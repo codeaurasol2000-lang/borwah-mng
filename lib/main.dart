@@ -10,10 +10,15 @@ import 'features/auth/presentation/screens/login_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // تهيئة حقن التبعيات (GetIt)
-  await di.initDependencies();
+  try {
+    // تهيئة حقن التبعيات (GetIt)
+    await di.initDependencies();
+  } catch (e, stackTrace) {
+    debugPrint("DI Initialization Error: $e");
+    debugPrint(stackTrace.toString());
+  }
 
-  runApp( BarwahApp());
+  runApp(const BarwahApp());
 }
 
 class BarwahApp extends StatelessWidget {
