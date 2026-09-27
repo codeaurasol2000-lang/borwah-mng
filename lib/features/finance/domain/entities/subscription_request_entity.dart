@@ -13,6 +13,7 @@ class SubscriptionRequestEntity extends Equatable {
   final String paymentMethod;         // تحويل بنكي مباشر / خصم مباشر من المحفظة
   final String status;                // قيد المطابقة / جاهز للاعتماد التلقائي
   final SubscriptionType type;
+  final String? availableBalance;     // رصيد متاح في المحفظة إن وجد (مثال: رصيد متاح 6,400 ر.س)
 
   const SubscriptionRequestEntity({
     required this.id,
@@ -25,6 +26,7 @@ class SubscriptionRequestEntity extends Equatable {
     required this.paymentMethod,
     required this.status,
     required this.type,
+    this.availableBalance,
   });
 
   @override

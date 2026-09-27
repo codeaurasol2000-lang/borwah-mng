@@ -229,7 +229,34 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
 
   @override
   Future<List<SubscriptionRequestEntity>> getSubscriptions() async {
-    return [];
+    await Future.delayed(Duration.zero);
+    return const [
+      SubscriptionRequestEntity(
+        id: '1',
+        providerName: 'متجر إلكترونيات النخبة',
+        registrationNumber: '101099234',
+        categoryName: 'اشتراك تاجر مميز',
+        targetPackageName: 'الباقة الذهبية السنوية',
+        durationText: 'شامل الضريبة 15%', // Use this field for the bottom text under amount
+        totalAmount: 4800.00,
+        paymentMethod: 'تحويل بنكي مباشر (سداد / الراجحي)',
+        status: 'قيد المطابقة',
+        type: SubscriptionType.merchant,
+      ),
+      SubscriptionRequestEntity(
+        id: '2',
+        providerName: 'ورشة الصيانة الشاملة...',
+        registrationNumber: '440219',
+        categoryName: 'مقدم خدمات منزلية',
+        targetPackageName: 'مزود خدمة احترافي',
+        durationText: 'نصف سنوي (6 أشهر)',
+        totalAmount: 1850.00,
+        paymentMethod: 'خصم مباشر من رصيد المحفظة الضامنة (Escrow)',
+        status: 'جاهز للاعتماد التلقائي',
+        type: SubscriptionType.serviceProvider,
+        availableBalance: 'رصيد متاح 6,400 ر.س',
+      ),
+    ];
   }
 
   @override
