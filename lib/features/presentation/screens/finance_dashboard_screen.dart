@@ -20,16 +20,13 @@ class FinanceDashboardScreen extends StatelessWidget {
       child: Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
-          backgroundColor: AppColors.background,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           appBar: AppBar(
-            backgroundColor: Colors.white,
-            elevation: 0,
-            scrolledUnderElevation: 0,
             titleSpacing: 0,
             leading: const Padding(
               padding: EdgeInsets.all(8.0),
               child: CircleAvatar(
-                backgroundColor: Color(0xFFF1F5F9),
+                backgroundColor: AppColors.surfaceLight,
                 child: Icon(Icons.person_outline, color: AppColors.primaryDark),
               ),
             ),
@@ -109,7 +106,7 @@ class FinanceDashboardScreen extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFEEF2F6),
+                          color: AppColors.surfaceHighlight,
                           borderRadius: BorderRadius.circular(14),
                         ),
                         child: const Row(
@@ -167,7 +164,7 @@ class FinanceDashboardScreen extends StatelessWidget {
                                   Container(
                                     padding: const EdgeInsets.all(8),
                                     decoration: BoxDecoration(
-                                      color: Colors.white.withOpacity(0.12),
+                                      color: AppColors.surface.withValues(alpha: 0.12),
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     child: const Icon(Icons.account_balance, color: Colors.white, size: 20),

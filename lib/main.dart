@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'core/constants/app_colors.dart';
+import 'core/theme/app_theme.dart';
 import 'core/di/injection_container.dart' as di;
 import 'features/auth/presentation/controllers/auth_cubit.dart';
 import 'features/auth/presentation/screens/login_screen.dart';
@@ -50,20 +51,7 @@ class BarwahApp extends StatelessWidget {
           GlobalCupertinoLocalizations.delegate,
         ],
 
-        theme: ThemeData(
-          useMaterial3: true,
-          scaffoldBackgroundColor: AppColors.background,
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: AppColors.primaryDark,
-            primary: AppColors.primaryDark,
-          ),
-          appBarTheme:  AppBarTheme(
-            backgroundColor: Colors.white,
-            elevation: 0,
-            scrolledUnderElevation: 0,
-            centerTitle: false,
-          ),
-        ),
+        theme: AppTheme.lightTheme,
 
         home: LoginScreen(),
       ),
