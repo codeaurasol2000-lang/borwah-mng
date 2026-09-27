@@ -258,90 +258,351 @@ class FinanceDashboardScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 14),
 
-                      // 7. مؤشرات المصاريف والعمولات
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _buildMetricTile(
-                              title: "المصاريف التشغيلية",
-                              value: "84,320 ر.س",
-                              icon: Icons.trending_down,
-                              color: Colors.red.shade700,
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: _buildMetricTile(
-                              title: "عمولات التطبيق",
-                              value: "142,650 ر.س",
-                              icon: Icons.trending_up,
-                              color: Colors.green.shade700,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 14),
-
-                      // 8. محافظ الأقسام التشغيلية المباشرة
+                      // 7. المصاريف والمدفوعات
                       Container(
-                        padding: const EdgeInsets.all(14),
+                        padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(color: AppColors.cardBorder),
                         ),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              "محافظ الأقسام التشغيلية المباشرة",
-                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.black87),
+                            Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(color: const Color(0xFFF1F5F9), borderRadius: BorderRadius.circular(12)),
+                                  child: const Icon(Icons.receipt_long, color: AppColors.primaryDark, size: 24),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const Text('المصاريف والمدفوعات\nالتشغيلية', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87)),
+                                      const SizedBox(height: 4),
+                                      Row(
+                                        children: [
+                                          Text('58,400', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87)),
+                                          const SizedBox(width: 4),
+                                          const Text('ر.س', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black87)),
+                                          const SizedBox(width: 6),
+                                          const Text('إجمالي مدفوعات الشهر', style: TextStyle(fontSize: 10, color: Colors.grey)),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                  decoration: BoxDecoration(color: Colors.blue.shade50, borderRadius: BorderRadius.circular(20)),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(Icons.circle, size: 6, color: Colors.blue.shade700),
+                                      const SizedBox(width: 4),
+                                      Text('إدارة\nالصرف', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.blue.shade700, height: 1.2), textAlign: TextAlign.center),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
-                            const SizedBox(height: 10),
-                            _buildWalletRow("محفظة التجار والمتاجر", "1,245,000 ر.س", Icons.store),
-                            const Divider(height: 16),
-                            _buildWalletRow("محفظة المستعمل وعربون «وصلني»", "840,200 ر.س", Icons.handshake),
-                            const Divider(height: 16),
-                            _buildWalletRow("محفظة الخدمات والصيانة", "420,150 ر.س", Icons.build),
-                            const Divider(height: 16),
-                            _buildWalletRow("محفظة مناديب الشحن والتوصيل", "295,800 ر.س", Icons.local_shipping),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 12),
+                              child: Divider(color: AppColors.cardBorder, height: 1),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text('الفواتير ومستحقات التشغيل الجارية', style: TextStyle(fontSize: 11, color: Colors.black87)),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.blue.shade100),
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: const Text('4 بنود صرف مجدولة', style: TextStyle(fontSize: 10, color: Colors.blue)),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 12),
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFF0F172A),
+                                  foregroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                  padding: const EdgeInsets.symmetric(vertical: 12),
+                                ),
+                                icon: const Icon(Icons.add_circle_outline, size: 16),
+                                onPressed: () {},
+                                label: const Text('تسجيل بيان دفع جديد / إدارة المصاريف', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                              ),
+                            ),
                           ],
                         ),
                       ),
                       const SizedBox(height: 14),
 
-                      // 9. مؤشر كفاية السيولة المصرفية الفورية
+                      // 8. مؤشرات العمولات والأرصدة المعلقة
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildMetricTileNew(
+                              title: "عمولات التطبيق المحصلة هذا الشهر",
+                              value: "284,900",
+                              icon: Icons.auto_graph,
+                              color: Colors.blue.shade700,
+                              badgeText: "+14.2%",
+                              badgeColor: Colors.blue.shade50,
+                              badgeTextColor: Colors.blue.shade700,
+                              bottomText: "مقارنة بالشهر السابق (249,450 ر.س)",
+                              bottomLink: "صافي الإيراد الرقابي",
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
                       Container(
-                        padding: const EdgeInsets.all(12),
+                        padding: const EdgeInsets.all(14),
                         decoration: BoxDecoration(
-                          color: Colors.teal.shade50,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Colors.teal.shade100),
+                          color: const Color(0xFFF8FAFC),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: AppColors.cardBorder),
                         ),
-                        child: const Row(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(Icons.check_circle_outline, color: Colors.teal, size: 22),
-                            SizedBox(width: 8),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10), border: Border.all(color: Colors.grey.shade200)),
+                                  child: const Icon(Icons.gavel, color: Colors.grey, size: 20),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          const Icon(Icons.circle, size: 6, color: AppColors.danger),
+                                          const SizedBox(width: 4),
+                                          const Text('أرصدة معلقة تحت التدقيق الرقابي', style: TextStyle(fontSize: 11, color: Colors.black87)),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        children: [
+                                          const Text('25,400', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87)),
+                                          const SizedBox(width: 4),
+                                          const Text('ر.س', style: TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold)),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(6)),
+                                  child: const Text('3 محافظ', style: TextStyle(fontSize: 10, color: Colors.black87)),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            Text('محافظ مجمدة احترازياً بطلب الإدارة العامة والمشرفين لوجود بلاغات ونزاعات مفتوحة.', style: TextStyle(fontSize: 10, color: Colors.grey.shade600, height: 1.4)),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+
+                      // 9. محافظ الأقسام التشغيلية المباشرة
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Row(
+                            children: [
+                              Icon(Icons.account_balance_wallet, color: AppColors.primaryDark, size: 18),
+                              SizedBox(width: 6),
+                              Text("محافظ الأقسام التشغيلية المباشرة", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black87)),
+                            ],
+                          ),
+                          Text('4 قطاعات حية', style: TextStyle(fontSize: 11, color: Colors.blue.shade700)),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      _buildWalletRowNew("محفظة قسم التجار والمتاجر", "رصيد دوري متاح للتسوية البنكية والسحب", "2,150,000", Icons.storefront),
+                      const SizedBox(height: 8),
+                      _buildWalletRowNew("محفظة المستعمل وعربون\n«وصلني»", "حساب ضمان وتأمين صفقات نشط\n(Escrow)", "980,000", Icons.handshake_outlined),
+                      const SizedBox(height: 8),
+                      _buildWalletRowNew("محفظة طلبات الخدمات\nوالصيانة", "مستحقات فنيين معتمدين ومزودي\nالخدمات", "620,000", Icons.build_circle_outlined),
+                      const SizedBox(height: 8),
+                      _buildWalletRowNew("محفظة مناديب التوصيل\nواللوجستيات", "أجور ومستحقات الشحن والتسليم\nالميداني", "450,000", Icons.local_shipping_outlined),
+                      const SizedBox(height: 16),
+
+                      // 10. مؤشر كفاية السيولة المصرفية الفورية
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: AppColors.cardBorder),
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Row(
+                                  children: [
+                                    Icon(Icons.shield_outlined, color: AppColors.primaryDark, size: 20),
+                                    SizedBox(width: 8),
+                                    Text("مؤشر كفاية السيولة المصرفية\nالفورية", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.primaryDark, height: 1.2)),
+                                  ],
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                  decoration: BoxDecoration(color: Colors.blue.shade50, borderRadius: BorderRadius.circular(20)),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.check_circle_outline, size: 14, color: Colors.blue.shade700),
+                                      const SizedBox(width: 4),
+                                      Text('آمن ومستقر\nجداً!', style: TextStyle(fontSize: 9, color: Colors.blue.shade700, fontWeight: FontWeight.bold, height: 1.2), textAlign: TextAlign.center),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(color: const Color(0xFFF8FAFC), borderRadius: BorderRadius.circular(12)),
+                              child: Row(
                                 children: [
-                                  Text(
-                                    "مؤشر كفاية السيولة المصرفية الفورية",
-                                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.teal),
+                                  Container(
+                                    width: 60,
+                                    height: 60,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(color: AppColors.primaryDark, width: 6),
+                                    ),
+                                    child: const Center(child: Text('99.8%', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.primaryDark))),
                                   ),
-                                  SizedBox(height: 2),
-                                  Text(
-                                    "آمن ومستقر جداً • نسبة التغطية النقدية: 142.8%",
-                                    style: TextStyle(fontSize: 11, color: Colors.black87),
+                                  const SizedBox(width: 16),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        const Text('نسبة تغطية طلبات السحب اليومية', style: TextStyle(fontSize: 10, color: Colors.grey)),
+                                        const SizedBox(height: 2),
+                                        Row(
+                                          crossAxisAlignment: CrossAxisAlignment.end,
+                                          children: [
+                                            const Text('99.8%', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black87)),
+                                            const SizedBox(width: 6),
+                                            Text('تغطية نقدية فائضة', style: TextStyle(fontSize: 10, color: Colors.blue.shade700, fontWeight: FontWeight.bold)),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 4),
+                                        const Text('الحد الأدنى النظامي المشترط: 85.0%', style: TextStyle(fontSize: 10, color: Colors.grey)),
+                                      ],
+                                    ),
                                   ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade200), borderRadius: BorderRadius.circular(10)),
+                              child: const Row(
+                                children: [
+                                  Icon(Icons.domain_verification, color: AppColors.primaryDark, size: 20),
+                                  SizedBox(width: 10),
+                                  Expanded(child: Text('التسوية المصرفية التلقائية عبر نظام سداد\n& SARIE:', style: TextStyle(fontSize: 11, color: Colors.black87))),
+                                  Text('مكتملة ومطابقة\n100%', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.black87), textAlign: TextAlign.center),
                                 ],
                               ),
                             ),
                           ],
                         ),
                       ),
+                      const SizedBox(height: 14),
+
+                      // 11. لائحة الحوكمة
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF1F5F9),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
+                                  child: const Icon(Icons.policy_outlined, color: Colors.black87, size: 20),
+                                ),
+                                const SizedBox(width: 12),
+                                const Expanded(
+                                  child: Text('لائحة الحوكمة وتفويض الصلاحيات\nالمالية', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black87, height: 1.3)),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  color: Colors.white,
+                                  child: const Text('بند\n#04- أ', style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: Colors.grey), textAlign: TextAlign.center),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 12),
+                            Text(
+                              'وفق لائحة الحوكمة والسياسات المالية: المشرفون الميدانيون ورؤساء الأقسام لا يملكون أي صلاحية لتعديل الأرصدة أو السحب أو التحويل البنكي. تنفيذ وتوثيق العمليات المالية حصري للمدير المالي المعتمد برقم تفويض مصرفي رسمي.',
+                              style: TextStyle(fontSize: 10, color: Colors.grey.shade700, height: 1.5),
+                              textAlign: TextAlign.justify,
+                            ),
+                          ],
+                        ),
+                      ),
                       const SizedBox(height: 20),
+
+                      // Bottom Sticky Buttons
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF0F172A),
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          ),
+                          icon: const Icon(Icons.check_circle_outline, size: 18),
+                          onPressed: () {},
+                          label: const Text('مراجعة طلبات السحب العاجلة (14 طلباً جاهزاً للصرف)', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      SizedBox(
+                        width: double.infinity,
+                        child: OutlinedButton.icon(
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: AppColors.primaryDark,
+                            side: const BorderSide(color: Colors.transparent),
+                            backgroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                          ),
+                          icon: const Icon(Icons.picture_as_pdf_outlined, size: 18),
+                          onPressed: () {},
+                          label: const Text('تصدير تقرير السيولة والمركز المالي اليومي (PDF)', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                        ),
+                      ),
+                      const SizedBox(height: 30),
                     ],
                   ),
                 );
@@ -426,7 +687,7 @@ class FinanceDashboardScreen extends StatelessWidget {
                     children: [
                       Text(
                         title,
-                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black87),
+                        style: const TextStyle(fontSize: 11, color: Colors.grey),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -435,13 +696,13 @@ class FinanceDashboardScreen extends StatelessWidget {
                         children: [
                           Text(
                             countText,
-                            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.primaryDark),
+                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
                           ),
                           const SizedBox(width: 6),
                           Flexible(
                             child: Text(
                               '($amountText)',
-                              style: const TextStyle(fontSize: 11, color: AppColors.info, fontWeight: FontWeight.w600),
+                              style: TextStyle(fontSize: 12, color: Colors.blue.shade700, fontWeight: FontWeight.w600),
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
@@ -453,30 +714,31 @@ class FinanceDashboardScreen extends StatelessWidget {
                 const SizedBox(width: 8),
 
                 // 3. السهم في أقصى اليسار (< في اتجاه RTL)
-                const Icon(Icons.arrow_forward_ios, size: 13, color: AppColors.textSecondary),
+                const Icon(Icons.arrow_forward_ios, size: 12, color: Colors.grey),
               ],
             ),
             const SizedBox(height: 8),
             Text(
               subtitle,
-              style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+              style: const TextStyle(fontSize: 10, color: Colors.grey),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
             if (actionButtonText != null) ...[
               const SizedBox(height: 10),
-              OutlinedButton.icon(
-                onPressed: onTap,
-                icon: const Icon(Icons.task_alt, size: 16),
-                label: Text(
-                  actionButtonText,
-                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                ),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: AppColors.primaryDark,
-                  side: const BorderSide(color: AppColors.cardBorder),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  padding: const EdgeInsets.symmetric(vertical: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                decoration: BoxDecoration(color: Colors.blue.shade50, borderRadius: BorderRadius.circular(10)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.verified_outlined, size: 16, color: AppColors.primaryDark),
+                    const SizedBox(width: 6),
+                    Text(
+                      actionButtonText,
+                      style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.primaryDark),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -486,65 +748,95 @@ class FinanceDashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMetricTile({
+  Widget _buildMetricTileNew({
     required String title,
     required String value,
     required IconData icon,
     required Color color,
+    required String badgeText,
+    required Color badgeColor,
+    required Color badgeTextColor,
+    required String bottomText,
+    required String bottomLink,
   }) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: AppColors.cardBorder),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: color, size: 16),
-              const SizedBox(width: 6),
-              Expanded(
-                child: Text(
-                  title,
-                  style: const TextStyle(fontSize: 11, color: Colors.grey),
-                  overflow: TextOverflow.ellipsis,
-                ),
+              Text(title, style: const TextStyle(fontSize: 11, color: Colors.black87)),
+              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(color: badgeColor, borderRadius: BorderRadius.circular(8)),
+                child: Icon(icon, color: color, size: 16),
               ),
             ],
           ),
-          const SizedBox(height: 6),
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(
-              value,
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: color),
-            ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(value, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black87)),
+              const SizedBox(width: 4),
+              const Text('ر.س', style: TextStyle(fontSize: 10, color: Colors.black87, fontWeight: FontWeight.bold)),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(bottomText, style: const TextStyle(fontSize: 10, color: Colors.grey)),
+              Text(bottomLink, style: TextStyle(fontSize: 11, color: Colors.blue.shade700, fontWeight: FontWeight.bold)),
+            ],
           ),
         ],
       ),
     );
   }
 
-  Widget _buildWalletRow(String title, String balance, IconData icon) {
-    return Row(
-      children: [
-        Icon(icon, size: 18, color: AppColors.primaryDark),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Text(
-            title,
-            style: const TextStyle(fontSize: 12, color: Colors.black87),
-            overflow: TextOverflow.ellipsis,
+  Widget _buildWalletRowNew(String title, String subtitle, String balance, IconData icon) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), border: Border.all(color: AppColors.cardBorder)),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(color: Colors.blue.shade50, borderRadius: BorderRadius.circular(10)),
+            child: Icon(icon, size: 20, color: AppColors.primaryDark),
           ),
-        ),
-        Text(
-          balance,
-          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.primaryDark),
-        ),
-      ],
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black87)),
+                const SizedBox(height: 2),
+                Text(subtitle, style: const TextStyle(fontSize: 9, color: Colors.grey, height: 1.3)),
+              ],
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(balance, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87)),
+              const Text('ريال سعودي', style: TextStyle(fontSize: 9, color: Colors.grey)),
+            ],
+          ),
+          const SizedBox(width: 8),
+          const Icon(Icons.arrow_forward_ios, size: 12, color: Colors.grey),
+        ],
+      ),
     );
   }
 }
