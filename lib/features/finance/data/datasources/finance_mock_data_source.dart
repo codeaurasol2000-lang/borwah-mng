@@ -60,13 +60,11 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
     await Future.delayed(Duration.zero);
 
     // حساب إجمالي السيولة ديناميكياً بجمع كافة أرصدة الحسابات
-    // الناتج المبدئي = 3,120,400 + 1,450,000 + 424,800 + 290,000 + 100,000 = 5,385,200.00
     final double calculatedTotalLiquidity = _mockBankAccounts.fold(
       0.0,
           (sum, account) => sum + account.balance,
     );
 
-    // استخراج أرصدة الحسابات المميزة برمجياً بدلاً من كتابتها يدوياً
     final double rajhiBalance = _mockBankAccounts
         .firstWhere(
           (a) => a.bankName.contains('الراجحي'),
@@ -81,16 +79,33 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
     )
         .balance;
 
+    // استدعاء الطلبات الحقيقية من الموك لحساب الأرقام الديناميكية
+    final merchantRequests = await getMerchantWithdrawals();
+    final supervisorRequests = await getSupervisorWithdrawals();
+    final subscriptions = await getSubscriptions();
+
+    final pendingAndFrozenMerchants = merchantRequests.where((req) => req.status == RequestStatus.pending || req.status == RequestStatus.underInvestigation).toList();
+    final int merchantCount = pendingAndFrozenMerchants.length;
+    final double merchantAmount = pendingAndFrozenMerchants.fold(0.0, (sum, req) => sum + req.netAmount);
+
+    final pendingAndFrozenSupervisors = supervisorRequests.where((req) => req.status == RequestStatus.pending || req.status == RequestStatus.underInvestigation).toList();
+    final int supervisorCount = pendingAndFrozenSupervisors.length;
+    final double supervisorAmount = pendingAndFrozenSupervisors.fold(0.0, (sum, req) => sum + req.netAmount);
+
+    final pendingSubscriptions = subscriptions.where((req) => req.status == 'قيد المطابقة' || req.status.contains('جاهز')).toList();
+    final int subsCount = pendingSubscriptions.length;
+    final double subsAmount = pendingSubscriptions.fold(0.0, (sum, req) => sum + req.totalAmount);
+
     return FinanceSummaryModel(
       totalLiquidity: calculatedTotalLiquidity,
       rajhiAccountBalance: rajhiBalance,
       snbEscrowBalance: snbBalance,
-      pendingMerchantWithdrawalsCount: 14,
-      pendingMerchantWithdrawalsAmount: 84250.00,
-      pendingSupervisorWithdrawalsCount: 8,
-      pendingSupervisorWithdrawalsAmount: 24600.00,
-      pendingSubscriptionsCount: 18,
-      pendingSubscriptionsAmount: 36000.00,
+      pendingMerchantWithdrawalsCount: merchantCount,
+      pendingMerchantWithdrawalsAmount: merchantAmount,
+      pendingSupervisorWithdrawalsCount: supervisorCount,
+      pendingSupervisorWithdrawalsAmount: supervisorAmount,
+      pendingSubscriptionsCount: subsCount,
+      pendingSubscriptionsAmount: subsAmount,
       monthlyExpenses: 84320.00,
       monthlyCommissions: 142650.00,
     );
