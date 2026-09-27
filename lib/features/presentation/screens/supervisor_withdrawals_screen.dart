@@ -398,11 +398,13 @@ class _SupervisorWithdrawalsScreenState extends State<SupervisorWithdrawalsScree
                         Expanded(
                           child: Row(
                             children: [
-                              Text(
-                                req.beneficiaryName,
-                                style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 14, color: Colors.black87),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
+                              Flexible(
+                                child: Text(
+                                  req.beneficiaryName,
+                                  style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 14, color: Colors.black87),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                               if (!isDanger && !isReady) ...[
                                 const SizedBox(width: 4),
@@ -465,7 +467,7 @@ class _SupervisorWithdrawalsScreenState extends State<SupervisorWithdrawalsScree
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(grossTitle, style: TextStyle(fontSize: 11, color: Colors.grey.shade700)),
+                    Expanded(child: Text(grossTitle, style: TextStyle(fontSize: 11, color: Colors.grey.shade700))),
                     Text('${CurrencyFormatter.format(req.grossAmount)} ر.س', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black87)),
                   ],
                 ),
@@ -474,12 +476,14 @@ class _SupervisorWithdrawalsScreenState extends State<SupervisorWithdrawalsScree
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          const Icon(Icons.remove_circle_outline, color: AppColors.danger, size: 14),
-                          const SizedBox(width: 4),
-                          Text(feeTitle, style: const TextStyle(fontSize: 11, color: AppColors.danger)),
-                        ],
+                      Expanded(
+                        child: Row(
+                          children: [
+                            const Icon(Icons.remove_circle_outline, color: AppColors.danger, size: 14),
+                            const SizedBox(width: 4),
+                            Expanded(child: Text(feeTitle, style: const TextStyle(fontSize: 11, color: AppColors.danger), maxLines: 1, overflow: TextOverflow.ellipsis)),
+                          ],
+                        ),
                       ),
                       Text('- ${CurrencyFormatter.format(req.platformFeeAmount)} ر.س', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.danger)),
                     ],
@@ -493,9 +497,11 @@ class _SupervisorWithdrawalsScreenState extends State<SupervisorWithdrawalsScree
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
-                      netTitle,
-                      style: TextStyle(fontSize: 11, color: isDanger ? AppColors.danger : Colors.black87, fontWeight: FontWeight.bold),
+                    Expanded(
+                      child: Text(
+                        netTitle,
+                        style: TextStyle(fontSize: 11, color: isDanger ? AppColors.danger : Colors.black87, fontWeight: FontWeight.bold),
+                      ),
                     ),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
@@ -516,6 +522,8 @@ class _SupervisorWithdrawalsScreenState extends State<SupervisorWithdrawalsScree
                       child: Text(
                         req.bankName,
                         style: TextStyle(fontSize: 10, color: isDanger ? AppColors.danger : Colors.grey.shade700),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],

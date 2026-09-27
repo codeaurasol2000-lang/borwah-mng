@@ -187,7 +187,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text(CurrencyFormatter.format(_pendingAmount), style: const TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold, height: 1)),
+                          Expanded(child: Text(CurrencyFormatter.format(_pendingAmount), style: const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold, height: 1), maxLines: 1, overflow: TextOverflow.ellipsis)),
                           const SizedBox(width: 4),
                           const Text('ر.س', style: TextStyle(color: Colors.white70, fontSize: 14, fontWeight: FontWeight.bold)),
                         ],
@@ -215,7 +215,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                               const Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Expanded(child: Text('المفعلة هذا الشهر', style: TextStyle(color: Colors.white70, fontSize: 9))),
+                                  Expanded(child: Text('المفعلة هذا الشهر', style: TextStyle(color: Colors.white70, fontSize: 9), maxLines: 1, overflow: TextOverflow.ellipsis)),
                                   Icon(Icons.trending_up, color: Colors.lightBlueAccent, size: 12),
                                 ],
                               ),
@@ -223,13 +223,13 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  Text(CurrencyFormatter.format(142500), style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold)),
+                                  Expanded(child: Text(CurrencyFormatter.format(142500), style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis)),
                                   const SizedBox(width: 2),
                                   const Text('ر.س', style: TextStyle(color: Colors.white70, fontSize: 9)),
                                 ],
                               ),
                               const SizedBox(height: 4),
-                              const Text('+24% نمو إيرادات', style: TextStyle(color: Colors.greenAccent, fontSize: 9)),
+                              const Text('+24% نمو إيرادات', style: TextStyle(color: Colors.greenAccent, fontSize: 9), maxLines: 1, overflow: TextOverflow.ellipsis),
                             ],
                           ),
                         ),
@@ -248,7 +248,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                               const Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Expanded(child: Text('الاشتراكات المعلقة', style: TextStyle(color: Colors.white70, fontSize: 9))),
+                                  Expanded(child: Text('الاشتراكات المعلقة', style: TextStyle(color: Colors.white70, fontSize: 9), maxLines: 1, overflow: TextOverflow.ellipsis)),
                                   Icon(Icons.pause_circle_outline, color: Colors.orangeAccent, size: 12),
                                 ],
                               ),
@@ -256,13 +256,13 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  Text('$_pendingCount', style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold)),
+                                  Expanded(child: Text('$_pendingCount', style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis)),
                                   const SizedBox(width: 4),
                                   const Text('طلبات', style: TextStyle(color: Colors.white70, fontSize: 9)),
                                 ],
                               ),
                               const SizedBox(height: 4),
-                              const Text('قيد المعالجة', style: TextStyle(color: Colors.orangeAccent, fontSize: 9)),
+                              const Text('قيد المعالجة', style: TextStyle(color: Colors.orangeAccent, fontSize: 9), maxLines: 1, overflow: TextOverflow.ellipsis),
                             ],
                           ),
                         ),
@@ -281,7 +281,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                               const Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Expanded(child: Text('منتهية بانتظار التجديد', style: TextStyle(color: Colors.white70, fontSize: 9))),
+                                  Expanded(child: Text('منتهية بانتظار التجديد', style: TextStyle(color: Colors.white70, fontSize: 9), maxLines: 1, overflow: TextOverflow.ellipsis)),
                                   Icon(Icons.access_time, color: Colors.redAccent, size: 12),
                                 ],
                               ),
@@ -289,13 +289,13 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                               const Row(
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  Text('9', style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold)),
+                                  Expanded(child: Text('9', style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis)),
                                   SizedBox(width: 4),
                                   Text('طلبات', style: TextStyle(color: Colors.white70, fontSize: 9)),
                                 ],
                               ),
                               const SizedBox(height: 4),
-                              const Text('تنبيه تجاري آلي', style: TextStyle(color: Colors.redAccent, fontSize: 9)),
+                              const Text('تنبيه تجاري آلي', style: TextStyle(color: Colors.redAccent, fontSize: 9), maxLines: 1, overflow: TextOverflow.ellipsis),
                             ],
                           ),
                         ),
@@ -553,11 +553,17 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                     Row(
                       children: [
                         Expanded(
-                          child: Text(
-                            sub.providerName,
-                            style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 14, color: Colors.black87),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                          child: Row(
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  sub.providerName,
+                                  style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 14, color: Colors.black87),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
