@@ -13,7 +13,7 @@ void main() async {
   // تهيئة حقن التبعيات (GetIt)
   await di.initDependencies();
 
-  runApp(const BarwahApp());
+  runApp( BarwahApp());
 }
 
 class BarwahApp extends StatelessWidget {
@@ -30,16 +30,16 @@ class BarwahApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
 
         // ضبط اللغة الافتراضية
-        locale: const Locale('ar'),
+        locale:  Locale('ar'),
 
         // اللغات المدعومة
-        supportedLocales: const [
+        supportedLocales:  [
           Locale('ar'),
           Locale('en'),
         ],
 
         // مفوضات الترجمة والمحاذاة التلقائية (RTL / LTR)
-        localizationsDelegates: const [
+        localizationsDelegates:  [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
@@ -52,7 +52,7 @@ class BarwahApp extends StatelessWidget {
             seedColor: AppColors.primaryDark,
             primary: AppColors.primaryDark,
           ),
-          appBarTheme: const AppBarTheme(
+          appBarTheme:  AppBarTheme(
             backgroundColor: Colors.white,
             elevation: 0,
             scrolledUnderElevation: 0,
@@ -60,7 +60,7 @@ class BarwahApp extends StatelessWidget {
           ),
         ),
 
-        home: const LoginScreen(),
+        home: LoginScreen(),
       ),
     );
   }
