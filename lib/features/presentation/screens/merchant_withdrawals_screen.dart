@@ -15,7 +15,32 @@ class MerchantWithdrawalsScreen extends StatefulWidget {
 class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
   List<WithdrawalRequestEntity> _requests = [];
   bool _isLoading = true;
-  String _selectedFilter = 'التجار (14)';
+  String _selectedFilter = 'الكل'; // تغيير الفلتر الافتراضي
+
+  // دوال الفلترة والحساب الديناميكي
+  List<WithdrawalRequestEntity> get _filteredRequests {
+    if (_selectedFilter == 'التجار') {
+      return _requests.where((r) => r.beneficiaryType == BeneficiaryType.merchant).toList();
+    } else if (_selectedFilter == 'المستخدمين') {
+      return _requests.where((r) => r.beneficiaryType != BeneficiaryType.merchant).toList();
+    }
+    return _requests; // الكل
+  }
+
+  int get _pendingCount => _filteredRequests.where((r) => r.status != RequestStatus.underInvestigation).length;
+  int get _frozenCount => _filteredRequests.where((r) => r.status == RequestStatus.underInvestigation).length;
+  
+  double get _totalPendingAmount {
+    return _filteredRequests
+        .where((r) => r.status != RequestStatus.underInvestigation)
+        .fold(0.0, (sum, req) => sum + req.netAmount);
+  }
+
+  int _countFor(String type) {
+    if (type == 'التجار') return _requests.where((r) => r.beneficiaryType == BeneficiaryType.merchant).length;
+    if (type == 'المستخدمين') return _requests.where((r) => r.beneficiaryType != BeneficiaryType.merchant).length;
+    return _requests.length;
+  }
 
   @override
   void initState() {
@@ -112,8 +137,8 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                     Expanded(
                       child: _buildMetricMiniCard(
                         title: 'الطلبات المعلقة',
-                        count: '14',
-                        sub: '56,200 ر.س',
+                        count: '$_pendingCount',
+                        sub: '${CurrencyFormatter.format(_totalPendingAmount)} ر.س',
                         icon: Icons.pending_actions,
                         color: AppColors.primaryDark,
                       ),
@@ -122,7 +147,7 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                     Expanded(
                       child: _buildMetricMiniCard(
                         title: 'تحت الاحتراز',
-                        count: '6',
+                        count: '$_frozenCount',
                         sub: 'تجميد رقابي',
                         icon: Icons.gavel,
                         color: AppColors.danger,
@@ -136,17 +161,17 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    _buildFilterChip('الكل (32)'),
+                    _buildFilterChip('الكل'),
                     const SizedBox(width: 8),
-                    _buildFilterChip('التجار (14)'),
+                    _buildFilterChip('التجار'),
                     const SizedBox(width: 8),
-                    _buildFilterChip('المستخدمين (18)'),
+                    _buildFilterChip('المستخدمين'),
                   ],
                 ),
                 const SizedBox(height: 20),
 
                 // 5. List of requests
-                ..._requests.map((req) => _buildWithdrawalCard(req)),
+                ..._filteredRequests.map((req) => _buildWithdrawalCard(req)),
               ],
             ),
             
@@ -176,9 +201,9 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
-                        children: const [
-                          Text('إجمالي المبالغ بانتظار الاعتماد', style: TextStyle(color: Colors.white70, fontSize: 10)),
-                          Text('56,200 ر.س', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                        children: [
+                          const Text('إجمالي المبالغ بانتظار الاعتماد', style: TextStyle(color: Colors.white70, fontSize: 10)),
+                          Text('${CurrencyFormatter.format(_totalPendingAmount)} ر.س', style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
                         ],
                       ),
                     ),
@@ -188,7 +213,7 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                       children: [
                         const Text('المتبقي\nللمراجعة', style: TextStyle(color: Colors.white70, fontSize: 10, height: 1.2), textAlign: TextAlign.center),
                         const SizedBox(height: 2),
-                        const Text('14 طلب', style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
+                        Text('$_pendingCount طلب', style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
                       ],
                     ),
                   ],
@@ -201,10 +226,13 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
     );
   }
 
-  Widget _buildFilterChip(String label) {
-    bool isSelected = _selectedFilter == label;
+  Widget _buildFilterChip(String filterType) {
+    bool isSelected = _selectedFilter == filterType;
+    int count = _countFor(filterType);
+    String label = count > 0 ? '$filterType ($count)' : filterType;
+    
     return GestureDetector(
-      onTap: () => setState(() => _selectedFilter = label),
+      onTap: () => setState(() => _selectedFilter = filterType),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
@@ -551,7 +579,7 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                 icon: Icon(isDanger ? Icons.folder_off_outlined : Icons.check_circle_outline, size: 18),
                 onPressed: () {},
                 label: Text(
-                  isDanger ? 'الرفض و اشعار العميل' : (isReady ? 'اعتماد و اعطاء أمر الصرف البنكي' : 'اعتماد و ارسال الطلب للادارة'),
+                  isDanger ? 'الرفض و اشعار العميل' : 'اعتماد و ارسال الطلب للادارة',
                   style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                 ),
               ),
