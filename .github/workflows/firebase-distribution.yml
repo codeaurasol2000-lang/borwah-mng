@@ -3,7 +3,7 @@ name: Build & Distribute to Firebase
 on:
   push:
     branches:
-      - main # يتم التشغيل التلقائي عند الرفع على فرع main (أو master)
+      - master
 
 jobs:
   build-and-distribute:
