@@ -10,8 +10,38 @@ import 'merchant_withdrawals_screen.dart';
 import 'supervisor_withdrawals_screen.dart';
 import 'subscriptions_screen.dart';
 
-class FinanceDashboardScreen extends StatelessWidget {
+class FinanceDashboardScreen extends StatefulWidget {
   const FinanceDashboardScreen({super.key});
+
+  @override
+  State<FinanceDashboardScreen> createState() => _FinanceDashboardScreenState();
+}
+
+class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
+  final ScrollController _scrollController = ScrollController();
+  bool _isNavVisible = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels > 100 && _isNavVisible) {
+        setState(() {
+          _isNavVisible = false;
+        });
+      } else if (_scrollController.position.pixels <= 100 && !_isNavVisible) {
+        setState(() {
+          _isNavVisible = true;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +51,7 @@ class FinanceDashboardScreen extends StatelessWidget {
         textDirection: TextDirection.rtl,
         child: Scaffold(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          appBar: AppBar(
+          appBar: _isNavVisible ? AppBar(
             titleSpacing: 0,
             leading: const Padding(
               padding: EdgeInsets.all(8.0),
@@ -42,9 +72,9 @@ class FinanceDashboardScreen extends StatelessWidget {
                   children: [
                     const Icon(Icons.verified_outlined, size: 13, color: AppColors.info),
                     const SizedBox(width: 4),
-                    Text(
-                      'مدقق مالي معتمد',
-                      style: TextStyle(color: Colors.blueGrey[400], fontSize: 11),
+                    const Text(
+                      'المدير المالي التنفيذي',
+                      style: TextStyle(fontSize: 10, color: AppColors.textSecondary),
                     ),
                   ],
                 ),
@@ -56,7 +86,7 @@ class FinanceDashboardScreen extends StatelessWidget {
                 child: Icon(Icons.shield_outlined, color: AppColors.primaryDark),
               )
             ],
-          ),
+          ) : null,
           body: BlocBuilder<FinanceDashboardCubit, FinanceDashboardState>(
             builder: (context, state) {
               if (state is FinanceDashboardLoading) {
@@ -64,6 +94,7 @@ class FinanceDashboardScreen extends StatelessWidget {
               } else if (state is FinanceDashboardLoaded) {
                 final data = state.summary;
                 return SingleChildScrollView(
+                  controller: _scrollController,
                   physics: const BouncingScrollPhysics(),
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                   child: Column(
@@ -608,6 +639,46 @@ class FinanceDashboardScreen extends StatelessWidget {
             },
           ),
         ),
+        bottomNavigationBar: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          height: _isNavVisible ? 70 : 0,
+          child: Wrap(
+            children: [
+              BottomNavigationBar(
+                backgroundColor: Colors.white,
+                type: BottomNavigationBarType.fixed,
+                selectedItemColor: AppColors.primaryDark,
+                unselectedItemColor: AppColors.textSecondary,
+                selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 10, color: AppColors.primaryDark),
+                unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal, fontSize: 10, color: AppColors.textSecondary),
+                elevation: 10,
+                currentIndex: 4, // "الرئيسية" هي النشطة
+                items: const [
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.history_edu, size: 24),
+                    label: 'التدقيق',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.percent, size: 24),
+                    label: 'العمولات',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.sync_alt, size: 24),
+                    label: 'التسويات',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.fact_check_outlined, size: 24),
+                    label: 'المطابقة',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.account_balance, size: 24),
+                    label: 'الرئيسية',
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -740,6 +811,45 @@ class FinanceDashboardScreen extends StatelessWidget {
               ),
             ],
           ],
+        ),
+        bottomNavigationBar: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          height: _isNavVisible ? 70 : 0,
+          child: Wrap(
+            children: [
+              BottomNavigationBar(
+                backgroundColor: Colors.white,
+                type: BottomNavigationBarType.fixed,
+                selectedItemColor: AppColors.textSecondary,
+                unselectedItemColor: AppColors.textSecondary,
+                selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 10, color: AppColors.textSecondary),
+                unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal, fontSize: 10, color: AppColors.textSecondary),
+                elevation: 10,
+                items: const [
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.history_edu, size: 24),
+                    label: 'التدقيق',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.percent, size: 24),
+                    label: 'العمولات',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.sync_alt, size: 24),
+                    label: 'التسويات',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.fact_check_outlined, size: 24),
+                    label: 'المطابقة',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.account_balance, size: 24),
+                    label: 'الرئيسية',
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
