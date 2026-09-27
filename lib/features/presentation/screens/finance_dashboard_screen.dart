@@ -820,11 +820,12 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
               BottomNavigationBar(
                 backgroundColor: Colors.white,
                 type: BottomNavigationBarType.fixed,
-                selectedItemColor: AppColors.textSecondary,
+                selectedItemColor: AppColors.primaryDark,
                 unselectedItemColor: AppColors.textSecondary,
-                selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 10, color: AppColors.textSecondary),
+                selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 10, color: AppColors.primaryDark),
                 unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal, fontSize: 10, color: AppColors.textSecondary),
                 elevation: 10,
+                currentIndex: 4,
                 items: const [
                   BottomNavigationBarItem(
                     icon: Icon(Icons.history_edu, size: 24),
