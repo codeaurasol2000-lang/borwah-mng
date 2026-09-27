@@ -105,12 +105,126 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
 
   @override
   Future<List<WithdrawalRequestEntity>> getMerchantWithdrawals() async {
-    return [];
+    await Future.delayed(Duration.zero);
+    return const [
+      WithdrawalRequestEntity(
+        id: '1',
+        requestNumber: 'TRD-8821',
+        beneficiaryName: 'متجر الأفق للأجهزة الكهربائية',
+        beneficiaryRole: 'معتمد ومطابق عبر النفاذ الموحد',
+        beneficiaryType: BeneficiaryType.merchant,
+        grossAmount: 32500.00,
+        platformFeePercentage: 2.5,
+        platformFeeAmount: 812.50,
+        netAmount: 31687.50,
+        bankName: 'مصرف الراجحي',
+        iban: 'SA42 8000 0412 **** **** 4910',
+        dateText: 'اليوم، 10:45 ص (منذ ساعتين)',
+        status: RequestStatus.pending,
+        auditCheckResult: 'مطابقة الفواتير: 100% | لا توجد بلاغات نزاع أو شكاوى نشطة | رصيد المحفظة مغطى بالكامل ومطابق لصافي التحصيلات التشغيلية.',
+        alertNotice: null,
+        isInstantTransferReady: false,
+      ),
+      WithdrawalRequestEntity(
+        id: '2',
+        requestNumber: 'SRV-201',
+        beneficiaryName: 'م. أحمد الخالدي',
+        beneficiaryRole: 'فني صيانة معتمد | عمولات منجزة',
+        beneficiaryType: BeneficiaryType.serviceProvider,
+        grossAmount: 5000.00,
+        platformFeePercentage: 4.0,
+        platformFeeAmount: 200.00,
+        netAmount: 4800.00,
+        bankName: 'البنك الأهلي السعودي (SNB)',
+        iban: '',
+        dateText: '',
+        status: RequestStatus.approved, // assuming "جاهز للصرف" maps to a state we can display differently, or we can use isInstantTransferReady
+        auditCheckResult: null,
+        alertNotice: 'معتمد من النظام - جاهز للإرسال البنكي الفوري عبر شبكة سريع',
+        isInstantTransferReady: true,
+      ),
+      WithdrawalRequestEntity(
+        id: '3',
+        requestNumber: 'TRD-304',
+        beneficiaryName: 'تاجر مستلزمات حاسب',
+        beneficiaryRole: 'موقوف مؤقتاً للتحقيق الرقابي',
+        beneficiaryType: BeneficiaryType.merchant,
+        grossAmount: 18900.00,
+        platformFeePercentage: 5.0,
+        platformFeeAmount: 945.00,
+        netAmount: 17955.00,
+        bankName: '',
+        iban: 'المرجع الرقابي\n#FAR-102',
+        dateText: '',
+        status: RequestStatus.underInvestigation,
+        auditCheckResult: null,
+        alertNotice: 'طلب تجميد سحب صادر من مشرف التجار (Finance Action Request #FAR-102) لوجود شبهة تلاعب في عروض ترويجية #CMP-1042 مع عملاء النهائيين بشأن استرداد مبالغ مشتريات ملغاة.',
+        isInstantTransferReady: false,
+      ),
+    ];
   }
 
   @override
   Future<List<WithdrawalRequestEntity>> getSupervisorWithdrawals() async {
-    return [];
+    await Future.delayed(Duration.zero);
+    return const [
+      WithdrawalRequestEntity(
+        id: '1',
+        requestNumber: '#409-SUP',
+        beneficiaryName: 'أ. سعد العتيبي',
+        beneficiaryRole: 'مشرف تجار معتمد',
+        beneficiaryType: BeneficiaryType.supervisor,
+        grossAmount: 15000.00,
+        platformFeePercentage: 0.0,
+        platformFeeAmount: 0.0,
+        netAmount: 15000.00,
+        bankName: 'مصرف الراجحي',
+        iban: 'SA42 8000 0412 **** 5521',
+        dateText: '',
+        status: RequestStatus.pending,
+        sourceOfFunds: 'عمولات إشراف واعتماد عقود التجار المنجزة (شهر أكتوبر)',
+        auditCheckResult: 'نسبة الامتثال 98.4% | لا توجد بلاغات تظلم معلقة | رصيد المحفظة مغطى بالكامل',
+        transferMethod: 'تحويل سريع عبر IBAN بنك الراجحي',
+        isInstantTransferReady: false,
+      ),
+      WithdrawalRequestEntity(
+        id: '2',
+        requestNumber: '#3042-SRV',
+        beneficiaryName: 'مؤسسة التبريد المتقن',
+        beneficiaryRole: 'مقدم خدمة معتمد\n(م. خليل إبراهيم)',
+        beneficiaryType: BeneficiaryType.serviceProvider,
+        grossAmount: 10000.00,
+        platformFeePercentage: 12.5,
+        platformFeeAmount: 1250.00,
+        netAmount: 8750.00,
+        bankName: 'البنك الأهلي السعودي (SNB)',
+        iban: 'آيبان موثق',
+        dateText: '',
+        status: RequestStatus.approved,
+        sourceOfFunds: 'أجور إنجاز 14 طلب صيانة وتبريد ميدانية معتمدة من العميل والمشرف',
+        auditCheckResult: null,
+        isInstantTransferReady: true,
+      ),
+      WithdrawalRequestEntity(
+        id: '3',
+        requestNumber: '#188-SRV',
+        beneficiaryName: 'ورشة الإتقان للكهرباء',
+        beneficiaryRole: 'مقدم خدمة صيانة',
+        beneficiaryType: BeneficiaryType.serviceProvider,
+        grossAmount: 7000.00,
+        platformFeePercentage: 11.4,
+        platformFeeAmount: 800.00,
+        netAmount: 6200.00,
+        bankName: 'حالة الطلب: محجوز بموجب بروتوكول حماية الجودة الإشرافي',
+        iban: '',
+        dateText: '',
+        status: RequestStatus.underInvestigation,
+        sourceOfFunds: null,
+        auditCheckResult: null,
+        alertNotice: 'وجود شكوى مفتوحة من عميل (#CMP-1042) لعدم اكتمال أعمال الصيانة بانتظار فحص المشرف وإعادة تقييم الخدمة الميدانية.',
+        isInstantTransferReady: false,
+      ),
+    ];
   }
 
   @override

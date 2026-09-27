@@ -20,6 +20,8 @@ class WithdrawalRequestEntity extends Equatable {
   final String? auditCheckResult;      // نتيجة الفحص الآلي
   final String? alertNotice;           // مذكرة الإشعار الرقابي إن وجدت
   final bool isInstantTransferReady;   // هل متاح للصرف الفوري
+  final String? sourceOfFunds;         // مصدر المستحقات أو تفاصيل الإنجاز الميداني
+  final String? transferMethod;        // طريقة التحويل
 
   const WithdrawalRequestEntity({
     required this.id,
@@ -38,6 +40,8 @@ class WithdrawalRequestEntity extends Equatable {
     this.auditCheckResult,
     this.alertNotice,
     this.isInstantTransferReady = false,
+    this.sourceOfFunds,
+    this.transferMethod,
   });
 
   @override

@@ -15,6 +15,7 @@ class MerchantWithdrawalsScreen extends StatefulWidget {
 class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
   List<WithdrawalRequestEntity> _requests = [];
   bool _isLoading = true;
+  String _selectedFilter = 'التجار (14)';
 
   @override
   void initState() {
@@ -35,153 +36,540 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.primaryDark),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: const Text('طلبات سحب مستحقات التجار والمستخدمين', style: TextStyle(color: AppColors.primaryDark, fontWeight: FontWeight.bold, fontSize: 15)),
-      ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator(color: AppColors.primaryDark))
-          : ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          // إحصائية علوية
-          Row(
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF9FAFB),
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0.5,
+          scrolledUnderElevation: 0,
+          leading: const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: CircleAvatar(
+              backgroundColor: AppColors.primaryDark,
+              child: Icon(Icons.person, color: Colors.white, size: 20),
+            ),
+          ),
+          title: const Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Expanded(
-                child: _buildMetricMiniCard('الطلبات المعلقة', '14', '56,200 ر.س', Icons.pending_actions, AppColors.info),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _buildMetricMiniCard('تحت الاحتراز', '6', 'تجميد رقابي', Icons.gavel, AppColors.danger),
-              ),
+              Text('طلبات سحب المستحقات', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16)),
+              Text('برواح المازوري - الإدارة المالية', style: TextStyle(color: Colors.grey, fontSize: 11)),
             ],
           ),
-          const SizedBox(height: 16),
-          ..._requests.map((req) => _buildWithdrawalCard(req)).toList(),
-        ],
+          centerTitle: true,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.arrow_forward, color: Colors.black),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ],
+        ),
+        body: _isLoading
+            ? const Center(child: CircularProgressIndicator(color: AppColors.primaryDark))
+            : Stack(
+          children: [
+            ListView(
+              padding: const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 100),
+              children: [
+                // 1. Tag
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.blue.shade50,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text('بوابة الصرف والرقابة النقدية', style: TextStyle(color: AppColors.primaryDark, fontSize: 10, fontWeight: FontWeight.bold)),
+                        const SizedBox(width: 4),
+                        Icon(Icons.verified, color: Colors.blue.shade700, size: 14),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                // 2. Titles
+                const Text(
+                  'طلبات سحب مستحقات التجار و المستخدمين و المناديب',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: AppColors.primaryDark, height: 1.3),
+                ),
+                const SizedBox(height: 4),
+                const Text(
+                  'قائمة طلبات السحب النقدي المعتمدة للمتاجر والمزودين',
+                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                ),
+                const SizedBox(height: 20),
+
+                // 3. Metric Cards
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildMetricMiniCard(
+                        title: 'الطلبات المعلقة',
+                        count: '14',
+                        sub: '56,200 ر.س',
+                        icon: Icons.pending_actions,
+                        color: AppColors.primaryDark,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: _buildMetricMiniCard(
+                        title: 'تحت الاحتراز',
+                        count: '6',
+                        sub: 'تجميد رقابي',
+                        icon: Icons.gavel,
+                        color: AppColors.danger,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+
+                // 4. Filters
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    _buildFilterChip('الكل (32)'),
+                    const SizedBox(width: 8),
+                    _buildFilterChip('التجار (14)'),
+                    const SizedBox(width: 8),
+                    _buildFilterChip('المستخدمين (18)'),
+                  ],
+                ),
+                const SizedBox(height: 20),
+
+                // 5. List of requests
+                ..._requests.map((req) => _buildWithdrawalCard(req)),
+              ],
+            ),
+            
+            // 6. Bottom Sticky Bar
+            Positioned(
+              bottom: 16,
+              left: 16,
+              right: 16,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  color: AppColors.primaryDark,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(color: AppColors.primaryDark.withValues(alpha: 0.3), blurRadius: 10, offset: const Offset(0, 4)),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(10)),
+                      child: const Icon(Icons.calculate, color: Colors.white, size: 24),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: const [
+                          Text('إجمالي المبالغ بانتظار الاعتماد', style: TextStyle(color: Colors.white70, fontSize: 10)),
+                          Text('56,200 ر.س', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text('المتبقي\nللمراجعة', style: TextStyle(color: Colors.white70, fontSize: 10, height: 1.2), textAlign: TextAlign.center),
+                        const SizedBox(height: 2),
+                        const Text('14 طلب', style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildMetricMiniCard(String title, String count, String sub, IconData icon, Color color) {
+  Widget _buildFilterChip(String label) {
+    bool isSelected = _selectedFilter == label;
+    return GestureDetector(
+      onTap: () => setState(() => _selectedFilter = label),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.primaryDark : const Color(0xFFE5E7EB),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (isSelected) const Icon(Icons.circle, size: 8, color: Colors.blueAccent),
+            if (isSelected) const SizedBox(width: 6),
+            Text(
+              label,
+              style: TextStyle(
+                color: isSelected ? Colors.white : Colors.black54,
+                fontSize: 12,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMetricMiniCard({required String title, required String count, required String sub, required IconData icon, required Color color}) {
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.cardBorder),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 4, offset: const Offset(0, 2)),
+        ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Icon(icon, color: color, size: 20),
-              Text(title, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+              Text(title, style: const TextStyle(fontSize: 11, color: Colors.grey, fontWeight: FontWeight.w600)),
             ],
           ),
-          const SizedBox(height: 6),
-          Text(count, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: color)),
-          Text(sub, style: const TextStyle(fontSize: 11, color: AppColors.textMuted)),
+          const SizedBox(height: 12),
+          Align(
+            alignment: Alignment.center,
+            child: Column(
+              children: [
+                Text(count, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: color)),
+                Text(sub, style: TextStyle(fontSize: 10, color: color == AppColors.danger ? AppColors.danger : Colors.grey)),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
 
   Widget _buildWithdrawalCard(WithdrawalRequestEntity req) {
+    bool isDanger = req.status == RequestStatus.underInvestigation;
+    bool isReady = req.isInstantTransferReady;
+    
+    Color mainColor = isDanger ? AppColors.danger : AppColors.primaryDark;
+    Color lightBgColor = isDanger ? AppColors.dangerLight : (isReady ? Colors.blue.shade50 : const Color(0xFFF1F5F9));
+    
     return Container(
-      margin: const EdgeInsets.only(bottom: 14),
+      margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: req.status == RequestStatus.underInvestigation ? AppColors.danger.withOpacity(0.3) : AppColors.cardBorder),
+        border: Border.all(color: isDanger ? AppColors.danger.withValues(alpha: 0.5) : AppColors.cardBorder, width: isDanger ? 1.5 : 1),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 8, offset: const Offset(0, 4)),
+        ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Header Row
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF1F5F9),
-                  borderRadius: BorderRadius.circular(8),
+                  color: lightBgColor,
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                child: Text('#${req.requestNumber}', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                child: Icon(
+                  isDanger ? Icons.warning_amber_rounded : (isReady ? Icons.manage_accounts : Icons.store),
+                  color: mainColor,
+                  size: 24,
+                ),
               ),
-              const Spacer(),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            req.beneficiaryName,
+                            style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 14, color: Colors.black87),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: isDanger ? AppColors.dangerLight : const Color(0xFFE5E7EB),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            req.requestNumber,
+                            style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: isDanger ? AppColors.danger : Colors.black87),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        if (!isDanger && !isReady) const Icon(Icons.verified, color: AppColors.primaryDark, size: 14),
+                        if (!isDanger && !isReady) const SizedBox(width: 4),
+                        Text(
+                          req.beneficiaryRole,
+                          style: TextStyle(fontSize: 11, color: isDanger ? AppColors.danger : Colors.grey.shade700, fontWeight: isDanger ? FontWeight.bold : FontWeight.normal),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              if (!isDanger)
+                Container(
+                  margin: const EdgeInsets.only(right: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: isReady ? Colors.blue.shade100 : const Color(0xFFF1F5F9),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    isReady ? 'جاهز للصرف' : 'قيد المراجعة',
+                    style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: isReady ? AppColors.primaryDark : Colors.black87),
+                  ),
+                ),
+            ],
+          ),
+          
+          const SizedBox(height: 16),
+          
+          // Amount Box
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFAFAFA),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColors.cardBorder),
+            ),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('إجمالي ${isDanger ? 'المطلوب تحت الحظر' : (isReady ? 'المستحقات' : 'المبلغ المطلوب')} (Gross):', style: TextStyle(fontSize: 11, color: isDanger ? AppColors.danger : Colors.grey.shade700)),
+                    Text('${CurrencyFormatter.format(req.grossAmount)} ر.س', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: isDanger ? AppColors.danger : Colors.black87)),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('عمولة المنصة ${isDanger ? 'التقديرية' : 'والخدمات'} (${req.platformFeePercentage}%):', style: TextStyle(fontSize: 11, color: isDanger ? AppColors.danger : Colors.grey.shade700)),
+                    Text('- ${CurrencyFormatter.format(req.platformFeeAmount)} ر.س', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.danger)),
+                  ],
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  child: Divider(height: 1, color: AppColors.cardBorder),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          isDanger ? 'الصافي المحتجز للتجميد:' : (isReady ? 'صافي المستحق للصرف الفوري:' : 'صافي المبلغ المحول للحساب البنكي:'),
+                          style: TextStyle(fontSize: 11, color: isDanger ? AppColors.danger : AppColors.primaryDark, fontWeight: FontWeight.bold),
+                        ),
+                        if (!isDanger) const SizedBox(height: 4),
+                        if (!isDanger)
+                          Row(
+                            children: [
+                              Icon(isReady ? Icons.flash_on : Icons.account_balance_wallet, size: 12, color: AppColors.primaryDark),
+                              const SizedBox(width: 4),
+                              Text(isReady ? 'الحساب البنكي\n${req.bankName}' : 'طريقة الصرف\nتحويل بنكي مجدول', style: const TextStyle(fontSize: 9, color: Colors.grey)),
+                            ],
+                          ),
+                      ],
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(CurrencyFormatter.format(req.netAmount), style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: isDanger ? AppColors.danger : AppColors.primaryDark)),
+                        const SizedBox(width: 4),
+                        Text('ر.س', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: isDanger ? AppColors.danger : AppColors.primaryDark)),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          
+          const SizedBox(height: 12),
+          
+          // Bank Info or Alerts
+          if (req.bankName.isNotEmpty && !isReady)
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.cardBorder),
+              ),
+              child: Row(
                 children: [
-                  Text(req.beneficiaryName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-                  Text(req.beneficiaryRole, style: const TextStyle(fontSize: 10, color: AppColors.textSecondary)),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(Icons.account_balance, size: 14, color: Colors.grey),
+                            const SizedBox(width: 6),
+                            const Text('المصرف المستلم:', style: TextStyle(fontSize: 11, color: Colors.grey)),
+                            const SizedBox(width: 6),
+                            Text(req.bankName, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Icon(Icons.credit_card, size: 14, color: Colors.grey),
+                            const SizedBox(width: 6),
+                            const Text('رقم الآيبان\n(IBAN):', style: TextStyle(fontSize: 10, color: Colors.grey, height: 1.2)),
+                            const SizedBox(width: 6),
+                            Expanded(
+                              child: Text(req.iban, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold), textDirection: TextDirection.ltr, textAlign: TextAlign.right),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Text('تاريخ تقديم الطلب: ${req.dateText}', style: const TextStyle(fontSize: 10, color: Colors.grey)),
+                      ],
+                    ),
+                  ),
                 ],
               ),
-            ],
-          ),
-          const Divider(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(CurrencyFormatter.format(req.grossAmount), style: const TextStyle(fontSize: 12, decoration: TextDecoration.lineThrough, color: AppColors.textMuted)),
-              const Text('إجمالي المبلغ المطلوب', style: TextStyle(fontSize: 11, color: AppColors.textSecondary)),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                CurrencyFormatter.format(req.netAmount),
-                style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: AppColors.primaryDark),
-              ),
-              const Text('صافي المبلغ المحول للحساب', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
-            ],
-          ),
-          const SizedBox(height: 12),
-          if (req.alertNotice != null) ...[
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: AppColors.dangerLight,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(req.alertNotice!, style: const TextStyle(fontSize: 11, color: AppColors.danger, height: 1.4), textAlign: TextAlign.right),
             ),
+            
+          if (req.auditCheckResult != null) ...[
             const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.blue.shade50,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.blue.shade100),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(Icons.check_circle, color: Colors.blue.shade700, size: 16),
+                      const SizedBox(width: 6),
+                      Text('نتيجة الفحص الآلي للمطابقة الضريبية والمحفظة', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.primaryDark)),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  Text(req.auditCheckResult!, style: TextStyle(fontSize: 10, color: Colors.blue.shade800, height: 1.4)),
+                ],
+              ),
+            ),
           ],
-          Row(
+          
+          if (req.alertNotice != null) ...[
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: isDanger ? Colors.white : const Color(0xFFF1F5F9),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: isDanger ? AppColors.danger : Colors.grey.shade300),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(isDanger ? Icons.gavel : Icons.bolt, color: isDanger ? AppColors.danger : Colors.grey.shade700, size: 18),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (isDanger) const Text('مذكرة إشعار رقابي من مشرف التجار', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.danger)),
+                        if (isDanger) const SizedBox(height: 4),
+                        Text(
+                          req.alertNotice!,
+                          style: TextStyle(fontSize: 10, color: isDanger ? Colors.grey.shade800 : Colors.grey.shade700, height: 1.4),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+          
+          const SizedBox(height: 16),
+          
+          // Action Buttons
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Expanded(
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: req.status == RequestStatus.underInvestigation ? AppColors.danger : AppColors.primaryDark,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  ),
-                  onPressed: () {},
-                  child: Text(
-                    req.status == RequestStatus.underInvestigation ? 'الرفض وإشعار العميل' : 'اعتماد وإرسال الطلب للإدارة',
-                    style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.white),
-                  ),
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: isDanger ? AppColors.primaryDark : AppColors.primaryDark,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  elevation: 0,
+                ),
+                icon: Icon(isDanger ? Icons.folder_off_outlined : Icons.check_circle_outline, size: 18),
+                onPressed: () {},
+                label: Text(
+                  isDanger ? 'الرفض و اشعار العميل' : (isReady ? 'اعتماد و اعطاء أمر الصرف البنكي' : 'اعتماد و ارسال الطلب للادارة'),
+                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                 ),
               ),
-              const SizedBox(width: 8),
-              OutlinedButton(
+              const SizedBox(height: 8),
+              OutlinedButton.icon(
                 style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: AppColors.danger),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  foregroundColor: AppColors.danger,
+                  side: BorderSide(color: isDanger ? AppColors.danger : AppColors.dangerLight),
+                  backgroundColor: isDanger ? AppColors.dangerLight.withValues(alpha: 0.3) : AppColors.dangerLight.withValues(alpha: 0.3),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
+                icon: Icon(isDanger ? Icons.cancel_outlined : Icons.lock_outline, size: 18),
                 onPressed: () {},
-                child: const Text('تجميد مؤقت', style: TextStyle(fontSize: 11, color: AppColors.danger)),
+                label: Text(
+                  isDanger ? 'تجميد الطلب' : 'تجميد مؤقت للطلب',
+                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                ),
               ),
             ],
           ),
