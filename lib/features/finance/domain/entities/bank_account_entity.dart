@@ -1,30 +1,19 @@
-import 'package:equatable/equatable.dart';
-
-enum AccountType { bank, eWallet }
-
-class BankAccountEntity extends Equatable {
+class BankAccountEntity {
   final String id;
-  final String title;              // اسم البنك أو المحفظة
-  final String subTitle;           // نوع الحساب أو الغرض
-  final String ibanOrNumber;       // رقم الآيبان أو رقم المحفظة
-  final double currentBalance;      // الرصيد الدفتري الحالي
-  final String? secondaryBalanceNote;
-  final AccountType type;
-  final String status;             // نشط، تجميد للأمانات، مجاني
+  final String bankName;
+  final String accountRole;
+  final String accountType;
+  final String iban;
+  final double balance; // إضافة المتغير هنا
   final bool isVerified;
 
   const BankAccountEntity({
     required this.id,
-    required this.title,
-    required this.subTitle,
-    required this.ibanOrNumber,
-    required this.currentBalance,
-    this.secondaryBalanceNote,
-    required this.type,
-    required this.status,
+    required this.bankName,
+    required this.accountRole,
+    required this.accountType,
+    required this.iban,
+    required this.balance,
     this.isVerified = true,
   });
-
-  @override
-  List<Object?> get props => [id, title, ibanOrNumber, currentBalance];
 }
