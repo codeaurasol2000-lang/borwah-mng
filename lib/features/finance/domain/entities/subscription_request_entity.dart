@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-enum SubscriptionType { merchant, serviceProvider }
+enum SubscriptionType { merchant, serviceProvider, user, courier, ad }
 
 class SubscriptionRequestEntity extends Equatable {
   final String id;

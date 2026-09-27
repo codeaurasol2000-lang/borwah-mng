@@ -15,7 +15,28 @@ class SubscriptionsScreen extends StatefulWidget {
 class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
   List<SubscriptionRequestEntity> _subscriptions = [];
   bool _isLoading = true;
-  String _selectedFilter = 'الكل 18';
+  String _selectedFilter = 'الكل';
+
+  List<SubscriptionRequestEntity> get _filteredSubscriptions {
+    if (_selectedFilter == 'المتاجر والتجار') return _subscriptions.where((s) => s.type == SubscriptionType.merchant).toList();
+    if (_selectedFilter == 'مزودوا الخدمات') return _subscriptions.where((s) => s.type == SubscriptionType.serviceProvider).toList();
+    if (_selectedFilter == 'مستخدمين') return _subscriptions.where((s) => s.type == SubscriptionType.user).toList();
+    if (_selectedFilter == 'مناديب') return _subscriptions.where((s) => s.type == SubscriptionType.courier).toList();
+    if (_selectedFilter == 'اعلانات') return _subscriptions.where((s) => s.type == SubscriptionType.ad).toList();
+    return _subscriptions;
+  }
+
+  int _countFor(String filter) {
+    if (filter == 'المتاجر والتجار') return _subscriptions.where((s) => s.type == SubscriptionType.merchant).length;
+    if (filter == 'مزودوا الخدمات') return _subscriptions.where((s) => s.type == SubscriptionType.serviceProvider).length;
+    if (filter == 'مستخدمين') return _subscriptions.where((s) => s.type == SubscriptionType.user).length;
+    if (filter == 'مناديب') return _subscriptions.where((s) => s.type == SubscriptionType.courier).length;
+    if (filter == 'اعلانات') return _subscriptions.where((s) => s.type == SubscriptionType.ad).length;
+    return _subscriptions.length;
+  }
+
+  int get _pendingCount => _subscriptions.where((s) => s.status.contains('قيد') || s.status.contains('جاهز')).length;
+  double get _pendingAmount => _subscriptions.where((s) => s.status.contains('قيد') || s.status.contains('جاهز')).fold(0.0, (sum, s) => sum + s.totalAmount);
 
   @override
   void initState() {
@@ -166,7 +187,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          const Text('64,200', style: TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold, height: 1)),
+                          Text(CurrencyFormatter.format(_pendingAmount), style: const TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold, height: 1)),
                           const SizedBox(width: 4),
                           const Text('ر.س', style: TextStyle(color: Colors.white70, fontSize: 14, fontWeight: FontWeight.bold)),
                         ],
@@ -174,7 +195,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                         decoration: BoxDecoration(color: Colors.red.shade100, borderRadius: BorderRadius.circular(20)),
-                        child: Text('18 طلباً قيد التدقيق', style: TextStyle(color: Colors.red.shade900, fontSize: 11, fontWeight: FontWeight.bold)),
+                        child: Text('$_pendingCount طلبات قيد التدقيق', style: TextStyle(color: Colors.red.shade900, fontSize: 11, fontWeight: FontWeight.bold)),
                       ),
                     ],
                   ),
@@ -194,26 +215,26 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                               const Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text('المفعلة هذا الشهر', style: TextStyle(color: Colors.white70, fontSize: 10)),
-                                  Icon(Icons.trending_up, color: Colors.lightBlueAccent, size: 14),
+                                  Expanded(child: Text('المفعلة هذا الشهر', style: TextStyle(color: Colors.white70, fontSize: 9))),
+                                  Icon(Icons.trending_up, color: Colors.lightBlueAccent, size: 12),
                                 ],
                               ),
                               const SizedBox(height: 6),
-                              const Row(
+                              Row(
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  Text('142,500', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
-                                  SizedBox(width: 2),
-                                  Text('ر.س', style: TextStyle(color: Colors.white70, fontSize: 10)),
+                                  Text(CurrencyFormatter.format(142500), style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold)),
+                                  const SizedBox(width: 2),
+                                  const Text('ر.س', style: TextStyle(color: Colors.white70, fontSize: 9)),
                                 ],
                               ),
                               const SizedBox(height: 4),
-                              const Text('+24% نمو إيرادات', style: TextStyle(color: Colors.greenAccent, fontSize: 10)),
+                              const Text('+24% نمو إيرادات', style: TextStyle(color: Colors.greenAccent, fontSize: 9)),
                             ],
                           ),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: 8),
                       Expanded(
                         child: Container(
                           padding: const EdgeInsets.all(12),
@@ -227,21 +248,54 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                               const Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text('منتهية بانتظار التجديد', style: TextStyle(color: Colors.white70, fontSize: 10)),
-                                  Icon(Icons.access_time, color: Colors.orangeAccent, size: 14),
+                                  Expanded(child: Text('الاشتراكات المعلقة', style: TextStyle(color: Colors.white70, fontSize: 9))),
+                                  Icon(Icons.pause_circle_outline, color: Colors.orangeAccent, size: 12),
+                                ],
+                              ),
+                              const SizedBox(height: 6),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text('$_pendingCount', style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold)),
+                                  const SizedBox(width: 4),
+                                  const Text('طلبات', style: TextStyle(color: Colors.white70, fontSize: 9)),
+                                ],
+                              ),
+                              const SizedBox(height: 4),
+                              const Text('قيد المعالجة', style: TextStyle(color: Colors.orangeAccent, fontSize: 9)),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.05),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(child: Text('منتهية بانتظار التجديد', style: TextStyle(color: Colors.white70, fontSize: 9))),
+                                  Icon(Icons.access_time, color: Colors.redAccent, size: 12),
                                 ],
                               ),
                               const SizedBox(height: 6),
                               const Row(
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  Text('9', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                                  Text('9', style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold)),
                                   SizedBox(width: 4),
-                                  Text('طلبات', style: TextStyle(color: Colors.white70, fontSize: 10)),
+                                  Text('طلبات', style: TextStyle(color: Colors.white70, fontSize: 9)),
                                 ],
                               ),
                               const SizedBox(height: 4),
-                              const Text('تنبيه تجاري آلي', style: TextStyle(color: Colors.orangeAccent, fontSize: 10)),
+                              const Text('تنبيه تجاري آلي', style: TextStyle(color: Colors.redAccent, fontSize: 9)),
                             ],
                           ),
                         ),
@@ -258,11 +312,17 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  _buildFilterChip('الكل 18', isDark: true),
+                  _buildFilterChip('الكل', isDark: true),
                   const SizedBox(width: 8),
-                  _buildFilterChip('المتاجر والتجار 8', icon: Icons.storefront),
+                  _buildFilterChip('المتاجر والتجار', icon: Icons.storefront),
                   const SizedBox(width: 8),
-                  _buildFilterChip('مزودو الخدمات والمؤسسات 10', icon: Icons.handshake),
+                  _buildFilterChip('مزودوا الخدمات', icon: Icons.handshake),
+                  const SizedBox(width: 8),
+                  _buildFilterChip('مستخدمين', icon: Icons.person),
+                  const SizedBox(width: 8),
+                  _buildFilterChip('مناديب', icon: Icons.local_shipping),
+                  const SizedBox(width: 8),
+                  _buildFilterChip('اعلانات', icon: Icons.campaign),
                 ],
               ),
             ),
@@ -291,7 +351,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
             const SizedBox(height: 16),
 
             // 5. List
-            ..._subscriptions.map((sub) => _buildSubscriptionCard(sub)),
+            ..._filteredSubscriptions.map((sub) => _buildSubscriptionCard(sub)),
             
             // 6. Bottom Info Banner
             Container(
@@ -354,16 +414,60 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                 ],
               ),
             ),
+
+            // 7. Bottom Record Button
+            InkWell(
+              onTap: () {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('جاري فتح السجل...')));
+              },
+              borderRadius: BorderRadius.circular(16),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.blue.shade100),
+                  boxShadow: [
+                    BoxShadow(color: Colors.blue.withValues(alpha: 0.05), blurRadius: 4, offset: const Offset(0, 2)),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(color: Colors.blue.shade50, borderRadius: BorderRadius.circular(10)),
+                      child: Icon(Icons.history, color: Colors.blue.shade700, size: 20),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('سجل الاشتراكات والترقيات النشطة والغير نشطة', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.blue.shade900)),
+                          const SizedBox(height: 2),
+                          Text('تصفح تاريخ جميع العمليات السابقة', style: TextStyle(fontSize: 10, color: Colors.grey.shade600)),
+                        ],
+                      ),
+                    ),
+                    const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildFilterChip(String label, {IconData? icon, bool isDark = false}) {
-    bool isSelected = _selectedFilter == label || isDark;
+  Widget _buildFilterChip(String filterType, {IconData? icon, bool isDark = false}) {
+    bool isSelected = _selectedFilter == filterType || (isDark && _selectedFilter == 'الكل');
+    int count = _countFor(filterType);
+    String label = count > 0 ? '$filterType $count' : filterType;
+    
     return GestureDetector(
-      onTap: () => setState(() => _selectedFilter = label),
+      onTap: () => setState(() => _selectedFilter = filterType),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
@@ -436,7 +540,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
-                  sub.type == SubscriptionType.merchant ? Icons.devices : Icons.build,
+                  sub.type == SubscriptionType.merchant ? Icons.devices : (sub.type == SubscriptionType.serviceProvider ? Icons.build : (sub.type == SubscriptionType.user ? Icons.person : (sub.type == SubscriptionType.courier ? Icons.local_shipping : Icons.campaign))),
                   color: AppColors.primaryDark,
                   size: 24,
                 ),
@@ -606,39 +710,56 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
           const SizedBox(height: 16),
           
           // Action Buttons
-          Row(
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              if (isAutoReady)
-                Expanded(
-                  flex: 1,
-                  child: OutlinedButton.icon(
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: AppColors.danger,
-                      backgroundColor: AppColors.dangerLight.withValues(alpha: 0.3),
-                      side: const BorderSide(color: AppColors.dangerLight),
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryDark,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  elevation: 0,
+                ),
+                icon: const Icon(Icons.check_circle_outline, size: 16),
+                onPressed: () {},
+                label: const Text('اعتماد و ارسال الطلب', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  if (isAutoReady) ...[
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: AppColors.danger,
+                          backgroundColor: AppColors.dangerLight.withValues(alpha: 0.3),
+                          side: const BorderSide(color: AppColors.dangerLight),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        ),
+                        icon: const Icon(Icons.cancel_outlined, size: 16),
+                        onPressed: () {},
+                        label: const Text('رفض مع السبب', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                      ),
                     ),
-                    icon: const Icon(Icons.cancel_outlined, size: 16),
-                    onPressed: () {},
-                    label: const Text('رفض مع السبب', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                    const SizedBox(width: 8),
+                  ],
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.orange.shade800,
+                        backgroundColor: Colors.orange.shade50,
+                        side: BorderSide(color: Colors.orange.shade200),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      ),
+                      icon: const Icon(Icons.pause_circle_outline, size: 16),
+                      onPressed: () {},
+                      label: const Text('تعليق الطلب', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                    ),
                   ),
-                ),
-              if (isAutoReady) const SizedBox(width: 8),
-              Expanded(
-                flex: 2,
-                child: ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryDark,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                    elevation: 0,
-                  ),
-                  icon: const Icon(Icons.check_circle_outline, size: 16),
-                  onPressed: () {},
-                  label: const Text('اعتماد و ارسال الطلب', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-                ),
+                ],
               ),
             ],
           ),
