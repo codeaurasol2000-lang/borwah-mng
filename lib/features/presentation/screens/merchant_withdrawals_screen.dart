@@ -158,13 +158,12 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                 const SizedBox(height: 20),
 
                 // 4. Filters
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
                   children: [
                     _buildFilterChip('الكل'),
-                    const SizedBox(width: 8),
                     _buildFilterChip('التجار'),
-                    const SizedBox(width: 8),
                     _buildFilterChip('المستخدمين'),
                   ],
                 ),
@@ -364,9 +363,13 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                       children: [
                         if (!isDanger && !isReady) const Icon(Icons.verified, color: AppColors.primaryDark, size: 14),
                         if (!isDanger && !isReady) const SizedBox(width: 4),
-                        Text(
-                          req.beneficiaryRole,
-                          style: TextStyle(fontSize: 11, color: isDanger ? AppColors.danger : Colors.grey.shade700, fontWeight: isDanger ? FontWeight.bold : FontWeight.normal),
+                        Expanded(
+                          child: Text(
+                            req.beneficiaryRole,
+                            style: TextStyle(fontSize: 11, color: isDanger ? AppColors.danger : Colors.grey.shade700, fontWeight: isDanger ? FontWeight.bold : FontWeight.normal),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ],
                     ),
@@ -404,7 +407,7 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('إجمالي ${isDanger ? 'المطلوب تحت الحظر' : (isReady ? 'المستحقات' : 'المبلغ المطلوب')} (Gross):', style: TextStyle(fontSize: 11, color: isDanger ? AppColors.danger : Colors.grey.shade700)),
+                    Expanded(child: Text('إجمالي ${isDanger ? 'المطلوب تحت الحظر' : (isReady ? 'المستحقات' : 'المبلغ المطلوب')} (Gross):', style: TextStyle(fontSize: 11, color: isDanger ? AppColors.danger : Colors.grey.shade700))),
                     Text('${CurrencyFormatter.format(req.grossAmount)} ر.س', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: isDanger ? AppColors.danger : Colors.black87)),
                   ],
                 ),
@@ -412,7 +415,7 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('عمولة المنصة ${isDanger ? 'التقديرية' : 'والخدمات'} (${req.platformFeePercentage}%):', style: TextStyle(fontSize: 11, color: isDanger ? AppColors.danger : Colors.grey.shade700)),
+                    Expanded(child: Text('عمولة المنصة ${isDanger ? 'التقديرية' : 'والخدمات'} (${req.platformFeePercentage}%):', style: TextStyle(fontSize: 11, color: isDanger ? AppColors.danger : Colors.grey.shade700))),
                     Text('- ${CurrencyFormatter.format(req.platformFeeAmount)} ر.س', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.danger)),
                   ],
                 ),
@@ -424,24 +427,27 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          isDanger ? 'الصافي المحتجز للتجميد:' : (isReady ? 'صافي المستحق للصرف الفوري:' : 'صافي المبلغ المحول للحساب البنكي:'),
-                          style: TextStyle(fontSize: 11, color: isDanger ? AppColors.danger : AppColors.primaryDark, fontWeight: FontWeight.bold),
-                        ),
-                        if (!isDanger) const SizedBox(height: 4),
-                        if (!isDanger)
-                          Row(
-                            children: [
-                              Icon(isReady ? Icons.flash_on : Icons.account_balance_wallet, size: 12, color: AppColors.primaryDark),
-                              const SizedBox(width: 4),
-                              Text(isReady ? 'الحساب البنكي\n${req.bankName}' : 'طريقة الصرف\nتحويل بنكي مجدول', style: const TextStyle(fontSize: 9, color: Colors.grey)),
-                            ],
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            isDanger ? 'الصافي المحتجز للتجميد:' : (isReady ? 'صافي المستحق للصرف الفوري:' : 'صافي المبلغ المحول للحساب البنكي:'),
+                            style: TextStyle(fontSize: 11, color: isDanger ? AppColors.danger : AppColors.primaryDark, fontWeight: FontWeight.bold),
                           ),
-                      ],
+                          if (!isDanger) const SizedBox(height: 4),
+                          if (!isDanger)
+                            Row(
+                              children: [
+                                Icon(isReady ? Icons.flash_on : Icons.account_balance_wallet, size: 12, color: AppColors.primaryDark),
+                                const SizedBox(width: 4),
+                                Expanded(child: Text(isReady ? 'الحساب البنكي\n${req.bankName}' : 'طريقة الصرف\nتحويل بنكي مجدول', style: const TextStyle(fontSize: 9, color: Colors.grey), maxLines: 2, overflow: TextOverflow.ellipsis)),
+                              ],
+                            ),
+                        ],
+                      ),
                     ),
+                    const SizedBox(width: 8),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
@@ -479,7 +485,7 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                             const SizedBox(width: 6),
                             const Text('المصرف المستلم:', style: TextStyle(fontSize: 11, color: Colors.grey)),
                             const SizedBox(width: 6),
-                            Text(req.bankName, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                            Expanded(child: Text(req.bankName, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis)),
                           ],
                         ),
                         const SizedBox(height: 8),
@@ -579,7 +585,7 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                 icon: Icon(isDanger ? Icons.folder_off_outlined : Icons.check_circle_outline, size: 18),
                 onPressed: () {},
                 label: Text(
-                  isDanger ? 'الرفض و اشعار العميل' : 'اعتماد و ارسال الطلب للادارة',
+                  isDanger ? 'الرفض و اشعار العميل' : (isReady ? 'اعتماد و اعطاء أمر الصرف البنكي' : 'اعتماد و ارسال الطلب للادارة'),
                   style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                 ),
               ),
