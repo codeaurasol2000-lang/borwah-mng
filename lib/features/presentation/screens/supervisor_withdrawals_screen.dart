@@ -15,7 +15,31 @@ class SupervisorWithdrawalsScreen extends StatefulWidget {
 class _SupervisorWithdrawalsScreenState extends State<SupervisorWithdrawalsScreen> {
   List<WithdrawalRequestEntity> _requests = [];
   bool _isLoading = true;
-  String _selectedFilter = 'بانتظار الاعتماد 16';
+  String _selectedFilter = 'الكل';
+
+  List<WithdrawalRequestEntity> get _filteredRequests {
+    if (_selectedFilter == 'المشرفين') {
+      return _requests.where((r) => r.beneficiaryType == BeneficiaryType.supervisor).toList();
+    } else if (_selectedFilter == 'مقدمي الخدمة') {
+      return _requests.where((r) => r.beneficiaryType == BeneficiaryType.serviceProvider).toList();
+    }
+    return _requests; // الكل
+  }
+
+  int get _pendingCount => _filteredRequests.where((r) => r.status != RequestStatus.underInvestigation).length;
+  int get _frozenCount => _filteredRequests.where((r) => r.status == RequestStatus.underInvestigation).length;
+  
+  double get _totalPendingAmount {
+    return _filteredRequests
+        .where((r) => r.status != RequestStatus.underInvestigation)
+        .fold(0.0, (sum, req) => sum + req.netAmount);
+  }
+
+  int _countFor(String type) {
+    if (type == 'المشرفين') return _requests.where((r) => r.beneficiaryType == BeneficiaryType.supervisor).length;
+    if (type == 'مقدمي الخدمة') return _requests.where((r) => r.beneficiaryType == BeneficiaryType.serviceProvider).length;
+    return _requests.length;
+  }
 
   @override
   void initState() {
@@ -112,8 +136,8 @@ class _SupervisorWithdrawalsScreenState extends State<SupervisorWithdrawalsScree
                     Expanded(
                       child: _buildMetricMiniCard(
                         title: 'المعلقة',
-                        count: '16',
-                        sub: '48,900 ر.س',
+                        count: '$_pendingCount',
+                        sub: '${CurrencyFormatter.format(_totalPendingAmount)} ر.س',
                         icon: Icons.pending_actions,
                         color: AppColors.primaryDark,
                         countColor: Colors.black87,
@@ -123,7 +147,7 @@ class _SupervisorWithdrawalsScreenState extends State<SupervisorWithdrawalsScree
                     Expanded(
                       child: _buildMetricMiniCard(
                         title: 'احتراز رقابي',
-                        count: '03',
+                        count: '$_frozenCount',
                         sub: 'قيد الفحص',
                         icon: Icons.playlist_remove,
                         color: AppColors.danger,
@@ -135,99 +159,98 @@ class _SupervisorWithdrawalsScreenState extends State<SupervisorWithdrawalsScree
                 const SizedBox(height: 20),
 
                 // 4. Filters
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
                   children: [
-                    _buildFilterChip('الكل  31'),
-                    const SizedBox(width: 8),
-                    _buildFilterChip('بانتظار الاعتماد  16'),
-                    const SizedBox(width: 8),
-                    _buildFilterChip('مشرفو المنصة  8', icon: Icons.group),
+                    _buildFilterChip('الكل'),
+                    _buildFilterChip('المشرفين', icon: Icons.admin_panel_settings),
+                    _buildFilterChip('مقدمي الخدمة', icon: Icons.build_circle),
                   ],
                 ),
                 const SizedBox(height: 20),
 
                 // 5. List of requests
-                ..._requests.map((req) => _buildWithdrawalCard(req)),
+                ..._filteredRequests.map((req) => _buildWithdrawalCard(req)),
               ],
             ),
             
             // 6. Bottom Sticky Bar
             Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border(top: BorderSide(color: Colors.grey.shade300)),
-                  boxShadow: [
-                    BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, -4)),
-                  ],
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              bottom: 16,
+              left: 16,
+              right: 16,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryDark,
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(color: AppColors.primaryDark.withValues(alpha: 0.3), blurRadius: 10, offset: const Offset(0, 4)),
+                      ],
+                    ),
+                    child: Row(
                       children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(10)),
+                          child: const Icon(Icons.calculate, color: Colors.white, size: 24),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Text('إجمالي المبالغ بانتظار الاعتماد', style: TextStyle(color: Colors.white70, fontSize: 10)),
+                              Text('${CurrencyFormatter.format(_totalPendingAmount)} ر.س', style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                        ),
                         Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.end,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text('إجمالي بانتظار الصرف', style: TextStyle(color: AppColors.primaryDark, fontSize: 11, fontWeight: FontWeight.bold)),
-                            Row(
-                              children: [
-                                const Text('48,900', style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold)),
-                                const SizedBox(width: 4),
-                                const Text('ر.س', style: TextStyle(color: AppColors.primaryDark, fontSize: 12, fontWeight: FontWeight.bold)),
-                                const SizedBox(width: 6),
-                                Text('(16 طلب)', style: TextStyle(color: Colors.grey.shade600, fontSize: 11)),
-                              ],
-                            ),
+                            const Text('المتبقي\nللمراجعة', style: TextStyle(color: Colors.white70, fontSize: 10, height: 1.2), textAlign: TextAlign.center),
+                            const SizedBox(height: 2),
+                            Text('$_pendingCount طلب', style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
                           ],
-                        ),
-                        ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primaryDark,
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                            elevation: 0,
-                          ),
-                          icon: const Icon(Icons.check_circle_outline, size: 18),
-                          onPressed: () {},
-                          label: const Text('اعتماد جماعي (12)', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 12),
-                    Container(
-                      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                      decoration: BoxDecoration(
-                        color: Colors.blue.shade50,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(Icons.shield_outlined, color: Colors.blue.shade700, size: 24),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text('التوافق البنكي المعتمد', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.primaryDark)),
-                                Text('التحويلات تخضع لمعايير البنك المركزي السعودي (SAMA)', style: TextStyle(fontSize: 10, color: Colors.grey.shade700)),
-                              ],
-                            ),
-                          ),
-                          const Text('v3.4.1', style: TextStyle(fontSize: 10, color: Colors.blue)),
-                        ],
-                      ),
+                  ),
+                  const SizedBox(height: 12),
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(color: Colors.grey.shade300),
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 4, offset: const Offset(0, 2)),
+                      ],
                     ),
-                  ],
-                ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.shield_outlined, color: Colors.blue.shade700, size: 24),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text('التوافق البنكي المعتمد', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.primaryDark)),
+                              Text('التحويلات تخضع لمعايير البنك المركزي السعودي (SAMA)', style: TextStyle(fontSize: 10, color: Colors.grey.shade700)),
+                            ],
+                          ),
+                        ),
+                        const Text('v3.4.1', style: TextStyle(fontSize: 10, color: Colors.blue)),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -236,10 +259,13 @@ class _SupervisorWithdrawalsScreenState extends State<SupervisorWithdrawalsScree
     );
   }
 
-  Widget _buildFilterChip(String label, {IconData? icon}) {
-    bool isSelected = _selectedFilter == label;
+  Widget _buildFilterChip(String filterType, {IconData? icon}) {
+    bool isSelected = _selectedFilter == filterType;
+    int count = _countFor(filterType);
+    String label = count > 0 ? '$filterType ($count)' : filterType;
+    
     return GestureDetector(
-      onTap: () => setState(() => _selectedFilter = label),
+      onTap: () => setState(() => _selectedFilter = filterType),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
@@ -636,7 +662,7 @@ class _SupervisorWithdrawalsScreenState extends State<SupervisorWithdrawalsScree
                 icon: Icon(isDanger ? Icons.folder_off_outlined : Icons.check_circle_outline, size: 18),
                 onPressed: () {},
                 label: Text(
-                  isDanger ? 'الرفض و اشعار العميل' : 'اعتماد و ارسال الطلب للادارة',
+                  isDanger ? 'الرفض و اشعار العميل' : (isReady ? 'اعتماد و اعطاء أمر الصرف البنكي' : 'اعتماد و ارسال الطلب للادارة'),
                   style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                 ),
               ),
