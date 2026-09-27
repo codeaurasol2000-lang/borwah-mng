@@ -1,0 +1,48 @@
+name: Build & Distribute to Firebase
+
+on:
+  push:
+    branches:
+      - main # يتم التشغيل التلقائي عند الرفع على فرع main (أو master)
+
+jobs:
+  build-and-distribute:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. سحب كود المشروع
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # 2. تثبيت لغة Java المطلوبة لبناء الأندرويد
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      # 3. تثبيت بيئة Flutter
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      # 4. جلب المكتبات والاعتماديات
+      - name: Install Dependencies
+        run: flutter pub get
+
+      # 5. بناء ملف الـ APK (نسخة Release أو Debug بدون توقيع معقد)
+      - name: Build APK
+        run: flutter build apk --debug
+
+      # 6. الرفع المباشر إلى Firebase App Distribution
+      - name: Upload to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_APP_ID }}
+          serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          groups: internal-testers
+          file: build/app/outputs/flutter-apk/app-debug.apk
+          releaseNotes: |
+            تحديث جديد تم بناؤه ونشره تلقائياً عبر GitHub Actions.
