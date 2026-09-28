@@ -42,12 +42,9 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
             backgroundColor: AppColors.surface,
             elevation: 0.5,
             scrolledUnderElevation: 0,
-            leading: const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: CircleAvatar(
-                backgroundColor: AppColors.surfaceLight,
-                child: Icon(Icons.person_outline, color: AppColors.primaryDark),
-              ),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_forward_ios, color: AppColors.textPrimary, size: 18),
+              onPressed: () => Navigator.pop(context),
             ),
             title: const Text(
               'إظهار الطلبات المعلقة والمجمدة',
@@ -55,9 +52,12 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
             ),
             centerTitle: true,
             actions: [
-              IconButton(
-                icon: const Icon(Icons.arrow_forward_ios, color: AppColors.textPrimary, size: 18),
-                onPressed: () => Navigator.pop(context),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: CircleAvatar(
+                  backgroundColor: AppColors.surfaceLight,
+                  child: Icon(Icons.person_outline, color: AppColors.primaryDark),
+                ),
               ),
             ],
           ),
@@ -224,6 +224,14 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                                   _buildFilterChip('تجار ومتاجر', icon: Icons.storefront),
                                   const SizedBox(width: 8),
                                   _buildFilterChip('مقدمو خدمات', icon: Icons.handyman_outlined),
+                                  const SizedBox(width: 8),
+                                  _buildFilterChip('المشرفين', icon: Icons.supervisor_account_outlined),
+                                  const SizedBox(width: 8),
+                                  _buildFilterChip('المناديب', icon: Icons.local_shipping_outlined),
+                                  const SizedBox(width: 8),
+                                  _buildFilterChip('مستخدمين', icon: Icons.person_outline),
+                                  const SizedBox(width: 8),
+                                  _buildFilterChip('اعلانات', icon: Icons.campaign_outlined),
                                 ],
                               ),
                             ),
@@ -367,13 +375,15 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                   ),
                 ),
                 const Spacer(),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(req['title'], style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
-                    const SizedBox(height: 2),
-                    Text(req['subtitle'], style: const TextStyle(fontSize: 10, color: AppColors.textSecondary)),
-                  ],
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(req['title'], style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.textPrimary), textAlign: TextAlign.right),
+                      const SizedBox(height: 2),
+                      Text(req['subtitle'], style: const TextStyle(fontSize: 10, color: AppColors.textSecondary), textAlign: TextAlign.right),
+                    ],
+                  ),
                 ),
                 const SizedBox(width: 12),
                 Container(
@@ -398,13 +408,15 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(CurrencyFormatter.format(req['amount']), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
-                        const SizedBox(width: 4),
-                        const Text('ر.س', style: TextStyle(fontSize: 12, color: AppColors.textPrimary, fontWeight: FontWeight.bold)),
-                      ],
+                    Expanded(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Flexible(child: Text(CurrencyFormatter.format(req['amount']), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textPrimary), overflow: TextOverflow.ellipsis, maxLines: 1)),
+                          const SizedBox(width: 4),
+                          const Text('ر.س', style: TextStyle(fontSize: 12, color: AppColors.textPrimary, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
                     ),
                     Text(req['ibanError'] != null ? 'المبلغ المعلق للحوالة:' : 'المبلغ المحتجز للتجميد:', style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
                   ],
@@ -419,7 +431,7 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                       Text('خصم عمولة المنصة: ${CurrencyFormatter.format(req['feeAmount'])} ر.س', style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
                     
                     if (req['ibanError'] != null)
-                      Text('الآيبان المسجل: ${req['ibanError']}', style: const TextStyle(fontSize: 11, color: AppColors.textSecondary), textDirection: TextDirection.ltr)
+                      Expanded(child: Text('الآيبان المسجل: ${req['ibanError']}', style: const TextStyle(fontSize: 11, color: AppColors.textSecondary), textDirection: TextDirection.ltr, textAlign: TextAlign.right, overflow: TextOverflow.ellipsis))
                     else
                       Text('إجمالي المعاملة: ${CurrencyFormatter.format(req['grossAmount'])} ر.س', style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
                   ],

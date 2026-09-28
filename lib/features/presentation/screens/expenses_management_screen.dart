@@ -47,12 +47,9 @@ class _ExpensesManagementScreenState extends State<_ExpensesManagementScreenCont
           backgroundColor: AppColors.surface,
           elevation: 0.5,
           scrolledUnderElevation: 0,
-          leading: const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: CircleAvatar(
-              backgroundColor: AppColors.surfaceLight,
-              child: Icon(Icons.person_outline, color: AppColors.primaryDark),
-            ),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_forward_ios, color: AppColors.textPrimary, size: 18),
+            onPressed: () => Navigator.pop(context),
           ),
           title: const Text(
             'المصاريف والمدفوعات',
@@ -60,9 +57,12 @@ class _ExpensesManagementScreenState extends State<_ExpensesManagementScreenCont
           ),
           centerTitle: true,
           actions: [
-            IconButton(
-              icon: const Icon(Icons.arrow_forward_ios, color: AppColors.textPrimary, size: 18),
-              onPressed: () => Navigator.pop(context),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: CircleAvatar(
+                backgroundColor: AppColors.surfaceLight,
+                child: Icon(Icons.person_outline, color: AppColors.primaryDark),
+              ),
             ),
           ],
         ),
