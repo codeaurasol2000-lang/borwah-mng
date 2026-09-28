@@ -120,24 +120,6 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                       child: const Icon(Icons.search, color: Colors.black87, size: 20),
                     ),
                     const SizedBox(width: 8),
-                    Stack(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle, border: Border.all(color: Colors.grey.shade300)),
-                          child: const Icon(Icons.notifications_none, color: Colors.black87, size: 20),
-                        ),
-                        Positioned(
-                          right: 0,
-                          top: 0,
-                          child: Container(
-                            width: 10,
-                            height: 10,
-                            decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
-                          ),
-                        ),
-                      ],
-                    ),
                   ],
                 ),
               ],
@@ -193,12 +175,6 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                             const Text('ر.س', style: TextStyle(color: Colors.white70, fontSize: 14, fontWeight: FontWeight.bold)),
                           ],
                         ),
-                      ),
-                      const SizedBox(width: 10),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                        decoration: BoxDecoration(color: Colors.red.shade100, borderRadius: BorderRadius.circular(20)),
-                        child: Text('$_pendingCount طلبات قيد التدقيق', style: TextStyle(color: Colors.red.shade900, fontSize: 11, fontWeight: FontWeight.bold)),
                       ),
                     ],
                   ),

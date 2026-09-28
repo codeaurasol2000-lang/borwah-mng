@@ -1,14 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/di/injection_container.dart';
+import '../../../../core/utils/currency_formatter.dart';
+import '../controllers/bank_accounts/bank_accounts_cubit.dart';
+import '../controllers/bank_accounts/bank_accounts_state.dart';
 
-class ExpensesManagementScreen extends StatefulWidget {
+class ExpensesManagementScreen extends StatelessWidget {
   const ExpensesManagementScreen({super.key});
 
   @override
-  State<ExpensesManagementScreen> createState() => _ExpensesManagementScreenState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => BankAccountsCubit(getBankAccountsUseCase: sl())..loadBankAccounts(),
+      child: const _ExpensesManagementScreenContent(),
+    );
+  }
 }
 
-class _ExpensesManagementScreenState extends State<ExpensesManagementScreen> {
+class _ExpensesManagementScreenContent extends StatefulWidget {
+  const _ExpensesManagementScreenContent();
+
+  @override
+  State<_ExpensesManagementScreenContent> createState() => _ExpensesManagementScreenState();
+}
+
+class _ExpensesManagementScreenState extends State<_ExpensesManagementScreenContent> {
   final TextEditingController _amountController = TextEditingController(text: '14,500.00');
   final TextEditingController _reasonController = TextEditingController();
   String _selectedPaymentMethod = 'rajhi'; // Default selected
@@ -99,40 +116,42 @@ class _ExpensesManagementScreenState extends State<ExpensesManagementScreen> {
               _buildSectionCard(
                 icon: Icons.account_balance_wallet_outlined,
                 title: 'الحساب وقناة الدفع للخصم المباشر',
-                child: Column(
-                  children: [
-                    _buildPaymentOption(
-                      id: 'rajhi',
-                      title: 'مصرف الراجحي (الحساب التشغيلي الرئيسي)',
-                      subtitle: 'IBAN: SA44 8000 0001 2345 6789 0001',
-                      balanceLabel: 'الرصيد الدفتري الحالي:',
-                      balanceValue: '3,100,000.00 ر.س',
-                    ),
-                    const SizedBox(height: 10),
-                    _buildPaymentOption(
-                      id: 'visa',
-                      title: 'بطاقة فيزا للشركات البلاتينية',
-                      subtitle: 'تنتهي بـ 9842 • صالحة حتى 09/27',
-                      balanceLabel: 'الحد الائتماني المتاح:',
-                      balanceValue: '150,000.00 ر.س',
-                    ),
-                    const SizedBox(height: 10),
-                    _buildPaymentOption(
-                      id: 'stc',
-                      title: 'محفظة stc pay للأعمال',
-                      subtitle: 'رقم المحفظة الرقمية: 0509988112',
-                      balanceLabel: 'الرصيد اللحظي المتاح:',
-                      balanceValue: '120,000.00 ر.س',
-                    ),
-                    const SizedBox(height: 10),
-                    _buildPaymentOption(
-                      id: 'instapay',
-                      title: 'إنستاباي الإدارة المركزية',
-                      subtitle: 'العنوان الرقمي: barwah.cfo@instapay',
-                      balanceLabel: 'سقف التحويل اليومي المتبقي:',
-                      balanceValue: '78,500.00 ر.س',
-                    ),
-                  ],
+                child: BlocBuilder<BankAccountsCubit, BankAccountsState>(
+                  builder: (context, state) {
+                    if (state is BankAccountsLoading) {
+                      return const Center(child: CircularProgressIndicator(color: AppColors.primaryDark));
+                    } else if (state is BankAccountsLoaded) {
+                      final accounts = state.accounts;
+                      if (accounts.isEmpty) {
+                        return const Center(child: Text('لا توجد حسابات متاحة'));
+                      }
+                      
+                      // Select first by default if not set
+                      if (!accounts.any((a) => a.id == _selectedPaymentMethod)) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          setState(() {
+                            _selectedPaymentMethod = accounts.first.id;
+                          });
+                        });
+                      }
+
+                      return Column(
+                        children: accounts.map((account) {
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: _buildPaymentOption(
+                              id: account.id,
+                              title: account.bankName,
+                              subtitle: account.iban,
+                              balanceLabel: account.accountType.contains('ضمان') ? 'رصيد حساب الضمان:' : 'الرصيد الدفتري الحالي:',
+                              balanceValue: '${CurrencyFormatter.format(account.balance)} ر.س',
+                            ),
+                          );
+                        }).toList(),
+                      );
+                    }
+                    return const SizedBox();
+                  },
                 ),
               ),
               const SizedBox(height: 16),
