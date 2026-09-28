@@ -184,14 +184,17 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Expanded(child: Text(CurrencyFormatter.format(_pendingAmount), style: const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold, height: 1), maxLines: 1, overflow: TextOverflow.ellipsis)),
-                          const SizedBox(width: 4),
-                          const Text('ر.س', style: TextStyle(color: Colors.white70, fontSize: 14, fontWeight: FontWeight.bold)),
-                        ],
+                      Expanded(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Flexible(child: Text(CurrencyFormatter.format(_pendingAmount), style: const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold, height: 1), maxLines: 1, overflow: TextOverflow.ellipsis)),
+                            const SizedBox(width: 4),
+                            const Text('ر.س', style: TextStyle(color: Colors.white70, fontSize: 14, fontWeight: FontWeight.bold)),
+                          ],
+                        ),
                       ),
+                      const SizedBox(width: 10),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                         decoration: BoxDecoration(color: Colors.red.shade100, borderRadius: BorderRadius.circular(20)),

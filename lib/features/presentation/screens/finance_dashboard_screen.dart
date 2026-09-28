@@ -9,6 +9,7 @@ import 'bank_accounts_screen.dart';
 import 'merchant_withdrawals_screen.dart';
 import 'supervisor_withdrawals_screen.dart';
 import 'subscriptions_screen.dart';
+import 'expenses_management_screen.dart';
 
 class FinanceDashboardScreen extends StatefulWidget {
   const FinanceDashboardScreen({super.key});
@@ -618,7 +619,12 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                                   Icons.add_circle_outline,
                                   size: 16,
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (_) => const ExpensesManagementScreen()),
+                                  );
+                                },
                                 label: const Text(
                                   'تسجيل بيان دفع جديد / إدارة المصاريف',
                                   style: TextStyle(
@@ -1222,9 +1228,9 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
           // =========================
           // Bottom Navigation
           // =========================
-          bottomNavigationBar: AnimatedContainer(
+          bottomNavigationBar: AnimatedSlide(
             duration: const Duration(milliseconds: 300),
-            height: _isNavVisible ? 70 : 0,
+            offset: _isNavVisible ? Offset.zero : const Offset(0, 1),
             child: BottomNavigationBar(
               backgroundColor: Colors.white,
               type: BottomNavigationBarType.fixed,
