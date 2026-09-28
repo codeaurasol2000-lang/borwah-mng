@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
+import 'edit_matrix_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -495,7 +496,12 @@ class ProfileScreen extends StatelessWidget {
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                         ),
                         icon: const Icon(Icons.edit, size: 14),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => const EditMatrixScreen()),
+                          );
+                        },
                         label: const Text('تعديل\nالمصفوفة', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, height: 1.2), textAlign: TextAlign.center),
                       ),
                     ),
