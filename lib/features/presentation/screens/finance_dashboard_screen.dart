@@ -11,6 +11,7 @@ import 'supervisor_withdrawals_screen.dart';
 import 'subscriptions_screen.dart';
 import 'expenses_management_screen.dart';
 import 'frozen_requests_screen.dart';
+import 'profile_screen.dart';
 
 class FinanceDashboardScreen extends StatefulWidget {
   const FinanceDashboardScreen({super.key});
@@ -65,13 +66,21 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
           appBar: _isNavVisible
               ? AppBar(
             titleSpacing: 0,
-            leading: const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: CircleAvatar(
-                backgroundColor: AppColors.surfaceLight,
-                child: Icon(
-                  Icons.person_outline,
-                  color: AppColors.primaryDark,
+            leading: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const ProfileScreen()),
+                  );
+                },
+                child: const CircleAvatar(
+                  backgroundColor: AppColors.surfaceLight,
+                  child: Icon(
+                    Icons.person_outline,
+                    color: AppColors.primaryDark,
+                  ),
                 ),
               ),
             ),

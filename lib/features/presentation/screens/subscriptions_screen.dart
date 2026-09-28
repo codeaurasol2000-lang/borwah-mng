@@ -529,23 +529,11 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Row(
-                            children: [
-                              Flexible(
-                                child: Text(
-                                  sub.providerName,
-                                  style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 14, color: Colors.black87),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                    Text(
+                      sub.providerName,
+                      style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 14, color: Colors.black87),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
                     Row(
@@ -611,7 +599,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                         children: [
                           if (sub.type == SubscriptionType.merchant) const Icon(Icons.stars, color: Colors.blue, size: 14),
                           if (sub.type == SubscriptionType.merchant) const SizedBox(width: 4),
-                          Expanded(
+                          Flexible(
                             child: Text(sub.targetPackageName, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black87), maxLines: 1, overflow: TextOverflow.ellipsis),
                           ),
                         ],
