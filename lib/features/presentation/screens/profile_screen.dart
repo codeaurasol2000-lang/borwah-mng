@@ -15,12 +15,9 @@ class ProfileScreen extends StatelessWidget {
           backgroundColor: AppColors.backgroundLight,
           elevation: 0,
           scrolledUnderElevation: 0,
-          leading: const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: CircleAvatar(
-              backgroundColor: AppColors.surfaceLight,
-              child: Icon(Icons.person_outline, color: AppColors.primaryDark),
-            ),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_forward_ios, color: AppColors.textPrimary, size: 18),
+            onPressed: () => Navigator.pop(context),
           ),
           title: const Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -51,9 +48,12 @@ class ProfileScreen extends StatelessWidget {
           ),
           centerTitle: true,
           actions: [
-            IconButton(
-              icon: const Icon(Icons.arrow_forward_ios, color: AppColors.textPrimary, size: 18),
-              onPressed: () => Navigator.pop(context),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: CircleAvatar(
+                backgroundColor: AppColors.primaryExtraDark,
+                child: Icon(Icons.person_outline, color: Colors.white, size: 18),
+              ),
             ),
           ],
         ),
@@ -138,7 +138,7 @@ class ProfileScreen extends StatelessWidget {
                                       child: const Text('#CFO-01', style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold), textDirection: TextDirection.ltr),
                                     ),
                                     const SizedBox(width: 8),
-                                    const Text('أ. سليمان الراجحي', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                                    const Flexible(child: Text('أ. سليمان الراجحي', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textPrimary), maxLines: 1, overflow: TextOverflow.ellipsis)),
                                   ],
                                 ),
                                 const SizedBox(height: 6),
@@ -152,19 +152,35 @@ class ProfileScreen extends StatelessWidget {
                           Stack(
                             alignment: Alignment.bottomRight,
                             children: [
-                              Container(
-                                width: 60,
-                                height: 60,
-                                decoration: BoxDecoration(
-                                  color: AppColors.surfaceLight,
-                                  borderRadius: BorderRadius.circular(12),
-                                  // In real app, put NetworkImage or AssetImage here.
-                                  // For mock, we just use a generic icon if no image provided
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(12),
-                                  // Mock image placeholder
-                                  child: const Icon(Icons.account_circle, size: 60, color: Colors.grey),
+                              GestureDetector(
+                                onTap: () {
+                                  // Upload profile image action
+                                },
+                                child: Container(
+                                  width: 60,
+                                  height: 60,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.surfaceLight,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(12),
+                                        child: const Icon(Icons.account_circle, size: 60, color: Colors.grey),
+                                      ),
+                                      Container(
+                                        width: double.infinity,
+                                        height: double.infinity,
+                                        decoration: BoxDecoration(
+                                          color: Colors.black.withValues(alpha: 0.3),
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                        child: const Icon(Icons.camera_alt, color: Colors.white, size: 24),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                               Positioned(
@@ -197,8 +213,9 @@ class ProfileScreen extends StatelessWidget {
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text('صلاحيات الاعتماد السيادي والمصادقة البنكية', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                              const Expanded(child: Text('صلاحيات الاعتماد السيادي والمصادقة البنكية', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.textPrimary), textAlign: TextAlign.right)),
                               const SizedBox(width: 8),
                               Icon(Icons.account_balance, size: 16, color: Colors.blue.shade700),
                             ],
@@ -771,13 +788,15 @@ class ProfileScreen extends StatelessWidget {
                   decoration: BoxDecoration(color: Colors.blue.shade50, borderRadius: BorderRadius.circular(12)),
                   child: Text(badgeText, style: TextStyle(fontSize: 9, color: Colors.blue.shade700, fontWeight: FontWeight.bold)),
                 ),
-              const Spacer(),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.textPrimary), textAlign: TextAlign.right),
-                  const SizedBox(height: 4),
-                ],
+              const SizedBox(width: 8),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(title, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.textPrimary), textAlign: TextAlign.right),
+                    const SizedBox(height: 4),
+                  ],
+                ),
               ),
               const SizedBox(width: 12),
               Container(
