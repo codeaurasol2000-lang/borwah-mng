@@ -10,6 +10,7 @@ import 'merchant_withdrawals_screen.dart';
 import 'supervisor_withdrawals_screen.dart';
 import 'subscriptions_screen.dart';
 import 'expenses_management_screen.dart';
+import 'frozen_requests_screen.dart';
 
 class FinanceDashboardScreen extends StatefulWidget {
   const FinanceDashboardScreen({super.key});
@@ -664,125 +665,113 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
 
                       const SizedBox(height: 10),
 
-                      Container(
-                        padding: const EdgeInsets.all(14),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFF8FAFC),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: AppColors.cardBorder,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => const FrozenRequestsScreen()),
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF8FAFC),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: AppColors.cardBorder,
+                            ),
                           ),
-                        ),
-                        child: Column(
-                          crossAxisAlignment:
-                          CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              crossAxisAlignment:
-                              CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius:
-                                    BorderRadius.circular(10),
-                                    border: Border.all(
-                                      color: Colors.grey.shade200,
-                                    ),
-                                  ),
-                                  child: const Icon(
-                                    Icons.gavel,
-                                    color: Colors.grey,
-                                    size: 20,
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                    CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          const Icon(
-                                            Icons.circle,
-                                            size: 6,
-                                            color: AppColors.danger,
-                                          ),
-                                          const SizedBox(width: 4),
-                                          const Text(
-                                            'أرصدة معلقة تحت التدقيق الرقابي',
-                                            style: TextStyle(
-                                              fontSize: 11,
-                                              color: Colors.black87,
-                                            ),
-                                          ),
-                                        ],
+                          child: Column(
+                            crossAxisAlignment:
+                            CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius:
+                                      BorderRadius.circular(10),
+                                      border: Border.all(
+                                        color: Colors.grey.shade200,
                                       ),
-                                      const SizedBox(height: 4),
-                                      Row(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.end,
-                                        children: [
-                                          const Text(
-                                            '25,400',
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black87,
-                                            ),
-                                          ),
-                                          const SizedBox(width: 4),
-                                          const Text(
-                                            'ر.س',
-                                            style: TextStyle(
-                                              fontSize: 10,
-                                              color: Colors.grey,
-                                              fontWeight:
-                                              FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    border: Border.all(
-                                      color: Colors.grey.shade300,
                                     ),
-                                    borderRadius:
-                                    BorderRadius.circular(6),
-                                  ),
-                                  child: const Text(
-                                    '3 محافظ',
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      color: Colors.black87,
+                                    child: const Icon(
+                                      Icons.gavel,
+                                      color: Colors.grey,
+                                      size: 20,
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-
-                            const SizedBox(height: 10),
-
-                            Text(
-                              'محافظ مجمدة احترازياً بطلب الإدارة العامة والمشرفين لوجود بلاغات ونزاعات مفتوحة.',
-                              style: TextStyle(
-                                fontSize: 10,
-                                color: Colors.grey.shade600,
-                                height: 1.4,
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            const Icon(
+                                              Icons.circle,
+                                              size: 6,
+                                              color: AppColors.danger,
+                                            ),
+                                            const SizedBox(width: 4),
+                                            const Text(
+                                              'أرصدة معلقة تحت التدقيق الرقابي',
+                                              style: TextStyle(
+                                                fontSize: 11,
+                                                color: Colors.black87,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Row(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                          children: [
+                                            const Text(
+                                              '25,400',
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black87,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 4),
+                                            const Text(
+                                              'ر.س',
+                                              style: TextStyle(
+                                                fontSize: 10,
+                                                color: Colors.grey,
+                                                fontWeight:
+                                                FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const Icon(Icons.arrow_forward_ios, size: 12, color: Colors.grey),
+                                ],
                               ),
-                            ),
-                          ],
+
+                              const SizedBox(height: 10),
+
+                              Text(
+                                'محافظ مجمدة احترازياً بطلب الإدارة العامة والمشرفين لوجود بلاغات ونزاعات مفتوحة.',
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: Colors.grey.shade600,
+                                  height: 1.4,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
 
