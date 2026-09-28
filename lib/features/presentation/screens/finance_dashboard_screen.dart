@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/di/injection_container.dart';
@@ -30,15 +32,18 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
     super.initState();
 
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels > 100 && _isNavVisible) {
-        setState(() {
-          _isNavVisible = false;
-        });
-      } else if (_scrollController.position.pixels <= 100 &&
-          !_isNavVisible) {
-        setState(() {
-          _isNavVisible = true;
-        });
+      if (_scrollController.position.userScrollDirection == ScrollDirection.reverse) {
+        if (_isNavVisible) {
+          setState(() {
+            _isNavVisible = false;
+          });
+        }
+      } else if (_scrollController.position.userScrollDirection == ScrollDirection.forward) {
+        if (!_isNavVisible) {
+          setState(() {
+            _isNavVisible = true;
+          });
+        }
       }
     });
   }
