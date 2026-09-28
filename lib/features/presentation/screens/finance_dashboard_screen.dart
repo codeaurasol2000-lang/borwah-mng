@@ -1055,7 +1055,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                                   SizedBox(width: 10),
                                   Expanded(
                                     child: Text(
-                                      'التسوية المصرفية التلقائية عبر نظام سداد\n& SARIE:',
+                                      'التسوية المصرفية  عبر نظام سداد\n& SARIE:',
                                       style: TextStyle(
                                         fontSize: 11,
                                         color: Colors.black87,
