@@ -135,29 +135,32 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
           // =========================
           // Body
           // =========================
-          body: BlocBuilder<FinanceDashboardCubit, FinanceDashboardState>(
-            builder: (context, state) {
-              if (state is FinanceDashboardLoading) {
-                return const Center(
-                  child: CircularProgressIndicator(
-                    color: AppColors.primaryDark,
-                  ),
-                );
-              }
+          body: Stack(
+            children: [
+              Positioned.fill(
+                child: BlocBuilder<FinanceDashboardCubit, FinanceDashboardState>(
+                  builder: (context, state) {
+                    if (state is FinanceDashboardLoading) {
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: AppColors.primaryDark,
+                        ),
+                      );
+                    }
 
-              if (state is FinanceDashboardLoaded) {
-                final data = state.summary;
+                    if (state is FinanceDashboardLoaded) {
+                      final data = state.summary;
 
-                return SingleChildScrollView(
-                  controller: _scrollController,
-                  physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 14,
-                    vertical: 12,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                      return SingleChildScrollView(
+                        controller: _scrollController,
+                        physics: const BouncingScrollPhysics(),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 14,
+                          vertical: 12,
+                        ).copyWith(bottom: 90), // Reserved space for floating bottom bar
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
                       // =========================
                       // 1. الجلسة المالية المباشرة والتاريخ
                       // =========================
@@ -1227,11 +1230,14 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
               return const SizedBox();
             },
           ),
-
-          // =========================
-          // Bottom Navigation
-          // =========================
-          bottomNavigationBar: AnimatedSlide(
+        ),
+        
+        // =========================
+        // Floating Bottom Navigation
+        // =========================
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: AnimatedSlide(
             duration: const Duration(milliseconds: 300),
             offset: _isNavVisible ? Offset.zero : const Offset(0, 1),
             child: BottomNavigationBar(
@@ -1249,7 +1255,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                 fontSize: 10,
                 color: AppColors.textSecondary,
               ),
-              elevation: 10,
+              elevation: 16,
               currentIndex: 4,
               items: const [
                 BottomNavigationBarItem(
@@ -1282,6 +1288,8 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
             ),
           ),
         ),
+        ],
+      ),
       ),
     );
   }

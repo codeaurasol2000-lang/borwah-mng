@@ -13,13 +13,32 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
   final TextEditingController _reasonController = TextEditingController(
     text: 'تعديل دوري لمواكبة تحديثات رسوم بوابات الدفع البنكية وتوسعة شبكة التوصيل الميداني',
   );
+  
+  final TextEditingController _salesPercentageController = TextEditingController(text: '4.50');
+  final TextEditingController _settlementFeeController = TextEditingController(text: '1.25');
+  final TextEditingController _deliveryCommissionController = TextEditingController(text: '7.00');
+  final TextEditingController _deliveryFixedController = TextEditingController(text: '3.00');
+
   bool _addFixedFee = true;
   bool _notifyAll = true;
   String _deliveryCommissionType = 'percentage'; // 'percentage' or 'fixed'
 
   @override
+  void initState() {
+    super.initState();
+    _salesPercentageController.addListener(() => setState(() {}));
+    _settlementFeeController.addListener(() => setState(() {}));
+    _deliveryCommissionController.addListener(() => setState(() {}));
+    _deliveryFixedController.addListener(() => setState(() {}));
+  }
+
+  @override
   void dispose() {
     _reasonController.dispose();
+    _salesPercentageController.dispose();
+    _settlementFeeController.dispose();
+    _deliveryCommissionController.dispose();
+    _deliveryFixedController.dispose();
     super.dispose();
   }
 
@@ -128,9 +147,9 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                       ],
                     ),
                     const SizedBox(height: 4),
-                    const Align(
+                    Align(
                       alignment: Alignment.centerLeft,
-                      child: Text('4.50%', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                      child: Text('${_salesPercentageController.text}%', style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
                     ),
                     const SizedBox(height: 12),
                     Container(
@@ -142,13 +161,26 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                width: 100,
+                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
                                 decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8)),
-                                child: const Row(
+                                child: Row(
                                   children: [
-                                    Text('%', style: TextStyle(color: AppColors.primaryDark, fontWeight: FontWeight.bold)),
-                                    SizedBox(width: 12),
-                                    Text('4.50', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                                    const Text('%', style: TextStyle(color: AppColors.primaryDark, fontWeight: FontWeight.bold)),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: TextField(
+                                        controller: _salesPercentageController,
+                                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                        textAlign: TextAlign.left,
+                                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                                        decoration: const InputDecoration(
+                                          border: InputBorder.none,
+                                          isDense: true,
+                                          contentPadding: EdgeInsets.zero,
+                                        ),
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -196,17 +228,34 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          width: 80,
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(color: AppColors.surfaceLight, borderRadius: BorderRadius.circular(6)),
-                          child: const Text('1.25 %', style: TextStyle(fontSize: 10, color: AppColors.primaryDark, fontWeight: FontWeight.bold), textDirection: TextDirection.ltr),
+                          child: Row(
+                            children: [
+                              const Text('% ', style: TextStyle(fontSize: 10, color: AppColors.primaryDark, fontWeight: FontWeight.bold)),
+                              Expanded(
+                                child: TextField(
+                                  controller: _settlementFeeController,
+                                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                  style: const TextStyle(fontSize: 10, color: AppColors.primaryDark, fontWeight: FontWeight.bold),
+                                  decoration: const InputDecoration(
+                                    border: InputBorder.none,
+                                    isDense: true,
+                                    contentPadding: EdgeInsets.zero,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                         const Text('رسم التسوية الحالية', style: TextStyle(fontSize: 11, color: AppColors.textSecondary)),
                       ],
                     ),
                     const SizedBox(height: 4),
-                    const Align(
+                    Align(
                       alignment: Alignment.centerLeft,
-                      child: Text('1.25%', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                      child: Text('${_settlementFeeController.text}%', style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
                     ),
                     const SizedBox(height: 12),
                     Container(
@@ -286,9 +335,9 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                       ],
                     ),
                     const SizedBox(height: 4),
-                    const Align(
+                    Align(
                       alignment: Alignment.centerLeft,
-                      child: Text('7.00%', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                      child: Text('${_deliveryCommissionType == 'percentage' ? _deliveryCommissionController.text + '%' : _deliveryFixedController.text + ' ر.س'}', style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
                     ),
                     const SizedBox(height: 12),
                     
@@ -306,9 +355,26 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                              width: 80,
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
                               decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(6), border: Border.all(color: Colors.grey.shade300)),
-                              child: const Text('7.00%', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: TextField(
+                                      controller: _deliveryCommissionController,
+                                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                                      decoration: const InputDecoration(
+                                        border: InputBorder.none,
+                                        isDense: true,
+                                        contentPadding: EdgeInsets.zero,
+                                      ),
+                                    ),
+                                  ),
+                                  const Text('%', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                                ],
+                              ),
                             ),
                             Row(
                               children: [
@@ -334,9 +400,26 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                              width: 80,
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
                               decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(6), border: Border.all(color: Colors.grey.shade300)),
-                              child: const Text('3.00 ر.س', style: TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: TextField(
+                                      controller: _deliveryFixedController,
+                                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                      style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                                      decoration: const InputDecoration(
+                                        border: InputBorder.none,
+                                        isDense: true,
+                                        contentPadding: EdgeInsets.zero,
+                                      ),
+                                    ),
+                                  ),
+                                  const Text('ر.س', style: TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                                ],
+                              ),
                             ),
                             Row(
                               children: [

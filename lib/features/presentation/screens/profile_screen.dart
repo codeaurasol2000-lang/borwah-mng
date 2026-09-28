@@ -12,6 +12,7 @@ class ProfileScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: AppColors.backgroundLight,
         appBar: AppBar(
+          toolbarHeight: 48,
           backgroundColor: AppColors.backgroundLight,
           elevation: 0,
           scrolledUnderElevation: 0,
@@ -231,11 +232,11 @@ class ProfileScreen extends StatelessWidget {
                       child: Row(
                         children: [
                           Expanded(
-                            child: _buildContactBox('الهاتف المعتمد', '+201014189187', Icons.phone_android),
+                            child: _buildContactBox('الهاتف المعتمد', '+201014189187', Icons.phone_android, false),
                           ),
                           const SizedBox(width: 12),
                           Expanded(
-                            child: _buildContactBox('البريد المؤسسي', 's.alrajhi@almazouri.sa', Icons.email_outlined),
+                            child: _buildContactBox('البريد المؤسسي', 's.alrajhi@almazouri.sa', Icons.email_outlined, true),
                           ),
                         ],
                       ),
@@ -741,29 +742,8 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildContactBox(String title, String value, IconData icon) {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: AppColors.surfaceLight,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(title, style: const TextStyle(fontSize: 9, color: AppColors.textSecondary)),
-              const SizedBox(height: 2),
-              Text(value, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.textPrimary), textDirection: TextDirection.ltr),
-            ],
-          ),
-          const SizedBox(width: 8),
-          Icon(icon, size: 18, color: AppColors.textPrimary),
-        ],
-      ),
-    );
+  Widget _buildContactBox(String title, String value, IconData icon, bool obscure) {
+    return _ObscureContactBox(title: title, value: value, icon: icon, obscureInit: obscure);
   }
 
   Widget _buildSettingCard({required String title, required String subtitle, required IconData icon, String? badgeText, required Widget content}) {
@@ -882,3 +862,4 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 }
+class _ObscureContactBox extends StatefulWidget { final String title; final String value; final IconData icon; final bool obscureInit; const _ObscureContactBox({required this.title, required this.value, required this.icon, required this.obscureInit}); @override State<_ObscureContactBox> createState() => _ObscureContactBoxState(); } class _ObscureContactBoxState extends State<_ObscureContactBox> { late bool _isObscured; @override void initState() { super.initState(); _isObscured = widget.obscureInit; } @override Widget build(BuildContext context) { String displayValue = widget.value; if (_isObscured && widget.value.contains('@')) { final parts = widget.value.split('@'); if (parts[0].length > 2) { displayValue = '${parts[0].substring(0, 2)}***@${parts[1]}'; } else { displayValue = '***@${parts[1]}'; } } return GestureDetector( onTap: () { if (widget.obscureInit) { setState(() { _isObscured = !_isObscured; }); } }, child: Container( padding: const EdgeInsets.all(10), decoration: BoxDecoration( color: AppColors.surfaceLight, borderRadius: BorderRadius.circular(10), ), child: Row( mainAxisAlignment: MainAxisAlignment.end, children: [ Expanded( child: Column( crossAxisAlignment: CrossAxisAlignment.end, children: [ Text(widget.title, style: const TextStyle(fontSize: 9, color: AppColors.textSecondary)), const SizedBox(height: 2), FittedBox( fit: BoxFit.scaleDown, alignment: Alignment.centerRight, child: Text( displayValue, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.textPrimary), textDirection: TextDirection.ltr, ), ), ], ), ), const SizedBox(width: 8), Icon(widget.icon, size: 18, color: AppColors.textPrimary), ], ), ), ); } }
