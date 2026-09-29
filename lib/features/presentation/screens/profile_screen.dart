@@ -350,23 +350,23 @@ class ProfileScreen extends StatelessWidget {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      const Text('رصيد معلق رقابيا', style: TextStyle(color: Colors.white70, fontSize: 10)),
+                                      Text(l10n.pendingRegulatoryBalance, style: const TextStyle(color: Colors.white70, fontSize: 10)),
                                       const SizedBox(width: 4),
                                       Icon(Icons.circle, size: 6, color: Colors.blueGrey.shade400),
                                     ],
                                   ),
                                   const SizedBox(height: 4),
-                                  const Row(
+                                  Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       Text('16,500.00', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
                                       SizedBox(width: 2),
-                                      Text('ر.س', style: TextStyle(color: Colors.white70, fontSize: 9)),
+                                      Text(l10n.currencySar, style: const TextStyle(color: Colors.white70, fontSize: 9)),
                                     ],
                                   ),
                                   const SizedBox(height: 4),
-                                  const Text('بانتظار الإقفال الربع سنوي', style: TextStyle(color: Colors.white54, fontSize: 9)),
+                                  Text(l10n.awaitingQuarterlyClose, style: const TextStyle(color: Colors.white54, fontSize: 9)),
                                 ],
                               ),
                             ),
@@ -385,23 +385,23 @@ class ProfileScreen extends StatelessWidget {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      const Text('جاهز للصرف الفوري', style: TextStyle(color: Colors.white70, fontSize: 10)),
+                                      Text(l10n.readyForInstantDisbursement, style: const TextStyle(color: Colors.white70, fontSize: 10)),
                                       const SizedBox(width: 4),
                                       Icon(Icons.circle, size: 6, color: Colors.blue.shade200),
                                     ],
                                   ),
                                   const SizedBox(height: 4),
-                                  const Row(
+                                  Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       Text('52,000.00', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
                                       SizedBox(width: 2),
-                                      Text('ر.س', style: TextStyle(color: Colors.white70, fontSize: 9)),
+                                      Text(l10n.currencySar, style: const TextStyle(color: Colors.white70, fontSize: 9)),
                                     ],
                                   ),
                                   const SizedBox(height: 4),
-                                  const Text('معتمد دون شروط', style: TextStyle(color: Colors.white54, fontSize: 9)),
+                                  Text(l10n.approvedWithoutConditions, style: const TextStyle(color: Colors.white54, fontSize: 9)),
                                 ],
                               ),
                             ),
@@ -421,10 +421,10 @@ class ProfileScreen extends StatelessWidget {
                         children: [
                           const Icon(Icons.remove_red_eye_outlined, color: Colors.white70, size: 20),
                           const Spacer(),
-                          const Column(
+                          Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              Text('الحساب المصفي المعتمد للصرف', style: TextStyle(color: Colors.white60, fontSize: 9)),
+                              Text(l10n.approvedPayoutAccount, style: const TextStyle(color: Colors.white60, fontSize: 9)),
                               Text('SA44 8000 0001 **** 3456', style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.2), textDirection: TextDirection.rtl),
                             ],
                           ),
@@ -459,7 +459,7 @@ class ProfileScreen extends StatelessWidget {
                               onPressed: () {
                                 showWithdrawBottomSheet(context);
                               },
-                              label: const Text('طلب سحب الارباح من المالك', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                              label: Text(l10n.requestOwnerProfitWithdrawal, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
                             ),
                           ),
                           const SizedBox(height: 8),
@@ -478,7 +478,7 @@ class ProfileScreen extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(builder: (_) => const BankAccountsScreen()),
                               ),
-                              label: const Text('تعديل معلومات السحب', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                              label: Text(l10n.editWithdrawalInformation, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
                             ),
                           ),
                         ],
@@ -491,15 +491,15 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(height: 24),
 
               // 3. Section Title
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('مقتصرة على CFO', style: TextStyle(fontSize: 10, color: AppColors.textSecondary)),
+                  Text(l10n.cfoExclusive, style: const TextStyle(fontSize: 10, color: AppColors.textSecondary)),
                   Row(
                     children: [
-                      Text('التحكم والإجراءات السيادية', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
-                      SizedBox(width: 8),
-                      Icon(Icons.tune, color: AppColors.primaryDark, size: 18),
+                      Text(l10n.sovereignControls, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                      const SizedBox(width: 8),
+                      const Icon(Icons.tune, color: AppColors.primaryDark, size: 18),
                     ],
                   ),
                 ],
@@ -508,10 +508,10 @@ class ProfileScreen extends StatelessWidget {
 
               // 4. Matrix Settings
               _buildSettingCard(
-                title: 'مصفوفة الرسوم\nوالعمولات العامة',
-                subtitle: 'ضبط النسب المئوية للمنصة، اقتطاعات بوابات الدفع الإلكترونية، وتعديل تسعير العمليات التعاقدية.',
+                title: l10n.feesAndCommissionsMatrix,
+                subtitle: l10n.feesAndCommissionsMatrixDesc,
                 icon: Icons.account_tree_outlined,
-                badgeText: 'صلاحية حصرية',
+                badgeText: l10n.exclusivePermission,
                 content: Row(
                   children: [
                     Expanded(
@@ -529,7 +529,7 @@ class ProfileScreen extends StatelessWidget {
                             MaterialPageRoute(builder: (_) => const EditMatrixScreen()),
                           );
                         },
-                        label: const Text('تعديل\nالمصفوفة', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, height: 1.2), textAlign: TextAlign.center),
+                        label: Text(l10n.editMatrix, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, height: 1.2), textAlign: TextAlign.center),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -537,7 +537,7 @@ class ProfileScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          const Text('رسوم التسوية\nالسريعة', style: TextStyle(fontSize: 9, color: AppColors.textSecondary, height: 1.2), textAlign: TextAlign.right),
+                          Text(l10n.fastSettlementFees, style: const TextStyle(fontSize: 9, color: AppColors.textSecondary, height: 1.2), textAlign: TextAlign.right),
                           const SizedBox(height: 4),
                           Text('1.25%', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blue.shade700)),
                         ],
@@ -548,7 +548,7 @@ class ProfileScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          const Text('العمولة الأساسية\nالحالية', style: TextStyle(fontSize: 9, color: AppColors.textSecondary, height: 1.2), textAlign: TextAlign.right),
+                          Text(l10n.currentBaseCommission, style: const TextStyle(fontSize: 9, color: AppColors.textSecondary, height: 1.2), textAlign: TextAlign.right),
                           const SizedBox(height: 4),
                           const Text('4.50%', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
                         ],
@@ -561,8 +561,8 @@ class ProfileScreen extends StatelessWidget {
 
               // 5. Reports Card
               _buildSettingCard(
-                title: 'كشف المدفوعات\nوالإيرادات الشامل',
-                subtitle: 'توليد كشوف التدفقات النقدية، تقارير الضريبة العامة المضافة، وحزم التسويات المصرفية المجمعة.',
+                title: l10n.comprehensivePaymentsReports,
+                subtitle: l10n.comprehensivePaymentsReportsDesc,
                 icon: Icons.bar_chart_outlined,
                 content: Row(
                   children: [
@@ -577,7 +577,7 @@ class ProfileScreen extends StatelessWidget {
                         ),
                         icon: const Icon(Icons.grid_on_outlined, size: 16),
                         onPressed: () {},
-                        label: const Text('تصدير Excel تفصيلي', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                        label: Text(l10n.exportDetailedExcel, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -592,7 +592,7 @@ class ProfileScreen extends StatelessWidget {
                         ),
                         icon: const Icon(Icons.picture_as_pdf_outlined, size: 16),
                         onPressed: () {},
-                        label: const Text('تصدير PDF معتمد', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                        label: Text(l10n.exportApprovedPdf, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
                       ),
                     ),
                   ],
@@ -610,13 +610,13 @@ class ProfileScreen extends StatelessWidget {
                       color: AppColors.surfaceLight,
                       borderRadius: BorderRadius.circular(6),
                     ),
-                    child: const Text('مباشر • موثق', style: TextStyle(fontSize: 9, color: AppColors.textSecondary)),
+                    child: Text(l10n.liveDocumented, style: const TextStyle(fontSize: 9, color: AppColors.textSecondary)),
                   ),
-                  const Row(
+                  Row(
                     children: [
-                      Text('سجل الرقابة وحركات المدير المالي', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
-                      SizedBox(width: 8),
-                      Icon(Icons.history, color: AppColors.primaryDark, size: 18),
+                      Text(l10n.auditActivityLog, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                      const SizedBox(width: 8),
+                      const Icon(Icons.history, color: AppColors.primaryDark, size: 18),
                     ],
                   ),
                 ],
@@ -625,23 +625,23 @@ class ProfileScreen extends StatelessWidget {
 
               // 7. Timeline List
               _buildTimelineItem(
-                title: 'مصادقة صرف تسوية نزاع مالك',
-                time: 'اليوم 11:00 ص',
-                description: 'اعتماد صرف تسوية النزاع #CMP-1035 بقيمة\n1,200.00 ر.س للعميل د. طارق العمري.',
+                title: l10n.ownerDisputeSettlementApproval,
+                time: l10n.todayAtEleven,
+                description: l10n.approveDisputeSettlement,
                 icon: Icons.verified_user_outlined,
                 iconColor: AppColors.primaryDark,
                 bgColor: Colors.blue.shade50,
                 bottomWidget: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    const Text('المرجع: #SIG-9082', style: TextStyle(fontSize: 9, color: AppColors.textSecondary)),
+                    Text('${l10n.referenceCode} #SIG-9082', style: const TextStyle(fontSize: 9, color: AppColors.textSecondary)),
                     const SizedBox(width: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
                       decoration: BoxDecoration(color: AppColors.surfaceLight, borderRadius: BorderRadius.circular(4)),
                       child: Row(
                         children: [
-                          Text('توقيع رقمي ساري SHA-256', style: TextStyle(fontSize: 9, color: Colors.blue.shade700, fontWeight: FontWeight.bold)),
+                          Text(l10n.validDigitalSignature, style: TextStyle(fontSize: 9, color: Colors.blue.shade700, fontWeight: FontWeight.bold)),
                           const SizedBox(width: 4),
                           Icon(Icons.key, size: 10, color: Colors.blue.shade700),
                         ],
@@ -651,25 +651,25 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               _buildTimelineItem(
-                title: 'اعتماد سحب أرباح مجمعة (SARIE)',
-                time: 'اليوم 09:30 ص',
-                description: 'تحويل مستحقات دورية لـ 12 متجر معتمد عبر نظام\nالمدفوعات الفورية بإجمالي 142,500.00 ر.س.',
+                title: l10n.aggregatedProfitWithdrawal,
+                time: l10n.todayAtNineThirty,
+                description: l10n.periodicMerchantTransfers,
                 icon: Icons.payments_outlined,
                 iconColor: AppColors.textPrimary,
                 bgColor: AppColors.surfaceLight,
                 bottomWidget: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    const Text('مصرف الراجحي', style: TextStyle(fontSize: 9, color: AppColors.textSecondary)),
+                    Text(l10n.alRajhiBank, style: const TextStyle(fontSize: 9, color: AppColors.textSecondary)),
                     const SizedBox(width: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
                       decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(4)),
-                      child: const Row(
+                      child: Row(
                         children: [
-                          Text('منفذة بنكيا ومقيدة', style: TextStyle(fontSize: 9, color: AppColors.textPrimary)),
-                          SizedBox(width: 4),
-                          Icon(Icons.check_circle_outline, size: 10, color: AppColors.success),
+                          Text(l10n.executedAndPosted, style: const TextStyle(fontSize: 9, color: AppColors.textPrimary)),
+                          const SizedBox(width: 4),
+                          const Icon(Icons.check_circle_outline, size: 10, color: AppColors.success),
                         ],
                       ),
                     ),
@@ -677,25 +677,25 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               _buildTimelineItem(
-                title: 'تجميد احترازي لمحفظة متجر',
-                time: 'أمس 04:15 م',
-                description: 'إيقاف عمليات الصرف لمتجر مستلزمات حاسب (#TRD-304) لوجود شبهة نزاع مدفوعات متكرر.',
+                title: l10n.precautionaryWalletFreeze,
+                time: l10n.yesterdayAtFourFifteen,
+                description: l10n.suspendMerchantDisbursement,
                 icon: Icons.lock_outline,
                 iconColor: AppColors.danger,
                 bgColor: AppColors.dangerLight,
                 bottomWidget: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    const Text('إشعار التدقيق #771', style: TextStyle(fontSize: 9, color: AppColors.textSecondary)),
+                    Text(l10n.auditNoticeReference, style: const TextStyle(fontSize: 9, color: AppColors.textSecondary)),
                     const SizedBox(width: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
                       decoration: BoxDecoration(color: AppColors.dangerLight, border: Border.all(color: AppColors.dangerBorder), borderRadius: BorderRadius.circular(4)),
-                      child: const Row(
+                      child: Row(
                         children: [
-                          Text('قيد التحقيق والتدقيق', style: TextStyle(fontSize: 9, color: AppColors.danger, fontWeight: FontWeight.bold)),
-                          SizedBox(width: 4),
-                          Icon(Icons.gavel, size: 10, color: AppColors.danger),
+                          Text(l10n.underInvestigation, style: const TextStyle(fontSize: 9, color: AppColors.danger, fontWeight: FontWeight.bold)),
+                          const SizedBox(width: 4),
+                          const Icon(Icons.gavel, size: 10, color: AppColors.danger),
                         ],
                       ),
                     ),
@@ -703,9 +703,9 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               _buildTimelineItem(
-                title: 'تحديث عمولة قطاع الصيانة',
-                time: 'أمس 01:20 م',
-                description: 'تعديل نسبة العمولة المحصلة إلى 8.0% بموجب قرار\nمجلس الإدارة رقم BOD-44/B.',
+                title: l10n.maintenanceCommissionUpdate,
+                time: l10n.yesterdayAtOneTwenty,
+                description: l10n.commissionUpdatedByBoard,
                 icon: Icons.percent,
                 iconColor: Colors.blue.shade700,
                 bgColor: Colors.blue.shade50,
@@ -716,11 +716,11 @@ class ProfileScreen extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
                       decoration: BoxDecoration(color: AppColors.surfaceLight, borderRadius: BorderRadius.circular(4)),
-                      child: const Row(
+                      child: Row(
                         children: [
-                          Text('تحديث نظامي نافذ', style: TextStyle(fontSize: 9, color: AppColors.textPrimary)),
-                          SizedBox(width: 4),
-                          Icon(Icons.check_box_outlined, size: 10, color: AppColors.textPrimary),
+                          Text(l10n.activeSystemUpdate, style: const TextStyle(fontSize: 9, color: AppColors.textPrimary)),
+                          const SizedBox(width: 4),
+                          const Icon(Icons.check_box_outlined, size: 10, color: AppColors.textPrimary),
                         ],
                       ),
                     ),
@@ -740,7 +740,7 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   icon: const Icon(Icons.arrow_back, size: 18),
                   onPressed: () {},
-                  label: const Text('عرض سجل الرقابة والحركات الكامل (342 حركة موثقة)', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                  label: Text(l10n.viewFullAuditActivity, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
                 ),
               ),
               const SizedBox(height: 30),

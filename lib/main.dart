@@ -33,15 +33,25 @@ class BarwahApp extends StatelessWidget {
       ],
       child: AnimatedBuilder(
         animation: AppLocaleController.instance,
-        builder: (context, _) => MaterialApp(
-          onGenerateTitle: (context) => AppLocalizations.of(context)!.appName,
-          debugShowCheckedModeBanner: false,
-          locale: AppLocaleController.instance.locale,
-          supportedLocales: AppLocalizations.supportedLocales,
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          theme: AppTheme.lightTheme,
-          home: const LoginScreen(),
-        ),
+        builder: (context, child) {
+          final isArabic = AppLocalizations.of(context)?.localeName == 'ar';
+
+          return MaterialApp(
+            onGenerateTitle: (context) => AppLocalizations.of(context)!.appName,
+            debugShowCheckedModeBanner: false,
+            locale: AppLocaleController.instance.locale,
+            supportedLocales: AppLocalizations.supportedLocales,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            theme: AppTheme.lightTheme,
+            builder: (context, child) {
+              return Directionality(
+                textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+                child: child ?? const SizedBox.shrink(),
+              );
+            },
+            home: const LoginScreen(),
+          );
+        },
       ),
     );
   }

@@ -10,20 +10,31 @@ class AppLocaleController extends ChangeNotifier {
 
   Locale get locale => _locale;
 
+  Future<void> setLocale(String languageCode) async {
+    if (languageCode != 'ar' && languageCode != 'en') {
+      return;
+    }
+
+    _locale = Locale(languageCode);
+
+    final preferences = await SharedPreferences.getInstance();
+    await preferences.setString('app_language', languageCode);
+    notifyListeners();
+  }
+
   Future<void> load() async {
     final preferences = await SharedPreferences.getInstance();
     final languageCode = preferences.getString('app_language');
+
     if (languageCode == 'ar' || languageCode == 'en') {
-      _locale = Locale(languageCode!);
+      final savedLanguageCode = languageCode!;
+      _locale = Locale(savedLanguageCode);
       notifyListeners();
     }
   }
 
-  void toggle() {
-    _locale = _locale.languageCode == 'ar' ? const Locale('en') : const Locale('ar');
-    SharedPreferences.getInstance().then(
-      (preferences) => preferences.setString('app_language', _locale.languageCode),
-    );
-    notifyListeners();
+  Future<void> toggle() async {
+    final nextLanguage = _locale.languageCode == 'ar' ? 'en' : 'ar';
+    await setLocale(nextLanguage);
   }
 }
