@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
-import 'edit_matrix_screen.dart';
+import 'widgets/withdraw_bottom_sheet.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -452,7 +452,9 @@ class ProfileScreen extends StatelessWidget {
                                 padding: const EdgeInsets.symmetric(vertical: 12),
                               ),
                               icon: const Icon(Icons.arrow_circle_left_outlined, size: 18),
-                              onPressed: () {},
+                              onPressed: () {
+                                showWithdrawBottomSheet(context);
+                              },
                               label: const Text('طلب سحب الارباح من المالك', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
                             ),
                           ),
