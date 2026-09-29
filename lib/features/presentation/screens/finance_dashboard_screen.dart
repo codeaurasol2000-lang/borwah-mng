@@ -14,6 +14,7 @@ import 'subscriptions_screen.dart';
 import 'expenses_management_screen.dart';
 import 'frozen_requests_screen.dart';
 import 'profile_screen.dart';
+import 'department_wallet_screen.dart';
 
 class FinanceDashboardScreen extends StatefulWidget {
   const FinanceDashboardScreen({super.key});
@@ -832,37 +833,45 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                       const SizedBox(height: 12),
 
                       _buildWalletRowNew(
+                        context,
                         'محفظة قسم التجار والمتاجر',
                         'رصيد دوري متاح للتسوية البنكية والسحب',
                         '2,150,000',
                         Icons.storefront,
+                        DepartmentType.merchants,
                       ),
 
                       const SizedBox(height: 8),
 
                       _buildWalletRowNew(
+                        context,
                         'محفظة المستعمل وعربون\n«وصلني»',
                         'حساب ضمان وتأمين صفقات نشط\n(Escrow)',
                         '980,000',
                         Icons.handshake_outlined,
+                        DepartmentType.usedEscrow,
                       ),
 
                       const SizedBox(height: 8),
 
                       _buildWalletRowNew(
+                        context,
                         'محفظة طلبات الخدمات\nوالصيانة',
                         'مستحقات فنيين معتمدين ومزودي\nالخدمات',
                         '620,000',
                         Icons.build_circle_outlined,
+                        DepartmentType.services,
                       ),
 
                       const SizedBox(height: 8),
 
                       _buildWalletRowNew(
+                        context,
                         'محفظة مناديب التوصيل\nواللوجستيات',
                         'أجور ومستحقات الشحن والتسليم\nالميداني',
                         '450,000',
                         Icons.local_shipping_outlined,
+                        DepartmentType.couriers,
                       ),
 
                       const SizedBox(height: 16),
@@ -1638,20 +1647,29 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
   // Wallet Row
   // =========================
   Widget _buildWalletRowNew(
+      BuildContext context,
       String title,
       String subtitle,
       String balance,
       IconData icon,
+      DepartmentType type,
       ) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: AppColors.cardBorder,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => DepartmentWalletScreen(type: type)),
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: AppColors.cardBorder,
+          ),
         ),
-      ),
       child: Row(
         children: [
           Container(
