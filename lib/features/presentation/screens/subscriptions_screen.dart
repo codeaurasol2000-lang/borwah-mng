@@ -4,6 +4,7 @@ import '../../../core/di/injection_container.dart';
 import '../../../core/utils/currency_formatter.dart';
 import '../../finance/domain/entities/subscription_request_entity.dart';
 import '../../finance/domain/usecases/get_subscriptions_usecase.dart';
+import '../../../l10n/app_localizations.dart';
 
 class SubscriptionsScreen extends StatefulWidget {
   const SubscriptionsScreen({super.key});
@@ -57,8 +58,10 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection: l10n.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
         backgroundColor: const Color(0xFFF9FAFB),
         appBar: AppBar(
@@ -72,11 +75,11 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
               child: Icon(Icons.person, color: Colors.white, size: 20),
             ),
           ),
-          title: const Column(
+          title: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text('طلبات الاشتراكات', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16)),
-              Text('برواح المازوري - الإدارة المالية', style: TextStyle(color: Colors.grey, fontSize: 11)),
+              Text(l10n.subscriptionOrdersTitle, style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16)),
+              Text(l10n.financialManagementSubtitle, style: const TextStyle(color: Colors.grey, fontSize: 11)),
             ],
           ),
           centerTitle: true,
@@ -103,13 +106,13 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                       children: [
                         const Icon(Icons.verified, color: Colors.blueAccent, size: 14),
                         const SizedBox(width: 4),
-                        Text('الرقابة المالية والتراخيص', style: TextStyle(color: Colors.blue.shade700, fontSize: 11, fontWeight: FontWeight.bold)),
+                        Text(l10n.financialAuditAndLicenses, style: TextStyle(color: Colors.blue.shade700, fontSize: 11, fontWeight: FontWeight.bold)),
                       ],
                     ),
                     const SizedBox(height: 4),
-                    const Text('طلبات الاشتراكات والترقيات', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: AppColors.primaryDark)),
+                    Text(l10n.subscriptionsAndUpgradesReviewTitle, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: AppColors.primaryDark)),
                     const SizedBox(height: 2),
-                    const Text('مراجعة وتفعيل اشتراكات المتاجر ومزودي الخدمات •\nبرواح المازوري', style: TextStyle(fontSize: 11, color: Colors.grey, height: 1.3)),
+                    Text(l10n.subscriptionsAndUpgradesReviewSubtitle, style: const TextStyle(fontSize: 11, color: Colors.grey, height: 1.3)),
                   ],
                 ),
                 Row(
@@ -148,7 +151,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                           color: Colors.white.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        child: const Text('موجز دورة الاشتراكات الجارية', style: TextStyle(color: Colors.white, fontSize: 11)),
+                        child: Text(l10n.currentSubscriptionsCycleSummary, style: const TextStyle(color: Colors.white, fontSize: 11)),
                       ),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -156,12 +159,12 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                           color: Colors.blue.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        child: const Text('محدث الآن', style: TextStyle(color: Colors.lightBlueAccent, fontSize: 10, fontWeight: FontWeight.bold)),
+                        child: Text(l10n.updatedNow, style: const TextStyle(color: Colors.lightBlueAccent, fontSize: 10, fontWeight: FontWeight.bold)),
                       ),
                     ],
                   ),
                   const SizedBox(height: 20),
-                  const Text('رسوم الاشتراكات المعلقة', style: TextStyle(color: Colors.white70, fontSize: 12)),
+                  Text(l10n.pendingSubscriptionFees, style: const TextStyle(color: Colors.white70, fontSize: 12)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -172,7 +175,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                           children: [
                             Flexible(child: Text(CurrencyFormatter.format(_pendingAmount), style: const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold, height: 1), maxLines: 1, overflow: TextOverflow.ellipsis)),
                             const SizedBox(width: 4),
-                            const Text('ر.س', style: TextStyle(color: Colors.white70, fontSize: 14, fontWeight: FontWeight.bold)),
+                            Text(l10n.currencySar, style: const TextStyle(color: Colors.white70, fontSize: 14, fontWeight: FontWeight.bold)),
                           ],
                         ),
                       ),
@@ -191,10 +194,10 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Row(
+                              Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Expanded(child: Text('المفعلة هذا الشهر', style: TextStyle(color: Colors.white70, fontSize: 9), maxLines: 1, overflow: TextOverflow.ellipsis)),
+                                  Expanded(child: Text(l10n.activatedThisMonth, style: const TextStyle(color: Colors.white70, fontSize: 9), maxLines: 1, overflow: TextOverflow.ellipsis)),
                                   Icon(Icons.trending_up, color: Colors.lightBlueAccent, size: 12),
                                 ],
                               ),
@@ -204,11 +207,11 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                                 children: [
                                   Expanded(child: Text(CurrencyFormatter.format(142500), style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis)),
                                   const SizedBox(width: 2),
-                                  const Text('ر.س', style: TextStyle(color: Colors.white70, fontSize: 9)),
+                                  Text(l10n.currencySar, style: const TextStyle(color: Colors.white70, fontSize: 9)),
                                 ],
                               ),
                               const SizedBox(height: 4),
-                              const Text('+24% نمو إيرادات', style: TextStyle(color: Colors.greenAccent, fontSize: 9), maxLines: 1, overflow: TextOverflow.ellipsis),
+                              Text(l10n.revenueGrowth, style: const TextStyle(color: Colors.greenAccent, fontSize: 9), maxLines: 1, overflow: TextOverflow.ellipsis),
                             ],
                           ),
                         ),
@@ -224,10 +227,10 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Row(
+                              Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Expanded(child: Text('الاشتراكات المعلقة', style: TextStyle(color: Colors.white70, fontSize: 9), maxLines: 1, overflow: TextOverflow.ellipsis)),
+                                  Expanded(child: Text(l10n.pendingRequests, style: const TextStyle(color: Colors.white70, fontSize: 9), maxLines: 1, overflow: TextOverflow.ellipsis)),
                                   Icon(Icons.pause_circle_outline, color: Colors.orangeAccent, size: 12),
                                 ],
                               ),
@@ -237,11 +240,11 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                                 children: [
                                   Expanded(child: Text('$_pendingCount', style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis)),
                                   const SizedBox(width: 4),
-                                  const Text('طلبات', style: TextStyle(color: Colors.white70, fontSize: 9)),
+                                  Text(l10n.ordersUnit, style: const TextStyle(color: Colors.white70, fontSize: 9)),
                                 ],
                               ),
                               const SizedBox(height: 4),
-                              const Text('قيد المعالجة', style: TextStyle(color: Colors.orangeAccent, fontSize: 9), maxLines: 1, overflow: TextOverflow.ellipsis),
+                              Text(l10n.ordersUnderAudit, style: const TextStyle(color: Colors.orangeAccent, fontSize: 9), maxLines: 1, overflow: TextOverflow.ellipsis),
                             ],
                           ),
                         ),
@@ -257,24 +260,24 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Row(
+                              Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Expanded(child: Text('منتهية بانتظار التجديد', style: TextStyle(color: Colors.white70, fontSize: 9), maxLines: 1, overflow: TextOverflow.ellipsis)),
+                                  Expanded(child: Text(l10n.expiredAwaitingRenewal, style: const TextStyle(color: Colors.white70, fontSize: 9), maxLines: 1, overflow: TextOverflow.ellipsis)),
                                   Icon(Icons.access_time, color: Colors.redAccent, size: 12),
                                 ],
                               ),
                               const SizedBox(height: 6),
-                              const Row(
+                              Row(
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   Expanded(child: Text('9', style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis)),
                                   SizedBox(width: 4),
-                                  Text('طلبات', style: TextStyle(color: Colors.white70, fontSize: 9)),
+                                  Text(l10n.ordersUnit, style: const TextStyle(color: Colors.white70, fontSize: 9)),
                                 ],
                               ),
                               const SizedBox(height: 4),
-                              const Text('تنبيه تجاري آلي', style: TextStyle(color: Colors.redAccent, fontSize: 9), maxLines: 1, overflow: TextOverflow.ellipsis),
+                              Text(l10n.autoCommercialAlert, style: const TextStyle(color: Colors.redAccent, fontSize: 9), maxLines: 1, overflow: TextOverflow.ellipsis),
                             ],
                           ),
                         ),
@@ -311,18 +314,18 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Row(
+                  Row(
                   children: [
-                    Icon(Icons.circle, color: AppColors.primaryDark, size: 10),
-                    SizedBox(width: 6),
-                    Text('طلبات بانتظار المصادقة', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87)),
+                    const Icon(Icons.circle, color: AppColors.primaryDark, size: 10),
+                    const SizedBox(width: 6),
+                    Text(l10n.awaitingCertificationRequests, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87)),
                   ],
                 ),
                 Row(
                   children: [
                     const Icon(Icons.sort, color: Colors.blueAccent, size: 16),
                     const SizedBox(width: 4),
-                    Text('ترتيب حسب الأحدث', style: TextStyle(fontSize: 11, color: Colors.blue.shade700)),
+                    Text(l10n.sortByNewest, style: TextStyle(fontSize: 11, color: Colors.blue.shade700)),
                   ],
                 ),
               ],
@@ -330,7 +333,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
             const SizedBox(height: 16),
 
             // 5. List
-            ..._filteredSubscriptions.map((sub) => _buildSubscriptionCard(sub)),
+            ..._filteredSubscriptions.map((sub) => _buildSubscriptionCard(context, sub)),
             
             // 6. Bottom Info Banner
             Container(
@@ -359,10 +362,10 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('حوكمة اعتماد التراخيص والترقيات', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black87)),
+                            Text(l10n.licensesGovernanceTitle, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black87)),
                             const SizedBox(height: 4),
                             Text(
-                              'تفعيل الباقات يمنح فوراً الصلاحيات التجارية وأولوية الظهور والإعفاءات الرقابية المحددة في النظام المالي لشركة برواح المازوري. تخضع كافة العمليات للتدقيق المستندي والضريبي اللاحق.',
+                              l10n.licensesGovernanceDesc,
                               style: TextStyle(fontSize: 11, color: Colors.grey.shade600, height: 1.4),
                             ),
                           ],
@@ -374,18 +377,18 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Row(
+                      Row(
                         children: [
-                          Icon(Icons.lock_outline, size: 14, color: Colors.grey),
-                          SizedBox(width: 4),
-                          Text('سجل معتمد وموثق', style: TextStyle(fontSize: 11, color: Colors.grey)),
+                          const Icon(Icons.lock_outline, size: 14, color: Colors.grey),
+                          const SizedBox(width: 4),
+                          Text(l10n.certifiedAndDocumentedRecord, style: const TextStyle(fontSize: 11, color: Colors.grey)),
                         ],
                       ),
                       Row(
                         children: [
-                          _buildSmallButton('تقرير PDF', Icons.picture_as_pdf, Colors.red),
+                          _buildSmallButton(l10n.pdfReport, Icons.picture_as_pdf, Colors.red),
                           const SizedBox(width: 8),
-                          _buildSmallButton('تصدير Excel', Icons.table_chart, Colors.green),
+                          _buildSmallButton(l10n.exportExcel, Icons.table_chart, Colors.green),
                         ],
                       ),
                     ],
@@ -397,7 +400,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
             // 7. Bottom Record Button
             InkWell(
               onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('جاري فتح السجل...')));
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.openingSubscriptionsRegister)));
               },
               borderRadius: BorderRadius.circular(16),
               child: Container(
@@ -422,9 +425,9 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('سجل الاشتراكات والترقيات النشطة والغير نشطة', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.blue.shade900)),
+                          Text(l10n.subscriptionsHistoryTitle, style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.blue.shade900)),
                           const SizedBox(height: 2),
-                          Text('تصفح تاريخ جميع العمليات السابقة', style: TextStyle(fontSize: 10, color: Colors.grey.shade600)),
+                          Text(l10n.browsePreviousOperations, style: TextStyle(fontSize: 10, color: Colors.grey.shade600)),
                         ],
                       ),
                     ),
@@ -441,9 +444,18 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
   }
 
   Widget _buildFilterChip(String filterType, {IconData? icon, bool isDark = false}) {
+    final l10n = AppLocalizations.of(context)!;
     bool isSelected = _selectedFilter == filterType || (isDark && _selectedFilter == 'الكل');
     int count = _countFor(filterType);
-    String label = count > 0 ? '$filterType $count' : filterType;
+    final localizedFilter = switch (filterType) {
+      'المتاجر والتجار' => l10n.storesAndMerchants,
+      'مزودوا الخدمات' => l10n.serviceProviders,
+      'مستخدمين' => l10n.usersTab,
+      'مناديب' => l10n.couriersTab,
+      'اعلانات' => l10n.advertisementsTab,
+      _ => l10n.allTab,
+    };
+    String label = count > 0 ? '$localizedFilter $count' : localizedFilter;
     
     return GestureDetector(
       onTap: () => setState(() => _selectedFilter = filterType),
@@ -491,7 +503,8 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
     );
   }
 
-  Widget _buildSubscriptionCard(SubscriptionRequestEntity sub) {
+  Widget _buildSubscriptionCard(BuildContext context, SubscriptionRequestEntity sub) {
+    final l10n = AppLocalizations.of(context)!;
     bool isAutoReady = sub.status.contains('جاهز');
     
     return Container(
@@ -539,14 +552,20 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                     Row(
                       children: [
                         Text(
-                          sub.categoryName,
+                          switch (sub.type) {
+                            SubscriptionType.merchant => l10n.storesAndMerchants,
+                            SubscriptionType.serviceProvider => l10n.serviceProviders,
+                            SubscriptionType.user => l10n.usersTab,
+                            SubscriptionType.courier => l10n.couriersTab,
+                            SubscriptionType.ad => l10n.advertisementsTab,
+                          },
                           style: TextStyle(fontSize: 10, color: Colors.blue.shade700, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(width: 4),
                         const Icon(Icons.circle, size: 4, color: Colors.grey),
                         const SizedBox(width: 4),
                         Text(
-                          '${sub.type == SubscriptionType.merchant ? 'س.ت:' : 'رخصة رقم:'} ${sub.registrationNumber}',
+                          '${sub.type == SubscriptionType.merchant ? l10n.commercialRegister : l10n.licenseNumber} ${sub.registrationNumber}',
                           style: TextStyle(fontSize: 10, color: Colors.grey.shade700),
                         ),
                       ],
@@ -567,7 +586,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                     if (!isAutoReady) const Icon(Icons.circle, color: Colors.blueAccent, size: 8),
                     const SizedBox(width: 4),
                     Text(
-                      sub.status,
+                      isAutoReady ? l10n.autoApprovalReady : l10n.underMatching,
                       style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: isAutoReady ? AppColors.primaryDark : Colors.blue.shade800),
                     ),
                   ],
@@ -593,7 +612,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('نوع الباقة المستهدفة', style: TextStyle(fontSize: 10, color: Colors.grey)),
+                      Text(l10n.targetedPackageType, style: const TextStyle(fontSize: 10, color: Colors.grey)),
                       const SizedBox(height: 4),
                       Row(
                         children: [
@@ -605,7 +624,10 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                         ],
                       ),
                       const SizedBox(height: 4),
-                      Text(sub.type == SubscriptionType.serviceProvider ? sub.durationText : '', style: TextStyle(fontSize: 10, color: Colors.blue.shade700)),
+                      Text(
+                        sub.type == SubscriptionType.serviceProvider ? l10n.semiAnnualDuration : l10n.taxInclusive15,
+                        style: TextStyle(fontSize: 10, color: Colors.blue.shade700),
+                      ),
                     ],
                   ),
                 ),
@@ -622,7 +644,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(isAutoReady ? 'المبلغ المستحق' : 'المبلغ الإجمالي', style: const TextStyle(fontSize: 10, color: Colors.grey)),
+                      Text(isAutoReady ? l10n.availableBalance : l10n.grossAmount, style: const TextStyle(fontSize: 10, color: Colors.grey)),
                       const SizedBox(height: 4),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
@@ -630,12 +652,12 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                         children: [
                           Text(CurrencyFormatter.format(sub.totalAmount), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87)),
                           const SizedBox(width: 2),
-                          const Text('ر.س', style: TextStyle(fontSize: 10, color: Colors.blue)),
+                          Text(l10n.currencySar, style: const TextStyle(fontSize: 10, color: Colors.blue)),
                         ],
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        isAutoReady ? 'رصيد كاف في المحفظة' : sub.durationText, // re-using durationText for "شامل الضريبة" in merchant case for mock purposes
+                        isAutoReady ? l10n.sufficientWalletBalance : l10n.taxInclusive15,
                         style: TextStyle(fontSize: 9, color: Colors.grey.shade600),
                       ),
                     ],
@@ -672,7 +694,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                   ),
                 if (!isAutoReady)
                   Text(
-                    'حساب\nالشركات',
+                    l10n.corporateAccount,
                     style: TextStyle(fontSize: 10, color: Colors.blue.shade700, height: 1.2),
                     textAlign: TextAlign.center,
                   ),
@@ -696,7 +718,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                 ),
                 icon: const Icon(Icons.check_circle_outline, size: 16),
                 onPressed: () {},
-                label: const Text('اعتماد و ارسال الطلب', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                label: Text(l10n.approveAndSendToAdmin, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
               ),
               const SizedBox(height: 8),
               Row(
@@ -713,7 +735,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                         ),
                         icon: const Icon(Icons.cancel_outlined, size: 16),
                         onPressed: () {},
-                        label: const Text('رفض مع السبب', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                        label: Text(l10n.rejectWithReason, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -729,7 +751,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                       ),
                       icon: const Icon(Icons.pause_circle_outline, size: 16),
                       onPressed: () {},
-                      label: const Text('تعليق الطلب', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                      label: Text(l10n.freezeRequestTemporarily, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
                     ),
                   ),
                 ],
@@ -751,7 +773,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                 ),
                 icon: const Icon(Icons.attachment, size: 16),
                 onPressed: () {},
-                label: const Text('معاينة الإيصال وبيانات التحويل', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                label: Text(l10n.previewReceiptAndTransferData, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
               ),
             ),
           ]

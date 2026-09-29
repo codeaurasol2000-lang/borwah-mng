@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'core/theme/app_theme.dart';
 import 'core/di/injection_container.dart' as di;
+import 'core/utils/app_locale_controller.dart';
 import 'features/auth/presentation/controllers/auth_cubit.dart';
 import 'features/auth/presentation/screens/login_screen.dart';
+import 'l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await AppLocaleController.instance.load();
 
   try {
     // تهيئة حقن التبعيات (GetIt)
@@ -29,29 +31,17 @@ class BarwahApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => AuthCubit()),
       ],
-      child: MaterialApp(
-        title: 'برواح المازوري',
-        debugShowCheckedModeBanner: false,
-
-        // ضبط اللغة الافتراضية
-        locale:  Locale('ar'),
-
-        // اللغات المدعومة
-        supportedLocales:  [
-          Locale('ar'),
-          Locale('en'),
-        ],
-
-        // مفوضات الترجمة والمحاذاة التلقائية (RTL / LTR)
-        localizationsDelegates:  [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-
-        theme: AppTheme.lightTheme,
-
-        home: LoginScreen(),
+      child: AnimatedBuilder(
+        animation: AppLocaleController.instance,
+        builder: (context, _) => MaterialApp(
+          onGenerateTitle: (context) => AppLocalizations.of(context)!.appName,
+          debugShowCheckedModeBanner: false,
+          locale: AppLocaleController.instance.locale,
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          theme: AppTheme.lightTheme,
+          home: const LoginScreen(),
+        ),
       ),
     );
   }

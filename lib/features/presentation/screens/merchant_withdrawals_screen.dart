@@ -4,6 +4,7 @@ import '../../../core/di/injection_container.dart';
 import '../../../core/utils/currency_formatter.dart';
 import '../../finance/domain/entities/withdrawal_request_entity.dart';
 import '../../finance/domain/usecases/get_merchant_withdrawals_usecase.dart';
+import '../../../l10n/app_localizations.dart';
 
 class MerchantWithdrawalsScreen extends StatefulWidget {
   const MerchantWithdrawalsScreen({super.key});
@@ -61,8 +62,10 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection: l10n.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
         backgroundColor: const Color(0xFFF9FAFB),
         appBar: AppBar(
@@ -76,11 +79,11 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
               child: Icon(Icons.person, color: Colors.white, size: 20),
             ),
           ),
-          title: const Column(
+          title: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text('طلبات سحب المستحقات', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16)),
-              Text('برواح المازوري - الإدارة المالية', style: TextStyle(color: Colors.grey, fontSize: 11)),
+              Text(l10n.navWithdrawalOrders, style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16)),
+              Text(l10n.financialManagementSubtitle, style: const TextStyle(color: Colors.grey, fontSize: 11)),
             ],
           ),
           centerTitle: true,
@@ -110,7 +113,7 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Text('بوابة الصرف والرقابة النقدية', style: TextStyle(color: AppColors.primaryDark, fontSize: 10, fontWeight: FontWeight.bold)),
+                        Text(l10n.bankingAndCashSurveillanceGateway, style: const TextStyle(color: AppColors.primaryDark, fontSize: 10, fontWeight: FontWeight.bold)),
                         const SizedBox(width: 4),
                         Icon(Icons.verified, color: Colors.blue.shade700, size: 14),
                       ],
@@ -120,14 +123,14 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                 const SizedBox(height: 12),
 
                 // 2. Titles
-                const Text(
-                  'طلبات سحب مستحقات التجار و المستخدمين و المناديب',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: AppColors.primaryDark, height: 1.3),
+                Text(
+                  l10n.merchantWithdrawalsHeaderTitle,
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: AppColors.primaryDark, height: 1.3),
                 ),
                 const SizedBox(height: 4),
-                const Text(
-                  'قائمة طلبات السحب النقدي المعتمدة للمتاجر والمزودين',
-                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                Text(
+                  l10n.merchantWithdrawalsHeaderSubtitle,
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
                 ),
                 const SizedBox(height: 20),
 
@@ -136,9 +139,9 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                   children: [
                     Expanded(
                       child: _buildMetricMiniCard(
-                        title: 'الطلبات المعلقة',
+                        title: l10n.pendingRequests,
                         count: '$_pendingCount',
-                        sub: '${CurrencyFormatter.format(_totalPendingAmount)} ر.س',
+                        sub: '${CurrencyFormatter.format(_totalPendingAmount)} ${l10n.currencySar}',
                         icon: Icons.pending_actions,
                         color: AppColors.primaryDark,
                       ),
@@ -146,9 +149,9 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: _buildMetricMiniCard(
-                        title: 'تحت الاحتراز',
+                        title: l10n.underRegulatoryHold,
                         count: '$_frozenCount',
-                        sub: 'تجميد رقابي',
+                        sub: l10n.regulatoryFreeze,
                         icon: Icons.gavel,
                         color: AppColors.danger,
                       ),
@@ -170,7 +173,7 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                 const SizedBox(height: 20),
 
                 // 5. List of requests
-                ..._filteredRequests.map((req) => _buildWithdrawalCard(req)),
+                ..._filteredRequests.map((req) => _buildWithdrawalCard(context, req)),
               ],
             ),
             
@@ -201,8 +204,8 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Text('إجمالي المبالغ بانتظار الاعتماد', style: TextStyle(color: Colors.white70, fontSize: 10)),
-                          Text('${CurrencyFormatter.format(_totalPendingAmount)} ر.س', style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                          Text(l10n.totalAwaitingApproval, style: const TextStyle(color: Colors.white70, fontSize: 10)),
+                          Text('${CurrencyFormatter.format(_totalPendingAmount)} ${l10n.currencySar}', style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
                         ],
                       ),
                     ),
@@ -210,9 +213,9 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Text('المتبقي\nللمراجعة', style: TextStyle(color: Colors.white70, fontSize: 10, height: 1.2), textAlign: TextAlign.center),
+                        Text(l10n.remainingForReview, style: const TextStyle(color: Colors.white70, fontSize: 10, height: 1.2), textAlign: TextAlign.center),
                         const SizedBox(height: 2),
-                        Text('$_pendingCount طلب', style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
+                        Text('$_pendingCount ${l10n.ordersUnit}', style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
                       ],
                     ),
                   ],
@@ -226,9 +229,15 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
   }
 
   Widget _buildFilterChip(String filterType) {
+    final l10n = AppLocalizations.of(context)!;
     bool isSelected = _selectedFilter == filterType;
     int count = _countFor(filterType);
-    String label = count > 0 ? '$filterType ($count)' : filterType;
+    final localizedFilter = switch (filterType) {
+      'التجار' => l10n.merchantsTab,
+      'المستخدمين' => l10n.usersTab,
+      _ => l10n.allTab,
+    };
+    String label = count > 0 ? '$localizedFilter ($count)' : localizedFilter;
     
     return GestureDetector(
       onTap: () => setState(() => _selectedFilter = filterType),
@@ -293,7 +302,9 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
     );
   }
 
-  Widget _buildWithdrawalCard(WithdrawalRequestEntity req) {
+  Widget _buildWithdrawalCard(BuildContext context, WithdrawalRequestEntity req) {
+    final l10n = AppLocalizations.of(context)!;
+
     bool isDanger = req.status == RequestStatus.underInvestigation;
     bool isReady = req.isInstantTransferReady;
     
@@ -385,7 +396,7 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    isReady ? 'جاهز للصرف' : 'قيد المراجعة',
+                    isReady ? l10n.readyForInstantDisbursement : l10n.underReviewStatus,
                     style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: isReady ? AppColors.primaryDark : Colors.black87),
                   ),
                 ),
@@ -407,16 +418,16 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(child: Text('إجمالي ${isDanger ? 'المطلوب تحت الحظر' : (isReady ? 'المستحقات' : 'المبلغ المطلوب')} (Gross):', style: TextStyle(fontSize: 11, color: isDanger ? AppColors.danger : Colors.grey.shade700))),
-                    Text('${CurrencyFormatter.format(req.grossAmount)} ر.س', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: isDanger ? AppColors.danger : Colors.black87)),
+                    Expanded(child: Text(isDanger ? l10n.grossHeldAmount : l10n.grossAmount, style: TextStyle(fontSize: 11, color: isDanger ? AppColors.danger : Colors.grey.shade700))),
+                    Text('${CurrencyFormatter.format(req.grossAmount)} ${l10n.currencySar}', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: isDanger ? AppColors.danger : Colors.black87)),
                   ],
                 ),
                 const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(child: Text('عمولة المنصة ${isDanger ? 'التقديرية' : 'والخدمات'} (${req.platformFeePercentage}%):', style: TextStyle(fontSize: 11, color: isDanger ? AppColors.danger : Colors.grey.shade700))),
-                    Text('- ${CurrencyFormatter.format(req.platformFeeAmount)} ر.س', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.danger)),
+                    Expanded(child: Text(isDanger ? l10n.estimatedPlatformFee : l10n.platformFee, style: TextStyle(fontSize: 11, color: isDanger ? AppColors.danger : Colors.grey.shade700))),
+                    Text('- ${CurrencyFormatter.format(req.platformFeeAmount)} ${l10n.currencySar}', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.danger)),
                   ],
                 ),
                 const Padding(
@@ -432,7 +443,7 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            isDanger ? 'الصافي المحتجز للتجميد:' : (isReady ? 'صافي المستحق للصرف الفوري:' : 'صافي المبلغ المحول للحساب البنكي:'),
+                            isDanger ? l10n.netFrozenAmount : (isReady ? l10n.netAmountDueForDisbursement : l10n.netTransferredAmount),
                             style: TextStyle(fontSize: 11, color: isDanger ? AppColors.danger : AppColors.primaryDark, fontWeight: FontWeight.bold),
                           ),
                           if (!isDanger) const SizedBox(height: 4),
@@ -441,7 +452,7 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                               children: [
                                 Icon(isReady ? Icons.flash_on : Icons.account_balance_wallet, size: 12, color: AppColors.primaryDark),
                                 const SizedBox(width: 4),
-                                Expanded(child: Text(isReady ? 'الحساب البنكي\n${req.bankName}' : 'طريقة الصرف\nتحويل بنكي مجدول', style: const TextStyle(fontSize: 9, color: Colors.grey), maxLines: 2, overflow: TextOverflow.ellipsis)),
+                                Expanded(child: Text(isReady ? '${l10n.receivingBank}\n${req.bankName}' : '${l10n.disbursementSource}\n${l10n.readyForInstantBankingTransfer}', style: const TextStyle(fontSize: 9, color: Colors.grey), maxLines: 2, overflow: TextOverflow.ellipsis)),
                               ],
                             ),
                         ],
@@ -453,7 +464,7 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                       children: [
                         Text(CurrencyFormatter.format(req.netAmount), style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: isDanger ? AppColors.danger : AppColors.primaryDark)),
                         const SizedBox(width: 4),
-                        Text('ر.س', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: isDanger ? AppColors.danger : AppColors.primaryDark)),
+                        Text(l10n.currencySar, style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: isDanger ? AppColors.danger : AppColors.primaryDark)),
                       ],
                     ),
                   ],
@@ -483,7 +494,7 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                           children: [
                             const Icon(Icons.account_balance, size: 14, color: Colors.grey),
                             const SizedBox(width: 6),
-                            const Text('المصرف المستلم:', style: TextStyle(fontSize: 11, color: Colors.grey)),
+                            Text(l10n.receivingBank, style: const TextStyle(fontSize: 11, color: Colors.grey)),
                             const SizedBox(width: 6),
                             Expanded(child: Text(req.bankName, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis)),
                           ],
@@ -494,7 +505,7 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                           children: [
                             const Icon(Icons.credit_card, size: 14, color: Colors.grey),
                             const SizedBox(width: 6),
-                            const Text('رقم الآيبان\n(IBAN):', style: TextStyle(fontSize: 10, color: Colors.grey, height: 1.2)),
+                            Text(l10n.ibanNumber, style: const TextStyle(fontSize: 10, color: Colors.grey, height: 1.2)),
                             const SizedBox(width: 6),
                             Expanded(
                               child: Text(req.iban, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold), textDirection: TextDirection.ltr, textAlign: TextAlign.right),
@@ -502,7 +513,7 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                           ],
                         ),
                         const SizedBox(height: 8),
-                        Text('تاريخ تقديم الطلب: ${req.dateText}', style: const TextStyle(fontSize: 10, color: Colors.grey)),
+                        Text('${l10n.submissionDate} ${req.dateText}', style: const TextStyle(fontSize: 10, color: Colors.grey)),
                       ],
                     ),
                   ),
@@ -526,7 +537,7 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                     children: [
                       Icon(Icons.check_circle, color: Colors.blue.shade700, size: 16),
                       const SizedBox(width: 6),
-                      Text('نتيجة الفحص الآلي للمطابقة الضريبية والمحفظة', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.primaryDark)),
+                      Text(l10n.automatedTaxAuditResult, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.primaryDark)),
                     ],
                   ),
                   const SizedBox(height: 6),
@@ -554,7 +565,7 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (isDanger) const Text('مذكرة إشعار رقابي من مشرف التجار', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.danger)),
+                        if (isDanger) Text(l10n.regulatoryNoticeFromSupervisor, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.danger)),
                         if (isDanger) const SizedBox(height: 4),
                         Text(
                           req.alertNotice!,
@@ -585,7 +596,7 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                 icon: Icon(isDanger ? Icons.folder_off_outlined : Icons.check_circle_outline, size: 18),
                 onPressed: () {},
                 label: Text(
-                  isDanger ? 'الرفض و اشعار العميل' : (isReady ? 'اعتماد و اعطاء أمر الصرف البنكي' : 'اعتماد و ارسال الطلب للادارة'),
+                  isDanger ? l10n.rejectAndNotifyCustomer : (isReady ? l10n.approveAndIssueBankOrder : l10n.approveAndSendToAdmin),
                   style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -601,7 +612,7 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                 icon: Icon(isDanger ? Icons.cancel_outlined : Icons.lock_outline, size: 18),
                 onPressed: () {},
                 label: Text(
-                  isDanger ? 'تجميد الطلب' : 'تجميد مؤقت للطلب',
+                  isDanger ? l10n.freezeRequest : l10n.freezeRequestTemporarily,
                   style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                 ),
               ),

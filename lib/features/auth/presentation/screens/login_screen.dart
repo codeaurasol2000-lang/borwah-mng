@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../presentation/screens/finance_dashboard_screen.dart';
 import '../../domain/entities/user_role.dart';
 import '../controllers/auth_cubit.dart';
@@ -27,6 +28,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthSuccess) {
@@ -43,7 +46,9 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       },
       builder: (context, state) {
-        return Scaffold(
+        return Directionality(
+          textDirection: l10n.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
+          child: Scaffold(
           backgroundColor: const Color(0xFFF1F5F9),
           body: SafeArea(
             child: Center(
@@ -78,13 +83,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 20),
 
                     // عنوان النظام
-                    const Text(
-                      'برواح المازوري',
+                    Text(
+                      l10n.appName,
                       style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
                     ),
                     const SizedBox(height: 6),
-                    const Text(
-                      'نظام الإدارة والإشراف الميداني',
+                    Text(
+                      l10n.appSubtitle,
                       style: TextStyle(fontSize: 15, color: AppColors.textSecondary),
                     ),
                     const SizedBox(height: 12),
@@ -96,12 +101,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         color: const Color(0xFFE2E8F0),
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(Icons.verified_user_rounded, size: 16, color: AppColors.info),
                           SizedBox(width: 6),
-                          Text('بوابة تسجيل دخول آمنة ومشفّرة', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
+                          Text(l10n.secureLoginPortal, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
                         ],
                       ),
                     ),
@@ -125,14 +130,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           // حقل البريد
-                          const Align(
+                          Align(
                             alignment: Alignment.centerRight,
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text('البريد الإلكتروني الوظيفي', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
-                                SizedBox(width: 6),
-                                Icon(Icons.mail_outline, size: 18, color: AppColors.textSecondary),
+                                Text(l10n.workEmail, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+                                const SizedBox(width: 6),
+                                const Icon(Icons.mail_outline, size: 18, color: AppColors.textSecondary),
                               ],
                             ),
                           ),
@@ -150,14 +155,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           const SizedBox(height: 16),
 
                           // حقل كلمة المرور
-                          const Align(
+                          Align(
                             alignment: Alignment.centerRight,
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text('كلمة المرور', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
-                                SizedBox(width: 6),
-                                Icon(Icons.lock_outline, size: 18, color: AppColors.textSecondary),
+                                Text(l10n.password, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+                                const SizedBox(width: 6),
+                                const Icon(Icons.lock_outline, size: 18, color: AppColors.textSecondary),
                               ],
                             ),
                           ),
@@ -185,14 +190,14 @@ class _LoginScreenState extends State<LoginScreen> {
                               color: const Color(0xFFF8FAFC),
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: const Row(
+                            child: Row(
                               children: [
                                 Icon(Icons.hub_outlined, color: AppColors.info, size: 22),
                                 SizedBox(width: 8),
                                 Expanded(
                                   child: Text(
-                                    'يتم تحديد واجهة العمل وصلاحيات النظام تلقائياً حسب الرتبة الإشرافية فور التحقق.',
-                                    style: TextStyle(fontSize: 11, color: AppColors.textSecondary, height: 1.4),
+                                    l10n.roleAccessNotice,
+                                    style: const TextStyle(fontSize: 11, color: AppColors.textSecondary, height: 1.4),
                                     textAlign: TextAlign.right,
                                   ),
                                 ),
@@ -217,12 +222,12 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               child: state is AuthLoading
                                   ? const CircularProgressIndicator(color: Colors.white)
-                                  : const Row(
+                                  : Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text('تسجيل الدخول', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
-                                  SizedBox(width: 8),
-                                  Icon(Icons.login, color: Colors.white),
+                                  Text(l10n.loginButton, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+                                  const SizedBox(width: 8),
+                                  const Icon(Icons.login, color: Colors.white),
                                 ],
                               ),
                             ),
@@ -230,9 +235,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           const SizedBox(height: 16),
 
                           // استعادة الوصول
-                          const Center(
+                          Center(
                             child: Text(
-                              'نسيت كلمة المرور؟\nطلب استعادة الوصول عبر المسؤول التقني',
+                              '${l10n.forgotPassword}\n${l10n.requestAccessReset}',
                               textAlign: TextAlign.center,
                               style: TextStyle(fontSize: 12, color: AppColors.info, height: 1.4),
                             ),
@@ -243,23 +248,24 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 24),
 
                     // حقوق النظام بالأسفل
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('هذا التطبيق مخصص للإدارة والمشرفين فقط', style: TextStyle(fontSize: 11, color: AppColors.textSecondary)),
-                        SizedBox(width: 4),
-                        Icon(Icons.lock_person_outlined, size: 14, color: AppColors.textSecondary),
+                        Text(l10n.restrictedAccessFooter, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                        const SizedBox(width: 4),
+                        const Icon(Icons.lock_person_outlined, size: 14, color: AppColors.textSecondary),
                       ],
                     ),
                     const SizedBox(height: 4),
-                    const Text(
-                      'الإصدار 3.4.0 (داخلي) • جميع الحقوق محفوظة لشركة برواح المازوري',
-                      style: TextStyle(fontSize: 10, color: AppColors.textMuted),
+                    Text(
+                      l10n.copyrightNotice,
+                      style: const TextStyle(fontSize: 10, color: AppColors.textMuted),
                     ),
                   ],
                 ),
               ),
             ),
+          ),
           ),
         );
       },

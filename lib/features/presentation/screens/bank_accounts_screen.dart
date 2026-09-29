@@ -6,6 +6,7 @@ import '../../../core/di/injection_container.dart';
 import '../../finance/domain/entities/bank_account_entity.dart';
 import '../controllers/bank_accounts/bank_accounts_cubit.dart';
 import '../controllers/bank_accounts/bank_accounts_state.dart';
+import '../../../l10n/app_localizations.dart';
 
 class BankAccountsScreen extends StatelessWidget {
   const BankAccountsScreen({super.key});
@@ -28,13 +29,6 @@ class _BankAccountsScreenContent extends StatefulWidget {
 
 class _BankAccountsScreenContentState extends State<_BankAccountsScreenContent> {
   int _selectedCategoryIndex = 0;
-  final List<String> _categories = [
-    "الكل",
-    "حسابات تشغيلية",
-    "حسابات ضمان Escrow",
-    "بوابات الدفع الإلكتروني",
-    "المحافظ الرقمية",
-  ];
 
   // فلترة الحسابات حسب التصنيف المختار
   List<BankAccountEntity> _filterAccounts(List<BankAccountEntity> accounts) {
@@ -56,8 +50,10 @@ class _BankAccountsScreenContentState extends State<_BankAccountsScreenContent> 
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection: l10n.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
         backgroundColor: const Color(0xFFF8FAFC),
         appBar: AppBar(
@@ -68,23 +64,23 @@ class _BankAccountsScreenContentState extends State<_BankAccountsScreenContent> 
             icon: const Icon(Icons.arrow_forward_ios, size: 18, color: Colors.black87),
             onPressed: () => Navigator.pop(context),
           ),
-          title: const Column(
+          title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                "الحسابات البنكية والقنوات الرسمية",
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black87),
+                l10n.officialBankAccountsAndIban,
+                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black87),
               ),
               Text(
-                "إدارة السيولة والمطابقة مع الشبكة السعودية للمدفوعات",
-                style: TextStyle(fontSize: 11, color: Colors.grey),
+                l10n.bankAccountsScreenSubtitle,
+                style: const TextStyle(fontSize: 11, color: Colors.grey),
               ),
             ],
           ),
           actions: [
             IconButton(
-              tooltip: "تحديث الأرصدة",
+              tooltip: l10n.refreshBalances,
               icon: const Icon(Icons.refresh, color: AppColors.primaryDark),
               onPressed: () => context.read<BankAccountsCubit>().loadBankAccounts(),
             ),
@@ -114,7 +110,7 @@ class _BankAccountsScreenContentState extends State<_BankAccountsScreenContent> 
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // 1. كارت الرصيد المحسوب تلقائياً بالتزامن مع الحسابات
-                    _buildConsolidatedBalanceCard(calculatedTotalLiquidity),
+                    _buildConsolidatedBalanceCard(calculatedTotalLiquidity, l10n),
                     const SizedBox(height: 12),
 
                     // 2. أزرار الإجراءات (إضافة حساب + تصدير PDF)
@@ -131,10 +127,10 @@ class _BankAccountsScreenContentState extends State<_BankAccountsScreenContent> 
 
                     // 5. قائمة الحسابات البنكية المقسمة
                     if (filteredAccounts.isEmpty)
-                      const Center(
+                      Center(
                         child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 30),
-                          child: Text("لا توجد حسابات مسجلة ضمن هذا التصنيف", style: TextStyle(color: Colors.grey, fontSize: 13)),
+                          padding: const EdgeInsets.symmetric(vertical: 30),
+                          child: Text(l10n.noAccountsInCategory, style: const TextStyle(color: Colors.grey, fontSize: 13)),
                         ),
                       )
                     else
@@ -146,7 +142,7 @@ class _BankAccountsScreenContentState extends State<_BankAccountsScreenContent> 
                         itemBuilder: (context, index) {
                           final account = filteredAccounts[index];
                           final bool isEscrow = account.accountType.contains("ضمان") || account.accountType.contains("Escrow");
-                          return _buildBankAccountCard(account: account, isEscrow: isEscrow);
+                          return _buildBankAccountCard(context: context, account: account, isEscrow: isEscrow);
                         },
                       ),
                     const SizedBox(height: 20),
@@ -162,7 +158,7 @@ class _BankAccountsScreenContentState extends State<_BankAccountsScreenContent> 
   }
 
   // كارت الرصيد المجمع بحساب ديناميكي
-  Widget _buildConsolidatedBalanceCard(double totalBalance) {
+  Widget _buildConsolidatedBalanceCard(double totalBalance, AppLocalizations l10n) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
@@ -180,13 +176,13 @@ class _BankAccountsScreenContentState extends State<_BankAccountsScreenContent> 
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             children: [
               Icon(Icons.account_balance, color: Colors.white70, size: 18),
               SizedBox(width: 8),
               Text(
-                "إجمالي السيولة النقدية المجمعة بكافة القنوات",
-                style: TextStyle(color: Colors.white70, fontSize: 12),
+                l10n.totalAggregatedLiquidity,
+                style: const TextStyle(color: Colors.white70, fontSize: 12),
               ),
             ],
           ),
@@ -210,14 +206,14 @@ class _BankAccountsScreenContentState extends State<_BankAccountsScreenContent> 
               color: Colors.white.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: const Row(
+            child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(Icons.sync, size: 14, color: Colors.greenAccent),
                 SizedBox(width: 6),
                 Text(
-                  "تحديث ومطابقة تلقائية متزامنة مع كافة القنوات",
-                  style: TextStyle(color: Colors.white, fontSize: 11),
+                  l10n.instantBankSyncNote,
+                  style: const TextStyle(color: Colors.white, fontSize: 11),
                 ),
               ],
             ),
@@ -229,15 +225,17 @@ class _BankAccountsScreenContentState extends State<_BankAccountsScreenContent> 
 
   // أزرار إضافة حساب وتصدير كشف PDF
   Widget _buildTopActionButtons(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Row(
       children: [
         Expanded(
           child: ElevatedButton.icon(
             onPressed: () => _showAddBankAccountSheet(context),
             icon: const Icon(Icons.add_circle_outline, size: 17, color: Colors.white),
-            label: const Text(
-              "إضافة حساب جديد",
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+            label: Text(
+              l10n.createBankAccount,
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
             ),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primaryDark,
@@ -252,9 +250,9 @@ class _BankAccountsScreenContentState extends State<_BankAccountsScreenContent> 
           child: OutlinedButton.icon(
             onPressed: () => _showExportPdfDialog(context),
             icon: const Icon(Icons.picture_as_pdf_outlined, size: 17, color: Colors.redAccent),
-            label: const Text(
-              "تصدير كشف PDF",
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black87),
+            label: Text(
+              l10n.exportAccountStatementButton,
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black87),
             ),
             style: OutlinedButton.styleFrom(
               backgroundColor: Colors.white,
@@ -271,10 +269,12 @@ class _BankAccountsScreenContentState extends State<_BankAccountsScreenContent> 
 
   // كارت سجل الحركات المصرفية
   Widget _buildDailyTransactionsButton(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return InkWell(
       onTap: () {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("جاري فتح سجل العمليات والتحويلات اليومية المكتملة...")),
+          SnackBar(content: Text(l10n.openDailyLedger)),
         );
       },
       borderRadius: BorderRadius.circular(14),
@@ -303,19 +303,19 @@ class _BankAccountsScreenContentState extends State<_BankAccountsScreenContent> 
               child: const Icon(Icons.receipt_long_outlined, color: AppColors.info, size: 20),
             ),
             const SizedBox(width: 10),
-            const Expanded(
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    "سجل الحركات المصرفية والعمليات اليومية",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.black87),
+                    l10n.dailyLogLedger,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.black87),
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
-                    "عرض قيود اليومية، الإيداعات، والحوالات الصادرة والواردة",
-                    style: TextStyle(fontSize: 10, color: Colors.grey),
+                    l10n.dailyLedgerDescription,
+                    style: const TextStyle(fontSize: 10, color: Colors.grey),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ],
@@ -331,16 +331,25 @@ class _BankAccountsScreenContentState extends State<_BankAccountsScreenContent> 
 
   // شريط الفلاتر
   Widget _buildCategoryChips(int totalCount) {
+    final l10n = AppLocalizations.of(context)!;
+    final categories = [
+      l10n.allTab,
+      l10n.operationalAccountsFilter,
+      l10n.escrowAccountsFilter,
+      l10n.paymentGatewaysFilter,
+      l10n.digitalWalletsFilter,
+    ];
+
     return SizedBox(
       height: 38,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
-        itemCount: _categories.length,
+        itemCount: categories.length,
         separatorBuilder: (_, __) => const SizedBox(width: 8),
         itemBuilder: (context, index) {
           final isSelected = _selectedCategoryIndex == index;
-          final title = index == 0 ? "الكل ($totalCount)" : _categories[index];
+          final title = index == 0 ? "${l10n.allTab} ($totalCount)" : categories[index];
           return ChoiceChip(
             label: Text(
               title,
@@ -368,9 +377,12 @@ class _BankAccountsScreenContentState extends State<_BankAccountsScreenContent> 
 
   // كارت الحساب البنكي المعتمد على Entity
   Widget _buildBankAccountCard({
+    required BuildContext context,
     required BankAccountEntity account,
     required bool isEscrow,
   }) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -430,9 +442,9 @@ class _BankAccountsScreenContentState extends State<_BankAccountsScreenContent> 
                     color: Colors.teal.shade50,
                     borderRadius: BorderRadius.circular(6),
                   ),
-                  child: const Text(
-                    "حساب ضمان",
-                    style: TextStyle(color: Colors.teal, fontSize: 10, fontWeight: FontWeight.bold),
+                  child: Text(
+                    l10n.escrowAccountBadge,
+                    style: const TextStyle(color: Colors.teal, fontSize: 10, fontWeight: FontWeight.bold),
                   ),
                 ),
             ],
@@ -443,7 +455,7 @@ class _BankAccountsScreenContentState extends State<_BankAccountsScreenContent> 
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text("الرصيد الدفتري المتاح:", style: TextStyle(fontSize: 11, color: Colors.grey)),
+              Text(l10n.availableLedgerBalanceLabel, style: const TextStyle(fontSize: 11, color: Colors.grey)),
               Text(
                 CurrencyFormatter.format(account.balance),
                 style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: AppColors.primaryDark),
@@ -453,7 +465,7 @@ class _BankAccountsScreenContentState extends State<_BankAccountsScreenContent> 
           const SizedBox(height: 6),
           Row(
             children: [
-              const Text("الآيبان / المعرّف:", style: TextStyle(fontSize: 11, color: Colors.grey)),
+              Text(l10n.ibanOrIdentifierLabel, style: const TextStyle(fontSize: 11, color: Colors.grey)),
               const SizedBox(width: 6),
               Expanded(
                 child: Text(
@@ -477,7 +489,7 @@ class _BankAccountsScreenContentState extends State<_BankAccountsScreenContent> 
                 Icon(Icons.bolt, size: 14, color: Colors.green.shade700),
                 const SizedBox(width: 4),
                 Text(
-                  "متصل ومطابق لحظياً عبر SARIE",
+                  l10n.connectedReconciledViaSarie,
                   style: TextStyle(color: Colors.green.shade700, fontSize: 10, fontWeight: FontWeight.bold),
                 ),
               ],
@@ -490,6 +502,8 @@ class _BankAccountsScreenContentState extends State<_BankAccountsScreenContent> 
 
   // نافذة إضافة حساب بنكي
   void _showAddBankAccountSheet(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -497,7 +511,7 @@ class _BankAccountsScreenContentState extends State<_BankAccountsScreenContent> 
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (ctx) {
         return Directionality(
-          textDirection: TextDirection.rtl,
+          textDirection: l10n.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
           child: Padding(
             padding: EdgeInsets.only(
               left: 16,
@@ -509,24 +523,24 @@ class _BankAccountsScreenContentState extends State<_BankAccountsScreenContent> 
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Text("ربط حساب مصرفي جديد", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                Text(l10n.linkBankAccountTitle, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 4),
-                const Text("أدخل تفاصيل الحساب المصرفي للاعتماد", style: TextStyle(fontSize: 11, color: Colors.grey)),
+                Text(l10n.enterBankDetailsToApprove, style: const TextStyle(fontSize: 11, color: Colors.grey)),
                 const SizedBox(height: 16),
-                TextFormField(decoration: const InputDecoration(labelText: "اسم البنك", border: OutlineInputBorder())),
+                TextFormField(decoration: InputDecoration(labelText: l10n.bankNameField, border: const OutlineInputBorder())),
                 const SizedBox(height: 10),
-                TextFormField(decoration: const InputDecoration(labelText: "رقم الآيبان (IBAN)", border: OutlineInputBorder())),
+                TextFormField(decoration: InputDecoration(labelText: l10n.ibanField, border: const OutlineInputBorder())),
                 const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.pop(ctx);
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("تم إرسال طلب الربط")));
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.bankLinkRequestSent)));
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryDark,
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
-                  child: const Text("حفظ الحساب", style: TextStyle(color: Colors.white)),
+                  child: Text(l10n.saveAccount, style: const TextStyle(color: Colors.white)),
                 ),
               ],
             ),
@@ -538,34 +552,36 @@ class _BankAccountsScreenContentState extends State<_BankAccountsScreenContent> 
 
   // نافذة تصدير تقرير PDF
   void _showExportPdfDialog(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     showDialog(
       context: context,
       builder: (ctx) => Directionality(
-        textDirection: TextDirection.rtl,
+        textDirection: l10n.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
         child: AlertDialog(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          title: const Row(
+          title: Row(
             children: [
-              Icon(Icons.picture_as_pdf, color: Colors.redAccent),
-              SizedBox(width: 8),
-              Text("تصدير كشف الحسابات", style: TextStyle(fontSize: 15)),
+              const Icon(Icons.picture_as_pdf, color: Colors.redAccent),
+              const SizedBox(width: 8),
+              Text(l10n.exportAccountsTitle, style: const TextStyle(fontSize: 15)),
             ],
           ),
-          content: const Text(
-            "سيتم توليد تقرير رسمي مفصل بصيغة PDF بجميع الأرصدة المصرفية المتطابقة.",
-            style: TextStyle(fontSize: 12),
+          content: Text(
+            l10n.pdfReportExplanation,
+            style: const TextStyle(fontSize: 12),
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text("إلغاء")),
+            TextButton(onPressed: () => Navigator.pop(ctx), child: Text(l10n.cancelAction)),
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: AppColors.primaryDark),
               onPressed: () {
                 Navigator.pop(ctx);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("تم تصدير كشف الحسابات بنجاح")),
+                  SnackBar(content: Text(l10n.accountsExportSuccess)),
                 );
               },
-              child: const Text("تحميل", style: TextStyle(color: Colors.white)),
+              child: Text(l10n.download, style: const TextStyle(color: Colors.white)),
             ),
           ],
         ),

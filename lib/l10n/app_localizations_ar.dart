@@ -12,6 +12,31 @@ class AppLocalizationsAr extends AppLocalizations {
   String get appName => 'برواح المازوري';
 
   @override
+  String get cfoSessionTimestamp => '1446/11/04 هـ - 10:45 ص';
+
+  @override
+  String get ordersUnit => 'طلبات';
+
+  @override
+  String get financialGovernanceTitle =>
+      'لائحة الحوكمة وتفويض الصلاحيات المالية';
+
+  @override
+  String get ongoingOperatingInvoices => 'الفواتير ومستحقات التشغيل الجارية';
+
+  @override
+  String get completedAndMatched => 'مكتملة ومطابقة 100%';
+
+  @override
+  String get switchLanguage => 'تغيير اللغة';
+
+  @override
+  String get languageArabic => 'العربية';
+
+  @override
+  String get languageEnglish => 'English';
+
+  @override
   String get appSubtitle => 'نظام الإدارة والإشراف الميداني';
 
   @override
@@ -102,6 +127,56 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get operationalExpenses => 'المصاريف والمدفوعات التشغيلية';
+
+  @override
+  String get expensesManagementTitle => 'المصاريف والمدفوعات';
+
+  @override
+  String get amountToDisburse => 'المبلغ المطلوب دفعه وصرفه';
+
+  @override
+  String get accountAndPaymentChannel => 'الحساب وقناة الدفع للخصم المباشر';
+
+  @override
+  String get noAccountsAvailable => 'لا توجد حسابات متاحة';
+
+  @override
+  String get escrowBalanceLabel => 'رصيد حساب الضمان:';
+
+  @override
+  String get currentLedgerBalanceLabel => 'الرصيد الدفتري الحالي:';
+
+  @override
+  String get expenseCategoryAndDocuments => 'تصنيف المصروف والمستندات المؤيدة';
+
+  @override
+  String get detailedExpenseReason => 'سبب سحب وصرف المصروف تفصيلياً';
+
+  @override
+  String get expenseDetailsHint => 'أدخل بياناً تفصيلياً بالمصروف';
+
+  @override
+  String get invoiceSupportDocument => 'مرفق الفاتورة الضريبية والمستند المؤيد';
+
+  @override
+  String get attachDocumentOptional => 'إرفاق صورة المستند إن وجدت';
+
+  @override
+  String get strictFinancialDisbursementGovernance =>
+      'حوكمة الصرف المالي المشدد';
+
+  @override
+  String get disbursementGovernanceNote =>
+      'تخضع هذه العملية للرقابة المستندية والمطابقة البنكية الآلية، ويتم توثيق أمر الصرف في سجل التدقيق المالي برقم تتبع مشفر وتتطلب تأكيد التوقيع الرقمي المباشر للمدير المالي (CFO).';
+
+  @override
+  String get approvePaymentOrder => 'اعتماد أمر الدفع وإرساله للإدارة';
+
+  @override
+  String get cancelPaymentOrder => 'إلغاء الأمر والتراجع عنه';
+
+  @override
+  String get paymentApprovedSuccessfully => 'تم اعتماد أمر الدفع بنجاح';
 
   @override
   String get monthlyTotalExpenses => 'إجمالي مدفوعات الشهر';
@@ -223,6 +298,91 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get officialBankAccountsAndIban =>
       'الحسابات البنكية الرسمية وحسابات الآيبان';
+
+  @override
+  String get bankAccountsScreenSubtitle =>
+      'إدارة السيولة والمطابقة مع الشبكة السعودية للمدفوعات';
+
+  @override
+  String get refreshBalances => 'تحديث الأرصدة';
+
+  @override
+  String get noAccountsInCategory => 'لا توجد حسابات مسجلة ضمن هذا التصنيف';
+
+  @override
+  String get operationalAccountsFilter => 'حسابات تشغيلية';
+
+  @override
+  String get escrowAccountsFilter => 'حسابات ضمان Escrow';
+
+  @override
+  String get paymentGatewaysFilter => 'بوابات الدفع الإلكتروني';
+
+  @override
+  String get digitalWalletsFilter => 'المحافظ الرقمية';
+
+  @override
+  String get instantBankSyncNote =>
+      'تحديث ومطابقة تلقائية متزامنة مع كافة القنوات';
+
+  @override
+  String get createBankAccount => 'إضافة حساب جديد';
+
+  @override
+  String get exportAccountStatementButton => 'تصدير كشف PDF';
+
+  @override
+  String get openDailyLedger => 'سجل الحركات المصرفية والعمليات اليومية';
+
+  @override
+  String get dailyLedgerDescription =>
+      'عرض قيود اليومية، الإيداعات، والحوالات الصادرة والواردة';
+
+  @override
+  String get escrowAccountBadge => 'حساب ضمان';
+
+  @override
+  String get availableLedgerBalanceLabel => 'الرصيد الدفتري المتاح:';
+
+  @override
+  String get ibanOrIdentifierLabel => 'الآيبان / المعرّف:';
+
+  @override
+  String get connectedReconciledViaSarie => 'متصل ومطابق لحظياً عبر SARIE';
+
+  @override
+  String get linkBankAccountTitle => 'ربط حساب مصرفي جديد';
+
+  @override
+  String get enterBankDetailsToApprove => 'أدخل تفاصيل الحساب المصرفي للاعتماد';
+
+  @override
+  String get bankNameField => 'اسم البنك';
+
+  @override
+  String get ibanField => 'رقم الآيبان (IBAN)';
+
+  @override
+  String get bankLinkRequestSent => 'تم إرسال طلب الربط';
+
+  @override
+  String get saveAccount => 'حفظ الحساب';
+
+  @override
+  String get exportAccountsTitle => 'تصدير كشف الحسابات';
+
+  @override
+  String get pdfReportExplanation =>
+      'سيتم توليد تقرير رسمي مفصل بصيغة PDF بجميع الأرصدة المصرفية المتطابقة.';
+
+  @override
+  String get download => 'تحميل';
+
+  @override
+  String get cancelAction => 'إلغاء';
+
+  @override
+  String get accountsExportSuccess => 'تم تصدير كشف الحسابات بنجاح';
 
   @override
   String get accountsCount => '3 حسابات';
@@ -514,6 +674,25 @@ class AppLocalizationsAr extends AppLocalizations {
   String get autoCommercialAlert => 'تنبيه تجاري آلي';
 
   @override
+  String get couriersTab => 'المناديب';
+
+  @override
+  String get advertisementsTab => 'الإعلانات';
+
+  @override
+  String get corporateAccount => 'حساب الشركات';
+
+  @override
+  String get subscriptionsHistoryTitle =>
+      'سجل الاشتراكات والترقيات النشطة وغير النشطة';
+
+  @override
+  String get browsePreviousOperations => 'تصفح تاريخ جميع العمليات السابقة';
+
+  @override
+  String get openingSubscriptionsRegister => 'جاري فتح السجل...';
+
+  @override
   String get storesAndMerchants => 'المتاجر والتجار';
 
   @override
@@ -617,4 +796,179 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get navHome => 'الرئيسية';
+
+  @override
+  String get profileTitle => 'ملفك الشخصي';
+
+  @override
+  String get financialDepartment => 'الإدارة المالية';
+
+  @override
+  String get encryptedBit256 => 'تشفير bit-256';
+
+  @override
+  String get secureApprovedSession => 'جلسة رقابية آمنة ومصادق عليها';
+
+  @override
+  String get cfoAuditingTitle => 'CFO ورئيس التدقيق المالي';
+
+  @override
+  String get sovereignApprovalPowers =>
+      'صلاحيات الاعتماد السيادي والمصادقة البنكية';
+
+  @override
+  String get certifiedAuditorAuthority =>
+      'مدقق مالي معتمد • مفوض التوقيع والمصادقة البنكية المزدوجة لدى مؤسسة برواح المازوري';
+
+  @override
+  String get officialPhone => 'الهاتف المعتمد';
+
+  @override
+  String get corporateEmail => 'البريد المؤسسي';
+
+  @override
+  String get enabledNafath => 'نفاذ وطني مفعل';
+
+  @override
+  String get authorizationEffectiveFrom => 'سريان الاعتماد الرقابي من: 2027م';
+
+  @override
+  String get activeAndReconciled => 'نشط ومطابق';
+
+  @override
+  String get duesWalletTitle => 'محفظة المستحقات والأتعاب';
+
+  @override
+  String get executiveWalletDescription =>
+      'حساب الإدارة والرقابة التنفيذية المباشر';
+
+  @override
+  String get totalAccountingDues => 'إجمالي رصيد المستحقات المحاسبية';
+
+  @override
+  String get pendingRegulatoryBalance => 'رصيد معلق رقابياً';
+
+  @override
+  String get awaitingQuarterlyClose => 'بانتظار الإقفال الربع سنوي';
+
+  @override
+  String get approvedWithoutConditions => 'معتمد دون شروط';
+
+  @override
+  String get approvedPayoutAccount => 'الحساب المصفي المعتمد للصرف';
+
+  @override
+  String get requestOwnerProfitWithdrawal => 'طلب سحب الأرباح من المالك';
+
+  @override
+  String get editWithdrawalInformation => 'تعديل معلومات السحب';
+
+  @override
+  String get cfoExclusive => 'مقتصرة على CFO';
+
+  @override
+  String get sovereignControls => 'التحكم والإجراءات السيادية';
+
+  @override
+  String get feesAndCommissionsMatrix => 'مصفوفة الرسوم والعمولات العامة';
+
+  @override
+  String get feesAndCommissionsMatrixDesc =>
+      'ضبط النسب المئوية للمنصة، اقتطاعات بوابات الدفع الإلكترونية، وتعديل تسعير العمليات التعاقدية.';
+
+  @override
+  String get exclusivePermission => 'صلاحية حصرية';
+
+  @override
+  String get editMatrix => 'تعديل المصفوفة';
+
+  @override
+  String get fastSettlementFees => 'رسوم التسوية السريعة';
+
+  @override
+  String get currentBaseCommission => 'العمولة الأساسية الحالية';
+
+  @override
+  String get comprehensivePaymentsReports => 'كشف المدفوعات والإيرادات الشامل';
+
+  @override
+  String get comprehensivePaymentsReportsDesc =>
+      'توليد كشوف التدفقات النقدية، تقارير الضريبة العامة المضافة، وحزم التسويات المصرفية المجمعة.';
+
+  @override
+  String get exportDetailedExcel => 'تصدير Excel تفصيلي';
+
+  @override
+  String get exportApprovedPdf => 'تصدير PDF معتمد';
+
+  @override
+  String get liveDocumented => 'مباشر • موثق';
+
+  @override
+  String get auditActivityLog => 'سجل الرقابة وحركات المدير المالي';
+
+  @override
+  String get ownerDisputeSettlementApproval => 'مصادقة صرف تسوية نزاع مالك';
+
+  @override
+  String get todayAtEleven => 'اليوم 11:00 ص';
+
+  @override
+  String get approveDisputeSettlement =>
+      'اعتماد صرف تسوية النزاع #CMP-1035 بقيمة 1,200.00 ر.س للعميل د. طارق العمري.';
+
+  @override
+  String get referenceCode => 'المرجع:';
+
+  @override
+  String get validDigitalSignature => 'توقيع رقمي ساري SHA-256';
+
+  @override
+  String get aggregatedProfitWithdrawal => 'اعتماد سحب أرباح مجمعة (SARIE)';
+
+  @override
+  String get todayAtNineThirty => 'اليوم 09:30 ص';
+
+  @override
+  String get periodicMerchantTransfers =>
+      'تحويل مستحقات دورية لـ 12 متجر معتمد عبر نظام المدفوعات الفورية بإجمالي 142,500.00 ر.س.';
+
+  @override
+  String get alRajhiBank => 'مصرف الراجحي';
+
+  @override
+  String get executedAndPosted => 'منفذة بنكياً ومقيدة';
+
+  @override
+  String get precautionaryWalletFreeze => 'تجميد احترازي لمحفظة متجر';
+
+  @override
+  String get yesterdayAtFourFifteen => 'أمس 04:15 م';
+
+  @override
+  String get suspendMerchantDisbursement =>
+      'إيقاف عمليات الصرف لمتجر مستلزمات حاسب (#TRD-304) لوجود شبهة نزاع مدفوعات متكرر.';
+
+  @override
+  String get auditNoticeReference => 'إشعار التدقيق #771';
+
+  @override
+  String get underInvestigation => 'قيد التحقيق والتدقيق';
+
+  @override
+  String get maintenanceCommissionUpdate => 'تحديث عمولة قطاع الصيانة';
+
+  @override
+  String get yesterdayAtOneTwenty => 'أمس 01:20 م';
+
+  @override
+  String get commissionUpdatedByBoard =>
+      'تعديل نسبة العمولة المحصلة إلى 8.0% بموجب قرار مجلس الإدارة رقم BOD-44/B.';
+
+  @override
+  String get activeSystemUpdate => 'تحديث نظامي نافذ';
+
+  @override
+  String get viewFullAuditActivity =>
+      'عرض سجل الرقابة والحركات الكامل (342 حركة موثقة)';
 }

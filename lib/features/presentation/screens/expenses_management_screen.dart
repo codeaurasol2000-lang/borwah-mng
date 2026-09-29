@@ -5,6 +5,7 @@ import '../../../core/di/injection_container.dart';
 import '../../../core/utils/currency_formatter.dart';
 import '../controllers/bank_accounts/bank_accounts_cubit.dart';
 import '../controllers/bank_accounts/bank_accounts_state.dart';
+import '../../../l10n/app_localizations.dart';
 
 class ExpensesManagementScreen extends StatelessWidget {
   const ExpensesManagementScreen({super.key});
@@ -39,8 +40,10 @@ class _ExpensesManagementScreenState extends State<_ExpensesManagementScreenCont
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection: l10n.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
         backgroundColor: AppColors.backgroundLight,
         appBar: AppBar(
@@ -51,13 +54,13 @@ class _ExpensesManagementScreenState extends State<_ExpensesManagementScreenCont
             icon: const Icon(Icons.arrow_forward_ios, color: AppColors.textPrimary, size: 18),
             onPressed: () => Navigator.pop(context),
           ),
-          title: const Text(
-            'المصاريف والمدفوعات',
-            style: TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 16),
+          title: Text(
+            l10n.expensesManagementTitle,
+            style: const TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 16),
           ),
           centerTitle: true,
-          actions: [
-            const Padding(
+          actions: const [
+            Padding(
               padding: EdgeInsets.all(8.0),
               child: CircleAvatar(
                 backgroundColor: AppColors.surfaceLight,
@@ -75,7 +78,7 @@ class _ExpensesManagementScreenState extends State<_ExpensesManagementScreenCont
               // 1. Amount Card
               _buildSectionCard(
                 icon: Icons.payments_outlined,
-                title: 'المبلغ المطلوب دفعه وصرفه',
+                title: l10n.amountToDisburse,
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
@@ -91,7 +94,7 @@ class _ExpensesManagementScreenState extends State<_ExpensesManagementScreenCont
                           color: AppColors.cardBorder,
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: const Text('ر.س', style: TextStyle(fontWeight: FontWeight.bold)),
+                        child: Text(l10n.currencySar, style: const TextStyle(fontWeight: FontWeight.bold)),
                       ),
                       Expanded(
                         child: TextField(
@@ -115,7 +118,7 @@ class _ExpensesManagementScreenState extends State<_ExpensesManagementScreenCont
               // 2. Payment Method Card
               _buildSectionCard(
                 icon: Icons.account_balance_wallet_outlined,
-                title: 'الحساب وقناة الدفع للخصم المباشر',
+                title: l10n.accountAndPaymentChannel,
                 child: BlocBuilder<BankAccountsCubit, BankAccountsState>(
                   builder: (context, state) {
                     if (state is BankAccountsLoading) {
@@ -123,7 +126,7 @@ class _ExpensesManagementScreenState extends State<_ExpensesManagementScreenCont
                     } else if (state is BankAccountsLoaded) {
                       final accounts = state.accounts;
                       if (accounts.isEmpty) {
-                        return const Center(child: Text('لا توجد حسابات متاحة'));
+                        return Center(child: Text(l10n.noAccountsAvailable));
                       }
                       
                       // Select first by default if not set
@@ -143,8 +146,8 @@ class _ExpensesManagementScreenState extends State<_ExpensesManagementScreenCont
                               id: account.id,
                               title: account.bankName,
                               subtitle: account.iban,
-                              balanceLabel: account.accountType.contains('ضمان') ? 'رصيد حساب الضمان:' : 'الرصيد الدفتري الحالي:',
-                              balanceValue: '${CurrencyFormatter.format(account.balance)} ر.س',
+                              balanceLabel: account.accountType.contains('ضمان') ? l10n.escrowBalanceLabel : l10n.currentLedgerBalanceLabel,
+                              balanceValue: '${CurrencyFormatter.format(account.balance)} ${l10n.currencySar}',
                             ),
                           );
                         }).toList(),
@@ -159,17 +162,17 @@ class _ExpensesManagementScreenState extends State<_ExpensesManagementScreenCont
               // 3. Document Category Card
               _buildSectionCard(
                 icon: Icons.assignment_outlined,
-                title: 'تصنيف المصروف والمستندات المؤيدة',
+                title: l10n.expenseCategoryAndDocuments,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('سبب سحب وصرف المصروف تفصيلياً', style: TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                    Text(l10n.detailedExpenseReason, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
                     const SizedBox(height: 8),
                     TextField(
                       controller: _reasonController,
                       maxLines: 2,
                       decoration: InputDecoration(
-                        hintText: 'ادخل بيان تفصيلي بالمصروف',
+                        hintText: l10n.expenseDetailsHint,
                         hintStyle: const TextStyle(fontSize: 12, color: AppColors.textMuted),
                         filled: true,
                         fillColor: AppColors.surfaceLight,
@@ -181,7 +184,7 @@ class _ExpensesManagementScreenState extends State<_ExpensesManagementScreenCont
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Text('مرفق الفاتورة الضريبية والمستند المؤيد', style: TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                    Text(l10n.invoiceSupportDocument, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
                     const SizedBox(height: 8),
                     Container(
                       width: double.infinity,
@@ -195,7 +198,7 @@ class _ExpensesManagementScreenState extends State<_ExpensesManagementScreenCont
                         children: [
                           const Icon(Icons.attach_file, color: AppColors.info, size: 16),
                           const SizedBox(width: 8),
-                          Text('ارفاق صورة المستند ان وجدت', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.blue.shade800)),
+                          Text(l10n.attachDocumentOptional, style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.blue.shade800)),
                         ],
                       ),
                     ),
@@ -228,10 +231,10 @@ class _ExpensesManagementScreenState extends State<_ExpensesManagementScreenCont
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('حوكمة الصرف المالي المشدد', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                          Text(l10n.strictFinancialDisbursementGovernance, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
                           const SizedBox(height: 4),
                           Text(
-                            'تخضع هذه العملية للرقابة المستندية والمطابقة البنكية الآلية، ويتم توثيق أمر الصرف في سجل التدقيق المالي برقم تتبع مشفر وتتطلب تأكيد التوقيع الرقمي المباشر للمدير المالي (CFO).',
+                            l10n.disbursementGovernanceNote,
                             style: TextStyle(fontSize: 10, color: Colors.grey.shade600, height: 1.4),
                           ),
                         ],
@@ -252,10 +255,10 @@ class _ExpensesManagementScreenState extends State<_ExpensesManagementScreenCont
                 ),
                 icon: const Icon(Icons.fingerprint, size: 18),
                 onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('تم اعتماد أمر الدفع بنجاح')));
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.paymentApprovedSuccessfully)));
                   Navigator.pop(context);
                 },
-                label: const Text('اعتماد أمر الدفع و ارساله للادارة', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                label: Text(l10n.approvePaymentOrder, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
               ),
               const SizedBox(height: 12),
               OutlinedButton(
@@ -267,7 +270,7 @@ class _ExpensesManagementScreenState extends State<_ExpensesManagementScreenCont
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
                 onPressed: () => Navigator.pop(context),
-                child: const Text('إلغاء وتراجع عن الأمر', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                child: Text(l10n.cancelPaymentOrder, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
               ),
               const SizedBox(height: 20),
             ],

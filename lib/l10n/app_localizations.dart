@@ -104,6 +104,54 @@ abstract class AppLocalizations {
   /// **'برواح المازوري'**
   String get appName;
 
+  /// No description provided for @cfoSessionTimestamp.
+  ///
+  /// In ar, this message translates to:
+  /// **'1446/11/04 هـ - 10:45 ص'**
+  String get cfoSessionTimestamp;
+
+  /// No description provided for @ordersUnit.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلبات'**
+  String get ordersUnit;
+
+  /// No description provided for @financialGovernanceTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'لائحة الحوكمة وتفويض الصلاحيات المالية'**
+  String get financialGovernanceTitle;
+
+  /// No description provided for @ongoingOperatingInvoices.
+  ///
+  /// In ar, this message translates to:
+  /// **'الفواتير ومستحقات التشغيل الجارية'**
+  String get ongoingOperatingInvoices;
+
+  /// No description provided for @completedAndMatched.
+  ///
+  /// In ar, this message translates to:
+  /// **'مكتملة ومطابقة 100%'**
+  String get completedAndMatched;
+
+  /// No description provided for @switchLanguage.
+  ///
+  /// In ar, this message translates to:
+  /// **'تغيير اللغة'**
+  String get switchLanguage;
+
+  /// No description provided for @languageArabic.
+  ///
+  /// In ar, this message translates to:
+  /// **'العربية'**
+  String get languageArabic;
+
+  /// No description provided for @languageEnglish.
+  ///
+  /// In ar, this message translates to:
+  /// **'English'**
+  String get languageEnglish;
+
   /// No description provided for @appSubtitle.
   ///
   /// In ar, this message translates to:
@@ -271,6 +319,102 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'المصاريف والمدفوعات التشغيلية'**
   String get operationalExpenses;
+
+  /// No description provided for @expensesManagementTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'المصاريف والمدفوعات'**
+  String get expensesManagementTitle;
+
+  /// No description provided for @amountToDisburse.
+  ///
+  /// In ar, this message translates to:
+  /// **'المبلغ المطلوب دفعه وصرفه'**
+  String get amountToDisburse;
+
+  /// No description provided for @accountAndPaymentChannel.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحساب وقناة الدفع للخصم المباشر'**
+  String get accountAndPaymentChannel;
+
+  /// No description provided for @noAccountsAvailable.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد حسابات متاحة'**
+  String get noAccountsAvailable;
+
+  /// No description provided for @escrowBalanceLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'رصيد حساب الضمان:'**
+  String get escrowBalanceLabel;
+
+  /// No description provided for @currentLedgerBalanceLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'الرصيد الدفتري الحالي:'**
+  String get currentLedgerBalanceLabel;
+
+  /// No description provided for @expenseCategoryAndDocuments.
+  ///
+  /// In ar, this message translates to:
+  /// **'تصنيف المصروف والمستندات المؤيدة'**
+  String get expenseCategoryAndDocuments;
+
+  /// No description provided for @detailedExpenseReason.
+  ///
+  /// In ar, this message translates to:
+  /// **'سبب سحب وصرف المصروف تفصيلياً'**
+  String get detailedExpenseReason;
+
+  /// No description provided for @expenseDetailsHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل بياناً تفصيلياً بالمصروف'**
+  String get expenseDetailsHint;
+
+  /// No description provided for @invoiceSupportDocument.
+  ///
+  /// In ar, this message translates to:
+  /// **'مرفق الفاتورة الضريبية والمستند المؤيد'**
+  String get invoiceSupportDocument;
+
+  /// No description provided for @attachDocumentOptional.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرفاق صورة المستند إن وجدت'**
+  String get attachDocumentOptional;
+
+  /// No description provided for @strictFinancialDisbursementGovernance.
+  ///
+  /// In ar, this message translates to:
+  /// **'حوكمة الصرف المالي المشدد'**
+  String get strictFinancialDisbursementGovernance;
+
+  /// No description provided for @disbursementGovernanceNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'تخضع هذه العملية للرقابة المستندية والمطابقة البنكية الآلية، ويتم توثيق أمر الصرف في سجل التدقيق المالي برقم تتبع مشفر وتتطلب تأكيد التوقيع الرقمي المباشر للمدير المالي (CFO).'**
+  String get disbursementGovernanceNote;
+
+  /// No description provided for @approvePaymentOrder.
+  ///
+  /// In ar, this message translates to:
+  /// **'اعتماد أمر الدفع وإرساله للإدارة'**
+  String get approvePaymentOrder;
+
+  /// No description provided for @cancelPaymentOrder.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء الأمر والتراجع عنه'**
+  String get cancelPaymentOrder;
+
+  /// No description provided for @paymentApprovedSuccessfully.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم اعتماد أمر الدفع بنجاح'**
+  String get paymentApprovedSuccessfully;
 
   /// No description provided for @monthlyTotalExpenses.
   ///
@@ -487,6 +631,168 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'الحسابات البنكية الرسمية وحسابات الآيبان'**
   String get officialBankAccountsAndIban;
+
+  /// No description provided for @bankAccountsScreenSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إدارة السيولة والمطابقة مع الشبكة السعودية للمدفوعات'**
+  String get bankAccountsScreenSubtitle;
+
+  /// No description provided for @refreshBalances.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحديث الأرصدة'**
+  String get refreshBalances;
+
+  /// No description provided for @noAccountsInCategory.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد حسابات مسجلة ضمن هذا التصنيف'**
+  String get noAccountsInCategory;
+
+  /// No description provided for @operationalAccountsFilter.
+  ///
+  /// In ar, this message translates to:
+  /// **'حسابات تشغيلية'**
+  String get operationalAccountsFilter;
+
+  /// No description provided for @escrowAccountsFilter.
+  ///
+  /// In ar, this message translates to:
+  /// **'حسابات ضمان Escrow'**
+  String get escrowAccountsFilter;
+
+  /// No description provided for @paymentGatewaysFilter.
+  ///
+  /// In ar, this message translates to:
+  /// **'بوابات الدفع الإلكتروني'**
+  String get paymentGatewaysFilter;
+
+  /// No description provided for @digitalWalletsFilter.
+  ///
+  /// In ar, this message translates to:
+  /// **'المحافظ الرقمية'**
+  String get digitalWalletsFilter;
+
+  /// No description provided for @instantBankSyncNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحديث ومطابقة تلقائية متزامنة مع كافة القنوات'**
+  String get instantBankSyncNote;
+
+  /// No description provided for @createBankAccount.
+  ///
+  /// In ar, this message translates to:
+  /// **'إضافة حساب جديد'**
+  String get createBankAccount;
+
+  /// No description provided for @exportAccountStatementButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'تصدير كشف PDF'**
+  String get exportAccountStatementButton;
+
+  /// No description provided for @openDailyLedger.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجل الحركات المصرفية والعمليات اليومية'**
+  String get openDailyLedger;
+
+  /// No description provided for @dailyLedgerDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض قيود اليومية، الإيداعات، والحوالات الصادرة والواردة'**
+  String get dailyLedgerDescription;
+
+  /// No description provided for @escrowAccountBadge.
+  ///
+  /// In ar, this message translates to:
+  /// **'حساب ضمان'**
+  String get escrowAccountBadge;
+
+  /// No description provided for @availableLedgerBalanceLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'الرصيد الدفتري المتاح:'**
+  String get availableLedgerBalanceLabel;
+
+  /// No description provided for @ibanOrIdentifierLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'الآيبان / المعرّف:'**
+  String get ibanOrIdentifierLabel;
+
+  /// No description provided for @connectedReconciledViaSarie.
+  ///
+  /// In ar, this message translates to:
+  /// **'متصل ومطابق لحظياً عبر SARIE'**
+  String get connectedReconciledViaSarie;
+
+  /// No description provided for @linkBankAccountTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'ربط حساب مصرفي جديد'**
+  String get linkBankAccountTitle;
+
+  /// No description provided for @enterBankDetailsToApprove.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل تفاصيل الحساب المصرفي للاعتماد'**
+  String get enterBankDetailsToApprove;
+
+  /// No description provided for @bankNameField.
+  ///
+  /// In ar, this message translates to:
+  /// **'اسم البنك'**
+  String get bankNameField;
+
+  /// No description provided for @ibanField.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم الآيبان (IBAN)'**
+  String get ibanField;
+
+  /// No description provided for @bankLinkRequestSent.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إرسال طلب الربط'**
+  String get bankLinkRequestSent;
+
+  /// No description provided for @saveAccount.
+  ///
+  /// In ar, this message translates to:
+  /// **'حفظ الحساب'**
+  String get saveAccount;
+
+  /// No description provided for @exportAccountsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تصدير كشف الحسابات'**
+  String get exportAccountsTitle;
+
+  /// No description provided for @pdfReportExplanation.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيتم توليد تقرير رسمي مفصل بصيغة PDF بجميع الأرصدة المصرفية المتطابقة.'**
+  String get pdfReportExplanation;
+
+  /// No description provided for @download.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحميل'**
+  String get download;
+
+  /// No description provided for @cancelAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء'**
+  String get cancelAction;
+
+  /// No description provided for @accountsExportSuccess.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تصدير كشف الحسابات بنجاح'**
+  String get accountsExportSuccess;
 
   /// No description provided for @accountsCount.
   ///
@@ -1034,6 +1340,42 @@ abstract class AppLocalizations {
   /// **'تنبيه تجاري آلي'**
   String get autoCommercialAlert;
 
+  /// No description provided for @couriersTab.
+  ///
+  /// In ar, this message translates to:
+  /// **'المناديب'**
+  String get couriersTab;
+
+  /// No description provided for @advertisementsTab.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإعلانات'**
+  String get advertisementsTab;
+
+  /// No description provided for @corporateAccount.
+  ///
+  /// In ar, this message translates to:
+  /// **'حساب الشركات'**
+  String get corporateAccount;
+
+  /// No description provided for @subscriptionsHistoryTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجل الاشتراكات والترقيات النشطة وغير النشطة'**
+  String get subscriptionsHistoryTitle;
+
+  /// No description provided for @browsePreviousOperations.
+  ///
+  /// In ar, this message translates to:
+  /// **'تصفح تاريخ جميع العمليات السابقة'**
+  String get browsePreviousOperations;
+
+  /// No description provided for @openingSubscriptionsRegister.
+  ///
+  /// In ar, this message translates to:
+  /// **'جاري فتح السجل...'**
+  String get openingSubscriptionsRegister;
+
   /// No description provided for @storesAndMerchants.
   ///
   /// In ar, this message translates to:
@@ -1237,6 +1579,336 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'الرئيسية'**
   String get navHome;
+
+  /// No description provided for @profileTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملفك الشخصي'**
+  String get profileTitle;
+
+  /// No description provided for @financialDepartment.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإدارة المالية'**
+  String get financialDepartment;
+
+  /// No description provided for @encryptedBit256.
+  ///
+  /// In ar, this message translates to:
+  /// **'تشفير bit-256'**
+  String get encryptedBit256;
+
+  /// No description provided for @secureApprovedSession.
+  ///
+  /// In ar, this message translates to:
+  /// **'جلسة رقابية آمنة ومصادق عليها'**
+  String get secureApprovedSession;
+
+  /// No description provided for @cfoAuditingTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'CFO ورئيس التدقيق المالي'**
+  String get cfoAuditingTitle;
+
+  /// No description provided for @sovereignApprovalPowers.
+  ///
+  /// In ar, this message translates to:
+  /// **'صلاحيات الاعتماد السيادي والمصادقة البنكية'**
+  String get sovereignApprovalPowers;
+
+  /// No description provided for @certifiedAuditorAuthority.
+  ///
+  /// In ar, this message translates to:
+  /// **'مدقق مالي معتمد • مفوض التوقيع والمصادقة البنكية المزدوجة لدى مؤسسة برواح المازوري'**
+  String get certifiedAuditorAuthority;
+
+  /// No description provided for @officialPhone.
+  ///
+  /// In ar, this message translates to:
+  /// **'الهاتف المعتمد'**
+  String get officialPhone;
+
+  /// No description provided for @corporateEmail.
+  ///
+  /// In ar, this message translates to:
+  /// **'البريد المؤسسي'**
+  String get corporateEmail;
+
+  /// No description provided for @enabledNafath.
+  ///
+  /// In ar, this message translates to:
+  /// **'نفاذ وطني مفعل'**
+  String get enabledNafath;
+
+  /// No description provided for @authorizationEffectiveFrom.
+  ///
+  /// In ar, this message translates to:
+  /// **'سريان الاعتماد الرقابي من: 2027م'**
+  String get authorizationEffectiveFrom;
+
+  /// No description provided for @activeAndReconciled.
+  ///
+  /// In ar, this message translates to:
+  /// **'نشط ومطابق'**
+  String get activeAndReconciled;
+
+  /// No description provided for @duesWalletTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'محفظة المستحقات والأتعاب'**
+  String get duesWalletTitle;
+
+  /// No description provided for @executiveWalletDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'حساب الإدارة والرقابة التنفيذية المباشر'**
+  String get executiveWalletDescription;
+
+  /// No description provided for @totalAccountingDues.
+  ///
+  /// In ar, this message translates to:
+  /// **'إجمالي رصيد المستحقات المحاسبية'**
+  String get totalAccountingDues;
+
+  /// No description provided for @pendingRegulatoryBalance.
+  ///
+  /// In ar, this message translates to:
+  /// **'رصيد معلق رقابياً'**
+  String get pendingRegulatoryBalance;
+
+  /// No description provided for @awaitingQuarterlyClose.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار الإقفال الربع سنوي'**
+  String get awaitingQuarterlyClose;
+
+  /// No description provided for @approvedWithoutConditions.
+  ///
+  /// In ar, this message translates to:
+  /// **'معتمد دون شروط'**
+  String get approvedWithoutConditions;
+
+  /// No description provided for @approvedPayoutAccount.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحساب المصفي المعتمد للصرف'**
+  String get approvedPayoutAccount;
+
+  /// No description provided for @requestOwnerProfitWithdrawal.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب سحب الأرباح من المالك'**
+  String get requestOwnerProfitWithdrawal;
+
+  /// No description provided for @editWithdrawalInformation.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعديل معلومات السحب'**
+  String get editWithdrawalInformation;
+
+  /// No description provided for @cfoExclusive.
+  ///
+  /// In ar, this message translates to:
+  /// **'مقتصرة على CFO'**
+  String get cfoExclusive;
+
+  /// No description provided for @sovereignControls.
+  ///
+  /// In ar, this message translates to:
+  /// **'التحكم والإجراءات السيادية'**
+  String get sovereignControls;
+
+  /// No description provided for @feesAndCommissionsMatrix.
+  ///
+  /// In ar, this message translates to:
+  /// **'مصفوفة الرسوم والعمولات العامة'**
+  String get feesAndCommissionsMatrix;
+
+  /// No description provided for @feesAndCommissionsMatrixDesc.
+  ///
+  /// In ar, this message translates to:
+  /// **'ضبط النسب المئوية للمنصة، اقتطاعات بوابات الدفع الإلكترونية، وتعديل تسعير العمليات التعاقدية.'**
+  String get feesAndCommissionsMatrixDesc;
+
+  /// No description provided for @exclusivePermission.
+  ///
+  /// In ar, this message translates to:
+  /// **'صلاحية حصرية'**
+  String get exclusivePermission;
+
+  /// No description provided for @editMatrix.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعديل المصفوفة'**
+  String get editMatrix;
+
+  /// No description provided for @fastSettlementFees.
+  ///
+  /// In ar, this message translates to:
+  /// **'رسوم التسوية السريعة'**
+  String get fastSettlementFees;
+
+  /// No description provided for @currentBaseCommission.
+  ///
+  /// In ar, this message translates to:
+  /// **'العمولة الأساسية الحالية'**
+  String get currentBaseCommission;
+
+  /// No description provided for @comprehensivePaymentsReports.
+  ///
+  /// In ar, this message translates to:
+  /// **'كشف المدفوعات والإيرادات الشامل'**
+  String get comprehensivePaymentsReports;
+
+  /// No description provided for @comprehensivePaymentsReportsDesc.
+  ///
+  /// In ar, this message translates to:
+  /// **'توليد كشوف التدفقات النقدية، تقارير الضريبة العامة المضافة، وحزم التسويات المصرفية المجمعة.'**
+  String get comprehensivePaymentsReportsDesc;
+
+  /// No description provided for @exportDetailedExcel.
+  ///
+  /// In ar, this message translates to:
+  /// **'تصدير Excel تفصيلي'**
+  String get exportDetailedExcel;
+
+  /// No description provided for @exportApprovedPdf.
+  ///
+  /// In ar, this message translates to:
+  /// **'تصدير PDF معتمد'**
+  String get exportApprovedPdf;
+
+  /// No description provided for @liveDocumented.
+  ///
+  /// In ar, this message translates to:
+  /// **'مباشر • موثق'**
+  String get liveDocumented;
+
+  /// No description provided for @auditActivityLog.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجل الرقابة وحركات المدير المالي'**
+  String get auditActivityLog;
+
+  /// No description provided for @ownerDisputeSettlementApproval.
+  ///
+  /// In ar, this message translates to:
+  /// **'مصادقة صرف تسوية نزاع مالك'**
+  String get ownerDisputeSettlementApproval;
+
+  /// No description provided for @todayAtEleven.
+  ///
+  /// In ar, this message translates to:
+  /// **'اليوم 11:00 ص'**
+  String get todayAtEleven;
+
+  /// No description provided for @approveDisputeSettlement.
+  ///
+  /// In ar, this message translates to:
+  /// **'اعتماد صرف تسوية النزاع #CMP-1035 بقيمة 1,200.00 ر.س للعميل د. طارق العمري.'**
+  String get approveDisputeSettlement;
+
+  /// No description provided for @referenceCode.
+  ///
+  /// In ar, this message translates to:
+  /// **'المرجع:'**
+  String get referenceCode;
+
+  /// No description provided for @validDigitalSignature.
+  ///
+  /// In ar, this message translates to:
+  /// **'توقيع رقمي ساري SHA-256'**
+  String get validDigitalSignature;
+
+  /// No description provided for @aggregatedProfitWithdrawal.
+  ///
+  /// In ar, this message translates to:
+  /// **'اعتماد سحب أرباح مجمعة (SARIE)'**
+  String get aggregatedProfitWithdrawal;
+
+  /// No description provided for @todayAtNineThirty.
+  ///
+  /// In ar, this message translates to:
+  /// **'اليوم 09:30 ص'**
+  String get todayAtNineThirty;
+
+  /// No description provided for @periodicMerchantTransfers.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحويل مستحقات دورية لـ 12 متجر معتمد عبر نظام المدفوعات الفورية بإجمالي 142,500.00 ر.س.'**
+  String get periodicMerchantTransfers;
+
+  /// No description provided for @alRajhiBank.
+  ///
+  /// In ar, this message translates to:
+  /// **'مصرف الراجحي'**
+  String get alRajhiBank;
+
+  /// No description provided for @executedAndPosted.
+  ///
+  /// In ar, this message translates to:
+  /// **'منفذة بنكياً ومقيدة'**
+  String get executedAndPosted;
+
+  /// No description provided for @precautionaryWalletFreeze.
+  ///
+  /// In ar, this message translates to:
+  /// **'تجميد احترازي لمحفظة متجر'**
+  String get precautionaryWalletFreeze;
+
+  /// No description provided for @yesterdayAtFourFifteen.
+  ///
+  /// In ar, this message translates to:
+  /// **'أمس 04:15 م'**
+  String get yesterdayAtFourFifteen;
+
+  /// No description provided for @suspendMerchantDisbursement.
+  ///
+  /// In ar, this message translates to:
+  /// **'إيقاف عمليات الصرف لمتجر مستلزمات حاسب (#TRD-304) لوجود شبهة نزاع مدفوعات متكرر.'**
+  String get suspendMerchantDisbursement;
+
+  /// No description provided for @auditNoticeReference.
+  ///
+  /// In ar, this message translates to:
+  /// **'إشعار التدقيق #771'**
+  String get auditNoticeReference;
+
+  /// No description provided for @underInvestigation.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيد التحقيق والتدقيق'**
+  String get underInvestigation;
+
+  /// No description provided for @maintenanceCommissionUpdate.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحديث عمولة قطاع الصيانة'**
+  String get maintenanceCommissionUpdate;
+
+  /// No description provided for @yesterdayAtOneTwenty.
+  ///
+  /// In ar, this message translates to:
+  /// **'أمس 01:20 م'**
+  String get yesterdayAtOneTwenty;
+
+  /// No description provided for @commissionUpdatedByBoard.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعديل نسبة العمولة المحصلة إلى 8.0% بموجب قرار مجلس الإدارة رقم BOD-44/B.'**
+  String get commissionUpdatedByBoard;
+
+  /// No description provided for @activeSystemUpdate.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحديث نظامي نافذ'**
+  String get activeSystemUpdate;
+
+  /// No description provided for @viewFullAuditActivity.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض سجل الرقابة والحركات الكامل (342 حركة موثقة)'**
+  String get viewFullAuditActivity;
 }
 
 class _AppLocalizationsDelegate

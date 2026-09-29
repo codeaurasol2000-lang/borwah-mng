@@ -12,6 +12,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appName => 'Barwah Elmazoury';
 
   @override
+  String get cfoSessionTimestamp => '04/11/1446 AH - 10:45 AM';
+
+  @override
+  String get ordersUnit => 'orders';
+
+  @override
+  String get financialGovernanceTitle =>
+      'Financial Governance and Delegation Policy';
+
+  @override
+  String get ongoingOperatingInvoices => 'Ongoing Operating Invoices and Dues';
+
+  @override
+  String get completedAndMatched => 'Completed and reconciled 100%';
+
+  @override
+  String get switchLanguage => 'Switch language';
+
+  @override
+  String get languageArabic => 'Arabic';
+
+  @override
+  String get languageEnglish => 'English';
+
+  @override
   String get appSubtitle => 'Field Management & Supervision System';
 
   @override
@@ -107,6 +132,60 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get operationalExpenses => 'Operational Expenses & Disbursements';
+
+  @override
+  String get expensesManagementTitle => 'Expenses and Payments';
+
+  @override
+  String get amountToDisburse => 'Amount to pay and disburse';
+
+  @override
+  String get accountAndPaymentChannel => 'Account and direct-payment channel';
+
+  @override
+  String get noAccountsAvailable => 'No accounts are available';
+
+  @override
+  String get escrowBalanceLabel => 'Escrow account balance:';
+
+  @override
+  String get currentLedgerBalanceLabel => 'Current ledger balance:';
+
+  @override
+  String get expenseCategoryAndDocuments =>
+      'Expense category and supporting documents';
+
+  @override
+  String get detailedExpenseReason => 'Detailed reason for the expense';
+
+  @override
+  String get expenseDetailsHint =>
+      'Enter a detailed description of the expense';
+
+  @override
+  String get invoiceSupportDocument => 'Tax invoice and supporting document';
+
+  @override
+  String get attachDocumentOptional => 'Attach a document image (optional)';
+
+  @override
+  String get strictFinancialDisbursementGovernance =>
+      'Strict financial disbursement governance';
+
+  @override
+  String get disbursementGovernanceNote =>
+      'This operation is subject to document review and automated bank reconciliation. The payment order is recorded in the financial audit log with an encrypted tracking number and requires the CFO\'s direct digital signature.';
+
+  @override
+  String get approvePaymentOrder =>
+      'Approve payment order and send to management';
+
+  @override
+  String get cancelPaymentOrder => 'Cancel and withdraw the payment order';
+
+  @override
+  String get paymentApprovedSuccessfully =>
+      'Payment order approved successfully';
 
   @override
   String get monthlyTotalExpenses => 'Total Monthly Disbursements';
@@ -237,6 +316,94 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get officialBankAccountsAndIban =>
       'Official Bank Accounts & IBAN Records';
+
+  @override
+  String get bankAccountsScreenSubtitle =>
+      'Manage liquidity and reconcile with the Saudi Payments network';
+
+  @override
+  String get refreshBalances => 'Refresh balances';
+
+  @override
+  String get noAccountsInCategory =>
+      'No accounts are registered in this category';
+
+  @override
+  String get operationalAccountsFilter => 'Operating accounts';
+
+  @override
+  String get escrowAccountsFilter => 'Escrow accounts';
+
+  @override
+  String get paymentGatewaysFilter => 'Payment gateways';
+
+  @override
+  String get digitalWalletsFilter => 'Digital wallets';
+
+  @override
+  String get instantBankSyncNote =>
+      'Automatic synchronization and reconciliation across all channels';
+
+  @override
+  String get createBankAccount => 'Add new account';
+
+  @override
+  String get exportAccountStatementButton => 'Export PDF statement';
+
+  @override
+  String get openDailyLedger => 'Bank transactions and daily operations';
+
+  @override
+  String get dailyLedgerDescription =>
+      'View journal entries, deposits, and incoming and outgoing transfers';
+
+  @override
+  String get escrowAccountBadge => 'Escrow account';
+
+  @override
+  String get availableLedgerBalanceLabel => 'Available ledger balance:';
+
+  @override
+  String get ibanOrIdentifierLabel => 'IBAN / Identifier:';
+
+  @override
+  String get connectedReconciledViaSarie =>
+      'Connected and reconciled live via SARIE';
+
+  @override
+  String get linkBankAccountTitle => 'Link a new bank account';
+
+  @override
+  String get enterBankDetailsToApprove =>
+      'Enter bank account details for approval';
+
+  @override
+  String get bankNameField => 'Bank name';
+
+  @override
+  String get ibanField => 'IBAN';
+
+  @override
+  String get bankLinkRequestSent => 'Account-link request sent';
+
+  @override
+  String get saveAccount => 'Save account';
+
+  @override
+  String get exportAccountsTitle => 'Export account statement';
+
+  @override
+  String get pdfReportExplanation =>
+      'A detailed official PDF report of all reconciled bank balances will be generated.';
+
+  @override
+  String get download => 'Download';
+
+  @override
+  String get cancelAction => 'Cancel';
+
+  @override
+  String get accountsExportSuccess => 'Account statement exported successfully';
 
   @override
   String get accountsCount => '3 Accounts';
@@ -534,6 +701,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get autoCommercialAlert => 'Automated Commercial Alert';
 
   @override
+  String get couriersTab => 'Couriers';
+
+  @override
+  String get advertisementsTab => 'Advertisements';
+
+  @override
+  String get corporateAccount => 'Corporate account';
+
+  @override
+  String get subscriptionsHistoryTitle =>
+      'Active and inactive subscription and upgrade records';
+
+  @override
+  String get browsePreviousOperations =>
+      'Browse the history of all previous operations';
+
+  @override
+  String get openingSubscriptionsRegister => 'Opening the register...';
+
+  @override
   String get storesAndMerchants => 'Stores & Merchants';
 
   @override
@@ -638,4 +825,184 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get navHome => 'Home';
+
+  @override
+  String get profileTitle => 'My Profile';
+
+  @override
+  String get financialDepartment => 'Financial Administration';
+
+  @override
+  String get encryptedBit256 => 'bit-256 encrypted';
+
+  @override
+  String get secureApprovedSession => 'Secure, authenticated audit session';
+
+  @override
+  String get cfoAuditingTitle => 'CFO & Head of Financial Auditing';
+
+  @override
+  String get sovereignApprovalPowers =>
+      'Executive approval and bank authentication powers';
+
+  @override
+  String get certifiedAuditorAuthority =>
+      'Certified financial auditor • Authorized for dual bank signatures and authentication at Barwah Elmazoury';
+
+  @override
+  String get officialPhone => 'Verified phone';
+
+  @override
+  String get corporateEmail => 'Corporate email';
+
+  @override
+  String get enabledNafath => 'National Nafath enabled';
+
+  @override
+  String get authorizationEffectiveFrom =>
+      'Regulatory authorization effective from: 2027';
+
+  @override
+  String get activeAndReconciled => 'Active and reconciled';
+
+  @override
+  String get duesWalletTitle => 'Dues and fees wallet';
+
+  @override
+  String get executiveWalletDescription =>
+      'Direct executive management and oversight account';
+
+  @override
+  String get totalAccountingDues => 'Total accounting dues balance';
+
+  @override
+  String get pendingRegulatoryBalance => 'Balance under regulatory review';
+
+  @override
+  String get awaitingQuarterlyClose => 'Awaiting quarterly close';
+
+  @override
+  String get approvedWithoutConditions => 'Approved without conditions';
+
+  @override
+  String get approvedPayoutAccount => 'Approved settlement account for payouts';
+
+  @override
+  String get requestOwnerProfitWithdrawal => 'Request owner profit withdrawal';
+
+  @override
+  String get editWithdrawalInformation => 'Edit withdrawal information';
+
+  @override
+  String get cfoExclusive => 'CFO only';
+
+  @override
+  String get sovereignControls => 'Executive controls and actions';
+
+  @override
+  String get feesAndCommissionsMatrix => 'General fees and commissions matrix';
+
+  @override
+  String get feesAndCommissionsMatrixDesc =>
+      'Set platform percentages, payment-gateway deductions, and contracted operation pricing.';
+
+  @override
+  String get exclusivePermission => 'Exclusive access';
+
+  @override
+  String get editMatrix => 'Edit matrix';
+
+  @override
+  String get fastSettlementFees => 'Fast settlement fees';
+
+  @override
+  String get currentBaseCommission => 'Current base commission';
+
+  @override
+  String get comprehensivePaymentsReports =>
+      'Comprehensive payments and revenue statement';
+
+  @override
+  String get comprehensivePaymentsReportsDesc =>
+      'Generate cash-flow statements, VAT reports, and consolidated bank-settlement packages.';
+
+  @override
+  String get exportDetailedExcel => 'Export detailed Excel';
+
+  @override
+  String get exportApprovedPdf => 'Export approved PDF';
+
+  @override
+  String get liveDocumented => 'Live • documented';
+
+  @override
+  String get auditActivityLog => 'CFO audit and activity log';
+
+  @override
+  String get ownerDisputeSettlementApproval =>
+      'Owner dispute settlement payout approval';
+
+  @override
+  String get todayAtEleven => 'Today 11:00 AM';
+
+  @override
+  String get approveDisputeSettlement =>
+      'Approved dispute settlement #CMP-1035 for 1,200.00 SAR to Dr. Tareq Al-Omari.';
+
+  @override
+  String get referenceCode => 'Reference:';
+
+  @override
+  String get validDigitalSignature => 'Valid SHA-256 digital signature';
+
+  @override
+  String get aggregatedProfitWithdrawal =>
+      'Aggregated profit withdrawal approval (SARIE)';
+
+  @override
+  String get todayAtNineThirty => 'Today 09:30 AM';
+
+  @override
+  String get periodicMerchantTransfers =>
+      'Periodic payouts to 12 approved stores through instant payments, totaling SAR 142,500.00.';
+
+  @override
+  String get alRajhiBank => 'Al Rajhi Bank';
+
+  @override
+  String get executedAndPosted => 'Executed by bank and posted';
+
+  @override
+  String get precautionaryWalletFreeze => 'Precautionary store wallet freeze';
+
+  @override
+  String get yesterdayAtFourFifteen => 'Yesterday 04:15 PM';
+
+  @override
+  String get suspendMerchantDisbursement =>
+      'Payouts paused for computer-supplies store (#TRD-304) due to a suspected recurring payment dispute.';
+
+  @override
+  String get auditNoticeReference => 'Audit notice #771';
+
+  @override
+  String get underInvestigation => 'Under investigation and audit';
+
+  @override
+  String get maintenanceCommissionUpdate =>
+      'Maintenance-sector commission update';
+
+  @override
+  String get yesterdayAtOneTwenty => 'Yesterday 01:20 PM';
+
+  @override
+  String get commissionUpdatedByBoard =>
+      'Collected commission updated to 8.0% under board resolution BOD-44/B.';
+
+  @override
+  String get activeSystemUpdate => 'Active system update';
+
+  @override
+  String get viewFullAuditActivity =>
+      'View full audit and activity log (342 documented events)';
 }

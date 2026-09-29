@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/di/injection_container.dart';
+import '../../../core/utils/app_locale_controller.dart';
 import '../../../core/utils/currency_formatter.dart';
 import '../controllers/dashboard/finance_dashboard_cubit.dart';
 import '../controllers/dashboard/finance_dashboard_state.dart';
@@ -15,6 +16,9 @@ import 'expenses_management_screen.dart';
 import 'frozen_requests_screen.dart';
 import 'profile_screen.dart';
 import 'department_wallet_screen.dart';
+import 'settlements_screen.dart';
+import 'bank_reconciliation_screen.dart';
+import '../../../l10n/app_localizations.dart';
 
 class FinanceDashboardScreen extends StatefulWidget {
   const FinanceDashboardScreen({super.key});
@@ -57,12 +61,14 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return BlocProvider(
       create: (_) =>
       FinanceDashboardCubit(getFinanceSummaryUseCase: sl())
         ..loadDashboardData(),
       child: Directionality(
-        textDirection: TextDirection.rtl,
+        textDirection: l10n.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
         child: Scaffold(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
 
@@ -90,13 +96,13 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                 ),
               ),
             ),
-            title: const Column(
+            title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'برواح المازوري',
-                  style: TextStyle(
+                  l10n.appName,
+                  style: const TextStyle(
                     color: AppColors.primaryDark,
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
@@ -104,15 +110,15 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                 ),
                 Row(
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.verified_outlined,
                       size: 13,
                       color: AppColors.info,
                     ),
-                    SizedBox(width: 4),
+                    const SizedBox(width: 4),
                     Text(
-                      'المدير المالي التنفيذي',
-                      style: TextStyle(
+                      l10n.cfoRole,
+                      style: const TextStyle(
                         fontSize: 10,
                         color: AppColors.textSecondary,
                       ),
@@ -121,7 +127,22 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                 ),
               ],
             ),
-            actions: const [
+            actions: [
+              IconButton(
+                tooltip: l10n.switchLanguage,
+                onPressed: AppLocaleController.instance.toggle,
+                icon: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.translate, color: AppColors.primaryDark, size: 19),
+                    const SizedBox(width: 3),
+                    Text(
+                      l10n.localeName == 'ar' ? l10n.languageEnglish : l10n.languageArabic,
+                      style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.primaryDark),
+                    ),
+                  ],
+                ),
+              ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: Icon(
@@ -158,7 +179,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                         padding: const EdgeInsets.symmetric(
                           horizontal: 14,
                           vertical: 12,
-                        ).copyWith(bottom: 90), // Reserved space for floating bottom bar
+                        ).copyWith(bottom: 90),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -168,7 +189,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Row(
+                          Row(
                             children: [
                               CircleAvatar(
                                 radius: 4,
@@ -176,8 +197,8 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                               ),
                               SizedBox(width: 6),
                               Text(
-                                'الجلسة المالية المباشرة',
-                                style: TextStyle(
+                                l10n.liveFinancialSession,
+                                style: const TextStyle(
                                   color: AppColors.info,
                                   fontSize: 11,
                                   fontWeight: FontWeight.bold,
@@ -186,7 +207,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                             ],
                           ),
                           Text(
-                            '1446/11/04 هـ - 10:45 ص',
+                            l10n.cfoSessionTimestamp,
                             style: TextStyle(
                               color: Colors.blueGrey[400],
                               fontSize: 11,
@@ -197,8 +218,8 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
 
                       const SizedBox(height: 8),
 
-                      const Text(
-                        'الرقابة المالية المركزية - برواح المازوري',
+                      Text(
+                        l10n.financialControlTitle,
                         style: TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.bold,
@@ -208,7 +229,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                       const SizedBox(height: 2),
 
                       Text(
-                        'لوحة تحكم المدير المالي | الوردية المالية النشطة ومطابقة السيولة الحية',
+                        l10n.cfoControlPanelSubtitle,
                         style: TextStyle(
                           fontSize: 11,
                           color: Colors.blueGrey[500],
@@ -229,7 +250,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                           color: AppColors.surfaceHighlight,
                           borderRadius: BorderRadius.circular(14),
                         ),
-                        child: const Row(
+                        child: Row(
                           children: [
                             Icon(
                               Icons.verified,
@@ -243,15 +264,15 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                    'أ. سليمان الراجحي',
-                                    style: TextStyle(
+                                    l10n.cfoName,
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 13,
                                     ),
                                   ),
                                   Text(
-                                    'المدير المالي التنفيذي',
-                                    style: TextStyle(
+                                    l10n.cfoRole,
+                                    style: const TextStyle(
                                       fontSize: 10,
                                       color: AppColors.textSecondary,
                                     ),
@@ -260,8 +281,8 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                               ),
                             ),
                             Text(
-                              '#CF0-01',
-                              style: TextStyle(
+                              l10n.cfoBadgeCode,
+                              style: const TextStyle(
                                 fontSize: 11,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -323,10 +344,10 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                                     ),
                                   ),
                                   const SizedBox(width: 10),
-                                  const Expanded(
+                                  Expanded(
                                     child: Text(
-                                      'إجمالي السيولة النقدية والضمانات المجمعة',
-                                      style: TextStyle(
+                                      l10n.totalAggregatedLiquidity,
+                                      style: const TextStyle(
                                         color: Colors.white70,
                                         fontSize: 12,
                                       ),
@@ -364,7 +385,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                               ),
 
                               _buildBankSubRow(
-                                'مصرف الراجحي (الحساب التشغيلي الرئيسي)',
+                                l10n.alRajhiMainOperating,
                                 CurrencyFormatter.format(
                                   data.rajhiAccountBalance,
                                 ),
@@ -373,7 +394,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                               const SizedBox(height: 8),
 
                               _buildBankSubRow(
-                                'البنك الأهلي السعودي (حساب الضمان Escrow)',
+                                l10n.snbEscrowAccount,
                                 CurrencyFormatter.format(
                                   data.snbEscrowBalance,
                                 ),
@@ -391,14 +412,14 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                       _buildNavigationCard(
                         context,
                         title:
-                        'طلبات السحب المعلقة قيد المراجعة للتجار والمستخدمين',
+                        l10n.pendingMerchantWithdrawalsTitle,
                         countText:
-                        '${data.pendingMerchantWithdrawalsCount} طلباً',
+                        '${data.pendingMerchantWithdrawalsCount} ${l10n.ordersUnit}',
                         amountText: CurrencyFormatter.format(
                           data.pendingMerchantWithdrawalsAmount,
                         ),
                         subtitle:
-                        'تحتاج تدقيق ومطابقة فواتير قبل التوقيع',
+                        l10n.auditInvoiceNote,
                         icon: Icons.storefront_outlined,
                         onTap: () => Navigator.push(
                           context,
@@ -417,14 +438,14 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                       _buildNavigationCard(
                         context,
                         title:
-                        'طلبات السحب المعلقة قيد المراجعة للمشرفين و المساعدين',
+                        l10n.pendingSupervisorWithdrawalsTitle,
                         countText:
-                        '${data.pendingSupervisorWithdrawalsCount} طلباً',
+                        '${data.pendingSupervisorWithdrawalsCount} ${l10n.ordersUnit}',
                         amountText: CurrencyFormatter.format(
                           data.pendingSupervisorWithdrawalsAmount,
                         ),
                         subtitle:
-                        'تحتاج تدقيق ومطابقة فواتير قبل التوقيع',
+                        l10n.auditInvoiceNote,
                         icon: Icons.supervisor_account_outlined,
                         onTap: () => Navigator.push(
                           context,
@@ -442,17 +463,17 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                       // =========================
                       _buildNavigationCard(
                         context,
-                        title: 'طلبات الاشتراكات والترقيات المعلقة',
+                        title: l10n.pendingSubscriptionsTitle,
                         countText:
-                        '${data.pendingSubscriptionsCount} طلباً',
+                        '${data.pendingSubscriptionsCount} ${l10n.ordersUnit}',
                         amountText: CurrencyFormatter.format(
                           data.pendingSubscriptionsAmount,
                         ),
                         subtitle:
-                        'ترقيات باقات المتاجر واشتراكات الفنيين بانتظار الاعتماد المالي',
+                        l10n.pendingSubscriptionsSubtitle,
                         icon: Icons.subscriptions_outlined,
                         actionButtonText:
-                        'مراجعة واعتماد الاشتراكات (${data.pendingSubscriptionsCount})',
+                        '${l10n.reviewSubscriptionsAction} (${data.pendingSubscriptionsCount})',
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -498,8 +519,8 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                                     crossAxisAlignment:
                                     CrossAxisAlignment.start,
                                     children: [
-                                      const Text(
-                                        'المصاريف والمدفوعات\nالتشغيلية',
+                                      Text(
+                                        l10n.operationalExpenses,
                                         style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold,
@@ -518,8 +539,8 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                                             ),
                                           ),
                                           const SizedBox(width: 4),
-                                          const Text(
-                                            'ر.س',
+                                          Text(
+                                            l10n.currencySar,
                                             style: TextStyle(
                                               fontSize: 12,
                                               fontWeight: FontWeight.bold,
@@ -527,8 +548,8 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                                             ),
                                           ),
                                           const SizedBox(width: 6),
-                                          const Text(
-                                            'إجمالي مدفوعات الشهر',
+                                          Text(
+                                            l10n.monthlyTotalExpenses,
                                             style: TextStyle(
                                               fontSize: 10,
                                               color: Colors.grey,
@@ -559,7 +580,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                                       ),
                                       const SizedBox(width: 4),
                                       Text(
-                                        'إدارة\nالصرف',
+                                        l10n.expenseManagement,
                                         style: TextStyle(
                                           fontSize: 10,
                                           fontWeight: FontWeight.bold,
@@ -586,8 +607,8 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                               mainAxisAlignment:
                               MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text(
-                                  'الفواتير ومستحقات التشغيل الجارية',
+                                Text(
+                                  l10n.ongoingOperatingInvoices,
                                   style: TextStyle(
                                     fontSize: 11,
                                     color: Colors.black87,
@@ -605,8 +626,8 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                                     borderRadius:
                                     BorderRadius.circular(6),
                                   ),
-                                  child: const Text(
-                                    '4 بنود صرف مجدولة',
+                                  child: Text(
+                                    l10n.scheduledDisbursementItems,
                                     style: TextStyle(
                                       fontSize: 10,
                                       color: Colors.blue,
@@ -644,8 +665,8 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                                     MaterialPageRoute(builder: (_) => const ExpensesManagementScreen()),
                                   );
                                 },
-                                label: const Text(
-                                  'تسجيل بيان دفع جديد / إدارة المصاريف',
+                                label: Text(
+                                  l10n.recordNewPayment,
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
@@ -666,7 +687,8 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                         children: [
                           Expanded(
                             child: _buildMetricTileNew(
-                              title: 'عمولات التطبيق المحصلة هذا الشهر',
+                              title: l10n.monthlyEarnedCommissions,
+                              currencyText: l10n.currencySar,
                               value: '284,900',
                               icon: Icons.auto_graph,
                               color: Colors.blue.shade700,
@@ -674,8 +696,8 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                               badgeColor: Colors.blue.shade50,
                               badgeTextColor: Colors.blue.shade700,
                               bottomText:
-                              'مقارنة بالشهر السابق (249,450 ر.س)',
-                              bottomLink: 'صافي الإيراد الرقابي',
+                              l10n.comparedToLastMonth,
+                              bottomLink: l10n.netRegulatoryRevenue,
                             ),
                           ),
                         ],
@@ -737,9 +759,9 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                                               color: AppColors.danger,
                                             ),
                                             const SizedBox(width: 4),
-                                            const Text(
-                                              'أرصدة معلقة تحت التدقيق الرقابي',
-                                              style: TextStyle(
+                                            Text(
+                                              l10n.balancesUnderRegulatoryAudit,
+                                              style: const TextStyle(
                                                 fontSize: 11,
                                                 color: Colors.black87,
                                               ),
@@ -760,9 +782,9 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                                               ),
                                             ),
                                             const SizedBox(width: 4),
-                                            const Text(
-                                              'ر.س',
-                                              style: TextStyle(
+                                            Text(
+                                              l10n.currencySar,
+                                              style: const TextStyle(
                                                 fontSize: 10,
                                                 color: Colors.grey,
                                                 fontWeight:
@@ -781,7 +803,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                               const SizedBox(height: 10),
 
                               Text(
-                                'محافظ مجمدة احترازياً بطلب الإدارة العامة والمشرفين لوجود بلاغات ونزاعات مفتوحة.',
+                                l10n.frozenWalletsNote,
                                 style: TextStyle(
                                   fontSize: 10,
                                   color: Colors.grey.shade600,
@@ -802,7 +824,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                         mainAxisAlignment:
                         MainAxisAlignment.spaceBetween,
                         children: [
-                          const Row(
+                          Row(
                             children: [
                               Icon(
                                 Icons.account_balance_wallet,
@@ -811,8 +833,8 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                               ),
                               SizedBox(width: 6),
                               Text(
-                                'محافظ الأقسام التشغيلية المباشرة',
-                                style: TextStyle(
+                                l10n.operationalDepartmentsWallets,
+                                style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,
                                   color: Colors.black87,
@@ -821,7 +843,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                             ],
                           ),
                           Text(
-                            '4 قطاعات حية',
+                            l10n.activeSectorsCount,
                             style: TextStyle(
                               fontSize: 11,
                               color: Colors.blue.shade700,
@@ -834,8 +856,8 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
 
                       _buildWalletRowNew(
                         context,
-                        'محفظة قسم التجار والمتاجر',
-                        'رصيد دوري متاح للتسوية البنكية والسحب',
+                        l10n.merchantsWalletTitle,
+                        l10n.merchantsWalletDesc,
                         '2,150,000',
                         Icons.storefront,
                         DepartmentType.merchants,
@@ -845,8 +867,8 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
 
                       _buildWalletRowNew(
                         context,
-                        'محفظة المستعمل وعربون\n«وصلني»',
-                        'حساب ضمان وتأمين صفقات نشط\n(Escrow)',
+                        l10n.usedAndEscrowWalletTitle,
+                        l10n.usedAndEscrowWalletDesc,
                         '980,000',
                         Icons.handshake_outlined,
                         DepartmentType.usedEscrow,
@@ -856,8 +878,8 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
 
                       _buildWalletRowNew(
                         context,
-                        'محفظة طلبات الخدمات\nوالصيانة',
-                        'مستحقات فنيين معتمدين ومزودي\nالخدمات',
+                        l10n.servicesMaintenanceWalletTitle,
+                        l10n.servicesMaintenanceWalletDesc,
                         '620,000',
                         Icons.build_circle_outlined,
                         DepartmentType.services,
@@ -867,8 +889,8 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
 
                       _buildWalletRowNew(
                         context,
-                        'محفظة مناديب التوصيل\nواللوجستيات',
-                        'أجور ومستحقات الشحن والتسليم\nالميداني',
+                        l10n.deliveryLogisticsWalletTitle,
+                        l10n.deliveryLogisticsWalletDesc,
                         '450,000',
                         Icons.local_shipping_outlined,
                         DepartmentType.couriers,
@@ -894,7 +916,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                               mainAxisAlignment:
                               MainAxisAlignment.spaceBetween,
                               children: [
-                                const Row(
+                                Row(
                                   children: [
                                     Icon(
                                       Icons.shield_outlined,
@@ -903,8 +925,8 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                                     ),
                                     SizedBox(width: 8),
                                     Text(
-                                      'مؤشر كفاية السيولة المصرفية\nالفورية',
-                                      style: TextStyle(
+                                      l10n.instantLiquidityAdequacyRatio,
+                                      style: const TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
                                         color:
@@ -934,7 +956,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                                       ),
                                       const SizedBox(width: 4),
                                       Text(
-                                        'آمن ومستقر\nجداً!',
+                                        l10n.verySafeAndStable,
                                         style: TextStyle(
                                           fontSize: 9,
                                           color:
@@ -994,9 +1016,9 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                                       crossAxisAlignment:
                                       CrossAxisAlignment.start,
                                       children: [
-                                        const Text(
-                                          'نسبة تغطية طلبات السحب اليومية',
-                                          style: TextStyle(
+                                        Text(
+                                          l10n.dailyWithdrawalCoverageRatio,
+                                          style: const TextStyle(
                                             fontSize: 10,
                                             color: Colors.grey,
                                           ),
@@ -1017,7 +1039,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                                             ),
                                             const SizedBox(width: 6),
                                             Text(
-                                              'تغطية نقدية فائضة',
+                                              l10n.excessCashCoverage,
                                               style: TextStyle(
                                                 fontSize: 10,
                                                 color: Colors
@@ -1029,9 +1051,9 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                                           ],
                                         ),
                                         const SizedBox(height: 4),
-                                        const Text(
-                                          'الحد الأدنى النظامي المشترط: 85.0%',
-                                          style: TextStyle(
+                                        Text(
+                                          l10n.statutoryMinimumRequirement,
+                                          style: const TextStyle(
                                             fontSize: 10,
                                             color: Colors.grey,
                                           ),
@@ -1054,7 +1076,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                                 borderRadius:
                                 BorderRadius.circular(10),
                               ),
-                              child: const Row(
+                              child: Row(
                                 children: [
                                   Icon(
                                     Icons.domain_verification,
@@ -1064,16 +1086,16 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                                   SizedBox(width: 10),
                                   Expanded(
                                     child: Text(
-                                      'التسوية المصرفية  عبر نظام سداد\n& SARIE:',
-                                      style: TextStyle(
+                                      l10n.autoBankingSettlement,
+                                      style: const TextStyle(
                                         fontSize: 11,
                                         color: Colors.black87,
                                       ),
                                     ),
                                   ),
                                   Text(
-                                    'مكتملة ومطابقة\n100%',
-                                    style: TextStyle(
+                                    l10n.completedAndMatched,
+                                    style: const TextStyle(
                                       fontSize: 10,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black87,
@@ -1116,10 +1138,10 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                                   ),
                                 ),
                                 const SizedBox(width: 12),
-                                const Expanded(
+                                Expanded(
                                   child: Text(
-                                    'لائحة الحوكمة وتفويض الصلاحيات\nالمالية',
-                                    style: TextStyle(
+                                    l10n.financialGovernanceTitle,
+                                    style: const TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black87,
@@ -1134,9 +1156,9 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                                     vertical: 4,
                                   ),
                                   color: Colors.white,
-                                  child: const Text(
-                                    'بند\n#04- أ',
-                                    style: TextStyle(
+                                  child: Text(
+                                    l10n.governancePolicyClause,
+                                    style: const TextStyle(
                                       fontSize: 9,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.grey,
@@ -1150,7 +1172,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                             const SizedBox(height: 12),
 
                             Text(
-                              'وفق لائحة الحوكمة والسياسات المالية: المشرفون الميدانيون ورؤساء الأقسام لا يملكون أي صلاحية لتعديل الأرصدة أو السحب أو التحويل البنكي. تنفيذ وتوثيق العمليات المالية حصري للمدير المالي المعتمد برقم تفويض مصرفي رسمي.',
+                              l10n.governancePolicyNotice,
                               style: TextStyle(
                                 fontSize: 10,
                                 color: Colors.grey.shade700,
@@ -1193,9 +1215,9 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                               builder: (_) => const MerchantWithdrawalsScreen(),
                             ),
                           ),
-                          label: const Text(
-                            'مراجعة طلبات السحب العاجلة (14 طلباً جاهزاً للصرف)',
-                            style: TextStyle(
+                          label: Text(
+                            l10n.urgentWithdrawalsAction,
+                            style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
                             ),
@@ -1225,9 +1247,9 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                             size: 18,
                           ),
                           onPressed: () {},
-                          label: const Text(
-                            'تصدير تقرير السيولة والمركز المالي اليومي (PDF)',
-                            style: TextStyle(
+                          label: Text(
+                            l10n.exportDailyReportPdf,
+                            style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
                             ),
@@ -1271,32 +1293,49 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
               ),
               elevation: 16,
               currentIndex: 4,
-              items: const [
+              onTap: (index) {
+                if (index == 2) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const SettlementsScreen(),
+                    ),
+                  );
+                } else if (index == 3) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const BankReconciliationScreen(),
+                    ),
+                  );
+                }
+              },
+              items: [
                 BottomNavigationBarItem(
                   icon: Icon(Icons.history_edu, size: 24),
-                  label: 'التدقيق',
+                  label: l10n.navAudit,
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.percent, size: 24),
-                  label: 'العمولات',
+                  label: l10n.navCommissions,
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.sync_alt, size: 24),
-                  label: 'التسويات',
+                  label: l10n.navSettlements,
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(
                     Icons.fact_check_outlined,
                     size: 24,
                   ),
-                  label: 'المطابقة',
+                  label: l10n.navReconciliation,
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(
                     Icons.account_balance,
                     size: 24,
                   ),
-                  label: 'الرئيسية',
+                  label: l10n.navHome,
                 ),
               ],
             ),
@@ -1527,6 +1566,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
   // =========================
   Widget _buildMetricTileNew({
     required String title,
+    required String currencyText,
     required String value,
     required IconData icon,
     required Color color,
@@ -1602,8 +1642,8 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
 
               const SizedBox(width: 4),
 
-              const Text(
-                'ر.س',
+              Text(
+                currencyText,
                 style: TextStyle(
                   fontSize: 10,
                   color: Colors.black87,
@@ -1659,6 +1699,8 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
       IconData icon,
       DepartmentType type,
       ) {
+    final currencyText = AppLocalizations.of(context)!.currencySar;
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -1736,8 +1778,8 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                 ),
               ),
 
-              const Text(
-                'ريال سعودي',
+              Text(
+                currencyText,
                 style: TextStyle(
                   fontSize: 9,
                   color: Colors.grey,

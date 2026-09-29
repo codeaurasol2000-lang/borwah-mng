@@ -4,6 +4,7 @@ import '../../../core/di/injection_container.dart';
 import '../../../core/utils/currency_formatter.dart';
 import '../../finance/domain/entities/withdrawal_request_entity.dart';
 import '../../finance/domain/usecases/get_supervisor_withdrawals_usecase.dart';
+import '../../../l10n/app_localizations.dart';
 
 class SupervisorWithdrawalsScreen extends StatefulWidget {
   const SupervisorWithdrawalsScreen({super.key});
@@ -60,8 +61,10 @@ class _SupervisorWithdrawalsScreenState extends State<SupervisorWithdrawalsScree
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection: l10n.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
         backgroundColor: const Color(0xFFF9FAFB),
         appBar: AppBar(
@@ -75,11 +78,11 @@ class _SupervisorWithdrawalsScreenState extends State<SupervisorWithdrawalsScree
               child: Icon(Icons.person, color: Colors.white, size: 20),
             ),
           ),
-          title: const Column(
+          title: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text('طلبات سحب المستحقات', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16)),
-              Text('برواح المازوري - الإدارة المالية', style: TextStyle(color: Colors.grey, fontSize: 11)),
+              Text(l10n.navWithdrawalOrders, style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16)),
+              Text(l10n.financialManagementSubtitle, style: const TextStyle(color: Colors.grey, fontSize: 11)),
             ],
           ),
           centerTitle: true,
@@ -109,7 +112,7 @@ class _SupervisorWithdrawalsScreenState extends State<SupervisorWithdrawalsScree
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Text('بوابة صرف مستحقات المشرفين ومقدمي الخدمات', style: TextStyle(color: AppColors.primaryDark, fontSize: 10, fontWeight: FontWeight.bold)),
+                        Text(l10n.supervisorWithdrawalsHeaderSubtitle, style: const TextStyle(color: AppColors.primaryDark, fontSize: 10, fontWeight: FontWeight.bold)),
                         const SizedBox(width: 4),
                         Icon(Icons.shield, color: Colors.blue.shade700, size: 14),
                       ],
@@ -119,14 +122,14 @@ class _SupervisorWithdrawalsScreenState extends State<SupervisorWithdrawalsScree
                 const SizedBox(height: 12),
 
                 // 2. Titles
-                const Text(
-                  'طلبات سحب مستحقات المشرفين ومقدمي الخدمة',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: AppColors.primaryDark, height: 1.3),
+                Text(
+                  l10n.supervisorWithdrawalsHeaderTitle,
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: AppColors.primaryDark, height: 1.3),
                 ),
                 const SizedBox(height: 4),
-                const Text(
-                  'قائمة طلبات سحب الأتعاب وعمولات الإشراف وأجور الصيانة المعتمدة للصرف',
-                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                Text(
+                  l10n.supervisorWithdrawalsHeaderSubtitle,
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
                 ),
                 const SizedBox(height: 20),
 
@@ -135,9 +138,9 @@ class _SupervisorWithdrawalsScreenState extends State<SupervisorWithdrawalsScree
                   children: [
                     Expanded(
                       child: _buildMetricMiniCard(
-                        title: 'المعلقة',
+                        title: l10n.awaitingApprovalTab,
                         count: '$_pendingCount',
-                        sub: '${CurrencyFormatter.format(_totalPendingAmount)} ر.س',
+                        sub: '${CurrencyFormatter.format(_totalPendingAmount)} ${l10n.currencySar}',
                         icon: Icons.pending_actions,
                         color: AppColors.primaryDark,
                         countColor: Colors.black87,
@@ -146,9 +149,9 @@ class _SupervisorWithdrawalsScreenState extends State<SupervisorWithdrawalsScree
                     const SizedBox(width: 12),
                     Expanded(
                       child: _buildMetricMiniCard(
-                        title: 'احتراز رقابي',
+                        title: l10n.underRegulatoryHold,
                         count: '$_frozenCount',
-                        sub: 'قيد الفحص',
+                        sub: l10n.temporarilySuspendedBadge,
                         icon: Icons.playlist_remove,
                         color: AppColors.danger,
                         countColor: AppColors.danger,
@@ -171,7 +174,7 @@ class _SupervisorWithdrawalsScreenState extends State<SupervisorWithdrawalsScree
                 const SizedBox(height: 20),
 
                 // 5. List of requests
-                ..._filteredRequests.map((req) => _buildWithdrawalCard(req)),
+                ..._filteredRequests.map((req) => _buildWithdrawalCard(context, req)),
               ],
             ),
             
@@ -205,8 +208,8 @@ class _SupervisorWithdrawalsScreenState extends State<SupervisorWithdrawalsScree
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Text('إجمالي المبالغ بانتظار الاعتماد', style: TextStyle(color: Colors.white70, fontSize: 10)),
-                              Text('${CurrencyFormatter.format(_totalPendingAmount)} ر.س', style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                              Text(l10n.totalAwaitingApproval, style: const TextStyle(color: Colors.white70, fontSize: 10)),
+                              Text('${CurrencyFormatter.format(_totalPendingAmount)} ${l10n.currencySar}', style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
                             ],
                           ),
                         ),
@@ -214,9 +217,9 @@ class _SupervisorWithdrawalsScreenState extends State<SupervisorWithdrawalsScree
                           crossAxisAlignment: CrossAxisAlignment.end,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Text('المتبقي\nللمراجعة', style: TextStyle(color: Colors.white70, fontSize: 10, height: 1.2), textAlign: TextAlign.center),
+                            Text(l10n.remainingForReview, style: const TextStyle(color: Colors.white70, fontSize: 10, height: 1.2), textAlign: TextAlign.center),
                             const SizedBox(height: 2),
-                            Text('$_pendingCount طلب', style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
+                            Text('$_pendingCount ${l10n.ordersUnit}', style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
                           ],
                         ),
                       ],
@@ -241,8 +244,7 @@ class _SupervisorWithdrawalsScreenState extends State<SupervisorWithdrawalsScree
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text('التوافق البنكي المعتمد', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.primaryDark)),
-                              Text('التحويلات تخضع لمعايير البنك المركزي السعودي (SAMA)', style: TextStyle(fontSize: 10, color: Colors.grey.shade700)),
+                              Text(l10n.samaComplianceNotice, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.primaryDark)),
                             ],
                           ),
                         ),
@@ -260,9 +262,15 @@ class _SupervisorWithdrawalsScreenState extends State<SupervisorWithdrawalsScree
   }
 
   Widget _buildFilterChip(String filterType, {IconData? icon}) {
+    final l10n = AppLocalizations.of(context)!;
     bool isSelected = _selectedFilter == filterType;
     int count = _countFor(filterType);
-    String label = count > 0 ? '$filterType ($count)' : filterType;
+    final localizedFilter = switch (filterType) {
+      'المشرفين' => l10n.platformSupervisorsTab,
+      'مقدمي الخدمة' => l10n.serviceProviders,
+      _ => l10n.allTab,
+    };
+    String label = count > 0 ? '$localizedFilter ($count)' : localizedFilter;
     
     return GestureDetector(
       onTap: () => setState(() => _selectedFilter = filterType),
@@ -328,7 +336,9 @@ class _SupervisorWithdrawalsScreenState extends State<SupervisorWithdrawalsScree
     );
   }
 
-  Widget _buildWithdrawalCard(WithdrawalRequestEntity req) {
+  Widget _buildWithdrawalCard(BuildContext context, WithdrawalRequestEntity req) {
+    final l10n = AppLocalizations.of(context)!;
+
     bool isDanger = req.status == RequestStatus.underInvestigation;
     bool isReady = req.isInstantTransferReady;
     
@@ -342,21 +352,20 @@ class _SupervisorWithdrawalsScreenState extends State<SupervisorWithdrawalsScree
     else headerIcon = Icons.admin_panel_settings;
 
     // Gross Amount Title
-    String grossTitle = 'إجمالي أتعاب وعمولات الإشراف:';
-    if (isDanger) grossTitle = 'إجمالي المبلغ المطالب به:';
-    else if (isReady) grossTitle = 'إجمالي أجور الصيانة المنجزة:';
+    String grossTitle = l10n.totalFeesAndCommissions;
+    if (isDanger) grossTitle = l10n.grossClaimedAmount;
+    else if (isReady) grossTitle = l10n.grossAmount;
 
     // Fee Title
     String feeTitle = '';
     if (req.platformFeePercentage > 0) {
-      feeTitle = 'عمولة المنصة على خدمات الصيانة (${req.platformFeePercentage}%):';
-      if (isDanger) feeTitle = 'عمولة المنصة المستقطعة (${req.platformFeePercentage}%):';
+      feeTitle = '${l10n.platformFee} (${req.platformFeePercentage}%):';
+      if (isDanger) feeTitle = '${l10n.deductedPlatformFee} (${req.platformFeePercentage}%):';
     }
 
     // Net Title
-    String netTitle = 'صافي المبلغ المستحق للصرف:';
-    if (isDanger) netTitle = 'صافي المبلغ المحجوز احترازياً:';
-    else if (isReady) netTitle = 'صافي المبلغ المستحق للصرف الفوري:';
+    String netTitle = l10n.netAmountDueForDisbursement;
+    if (isDanger) netTitle = l10n.netHeldAmount;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -443,7 +452,7 @@ class _SupervisorWithdrawalsScreenState extends State<SupervisorWithdrawalsScree
                     if (!isReady && !isDanger) const Icon(Icons.circle, color: AppColors.primaryDark, size: 8),
                     const SizedBox(width: 4),
                     Text(
-                      isDanger ? 'موقوف مؤقتاً' : (isReady ? 'جاهز للصرف الفوري' : 'بانتظار الصرف'),
+                      isDanger ? l10n.temporarilySuspendedBadge : (isReady ? l10n.readyForInstantDisbursement : l10n.awaitingDisbursementBadge),
                       style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: isDanger ? AppColors.danger : (isReady ? AppColors.primaryDark : Colors.black87)),
                     ),
                   ],
@@ -468,7 +477,7 @@ class _SupervisorWithdrawalsScreenState extends State<SupervisorWithdrawalsScree
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(child: Text(grossTitle, style: TextStyle(fontSize: 11, color: Colors.grey.shade700))),
-                    Text('${CurrencyFormatter.format(req.grossAmount)} ر.س', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black87)),
+                    Text('${CurrencyFormatter.format(req.grossAmount)} ${l10n.currencySar}', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black87)),
                   ],
                 ),
                 if (req.platformFeePercentage > 0) ...[
@@ -485,7 +494,7 @@ class _SupervisorWithdrawalsScreenState extends State<SupervisorWithdrawalsScree
                           ],
                         ),
                       ),
-                      Text('- ${CurrencyFormatter.format(req.platformFeeAmount)} ر.س', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.danger)),
+                      Text('- ${CurrencyFormatter.format(req.platformFeeAmount)} ${l10n.currencySar}', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.danger)),
                     ],
                   ),
                 ],
@@ -508,7 +517,7 @@ class _SupervisorWithdrawalsScreenState extends State<SupervisorWithdrawalsScree
                       children: [
                         Text(CurrencyFormatter.format(req.netAmount), style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Colors.black87)),
                         const SizedBox(width: 4),
-                        const Text('ر.س', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.black87)),
+                        Text(l10n.currencySar, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.black87)),
                       ],
                     ),
                   ],
@@ -576,7 +585,7 @@ class _SupervisorWithdrawalsScreenState extends State<SupervisorWithdrawalsScree
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          req.sourceOfFunds!.contains('أجور') ? 'تفاصيل الإنجاز الميداني' : 'مصدر المستحقات',
+                          req.sourceOfFunds!.contains('أجور') ? l10n.fieldCompletionDetails : l10n.disbursementSource,
                           style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey),
                         ),
                         const SizedBox(height: 2),
@@ -610,7 +619,7 @@ class _SupervisorWithdrawalsScreenState extends State<SupervisorWithdrawalsScree
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('نتيجة الفحص الآلي لمطابقة الأداء', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.primaryDark)),
+                        Text(l10n.complianceAndAuditResult, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.primaryDark)),
                         const SizedBox(height: 4),
                         Text(req.auditCheckResult!, style: TextStyle(fontSize: 10, color: Colors.blue.shade800, height: 1.4)),
                       ],
@@ -639,7 +648,7 @@ class _SupervisorWithdrawalsScreenState extends State<SupervisorWithdrawalsScree
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (isDanger) const Text('إشعار رقابي من مشرف الخدمات', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.danger)),
+                        if (isDanger) Text(l10n.regulatoryNoticeFromServicesSupervisor, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.danger)),
                         if (isDanger) const SizedBox(height: 4),
                         Text(
                           req.alertNotice!,
@@ -670,7 +679,7 @@ class _SupervisorWithdrawalsScreenState extends State<SupervisorWithdrawalsScree
                 icon: Icon(isDanger ? Icons.folder_off_outlined : Icons.check_circle_outline, size: 18),
                 onPressed: () {},
                 label: Text(
-                  isDanger ? 'الرفض و اشعار العميل' : (isReady ? 'اعتماد و اعطاء أمر الصرف البنكي' : 'اعتماد و ارسال الطلب للادارة'),
+                  isDanger ? l10n.rejectAndNotifyCustomer : (isReady ? l10n.approveAndIssueBankOrder : l10n.approveAndSendToAdmin),
                   style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -686,7 +695,7 @@ class _SupervisorWithdrawalsScreenState extends State<SupervisorWithdrawalsScree
                 icon: Icon(isDanger ? Icons.cancel_outlined : Icons.lock_outline, size: 18),
                 onPressed: () {},
                 label: Text(
-                  isDanger ? 'تجميد الطلب' : 'تجميد مؤقت للطلب',
+                  isDanger ? l10n.freezeRequest : l10n.freezeRequestTemporarily,
                   style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                 ),
               ),
