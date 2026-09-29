@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/utils/currency_formatter.dart';
+import 'transaction_history_screen.dart';
 
 enum DepartmentType { merchants, usedEscrow, services, couriers }
 
@@ -609,7 +610,18 @@ class DepartmentWalletScreen extends StatelessWidget {
                   elevation: 0,
                 ),
                 icon: const Icon(Icons.receipt_long, size: 16),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => TransactionHistoryScreen(
+                        title: item['title'],
+                        id: item['id'],
+                        availableBalance: item['available'],
+                      ),
+                    ),
+                  );
+                },
                 label: const Text('عرض سجل العمليات', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
               ),
             ),
