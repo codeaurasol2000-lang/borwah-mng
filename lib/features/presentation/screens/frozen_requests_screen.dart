@@ -359,6 +359,25 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: req['type'] == 'تجار ومتاجر' ? Colors.red.shade50 : (req['type'] == 'مقدمو خدمات' ? Colors.blue.shade50 : AppColors.surfaceLight),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(req['icon'], size: 20, color: req['type'] == 'تجار ومتاجر' ? Colors.red.shade700 : (req['type'] == 'مقدمو خدمات' ? Colors.blue.shade700 : AppColors.primaryDark)),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(req['title'], style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                      const SizedBox(height: 2),
+                      Text(req['subtitle'], style: const TextStyle(fontSize: 10, color: AppColors.textSecondary)),
+                    ],
+                  ),
+                ),
+                Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: AppColors.dangerLight,
@@ -368,31 +387,11 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(req['status'] == 'تعارض آيبان' ? Icons.warning_amber_rounded : Icons.pause_circle_outline, size: 12, color: AppColors.danger),
-                      const SizedBox(width: 4),
                       Text(req['status'], style: const TextStyle(fontSize: 10, color: AppColors.danger, fontWeight: FontWeight.bold)),
+                      const SizedBox(width: 4),
+                      Icon(req['status'] == 'تعارض آيبان' ? Icons.warning_amber_rounded : Icons.pause_circle_outline, size: 12, color: AppColors.danger),
                     ],
                   ),
-                ),
-                const Spacer(),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(req['title'], style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.textPrimary), textAlign: TextAlign.right),
-                      const SizedBox(height: 2),
-                      Text(req['subtitle'], style: const TextStyle(fontSize: 10, color: AppColors.textSecondary), textAlign: TextAlign.right),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: req['type'] == 'تجار ومتاجر' ? Colors.red.shade50 : (req['type'] == 'مقدمو خدمات' ? Colors.blue.shade50 : AppColors.surfaceLight),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Icon(req['icon'], size: 20, color: req['type'] == 'تجار ومتاجر' ? Colors.red.shade700 : (req['type'] == 'مقدمو خدمات' ? Colors.blue.shade700 : AppColors.primaryDark)),
                 ),
               ],
             ),
@@ -408,8 +407,10 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    Text(req['ibanError'] != null ? 'المبلغ المعلق للحوالة:' : 'المبلغ المحتجز للتجميد:', style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
                     Expanded(
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Flexible(child: Text(CurrencyFormatter.format(req['amount']), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textPrimary), overflow: TextOverflow.ellipsis, maxLines: 1)),
@@ -418,7 +419,6 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                         ],
                       ),
                     ),
-                    Text(req['ibanError'] != null ? 'المبلغ المعلق للحوالة:' : 'المبلغ المحتجز للتجميد:', style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
                   ],
                 ),
                 const SizedBox(height: 8),
@@ -426,14 +426,14 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     if (req['ibanError'] != null)
+                      Expanded(child: Text('الآيبان المسجل: ${req['ibanError']}', style: const TextStyle(fontSize: 11, color: AppColors.textSecondary), textDirection: TextDirection.ltr, textAlign: TextAlign.left, overflow: TextOverflow.ellipsis))
+                    else
+                      Text('إجمالي المعاملة: ${CurrencyFormatter.format(req['grossAmount'])} ر.س', style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+
+                    if (req['ibanError'] != null)
                       Text('عدم تطابق اسم الحساب', style: const TextStyle(fontSize: 11, color: AppColors.danger, fontWeight: FontWeight.bold))
                     else
                       Text('خصم عمولة المنصة: ${CurrencyFormatter.format(req['feeAmount'])} ر.س', style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
-                    
-                    if (req['ibanError'] != null)
-                      Expanded(child: Text('الآيبان المسجل: ${req['ibanError']}', style: const TextStyle(fontSize: 11, color: AppColors.textSecondary), textDirection: TextDirection.ltr, textAlign: TextAlign.right, overflow: TextOverflow.ellipsis))
-                    else
-                      Text('إجمالي المعاملة: ${CurrencyFormatter.format(req['grossAmount'])} ر.س', style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
                   ],
                 ),
               ],
@@ -449,35 +449,37 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Icon(req['ibanError'] != null ? Icons.do_not_disturb_alt : Icons.warning_amber_rounded, color: AppColors.danger, size: 18),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         req['reason'],
                         style: const TextStyle(fontSize: 11, color: AppColors.textPrimary, height: 1.4),
                       ),
                     ),
-                    const SizedBox(width: 12),
-                    Icon(req['ibanError'] != null ? Icons.do_not_disturb_alt : Icons.warning_amber_rounded, color: AppColors.danger, size: 18),
                   ],
                 ),
                 const SizedBox(height: 12),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        Text(req['timeText'], style: const TextStyle(fontSize: 10, color: AppColors.textSecondary)),
-                        const SizedBox(width: 6),
-                        const Icon(Icons.access_time, size: 14, color: AppColors.textMuted),
-                      ],
-                    ),
                     if (req['supervisor'] != '')
                       Row(
                         children: [
-                          Text('مشرف : ${req['supervisor']}', style: const TextStyle(fontSize: 10, color: AppColors.textSecondary)),
-                          const SizedBox(width: 6),
                           const Icon(Icons.assignment_ind_outlined, size: 14, color: AppColors.textMuted),
+                          const SizedBox(width: 6),
+                          Text('مشرف : ${req['supervisor']}', style: const TextStyle(fontSize: 10, color: AppColors.textSecondary)),
                         ],
-                      ),
+                      )
+                    else
+                      const SizedBox(),
+                    Row(
+                      children: [
+                        const Icon(Icons.access_time, size: 14, color: AppColors.textMuted),
+                        const SizedBox(width: 6),
+                        Text(req['timeText'], style: const TextStyle(fontSize: 10, color: AppColors.textSecondary)),
+                      ],
+                    ),
                   ],
                 ),
               ],
