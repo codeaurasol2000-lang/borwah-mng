@@ -375,7 +375,7 @@ class DepartmentWalletScreen extends StatelessWidget {
               // 4. List Items
               ..._listItems.map((item) => Padding(
                 padding: const EdgeInsets.only(bottom: 16),
-                child: _buildListItemCard(item),
+                child: _buildListItemCard(context, item),
               )),
 
               // 5. Bottom Info
@@ -455,7 +455,7 @@ class DepartmentWalletScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildListItemCard(Map<String, dynamic> item) {
+  Widget _buildListItemCard(BuildContext context, Map<String, dynamic> item) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
