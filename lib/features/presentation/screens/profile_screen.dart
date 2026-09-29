@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../../../core/constants/app_colors.dart';
+import '../../../core/constants/app_colors.dart';
 import 'widgets/withdraw_bottom_sheet.dart';
+import 'bank_accounts_screen.dart';
 import 'edit_matrix_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -470,7 +471,10 @@ class ProfileScreen extends StatelessWidget {
                                 padding: const EdgeInsets.symmetric(vertical: 12),
                               ),
                               icon: const Icon(Icons.arrow_circle_left_outlined, size: 18),
-                              onPressed: () {},
+                              onPressed: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (_) => const BankAccountsScreen()),
+                              ),
                               label: const Text('تعديل معلومات السحب', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
                             ),
                           ),

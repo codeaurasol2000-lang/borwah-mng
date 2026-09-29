@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/constants/app_colors.dart';
-import '../../../../core/di/injection_container.dart';
-import '../../../../core/utils/currency_formatter.dart';
+import '../../../core/constants/app_colors.dart';
+import '../../../core/di/injection_container.dart';
+import '../../../core/utils/currency_formatter.dart';
 import '../controllers/dashboard/finance_dashboard_cubit.dart';
 import '../controllers/dashboard/finance_dashboard_state.dart';
 import 'bank_accounts_screen.dart';
@@ -1187,7 +1187,12 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                             Icons.check_circle_outline,
                             size: 18,
                           ),
-                          onPressed: () {},
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const MerchantWithdrawalsScreen(),
+                            ),
+                          ),
                           label: const Text(
                             'مراجعة طلبات السحب العاجلة (14 طلباً جاهزاً للصرف)',
                             style: TextStyle(
