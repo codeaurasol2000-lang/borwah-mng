@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../l10n/app_localizations.dart';
 
 void showWithdrawBottomSheet(BuildContext context) {
   showModalBottomSheet(
@@ -29,11 +30,11 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    // Determine bottom padding for keyboard
+    final isArabic = AppLocalizations.of(context)!.localeName == 'ar';
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
 
     return Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 8),
         padding: EdgeInsets.only(
@@ -83,11 +84,17 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
                             child: const Icon(Icons.person_outline, color: Colors.white, size: 16),
                           ),
                           const SizedBox(width: 8),
-                          const Column(
+                          Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('برواح المازوري للخدمات المالية', style: TextStyle(fontSize: 10, color: AppColors.textSecondary)),
-                              Text('طلب سحب الارباح من المالك', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.primaryDark)),
+                              Text(
+                                isArabic ? 'برواح المازوري للخدمات المالية' : 'Barwah Mazouri Financial Services',
+                                style: const TextStyle(fontSize: 10, color: AppColors.textSecondary),
+                              ),
+                              Text(
+                                isArabic ? 'طلب سحب الارباح من المالك' : 'Owner profit withdrawal request',
+                                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.primaryDark),
+                              ),
                             ],
                           ),
                         ],
@@ -131,7 +138,11 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
             const SizedBox(height: 4),
             Row(
               children: [
-                const Text('طلب رقم #WD-8842', style: TextStyle(fontSize: 10, color: AppColors.textPrimary, fontWeight: FontWeight.bold), textDirection: TextDirection.rtl),
+                Text(
+                  isArabic ? 'طلب رقم #WD-8842' : 'Withdrawal request #WD-8842',
+                  style: const TextStyle(fontSize: 10, color: AppColors.textPrimary, fontWeight: FontWeight.bold),
+                  textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+                ),
               ],
             ),
             const SizedBox(height: 16),
@@ -311,6 +322,8 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
   }
 
   Widget _buildAmountChip(String label, String value, bool isSelected) {
+    final isArabic = AppLocalizations.of(context)!.localeName == 'ar';
+
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -330,7 +343,7 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
             fontSize: 11,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
           ),
-          textDirection: TextDirection.rtl,
+          textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
         ),
       ),
     );
@@ -383,7 +396,7 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
                     ],
                   ),
                   const SizedBox(height: 4),
-                  Text(iban, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary, letterSpacing: 1.2), textDirection: TextDirection.rtl),
+                  Text(iban, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary, letterSpacing: 1.2), textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr),
                   const SizedBox(height: 4),
                   Text(status, style: const TextStyle(fontSize: 9, color: AppColors.textSecondary)),
                 ],

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/di/injection_container.dart';
 import '../../../core/utils/currency_formatter.dart';
+import '../../../l10n/app_localizations.dart';
 import '../controllers/dashboard/finance_dashboard_cubit.dart';
 import '../controllers/dashboard/finance_dashboard_state.dart';
 
@@ -31,10 +32,12 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isArabic = AppLocalizations.of(context)!.localeName == 'ar';
+
     return BlocProvider.value(
       value: _cubit,
       child: Directionality(
-        textDirection: TextDirection.rtl,
+        textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
         child: Scaffold(
           backgroundColor: AppColors.backgroundLight,
           appBar: AppBar(
@@ -48,13 +51,17 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                 child: Icon(Icons.person_outline, color: AppColors.primaryDark),
               ),
             ),
-            title: const Text(
-              'إظهار الطلبات المعلقة والمجمدة',
-              style: TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 16),
+            title: Text(
+              isArabic ? 'إظهار الطلبات المعلقة والمجمدة' : 'Frozen & Pending Requests',
+              style: const TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 16),
             ),
             actions: [
               IconButton(
-                icon: const Icon(Icons.arrow_forward_ios, color: AppColors.textPrimary, size: 18),
+                icon: Icon(
+                  isArabic ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
+                  color: AppColors.textPrimary,
+                  size: 18,
+                ),
                 onPressed: () => Navigator.pop(context),
               ),
             ],

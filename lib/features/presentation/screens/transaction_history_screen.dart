@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/utils/currency_formatter.dart';
+import '../../../l10n/app_localizations.dart';
 
 class TransactionHistoryScreen extends StatefulWidget {
   final String title;
@@ -23,8 +24,10 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isArabic = AppLocalizations.of(context)!.localeName == 'ar';
+
     return Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
         backgroundColor: AppColors.backgroundLight,
         appBar: AppBar(
@@ -38,24 +41,28 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
               child: Icon(Icons.person_outline, color: AppColors.primaryDark),
             ),
           ),
-          title: const Column(
+          title: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'سجل العمليات',
-                style: TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 16),
+                isArabic ? 'سجل العمليات' : 'Transaction History',
+                style: const TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 16),
               ),
               Text(
-                'برواح المازوري - الإدارة المالية',
-                style: TextStyle(fontSize: 10, color: AppColors.textSecondary),
+                isArabic ? 'برواح المازوري - الإدارة المالية' : 'Barwah Mazouri - Finance Management',
+                style: const TextStyle(fontSize: 10, color: AppColors.textSecondary),
               ),
             ],
           ),
           centerTitle: true,
           actions: [
             IconButton(
-              icon: const Icon(Icons.arrow_forward_ios, color: AppColors.textPrimary, size: 18),
+              icon: Icon(
+                isArabic ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
+                color: AppColors.textPrimary,
+                size: 18,
+              ),
               onPressed: () => Navigator.pop(context),
             ),
           ],

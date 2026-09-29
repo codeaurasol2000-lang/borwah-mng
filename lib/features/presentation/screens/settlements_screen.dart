@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../l10n/app_localizations.dart';
 
 class SettlementsScreen extends StatefulWidget {
   const SettlementsScreen({super.key});
@@ -84,8 +85,11 @@ class _SettlementsScreenState extends State<SettlementsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final isArabic = l10n.localeName == 'ar';
+
     return Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
         backgroundColor: AppColors.backgroundLight,
         appBar: AppBar(
@@ -93,19 +97,22 @@ class _SettlementsScreenState extends State<SettlementsScreen> {
           elevation: 0.5,
           scrolledUnderElevation: 0,
           leading: IconButton(
-            tooltip: 'العودة',
-            icon: const Icon(Icons.arrow_forward_ios, size: 19),
+            tooltip: isArabic ? 'العودة' : 'Back',
+            icon: Icon(
+              isArabic ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
+              size: 19,
+            ),
             onPressed: () => Navigator.pop(context),
           ),
-          title: const Column(
+          title: Column(
             children: [
               Text(
-                'إدارة التسويات',
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                isArabic ? 'إدارة التسويات' : 'Settlements Management',
+                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
               ),
               Text(
-                'برواح المازوري - الإدارة المالية',
-                style: TextStyle(fontSize: 10, color: AppColors.textSecondary),
+                isArabic ? 'برواح المازوري - الإدارة المالية' : 'Barwah Mazouri - Finance Management',
+                style: const TextStyle(fontSize: 10, color: AppColors.textSecondary),
               ),
             ],
           ),
@@ -156,18 +163,22 @@ class _SettlementsScreenState extends State<SettlementsScreen> {
           onTap: (index) {
             if (index == 4) Navigator.pop(context);
           },
-          items: const [
+          items: [
             BottomNavigationBarItem(
-                icon: Icon(Icons.history_edu, size: 24), label: 'التدقيق'),
+                icon: const Icon(Icons.history_edu, size: 24),
+                label: isArabic ? 'التدقيق' : 'Audit'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.percent, size: 24), label: 'العمولات'),
+                icon: const Icon(Icons.percent, size: 24),
+                label: isArabic ? 'العمولات' : 'Commissions'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.sync_alt, size: 24), label: 'التسويات'),
+                icon: const Icon(Icons.sync_alt, size: 24),
+                label: isArabic ? 'التسويات' : 'Settlements'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.fact_check_outlined, size: 24),
-                label: 'المطابقة'),
+                icon: const Icon(Icons.fact_check_outlined, size: 24),
+                label: isArabic ? 'المطابقة' : 'Reconciliation'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.account_balance, size: 24), label: 'الرئيسية'),
+                icon: const Icon(Icons.account_balance, size: 24),
+                label: isArabic ? 'الرئيسية' : 'Home'),
           ],
         ),
       ),
@@ -175,6 +186,8 @@ class _SettlementsScreenState extends State<SettlementsScreen> {
   }
 
   Widget _buildHeader() {
+    final isArabic = AppLocalizations.of(context)!.localeName == 'ar';
+
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -194,16 +207,16 @@ class _SettlementsScreenState extends State<SettlementsScreen> {
                     color: Colors.white.withValues(alpha: 0.13),
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: const Row(
+                  child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.verified_user_outlined,
+                      const Icon(Icons.verified_user_outlined,
                           color: Colors.white, size: 12),
-                      SizedBox(width: 4),
+                      const SizedBox(width: 4),
                       Flexible(
                         child: Text(
-                          'صلاحيات المدير المالي التنفيذي',
-                          style: TextStyle(color: Colors.white, fontSize: 9),
+                          isArabic ? 'صلاحيات المدير المالي التنفيذي' : 'Executive CFO Authority',
+                          style: const TextStyle(color: Colors.white, fontSize: 9),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -212,25 +225,27 @@ class _SettlementsScreenState extends State<SettlementsScreen> {
                 ),
               ),
               const Spacer(),
-              const Text(
-                'سجل #SETTL-2024-098',
-                style: TextStyle(color: Colors.white70, fontSize: 8),
+              Text(
+                isArabic ? 'سجل #SETTL-2024-098' : 'Record #SETTL-2024-098',
+                style: const TextStyle(color: Colors.white70, fontSize: 8),
                 textDirection: TextDirection.ltr,
               ),
             ],
           ),
           const SizedBox(height: 14),
-          const Text(
-            'إدارة المحافظ الإلكترونية والتسويات',
-            textAlign: TextAlign.right,
-            style: TextStyle(
+          Text(
+            isArabic ? 'إدارة المحافظ الإلكترونية والتسويات' : 'Digital Wallets & Settlement Management',
+            textAlign: isArabic ? TextAlign.right : TextAlign.left,
+            style: const TextStyle(
                 color: Colors.white, fontSize: 19, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 5),
-          const Text(
-            'تنفيذ حركات النقود المالية المصرح بها مع إرفاق السند القانوني ومحضر النزاع المالي المعتمد.',
-            textAlign: TextAlign.right,
-            style: TextStyle(color: Colors.white70, fontSize: 9, height: 1.6),
+          Text(
+            isArabic
+                ? 'تنفيذ حركات النقود المالية المصرح بها مع إرفاق السند القانوني ومحضر النزاع المالي المعتمد.'
+                : 'Execution of approved financial cash movements with attached legal evidence and approved dispute record.',
+            textAlign: isArabic ? TextAlign.right : TextAlign.left,
+            style: const TextStyle(color: Colors.white70, fontSize: 9, height: 1.6),
           ),
         ],
       ),

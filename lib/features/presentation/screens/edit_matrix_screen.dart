@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../l10n/app_localizations.dart';
 
 class EditMatrixScreen extends StatefulWidget {
   const EditMatrixScreen({super.key});
@@ -44,8 +45,10 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isArabic = AppLocalizations.of(context)!.localeName == 'ar';
+
     return Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
         backgroundColor: AppColors.backgroundLight,
         appBar: AppBar(
@@ -59,14 +62,18 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
               child: Icon(Icons.person_outline, color: AppColors.primaryDark),
             ),
           ),
-          title: const Text(
-            'تعديل مصفوفة نسب الأرباح والرسوم',
-            style: TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 16),
+          title: Text(
+            isArabic ? 'تعديل مصفوفة نسب الأرباح والرسوم' : 'Update Profit & Fee Matrix',
+            style: const TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 16),
             overflow: TextOverflow.ellipsis,
           ),
           actions: [
             IconButton(
-              icon: const Icon(Icons.arrow_forward_ios, color: AppColors.textPrimary, size: 18),
+              icon: Icon(
+                isArabic ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
+                color: AppColors.textPrimary,
+                size: 18,
+              ),
               onPressed: () => Navigator.pop(context),
             ),
           ],
@@ -299,7 +306,13 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                             ],
                           ),
                           const SizedBox(height: 4),
-                          const Text('تغطية مصاريف بوابات الدفع (Mada / Visa / SARIE) بنسبة 0.85%', style: TextStyle(fontSize: 9, color: AppColors.textPrimary), textDirection: TextDirection.rtl),
+                          Text(
+                            AppLocalizations.of(context)!.localeName == 'ar'
+                                ? 'تغطية مصاريف بوابات الدفع (Mada / Visa / SARIE) بنسبة 0.85%'
+                                : 'Coverage of payment gateway fees (Mada / Visa / SARIE) at 0.85%',
+                            style: const TextStyle(fontSize: 9, color: AppColors.textPrimary),
+                            textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
+                          ),
                           const SizedBox(height: 2),
                           const Text('+ هامش تشغيلي وقائي بنسبة 0.40%', style: TextStyle(fontSize: 9, color: AppColors.textPrimary)),
                         ],

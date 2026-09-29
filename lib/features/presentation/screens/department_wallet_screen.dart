@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/utils/currency_formatter.dart';
+import '../../../l10n/app_localizations.dart';
 import 'transaction_history_screen.dart';
 
 enum DepartmentType { merchants, usedEscrow, services, couriers }
@@ -10,16 +11,18 @@ class DepartmentWalletScreen extends StatelessWidget {
 
   const DepartmentWalletScreen({super.key, required this.type});
 
-  String get _screenTitle {
+  String _screenTitleFor(BuildContext context) {
+    final isArabic = AppLocalizations.of(context)!.localeName == 'ar';
+
     switch (type) {
       case DepartmentType.merchants:
-        return 'محفظة قسم التجار والمتاجر';
+        return isArabic ? 'محفظة قسم التجار والمتاجر' : 'Merchants & Retail Wallet';
       case DepartmentType.usedEscrow:
-        return 'محفظة المستعمل وعربون «وصلني»';
+        return isArabic ? 'محفظة المستعمل وعربون «وصلني»' : 'Used Escrow & Waslni Wallet';
       case DepartmentType.services:
-        return 'محفظة طلبات الخدمات والصيانة';
+        return isArabic ? 'محفظة طلبات الخدمات والصيانة' : 'Service Requests & Maintenance Wallet';
       case DepartmentType.couriers:
-        return 'محفظة مناديب التوصيل واللوجستيات';
+        return isArabic ? 'محفظة مناديب التوصيل واللوجستيات' : 'Delivery Agents & Logistics Wallet';
     }
   }
 
@@ -188,8 +191,10 @@ class DepartmentWalletScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isArabic = AppLocalizations.of(context)!.localeName == 'ar';
+
     return Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
         backgroundColor: AppColors.backgroundLight,
         appBar: AppBar(
@@ -204,13 +209,17 @@ class DepartmentWalletScreen extends StatelessWidget {
             ),
           ),
           title: Text(
-            _screenTitle,
+            _screenTitleFor(context),
             style: const TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 16),
           ),
           centerTitle: true,
           actions: [
             IconButton(
-              icon: const Icon(Icons.arrow_forward_ios, color: AppColors.textPrimary, size: 18),
+              icon: Icon(
+                isArabic ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
+                color: AppColors.textPrimary,
+                size: 18,
+              ),
               onPressed: () => Navigator.pop(context),
             ),
           ],
@@ -236,7 +245,7 @@ class DepartmentWalletScreen extends StatelessWidget {
                           children: [
                             const Icon(Icons.account_balance_wallet, color: Colors.white, size: 18),
                             const SizedBox(width: 8),
-                            Text(_screenTitle, style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
+                            Text(_screenTitleFor(context), style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
                           ],
                         ),
                         Container(
@@ -456,6 +465,8 @@ class DepartmentWalletScreen extends StatelessWidget {
   }
 
   Widget _buildListItemCard(BuildContext context, Map<String, dynamic> item) {
+    final isArabic = AppLocalizations.of(context)!.localeName == 'ar';
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -495,7 +506,7 @@ class DepartmentWalletScreen extends StatelessWidget {
                         children: [
                           const Icon(Icons.security, size: 12, color: Colors.blue),
                           const SizedBox(width: 4),
-                          Expanded(child: Text(item['id'], style: const TextStyle(fontSize: 10, color: AppColors.textSecondary), textDirection: TextDirection.rtl, overflow: TextOverflow.ellipsis)),
+                          Expanded(child: Text(item['id'], style: const TextStyle(fontSize: 10, color: AppColors.textSecondary), textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr, overflow: TextOverflow.ellipsis)),
                         ],
                       ),
                     ],

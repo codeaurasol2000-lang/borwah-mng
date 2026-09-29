@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../l10n/app_localizations.dart';
 import 'settlements_screen.dart';
 
 class BankReconciliationScreen extends StatelessWidget {
@@ -13,8 +14,11 @@ class BankReconciliationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final isArabic = l10n.localeName == 'ar';
+
     return Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
         backgroundColor: const Color(0xFFF4F6F8),
         appBar: AppBar(
@@ -28,16 +32,16 @@ class BankReconciliationScreen extends StatelessWidget {
               child: Icon(Icons.shield_outlined, color: Colors.white, size: 19),
             ),
           ),
-          title: const Column(
+          title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'برواح المازوري',
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                isArabic ? 'برواح المازوري' : 'Barwah Mazouri',
+                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
               ),
               Text(
-                'الإدارة المالية والحسابات',
-                style: TextStyle(fontSize: 9, color: AppColors.textSecondary),
+                isArabic ? 'الإدارة المالية والحسابات' : 'Finance Management & Accounts',
+                style: const TextStyle(fontSize: 9, color: AppColors.textSecondary),
               ),
             ],
           ),
@@ -56,7 +60,7 @@ class BankReconciliationScreen extends StatelessWidget {
         body: ListView(
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
           children: [
-            _buildScreenHeading(),
+            _buildScreenHeading(context),
             const SizedBox(height: 12),
             _buildAuthorityBanner(),
             const SizedBox(height: 12),
@@ -72,18 +76,20 @@ class BankReconciliationScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildScreenHeading() {
+  Widget _buildScreenHeading(BuildContext context) {
+    final isArabic = AppLocalizations.of(context)!.localeName == 'ar';
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Row(
           children: [
-            const Expanded(
+            Expanded(
               child: Text(
-                'KYC & IBAN VERIFICATION ENGINE',
-                textAlign: TextAlign.left,
+                isArabic ? 'KYC & IBAN VERIFICATION ENGINE' : 'KYC & IBAN VERIFICATION ENGINE',
+                textAlign: isArabic ? TextAlign.left : TextAlign.left,
                 textDirection: TextDirection.ltr,
-                style: TextStyle(fontSize: 8, color: AppColors.infoDark),
+                style: const TextStyle(fontSize: 8, color: AppColors.infoDark),
               ),
             ),
             Container(
@@ -92,15 +98,16 @@ class BankReconciliationScreen extends StatelessWidget {
                 color: AppColors.surfaceLight,
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: const Row(
+              child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.verified_user_outlined,
+                  const Icon(Icons.verified_user_outlined,
                       size: 11, color: AppColors.textSecondary),
-                  SizedBox(width: 4),
-                  Text('امتثال مصرفي فوري',
-                      style: TextStyle(
-                          fontSize: 8, color: AppColors.textSecondary)),
+                  const SizedBox(width: 4),
+                  Text(
+                    isArabic ? 'امتثال مصرفي فوري' : 'Immediate banking compliance',
+                    style: const TextStyle(fontSize: 8, color: AppColors.textSecondary),
+                  ),
                 ],
               ),
             ),
@@ -109,10 +116,10 @@ class BankReconciliationScreen extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 6),
-        const Text(
-          'مطابقة الحسابات البنكية ومكافحة الاحتيال',
-          textAlign: TextAlign.right,
-          style: TextStyle(
+        Text(
+          isArabic ? 'مطابقة الحسابات البنكية ومكافحة الاحتيال' : 'Bank account reconciliation and fraud prevention',
+          textAlign: isArabic ? TextAlign.right : TextAlign.left,
+          style: const TextStyle(
               fontSize: 19,
               height: 1.35,
               fontWeight: FontWeight.bold,
@@ -665,6 +672,8 @@ class BankReconciliationScreen extends StatelessWidget {
   }
 
   Widget _buildBottomNavigation(BuildContext context) {
+    final isArabic = AppLocalizations.of(context)!.localeName == 'ar';
+
     return BottomNavigationBar(
       backgroundColor: Colors.white,
       type: BottomNavigationBarType.fixed,
@@ -683,17 +692,22 @@ class BankReconciliationScreen extends StatelessWidget {
           Navigator.pop(context);
         }
       },
-      items: const [
+      items: [
         BottomNavigationBarItem(
-            icon: Icon(Icons.history_edu, size: 24), label: 'التدقيق'),
+            icon: const Icon(Icons.history_edu, size: 24),
+            label: isArabic ? 'التدقيق' : 'Audit'),
         BottomNavigationBarItem(
-            icon: Icon(Icons.percent, size: 24), label: 'العمولات'),
+            icon: const Icon(Icons.percent, size: 24),
+            label: isArabic ? 'العمولات' : 'Commissions'),
         BottomNavigationBarItem(
-            icon: Icon(Icons.sync_alt, size: 24), label: 'التسويات'),
+            icon: const Icon(Icons.sync_alt, size: 24),
+            label: isArabic ? 'التسويات' : 'Settlements'),
         BottomNavigationBarItem(
-            icon: Icon(Icons.fact_check_outlined, size: 24), label: 'المطابقة'),
+            icon: const Icon(Icons.fact_check_outlined, size: 24),
+            label: isArabic ? 'المطابقة' : 'Reconciliation'),
         BottomNavigationBarItem(
-            icon: Icon(Icons.account_balance, size: 24), label: 'الرئيسية'),
+            icon: const Icon(Icons.account_balance, size: 24),
+            label: isArabic ? 'الرئيسية' : 'Home'),
       ],
     );
   }
