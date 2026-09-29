@@ -42,22 +42,21 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
             backgroundColor: AppColors.surface,
             elevation: 0.5,
             scrolledUnderElevation: 0,
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_forward_ios, color: AppColors.textPrimary, size: 18),
-              onPressed: () => Navigator.pop(context),
+            leading: const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: CircleAvatar(
+                backgroundColor: AppColors.surfaceLight,
+                child: Icon(Icons.person_outline, color: AppColors.primaryDark),
+              ),
             ),
             title: const Text(
               'إظهار الطلبات المعلقة والمجمدة',
               style: TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 16),
             ),
-            centerTitle: true,
             actions: [
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: CircleAvatar(
-                  backgroundColor: AppColors.surfaceLight,
-                  child: Icon(Icons.person_outline, color: AppColors.primaryDark),
-                ),
+              IconButton(
+                icon: const Icon(Icons.arrow_forward_ios, color: AppColors.textPrimary, size: 18),
+                onPressed: () => Navigator.pop(context),
               ),
             ],
           ),

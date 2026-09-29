@@ -131,7 +131,7 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
             const SizedBox(height: 4),
             Row(
               children: [
-                const Text('طلب رقم #WD-8842', style: TextStyle(fontSize: 10, color: AppColors.textPrimary, fontWeight: FontWeight.bold), textDirection: TextDirection.ltr),
+                const Text('طلب رقم #WD-8842', style: TextStyle(fontSize: 10, color: AppColors.textPrimary, fontWeight: FontWeight.bold), textDirection: TextDirection.rtl),
               ],
             ),
             const SizedBox(height: 16),
@@ -306,7 +306,7 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
           ],
         ),
       ),
-    );
+    ),
     );
   }
 
@@ -330,7 +330,7 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
             fontSize: 11,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
           ),
-          textDirection: TextDirection.ltr,
+          textDirection: TextDirection.rtl,
         ),
       ),
     );
@@ -383,7 +383,7 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
                     ],
                   ),
                   const SizedBox(height: 4),
-                  Text(iban, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary, letterSpacing: 1.2), textDirection: TextDirection.ltr),
+                  Text(iban, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary, letterSpacing: 1.2), textDirection: TextDirection.rtl),
                   const SizedBox(height: 4),
                   Text(status, style: const TextStyle(fontSize: 9, color: AppColors.textSecondary)),
                 ],
