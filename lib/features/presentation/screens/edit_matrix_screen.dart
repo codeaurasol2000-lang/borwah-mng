@@ -105,9 +105,9 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                           ),
                           child: const Row(
                             children: [
-                              Text('صلاحية سيادية حصرية للمدير المالي (CFO-01)', style: TextStyle(color: Colors.white, fontSize: 9)),
-                              SizedBox(width: 6),
                               Icon(Icons.verified_user_outlined, color: Colors.white, size: 12),
+                              SizedBox(width: 6),
+                              Text('صلاحية سيادية حصرية للمدير المالي (CFO-01)', style: TextStyle(color: Colors.white, fontSize: 9)),
                             ],
                           ),
                         ),
@@ -147,7 +147,7 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                     ),
                     const SizedBox(height: 4),
                     Align(
-                      alignment: Alignment.centerLeft,
+                      alignment: Alignment.centerRight,
                       child: Text('${_salesPercentageController.text}%', style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
                     ),
                     const SizedBox(height: 12),
@@ -171,7 +171,7 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                                       child: TextField(
                                         controller: _salesPercentageController,
                                         keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                                        textAlign: TextAlign.left,
+                                        textAlign: TextAlign.right,
                                         style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
                                         decoration: const InputDecoration(
                                           border: InputBorder.none,
@@ -253,7 +253,7 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                     ),
                     const SizedBox(height: 4),
                     Align(
-                      alignment: Alignment.centerLeft,
+                      alignment: Alignment.centerRight,
                       child: Text('${_settlementFeeController.text}%', style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
                     ),
                     const SizedBox(height: 12),
@@ -293,9 +293,9 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Text('تفصيل التغطية التكلفة:', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.blue.shade700)),
-                              const SizedBox(width: 4),
                               Icon(Icons.pie_chart_outline, size: 14, color: Colors.blue.shade700),
+                              const SizedBox(width: 4),
+                              Text('تفصيل التغطية التكلفة:', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.blue.shade700)),
                             ],
                           ),
                           const SizedBox(height: 4),
@@ -463,11 +463,11 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     const Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text('المسوغ المحاسبي والإلزامي للرقابة', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
-                        SizedBox(width: 8),
                         Icon(Icons.gavel, color: AppColors.danger, size: 18),
+                        SizedBox(width: 8),
+                        Text('المسوغ المحاسبي والإلزامي للرقابة', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
                       ],
                     ),
                     const SizedBox(height: 8),
@@ -492,17 +492,9 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                     GestureDetector(
                       onTap: () => setState(() => _notifyAll = !_notifyAll),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Expanded(
-                            child: Text(
-                              'إشعار فوري لجميع التجار والمناديب والمشرفين بتحديث قائمة الأسعار قبل 7 أيام من موعد التطبيق الإلزامي.',
-                              style: TextStyle(fontSize: 10, color: AppColors.textPrimary, height: 1.4),
-                              textAlign: TextAlign.right,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
                           Container(
                             width: 18,
                             height: 18,
@@ -512,6 +504,14 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                               border: Border.all(color: AppColors.primaryExtraDark),
                             ),
                             child: _notifyAll ? const Icon(Icons.check, size: 12, color: Colors.white) : null,
+                          ),
+                          const SizedBox(width: 12),
+                          const Expanded(
+                            child: Text(
+                              'إشعار فوري لجميع التجار والمناديب والمشرفين بتحديث قائمة الأسعار قبل 7 أيام من موعد التطبيق الإلزامي.',
+                              style: TextStyle(fontSize: 10, color: AppColors.textPrimary, height: 1.4),
+                              textAlign: TextAlign.right,
+                            ),
                           ),
                         ],
                       ),
@@ -561,11 +561,11 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
               ),
               const SizedBox(height: 12),
               const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text('سيتم قيد هذا الإجراء تلقائياً في سجل التدقيق المالي المركزي SHA-256', style: TextStyle(fontSize: 9, color: AppColors.textSecondary)),
-                  SizedBox(width: 6),
                   Icon(Icons.lock_outline, size: 12, color: AppColors.textSecondary),
+                  SizedBox(width: 6),
+                  Text('سيتم قيد هذا الإجراء تلقائياً في سجل التدقيق المالي المركزي SHA-256', style: TextStyle(fontSize: 9, color: AppColors.textSecondary)),
                 ],
               ),
               const SizedBox(height: 20),
@@ -588,14 +588,20 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text(title, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
-              const SizedBox(width: 8),
               Container(
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(color: AppColors.surfaceLight, borderRadius: BorderRadius.circular(8)),
                 child: Icon(icon, size: 16, color: AppColors.primaryDark),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  title,
+                  textAlign: TextAlign.right,
+                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                ),
               ),
             ],
           ),
