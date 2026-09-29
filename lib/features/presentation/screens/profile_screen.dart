@@ -17,28 +17,31 @@ class ProfileScreen extends StatelessWidget {
           backgroundColor: AppColors.backgroundLight,
           elevation: 0,
           scrolledUnderElevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_forward_ios, color: AppColors.textPrimary, size: 18),
-            onPressed: () => Navigator.pop(context),
+          leading: const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: CircleAvatar(
+              backgroundColor: AppColors.primaryExtraDark,
+              child: Icon(Icons.person_outline, color: Colors.white, size: 18),
+            ),
           ),
           title: const Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
+                  Text(
+                    'ملفك الشخصي',
+                    style: TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  SizedBox(width: 6),
                   Icon(Icons.verified_outlined, size: 14, color: AppColors.info),
                   SizedBox(width: 4),
                   Text(
                     'CFO',
                     style: TextStyle(fontSize: 10, color: AppColors.textSecondary, fontWeight: FontWeight.bold),
                     textDirection: TextDirection.ltr,
-                  ),
-                  SizedBox(width: 8),
-                  Text(
-                    'ملفك الشخصي',
-                    style: TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                 ],
               ),
@@ -48,14 +51,10 @@ class ProfileScreen extends StatelessWidget {
               ),
             ],
           ),
-          centerTitle: true,
           actions: [
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: CircleAvatar(
-                backgroundColor: AppColors.primaryExtraDark,
-                child: Icon(Icons.person_outline, color: Colors.white, size: 18),
-              ),
+            IconButton(
+              icon: const Icon(Icons.arrow_forward_ios, color: AppColors.textPrimary, size: 18),
+              onPressed: () => Navigator.pop(context),
             ),
           ],
         ),
@@ -85,7 +84,7 @@ class ProfileScreen extends StatelessWidget {
                         children: [
                           Icon(Icons.circle, size: 6, color: Colors.blue.shade700),
                           const SizedBox(width: 4),
-                          const Text('مشفر bit-256', style: TextStyle(fontSize: 10, color: AppColors.textSecondary), textDirection: TextDirection.ltr),
+                          const Text('مشفر bit-256', style: TextStyle(fontSize: 10, color: AppColors.textSecondary), textDirection: TextDirection.rtl),
                         ],
                       ),
                     ),
@@ -137,7 +136,7 @@ class ProfileScreen extends StatelessWidget {
                                         color: AppColors.primaryExtraDark,
                                         borderRadius: BorderRadius.circular(12),
                                       ),
-                                      child: const Text('#CFO-01', style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold), textDirection: TextDirection.ltr),
+                                      child: const Text('#CFO-01', style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold), textDirection: TextDirection.rtl),
                                     ),
                                     const SizedBox(width: 8),
                                     const Flexible(child: Text('أ. سليمان الراجحي', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textPrimary), maxLines: 1, overflow: TextOverflow.ellipsis)),
@@ -146,7 +145,7 @@ class ProfileScreen extends StatelessWidget {
                                 const SizedBox(height: 6),
                                 const Text('المدير المالي التنفيذي ورئيس الرقابة المحاسبية', style: TextStyle(fontSize: 11, color: AppColors.info)),
                                 const SizedBox(height: 4),
-                                const Text('CFO & Head of Financial Auditing', style: TextStyle(fontSize: 10, color: AppColors.textSecondary), textDirection: TextDirection.ltr),
+                                const Text('CFO & Head of Financial Auditing', style: TextStyle(fontSize: 10, color: AppColors.textSecondary), textDirection: TextDirection.rtl),
                               ],
                             ),
                           ),
@@ -422,7 +421,7 @@ class ProfileScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text('الحساب المصفي المعتمد للصرف', style: TextStyle(color: Colors.white60, fontSize: 9)),
-                              Text('SA44 8000 0001 **** 3456', style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.2), textDirection: TextDirection.ltr),
+                              Text('SA44 8000 0001 **** 3456', style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1.2), textDirection: TextDirection.rtl),
                             ],
                           ),
                           const SizedBox(width: 12),
@@ -865,4 +864,4 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 }
-class _ObscureContactBox extends StatefulWidget { final String title; final String value; final IconData icon; final bool obscureInit; const _ObscureContactBox({required this.title, required this.value, required this.icon, required this.obscureInit}); @override State<_ObscureContactBox> createState() => _ObscureContactBoxState(); } class _ObscureContactBoxState extends State<_ObscureContactBox> { late bool _isObscured; @override void initState() { super.initState(); _isObscured = widget.obscureInit; } @override Widget build(BuildContext context) { String displayValue = widget.value; if (_isObscured && widget.value.contains('@')) { final parts = widget.value.split('@'); if (parts[0].length > 2) { displayValue = '${parts[0].substring(0, 2)}***@${parts[1]}'; } else { displayValue = '***@${parts[1]}'; } } return GestureDetector( onTap: () { if (widget.obscureInit) { setState(() { _isObscured = !_isObscured; }); } }, child: Container( padding: const EdgeInsets.all(10), decoration: BoxDecoration( color: AppColors.surfaceLight, borderRadius: BorderRadius.circular(10), ), child: Row( mainAxisAlignment: MainAxisAlignment.end, children: [ Expanded( child: Column( crossAxisAlignment: CrossAxisAlignment.end, children: [ Text(widget.title, style: const TextStyle(fontSize: 9, color: AppColors.textSecondary)), const SizedBox(height: 2), FittedBox( fit: BoxFit.scaleDown, alignment: Alignment.centerRight, child: Text( displayValue, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.textPrimary), textDirection: TextDirection.ltr, ), ), ], ), ), const SizedBox(width: 8), Icon(widget.icon, size: 18, color: AppColors.textPrimary), ], ), ), ); } }
+class _ObscureContactBox extends StatefulWidget { final String title; final String value; final IconData icon; final bool obscureInit; const _ObscureContactBox({required this.title, required this.value, required this.icon, required this.obscureInit}); @override State<_ObscureContactBox> createState() => _ObscureContactBoxState(); } class _ObscureContactBoxState extends State<_ObscureContactBox> { late bool _isObscured; @override void initState() { super.initState(); _isObscured = widget.obscureInit; } @override Widget build(BuildContext context) { String displayValue = widget.value; if (_isObscured && widget.value.contains('@')) { final parts = widget.value.split('@'); if (parts[0].length > 2) { displayValue = '${parts[0].substring(0, 2)}***@${parts[1]}'; } else { displayValue = '***@${parts[1]}'; } } return GestureDetector( onTap: () { if (widget.obscureInit) { setState(() { _isObscured = !_isObscured; }); } }, child: Container( padding: const EdgeInsets.all(10), decoration: BoxDecoration( color: AppColors.surfaceLight, borderRadius: BorderRadius.circular(10), ), child: Row( mainAxisAlignment: MainAxisAlignment.end, children: [ Expanded( child: Column( crossAxisAlignment: CrossAxisAlignment.end, children: [ Text(widget.title, style: const TextStyle(fontSize: 9, color: AppColors.textSecondary)), const SizedBox(height: 2), FittedBox( fit: BoxFit.scaleDown, alignment: Alignment.centerRight, child: Text( displayValue, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.textPrimary), textDirection: TextDirection.rtl, ), ), ], ), ), const SizedBox(width: 8), Icon(widget.icon, size: 18, color: AppColors.textPrimary), ], ), ), ); } }

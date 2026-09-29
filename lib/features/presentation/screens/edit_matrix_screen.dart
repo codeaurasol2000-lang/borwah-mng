@@ -60,11 +60,10 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
             ),
           ),
           title: const Text(
-            'تعديل مصفوفة نسب الأرباح والر...',
+            'تعديل مصفوفة نسب الأرباح والرسوم',
             style: TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 16),
             overflow: TextOverflow.ellipsis,
           ),
-          centerTitle: true,
           actions: [
             IconButton(
               icon: const Icon(Icons.arrow_forward_ios, color: AppColors.textPrimary, size: 18),

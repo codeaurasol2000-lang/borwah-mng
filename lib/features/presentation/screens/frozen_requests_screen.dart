@@ -428,12 +428,14 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                     if (req['ibanError'] != null)
                       Expanded(child: Text('الآيبان المسجل: ${req['ibanError']}', style: const TextStyle(fontSize: 11, color: AppColors.textSecondary), textDirection: TextDirection.ltr, textAlign: TextAlign.left, overflow: TextOverflow.ellipsis))
                     else
-                      Text('إجمالي المعاملة: ${CurrencyFormatter.format(req['grossAmount'])} ر.س', style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                      Flexible(child: Text('إجمالي المعاملة: ${CurrencyFormatter.format(req['grossAmount'])} ر.س', style: const TextStyle(fontSize: 11, color: AppColors.textSecondary), overflow: TextOverflow.ellipsis)),
+
+                    const SizedBox(width: 8),
 
                     if (req['ibanError'] != null)
                       Text('عدم تطابق اسم الحساب', style: const TextStyle(fontSize: 11, color: AppColors.danger, fontWeight: FontWeight.bold))
                     else
-                      Text('خصم عمولة المنصة: ${CurrencyFormatter.format(req['feeAmount'])} ر.س', style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                      Flexible(child: Text('خصم عمولة المنصة: ${CurrencyFormatter.format(req['feeAmount'])} ر.س', style: const TextStyle(fontSize: 11, color: AppColors.textSecondary), overflow: TextOverflow.ellipsis)),
                   ],
                 ),
               ],

@@ -49,9 +49,10 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
             topRight: Radius.circular(24),
           ),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
             // Handle bar
             Container(
               width: 40,
@@ -305,6 +306,7 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
           ],
         ),
       ),
+    );
     );
   }
 
