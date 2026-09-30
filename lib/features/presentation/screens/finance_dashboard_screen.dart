@@ -533,31 +533,46 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                                               const SizedBox(height: 4),
                                               Row(
                                                 children: [
-                                                  const Text(
-                                                    '58,400',
-                                                    style: TextStyle(
-                                                      fontSize: 18,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.black87,
+                                                  Flexible(
+                                                    child: Text(
+                                                      '58,400',
+                                                      style: const TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.black87,
+                                                      ),
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                     ),
                                                   ),
                                                   const SizedBox(width: 4),
-                                                  Text(
-                                                    l10n.currencySar,
-                                                    style: TextStyle(
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.black87,
+                                                  Flexible(
+                                                    child: Text(
+                                                      l10n.currencySar,
+                                                      style: const TextStyle(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.black87,
+                                                      ),
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                     ),
                                                   ),
                                                   const SizedBox(width: 6),
-                                                  Text(
-                                                    l10n.monthlyTotalExpenses,
-                                                    style: TextStyle(
-                                                      fontSize: 10,
-                                                      color: Colors.grey,
+                                                  Expanded(
+                                                    child: Text(
+                                                      l10n.monthlyTotalExpenses,
+                                                      style: const TextStyle(
+                                                        fontSize: 10,
+                                                        color: Colors.grey,
+                                                      ),
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                     ),
                                                   ),
                                                 ],
@@ -565,36 +580,41 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                                             ],
                                           ),
                                         ),
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 10,
-                                            vertical: 6,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: Colors.blue.shade50,
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Icon(
-                                                Icons.circle,
-                                                size: 6,
-                                                color: Colors.blue.shade700,
-                                              ),
-                                              const SizedBox(width: 4),
-                                              Text(
-                                                l10n.expenseManagement,
-                                                style: TextStyle(
-                                                  fontSize: 10,
-                                                  fontWeight: FontWeight.bold,
+                                        Flexible(
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 10,
+                                              vertical: 6,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: Colors.blue.shade50,
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Icon(
+                                                  Icons.circle,
+                                                  size: 6,
                                                   color: Colors.blue.shade700,
-                                                  height: 1.2,
                                                 ),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                            ],
+                                                const SizedBox(width: 4),
+                                                Text(
+                                                  l10n.expenseManagement,
+                                                  style: TextStyle(
+                                                    fontSize: 10,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.blue.shade700,
+                                                    height: 1.2,
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -611,30 +631,39 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(
-                                          l10n.ongoingOperatingInvoices,
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            color: Colors.black87,
+                                        Expanded(
+                                          child: Text(
+                                            l10n.ongoingOperatingInvoices,
+                                            style: const TextStyle(
+                                              fontSize: 11,
+                                              color: Colors.black87,
+                                            ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
                                           ),
                                         ),
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 8,
-                                            vertical: 4,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                              color: Colors.blue.shade100,
+                                        const SizedBox(width: 8),
+                                        Flexible(
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 8,
+                                              vertical: 4,
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(6),
-                                          ),
-                                          child: Text(
-                                            l10n.scheduledDisbursementItems,
-                                            style: TextStyle(
-                                              fontSize: 10,
-                                              color: Colors.blue,
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color: Colors.blue.shade100,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
+                                            ),
+                                            child: Text(
+                                              l10n.scheduledDisbursementItems,
+                                              style: const TextStyle(
+                                                fontSize: 10,
+                                                color: Colors.blue,
+                                              ),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
                                         ),
@@ -763,11 +792,16 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                                                       color: AppColors.danger,
                                                     ),
                                                     const SizedBox(width: 4),
-                                                    Text(
-                                                      l10n.balancesUnderRegulatoryAudit,
-                                                      style: const TextStyle(
-                                                        fontSize: 11,
-                                                        color: Colors.black87,
+                                                    Expanded(
+                                                      child: Text(
+                                                        l10n.balancesUnderRegulatoryAudit,
+                                                        style: const TextStyle(
+                                                          fontSize: 11,
+                                                          color: Colors.black87,
+                                                        ),
+                                                        maxLines: 2,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                                                       ),
                                                     ),
                                                   ],
@@ -777,13 +811,18 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.end,
                                                   children: [
-                                                    const Text(
-                                                      '25,400',
-                                                      style: TextStyle(
-                                                        fontSize: 18,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.black87,
+                                                    Flexible(
+                                                      child: Text(
+                                                        '25,400',
+                                                        style: const TextStyle(
+                                                          fontSize: 18,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.black87,
+                                                        ),
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                                                       ),
                                                     ),
                                                     const SizedBox(width: 4),
@@ -825,32 +864,41 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                               // 9. محافظ الأقسام التشغيلية
                               // =========================
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.account_balance_wallet,
-                                        color: AppColors.primaryDark,
-                                        size: 18,
-                                      ),
-                                      SizedBox(width: 6),
-                                      Text(
-                                        l10n.operationalDepartmentsWallets,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14,
-                                          color: Colors.black87,
+                                  Expanded(
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.account_balance_wallet,
+                                          color: AppColors.primaryDark,
+                                          size: 18,
                                         ),
-                                      ),
-                                    ],
+                                        SizedBox(width: 6),
+                                        Expanded(
+                                          child: Text(
+                                            l10n.operationalDepartmentsWallets,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14,
+                                              color: Colors.black87,
+                                            ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  Text(
-                                    l10n.activeSectorsCount,
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      color: Colors.blue.shade700,
+                                  const SizedBox(width: 8),
+                                  Flexible(
+                                    child: Text(
+                                      l10n.activeSectorsCount,
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        color: Colors.blue.shade700,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                 ],
@@ -917,57 +965,69 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                                 child: Column(
                                   children: [
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Row(
-                                          children: [
-                                            Icon(
-                                              Icons.shield_outlined,
-                                              color: AppColors.primaryDark,
-                                              size: 20,
-                                            ),
-                                            SizedBox(width: 8),
-                                            Text(
-                                              l10n.instantLiquidityAdequacyRatio,
-                                              style: const TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.bold,
-                                                color: AppColors.primaryDark,
-                                                height: 1.2,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 10,
-                                            vertical: 6,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: Colors.blue.shade50,
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
+                                        Expanded(
                                           child: Row(
                                             children: [
                                               Icon(
-                                                Icons.check_circle_outline,
-                                                size: 14,
-                                                color: Colors.blue.shade700,
+                                                Icons.shield_outlined,
+                                                color: AppColors.primaryDark,
+                                                size: 20,
                                               ),
-                                              const SizedBox(width: 4),
-                                              Text(
-                                                l10n.verySafeAndStable,
-                                                style: TextStyle(
-                                                  fontSize: 9,
-                                                  color: Colors.blue.shade700,
-                                                  fontWeight: FontWeight.bold,
-                                                  height: 1.2,
+                                              SizedBox(width: 8),
+                                              Expanded(
+                                                child: Text(
+                                                  l10n.instantLiquidityAdequacyRatio,
+                                                  style: const TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.bold,
+                                                    color:
+                                                        AppColors.primaryDark,
+                                                    height: 1.2,
+                                                  ),
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                 ),
-                                                textAlign: TextAlign.center,
                                               ),
                                             ],
+                                          ),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Flexible(
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 10,
+                                              vertical: 6,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: Colors.blue.shade50,
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.check_circle_outline,
+                                                  size: 14,
+                                                  color: Colors.blue.shade700,
+                                                ),
+                                                const SizedBox(width: 4),
+                                                Text(
+                                                  l10n.verySafeAndStable,
+                                                  style: TextStyle(
+                                                    fontSize: 9,
+                                                    color: Colors.blue.shade700,
+                                                    fontWeight: FontWeight.bold,
+                                                    height: 1.2,
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -1020,24 +1080,34 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.end,
                                                   children: [
-                                                    const Text(
-                                                      '99.8%',
-                                                      style: TextStyle(
-                                                        fontSize: 22,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.black87,
+                                                    Flexible(
+                                                      child: Text(
+                                                        '99.8%',
+                                                        style: const TextStyle(
+                                                          fontSize: 22,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.black87,
+                                                        ),
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                                                       ),
                                                     ),
                                                     const SizedBox(width: 6),
-                                                    Text(
-                                                      l10n.excessCashCoverage,
-                                                      style: TextStyle(
-                                                        fontSize: 10,
-                                                        color: Colors
-                                                            .blue.shade700,
-                                                        fontWeight:
-                                                            FontWeight.bold,
+                                                    Flexible(
+                                                      child: Text(
+                                                        l10n.excessCashCoverage,
+                                                        style: TextStyle(
+                                                          fontSize: 10,
+                                                          color: Colors
+                                                              .blue.shade700,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                        maxLines: 2,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
                                                       ),
                                                     ),
                                                   ],
@@ -1080,16 +1150,22 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                                                 fontSize: 11,
                                                 color: Colors.black87,
                                               ),
+                                              maxLines: 3,
+                                              overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
-                                          Text(
-                                            l10n.completedAndMatched,
-                                            style: const TextStyle(
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black87,
+                                          Flexible(
+                                            child: Text(
+                                              l10n.completedAndMatched,
+                                              style: const TextStyle(
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black87,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                              maxLines: 3,
+                                              overflow: TextOverflow.ellipsis,
                                             ),
-                                            textAlign: TextAlign.center,
                                           ),
                                         ],
                                       ),
@@ -1136,22 +1212,28 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                                               color: Colors.black87,
                                               height: 1.3,
                                             ),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
                                           ),
                                         ),
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 8,
-                                            vertical: 4,
-                                          ),
-                                          color: Colors.white,
-                                          child: Text(
-                                            l10n.governancePolicyClause,
-                                            style: const TextStyle(
-                                              fontSize: 9,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.grey,
+                                        Flexible(
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 8,
+                                              vertical: 4,
                                             ),
-                                            textAlign: TextAlign.center,
+                                            color: Colors.white,
+                                            child: Text(
+                                              l10n.governancePolicyClause,
+                                              style: const TextStyle(
+                                                fontSize: 9,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.grey,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -1425,12 +1507,16 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                       const SizedBox(height: 4),
                       Row(
                         children: [
-                          Text(
-                            countText,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87,
+                          Flexible(
+                            child: Text(
+                              countText,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           const SizedBox(width: 6),
@@ -1487,12 +1573,17 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                       color: AppColors.primaryDark,
                     ),
                     const SizedBox(width: 6),
-                    Text(
-                      actionButtonText,
-                      style: const TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primaryDark,
+                    Flexible(
+                      child: Text(
+                        actionButtonText,
+                        style: const TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.primaryDark,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
                       ),
                     ),
                   ],
@@ -1565,12 +1656,16 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(
-                value,
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+              Flexible(
+                child: Text(
+                  value,
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               const SizedBox(width: 4),
@@ -1599,12 +1694,17 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                 ),
               ),
               const SizedBox(width: 8),
-              Text(
-                bottomLink,
-                style: TextStyle(
-                  fontSize: 11,
-                  color: Colors.blue.shade700,
-                  fontWeight: FontWeight.bold,
+              Flexible(
+                child: Text(
+                  bottomLink,
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: Colors.blue.shade700,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.end,
                 ),
               ),
             ],
@@ -1669,6 +1769,8 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
                     ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 2),
                   Text(
@@ -1678,30 +1780,36 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                       color: Colors.grey,
                       height: 1.3,
                     ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
             ),
             const SizedBox(width: 8),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  balance,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+            Flexible(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    balance,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-                Text(
-                  currencyText,
-                  style: TextStyle(
-                    fontSize: 9,
-                    color: Colors.grey,
+                  Text(
+                    currencyText,
+                    style: TextStyle(
+                      fontSize: 9,
+                      color: Colors.grey,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             const SizedBox(width: 8),
             const Icon(

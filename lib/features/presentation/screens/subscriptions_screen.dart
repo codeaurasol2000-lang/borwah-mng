@@ -138,34 +138,38 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              const Icon(Icons.verified,
-                                  color: Colors.blueAccent, size: 14),
-                              const SizedBox(width: 4),
-                              Text(l10n.financialAuditAndLicenses,
-                                  style: TextStyle(
-                                      color: Colors.blue.shade700,
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.bold)),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          Text(l10n.subscriptionsAndUpgradesReviewTitle,
-                              style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w900,
-                                  color: AppColors.primaryDark)),
-                          const SizedBox(height: 2),
-                          Text(l10n.subscriptionsAndUpgradesReviewSubtitle,
-                              style: const TextStyle(
-                                  fontSize: 11,
-                                  color: Colors.grey,
-                                  height: 1.3)),
-                        ],
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                const Icon(Icons.verified,
+                                    color: Colors.blueAccent, size: 14),
+                                const SizedBox(width: 4),
+                                Text(l10n.financialAuditAndLicenses,
+                                    style: TextStyle(
+                                        color: Colors.blue.shade700,
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.bold)),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            Text(l10n.subscriptionsAndUpgradesReviewTitle,
+                                style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w900,
+                                    color: AppColors.primaryDark),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis),
+                            const SizedBox(height: 2),
+                            Text(l10n.subscriptionsAndUpgradesReviewSubtitle,
+                                style: const TextStyle(
+                                    fontSize: 11,
+                                    color: Colors.grey,
+                                    height: 1.3)),
+                          ],
+                        ),
                       ),
                       Row(
                         children: [
@@ -205,29 +209,44 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Text(l10n.currentSubscriptionsCycleSummary,
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(
+                                  l10n.currentSubscriptionsCycleSummary,
                                   style: const TextStyle(
-                                      color: Colors.white, fontSize: 11)),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: Colors.blue.withValues(alpha: 0.2),
-                                borderRadius: BorderRadius.circular(20),
+                                      color: Colors.white, fontSize: 11),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
-                              child: Text(l10n.updatedNow,
+                            ),
+                            const SizedBox(width: 8),
+                            Flexible(
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue.withValues(alpha: 0.2),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(
+                                  l10n.updatedNow,
                                   style: const TextStyle(
                                       color: Colors.lightBlueAccent,
                                       fontSize: 10,
-                                      fontWeight: FontWeight.bold)),
+                                      fontWeight: FontWeight.bold),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
                             ),
                           ],
                         ),
@@ -485,29 +504,46 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
 
                   // 4. Section Title
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          const Icon(Icons.circle,
-                              color: AppColors.primaryDark, size: 10),
-                          const SizedBox(width: 6),
-                          Text(l10n.awaitingCertificationRequests,
-                              style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black87)),
-                        ],
+                      Expanded(
+                        child: Row(
+                          children: [
+                            const Icon(Icons.circle,
+                                color: AppColors.primaryDark, size: 10),
+                            const SizedBox(width: 6),
+                            Expanded(
+                              child: Text(
+                                l10n.awaitingCertificationRequests,
+                                style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black87),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      Row(
-                        children: [
-                          const Icon(Icons.sort,
-                              color: Colors.blueAccent, size: 16),
-                          const SizedBox(width: 4),
-                          Text(l10n.sortByNewest,
-                              style: TextStyle(
-                                  fontSize: 11, color: Colors.blue.shade700)),
-                        ],
+                      const SizedBox(width: 8),
+                      Flexible(
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.sort,
+                                color: Colors.blueAccent, size: 16),
+                            const SizedBox(width: 4),
+                            Flexible(
+                              child: Text(
+                                l10n.sortByNewest,
+                                style: TextStyle(
+                                    fontSize: 11, color: Colors.blue.shade700),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -792,63 +828,79 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        Text(
-                          switch (sub.type) {
-                            SubscriptionType.merchant =>
-                              l10n.storesAndMerchants,
-                            SubscriptionType.serviceProvider =>
-                              l10n.serviceProviders,
-                            SubscriptionType.user => l10n.usersTab,
-                            SubscriptionType.courier => l10n.couriersTab,
-                            SubscriptionType.ad => l10n.advertisementsTab,
-                          },
-                          style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.blue.shade700,
-                              fontWeight: FontWeight.bold),
+                        Flexible(
+                          child: Text(
+                            switch (sub.type) {
+                              SubscriptionType.merchant =>
+                                l10n.storesAndMerchants,
+                              SubscriptionType.serviceProvider =>
+                                l10n.serviceProviders,
+                              SubscriptionType.user => l10n.usersTab,
+                              SubscriptionType.courier => l10n.couriersTab,
+                              SubscriptionType.ad => l10n.advertisementsTab,
+                            },
+                            style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.blue.shade700,
+                                fontWeight: FontWeight.bold),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                         const SizedBox(width: 4),
                         const Icon(Icons.circle, size: 4, color: Colors.grey),
                         const SizedBox(width: 4),
-                        Text(
-                          '${sub.type == SubscriptionType.merchant ? l10n.commercialRegister : l10n.licenseNumber} ${sub.registrationNumber}',
-                          style: TextStyle(
-                              fontSize: 10, color: Colors.grey.shade700),
+                        Expanded(
+                          child: Text(
+                            '${sub.type == SubscriptionType.merchant ? l10n.commercialRegister : l10n.licenseNumber} ${sub.registrationNumber}',
+                            style: TextStyle(
+                                fontSize: 10, color: Colors.grey.shade700),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ],
                     ),
                   ],
                 ),
               ),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: isAutoReady
-                      ? Colors.blue.shade50
-                      : const Color(0xFFF1F5F9),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (isAutoReady)
-                      const Icon(Icons.flash_on,
-                          color: AppColors.primaryDark, size: 12),
-                    if (!isAutoReady)
-                      const Icon(Icons.circle,
-                          color: Colors.blueAccent, size: 8),
-                    const SizedBox(width: 4),
-                    Text(
-                      isAutoReady ? l10n.autoApprovalReady : l10n.underMatching,
-                      style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                          color: isAutoReady
-                              ? AppColors.primaryDark
-                              : Colors.blue.shade800),
-                    ),
-                  ],
+              Flexible(
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: isAutoReady
+                        ? Colors.blue.shade50
+                        : const Color(0xFFF1F5F9),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (isAutoReady)
+                        const Icon(Icons.flash_on,
+                            color: AppColors.primaryDark, size: 12),
+                      if (!isAutoReady)
+                        const Icon(Icons.circle,
+                            color: Colors.blueAccent, size: 8),
+                      const SizedBox(width: 4),
+                      Flexible(
+                        child: Text(
+                          isAutoReady
+                              ? l10n.autoApprovalReady
+                              : l10n.underMatching,
+                          style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              color: isAutoReady
+                                  ? AppColors.primaryDark
+                                  : Colors.blue.shade800),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -885,13 +937,16 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                           if (sub.type == SubscriptionType.merchant)
                             const SizedBox(width: 4),
                           Flexible(
-                            child: Text(sub.targetPackageName,
-                                style: const TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black87),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis),
+                            child: Text(
+                              sub.targetPackageName,
+                              style: const TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ],
                       ),
@@ -935,13 +990,17 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text(
-                              CurrencyFormatter.format(sub.totalAmount,
-                                  includeCurrency: false),
-                              style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black87)),
+                          Flexible(
+                            child: Text(
+                                CurrencyFormatter.format(sub.totalAmount,
+                                    includeCurrency: false),
+                                style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black87),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis),
+                          ),
                           const SizedBox(width: 2),
                           Text(l10n.currencySar,
                               style: const TextStyle(
@@ -989,16 +1048,28 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                   ),
                 ),
                 if (isAutoReady && sub.availableBalance != null)
-                  Text(
-                    sub.availableBalance!,
-                    style: TextStyle(fontSize: 10, color: Colors.blue.shade700),
+                  Flexible(
+                    child: Text(
+                      sub.availableBalance!,
+                      style:
+                          TextStyle(fontSize: 10, color: Colors.blue.shade700),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.end,
+                    ),
                   ),
                 if (!isAutoReady)
-                  Text(
-                    l10n.corporateAccount,
-                    style: TextStyle(
-                        fontSize: 10, color: Colors.blue.shade700, height: 1.2),
-                    textAlign: TextAlign.center,
+                  Flexible(
+                    child: Text(
+                      l10n.corporateAccount,
+                      style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.blue.shade700,
+                          height: 1.2),
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
               ],
             ),
