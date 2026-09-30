@@ -11,10 +11,8 @@ class EditMatrixScreen extends StatefulWidget {
 }
 
 class _EditMatrixScreenState extends State<EditMatrixScreen> {
-  final TextEditingController _reasonController = TextEditingController(
-    text:
-        'تعديل دوري لمواكبة تحديثات رسوم بوابات الدفع البنكية وتوسعة شبكة التوصيل الميداني',
-  );
+  final TextEditingController _reasonController = TextEditingController();
+  bool _hasLocalizedReason = false;
 
   final TextEditingController _salesPercentageController =
       TextEditingController(text: '4.50');
@@ -39,6 +37,16 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_hasLocalizedReason) {
+      _reasonController.text =
+          AppLocalizations.of(context)!.matrixDefaultReason;
+      _hasLocalizedReason = true;
+    }
+  }
+
+  @override
   void dispose() {
     _reasonController.dispose();
     _salesPercentageController.dispose();
@@ -50,7 +58,8 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isArabic = AppLocalizations.of(context)!.localeName == 'ar';
+    final l10n = AppLocalizations.of(context)!;
+    final isArabic = l10n.localeName == 'ar';
 
     return Directionality(
       textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
@@ -68,9 +77,7 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
             ),
           ),
           title: Text(
-            isArabic
-                ? 'تعديل مصفوفة نسب الأرباح والرسوم'
-                : 'Update Profit & Fee Matrix',
+            l10n.matrixScreenTitle,
             style: const TextStyle(
                 color: AppColors.textPrimary,
                 fontWeight: FontWeight.bold,
@@ -111,8 +118,8 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                             const Icon(Icons.circle,
                                 color: Colors.greenAccent, size: 8),
                             const SizedBox(width: 4),
-                            const Text('مباشر',
-                                style: TextStyle(
+                            Text(l10n.matrixLive,
+                                style: const TextStyle(
                                     color: Colors.white, fontSize: 10)),
                           ],
                         ),
@@ -124,13 +131,13 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                             color: Colors.white.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: const Row(
+                          child: Row(
                             children: [
                               Icon(Icons.verified_user_outlined,
                                   color: Colors.white, size: 12),
                               SizedBox(width: 6),
-                              Text('صلاحية سيادية حصرية للمدير المالي (CFO-01)',
-                                  style: TextStyle(
+                              Text(l10n.matrixCfoPermission,
+                                  style: const TextStyle(
                                       color: Colors.white, fontSize: 9)),
                             ],
                           ),
@@ -138,8 +145,8 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                       ],
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'تحديد النسب الرسمية لاقتطاعات المنصة التلقائية وتحديث محرك التسويات والرسوم اللوجستية لكافة العمليات المالية المعتمدة.',
+                    Text(
+                      l10n.matrixCfoDescription,
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 11,
@@ -147,8 +154,8 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                           fontWeight: FontWeight.w500),
                     ),
                     const SizedBox(height: 16),
-                    const Text(
-                      'آخر تحديث: 01 يناير 2025 بموجب قرار مجلس الإدارة رقم BOD-44/B',
+                    Text(
+                      l10n.matrixLastUpdated,
                       style: TextStyle(color: Colors.white60, fontSize: 9),
                     ),
                   ],
@@ -159,7 +166,7 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
               // Section 1: General Sales Percentage
               _buildCard(
                 icon: Icons.storefront_outlined,
-                title: 'النسبة العامة للمبيعات والمتاجر',
+                title: l10n.matrixSalesRateTitle,
                 child: Column(
                   children: [
                     Row(
@@ -171,14 +178,14 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                           decoration: BoxDecoration(
                               color: AppColors.surfaceLight,
                               borderRadius: BorderRadius.circular(6)),
-                          child: const Text('النطاق: 10.0% - 2.0%',
+                          child: Text(l10n.matrixRateRange,
                               style: TextStyle(
                                   fontSize: 10,
                                   color: AppColors.primaryDark,
                                   fontWeight: FontWeight.bold),
                               textDirection: TextDirection.ltr),
                         ),
-                        const Text('النسبة المطبقة حالياً',
+                        Text(l10n.matrixAppliedRate,
                             style: TextStyle(
                                 fontSize: 11, color: AppColors.textSecondary)),
                       ],
@@ -237,25 +244,25 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                                   ],
                                 ),
                               ),
-                              const Text('ضبط النسبة المستهدفة',
+                              Text(l10n.matrixTargetRate,
                                   style: TextStyle(
                                       fontSize: 11,
                                       color: AppColors.textSecondary)),
                             ],
                           ),
                           const SizedBox(height: 12),
-                          const Row(
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('الحد الأدنى 2.0%',
+                              Text(l10n.matrixMinimumValue,
                                   style: TextStyle(
                                       fontSize: 9,
                                       color: AppColors.textSecondary)),
-                              Text('المرجعي 5.0%',
+                              Text(l10n.matrixReferenceValue,
                                   style: TextStyle(
                                       fontSize: 9,
                                       color: AppColors.textSecondary)),
-                              Text('الحد الأقصى 10.0%',
+                              Text(l10n.matrixMaximumValue,
                                   style: TextStyle(
                                       fontSize: 9,
                                       color: AppColors.textSecondary)),
@@ -273,7 +280,7 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                         const SizedBox(width: 6),
                         Expanded(
                           child: Text(
-                            'تُطبق على جميع صفقات المتاجر، المنتجات الجديدة، ومبيعات الأجهزة المباشرة دون استثناءات محلية.',
+                            l10n.matrixSalesNote,
                             style: TextStyle(
                                 fontSize: 10,
                                 color: Colors.grey.shade600,
@@ -290,7 +297,7 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
               // Section 2: Wallet Settlement
               _buildCard(
                 icon: Icons.account_balance_wallet_outlined,
-                title: 'رسوم تسوية المحافظ والاسترداد',
+                title: l10n.matrixSettlementFeesTitle,
                 child: Column(
                   children: [
                     Row(
@@ -330,7 +337,7 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                             ],
                           ),
                         ),
-                        const Text('رسم التسوية الحالية',
+                        Text(l10n.matrixCurrentSettlementRate,
                             style: TextStyle(
                                 fontSize: 11, color: AppColors.textSecondary)),
                       ],
@@ -366,14 +373,13 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              const Text('رسم ثابت إضافي (تسوية فورية)',
+                              Text(l10n.matrixInstantFixedFee,
                                   style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.bold,
                                       color: AppColors.textPrimary)),
                               const SizedBox(height: 2),
-                              Text(
-                                  'تطبيق رسم مقطوع بقيمة 5.00 ر.س لكل تسوية مستعجلة',
+                              Text(l10n.matrixInstantFixedFeeNote,
                                   style: TextStyle(
                                       fontSize: 9,
                                       color: Colors.grey.shade600)),
@@ -397,7 +403,7 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                               Icon(Icons.pie_chart_outline,
                                   size: 14, color: Colors.blue.shade700),
                               const SizedBox(width: 4),
-                              Text('تفصيل التغطية التكلفة:',
+                              Text(l10n.matrixCoverageDetails,
                                   style: TextStyle(
                                       fontSize: 10,
                                       fontWeight: FontWeight.bold,
@@ -406,18 +412,15 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            AppLocalizations.of(context)!.localeName == 'ar'
-                                ? 'تغطية مصاريف بوابات الدفع (Mada / Visa / SARIE) بنسبة 0.85%'
-                                : 'Coverage of payment gateway fees (Mada / Visa / SARIE) at 0.85%',
+                            l10n.matrixGatewayCoverage,
                             style: const TextStyle(
                                 fontSize: 9, color: AppColors.textPrimary),
-                            textDirection:
-                                AppLocalizations.of(context)!.localeName == 'ar'
-                                    ? TextDirection.rtl
-                                    : TextDirection.ltr,
+                            textDirection: isArabic
+                                ? TextDirection.rtl
+                                : TextDirection.ltr,
                           ),
                           const SizedBox(height: 2),
-                          const Text('+ هامش تشغيلي وقائي بنسبة 0.40%',
+                          Text(l10n.matrixOperatingMargin,
                               style: TextStyle(
                                   fontSize: 9, color: AppColors.textPrimary)),
                         ],
@@ -425,7 +428,7 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      'تُقتطع تلقائياً عند طلب التسوية السريعة عبر شبكة المدفوعات اللوجستية الفورية واسترداد النزاعات.',
+                      l10n.matrixSettlementNote,
                       style: TextStyle(
                           fontSize: 10,
                           color: Colors.grey.shade600,
@@ -440,7 +443,7 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
               // Section 3: Delivery Commission
               _buildCard(
                 icon: Icons.local_shipping_outlined,
-                title: 'عمولة قطاع التوصيل والنقل والشحن',
+                title: l10n.matrixDeliveryTitle,
                 child: Column(
                   children: [
                     Row(
@@ -452,13 +455,13 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                           decoration: BoxDecoration(
                               color: Colors.blue.shade50,
                               borderRadius: BorderRadius.circular(6)),
-                          child: Text('أسطول وصلني & الشركاء',
+                          child: Text(l10n.matrixDeliveryFleet,
                               style: TextStyle(
                                   fontSize: 10,
                                   color: Colors.blue.shade800,
                                   fontWeight: FontWeight.bold)),
                         ),
-                        const Text('العمولة المعتمدة حالياً',
+                        Text(l10n.matrixCurrentCommission,
                             style: TextStyle(
                                 fontSize: 11, color: AppColors.textSecondary)),
                       ],
@@ -467,7 +470,9 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                          '${_deliveryCommissionType == 'percentage' ? _deliveryCommissionController.text + '%' : _deliveryFixedController.text + ' EGP'}',
+                          _deliveryCommissionType == 'percentage'
+                              ? '${_deliveryCommissionController.text}%'
+                              : '${_deliveryFixedController.text} ${l10n.currencySar}',
                           style: const TextStyle(
                               fontSize: 28,
                               fontWeight: FontWeight.bold,
@@ -530,7 +535,7 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                             ),
                             Row(
                               children: [
-                                const Text('نسبة مئوية من قيمة التوصيل',
+                                Text(l10n.matrixDeliveryPercentage,
                                     style: TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.bold,
@@ -596,7 +601,7 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                                       ),
                                     ),
                                   ),
-                                  const Text('EGP',
+                                  Text(l10n.currencySar,
                                       style: TextStyle(
                                           fontSize: 11,
                                           color: AppColors.textSecondary)),
@@ -605,7 +610,7 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                             ),
                             Row(
                               children: [
-                                const Text('مبلغ مقطوع ثابت لكل شحنة',
+                                Text(l10n.matrixFixedPerShipment,
                                     style: TextStyle(
                                         fontSize: 12,
                                         color: AppColors.textSecondary)),
@@ -634,7 +639,7 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                         const SizedBox(width: 6),
                         Expanded(
                           child: Text(
-                            'تُحتسب على كل عملية توصيل ناجحة لمناديب أسطول وصلني والشركات اللوجستية المتعاقدة وتُودع بالمحفظة المركزية.',
+                            l10n.matrixDeliveryDescription,
                             style: TextStyle(
                                 fontSize: 10,
                                 color: Colors.grey.shade600,
@@ -659,12 +664,12 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Icon(Icons.gavel, color: AppColors.danger, size: 18),
                         SizedBox(width: 8),
-                        Text('المسوغ المحاسبي والإلزامي للرقابة',
+                        Text(l10n.matrixAuditReasonTitle,
                             style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.bold,
@@ -672,8 +677,7 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                       ],
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                        'سبب وموجب تعديل النسب (إلزامي للرقابة والتدقيق المركزي):',
+                    Text(l10n.matrixAuditReasonPrompt,
                         style: TextStyle(
                             fontSize: 10, color: AppColors.textSecondary)),
                     const SizedBox(height: 12),
@@ -719,9 +723,9 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                                 : null,
                           ),
                           const SizedBox(width: 12),
-                          const Expanded(
+                          Expanded(
                             child: Text(
-                              'إشعار فوري لجميع التجار والمناديب والمشرفين بتحديث قائمة الأسعار قبل 7 أيام من موعد التطبيق الإلزامي.',
+                              l10n.matrixNotifyUsers,
                               style: TextStyle(
                                   fontSize: 10,
                                   color: AppColors.textPrimary,
@@ -752,8 +756,8 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                             borderRadius: BorderRadius.circular(12)),
                       ),
                       onPressed: () => Navigator.pop(context),
-                      child: const Text('إلغاء',
-                          style: TextStyle(
+                      child: Text(l10n.matrixCancel,
+                          style: const TextStyle(
                               fontSize: 13, fontWeight: FontWeight.bold)),
                     ),
                   ),
@@ -773,28 +777,24 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                           const Icon(Icons.drive_file_rename_outline, size: 18),
                       onPressed: () {
                         ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text(
-                                    'تم رفع التعديلات للسجل المالي بنجاح')));
+                            SnackBar(content: Text(l10n.matrixSaveSuccess)));
                         Navigator.pop(context);
                       },
-                      label: const Text(
-                          'حفظ وإرسال مصفوفة النسب رسمياً للإدارة',
-                          style: TextStyle(
+                      label: Text(l10n.matrixSaveAndSend,
+                          style: const TextStyle(
                               fontSize: 11, fontWeight: FontWeight.bold)),
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 12),
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Icon(Icons.lock_outline,
                       size: 12, color: AppColors.textSecondary),
                   SizedBox(width: 6),
-                  Text(
-                      'سيتم قيد هذا الإجراء تلقائياً في سجل التدقيق المالي المركزي SHA-256',
+                  Text(l10n.matrixAuditTrailNotice,
                       style: TextStyle(
                           fontSize: 9, color: AppColors.textSecondary)),
                 ],

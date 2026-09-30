@@ -21,12 +21,12 @@ class TransactionHistoryScreen extends StatefulWidget {
 }
 
 class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
-  String _selectedFilter =
-      'الكل (6)'; // 'الكل (6)', 'عمليات الإيداع (+3)', 'عمليات السحب (-3)'
+  String _selectedFilter = 'all';
 
   @override
   Widget build(BuildContext context) {
-    final isArabic = AppLocalizations.of(context)!.localeName == 'ar';
+    final l10n = AppLocalizations.of(context)!;
+    final isArabic = l10n.localeName == 'ar';
 
     return Directionality(
       textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
@@ -48,16 +48,14 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                isArabic ? 'سجل العمليات' : 'Transaction History',
+                l10n.transactionHistoryTitle,
                 style: const TextStyle(
                     color: AppColors.textPrimary,
                     fontWeight: FontWeight.bold,
                     fontSize: 16),
               ),
               Text(
-                isArabic
-                    ? 'برواح المازوري - الإدارة المالية'
-                    : 'Barwah Mazouri - Finance Management',
+                l10n.transactionFinancialSubtitle,
                 style: const TextStyle(
                     fontSize: 10, color: AppColors.textSecondary),
               ),
@@ -150,13 +148,13 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                               color: Colors.white.withOpacity(0.05),
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: const Text('تحت إشراف : أ. سعد العتيبي',
+                            child: Text(l10n.transactionSupervisedBy,
                                 style: TextStyle(
                                     color: Colors.white70, fontSize: 10),
                                 textAlign: TextAlign.center),
                           ),
                           const SizedBox(height: 20),
-                          const Text('رصيد المحفظة المتاح للتسوية',
+                          Text(l10n.transactionAvailableBalance,
                               style: TextStyle(
                                   color: Colors.white60, fontSize: 11)),
                           const SizedBox(height: 8),
@@ -175,7 +173,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                     height: 1),
                               ),
                               const SizedBox(width: 4),
-                              Text(AppLocalizations.of(context)!.currencySar,
+                              Text(l10n.currencySar,
                                   style: const TextStyle(
                                       color: Colors.white70,
                                       fontSize: 14,
@@ -196,11 +194,11 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
-                                      const Row(
+                                      Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
-                                          Text('إجمالي السحوبات',
+                                          Text(l10n.transactionTotalWithdrawals,
                                               style: TextStyle(
                                                   color: Colors.white70,
                                                   fontSize: 10)),
@@ -223,9 +221,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.bold)),
                                           const SizedBox(width: 2),
-                                          Text(
-                                              AppLocalizations.of(context)!
-                                                  .currencySar,
+                                          Text(l10n.currencySar,
                                               style: const TextStyle(
                                                   color: Colors.white70,
                                                   fontSize: 9)),
@@ -247,11 +243,11 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
-                                      const Row(
+                                      Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
-                                          Text('إجمالي الإيداعات',
+                                          Text(l10n.transactionTotalDeposits,
                                               style: TextStyle(
                                                   color: Colors.white70,
                                                   fontSize: 10)),
@@ -274,9 +270,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.bold)),
                                           const SizedBox(width: 2),
-                                          Text(
-                                              AppLocalizations.of(context)!
-                                                  .currencySar,
+                                          Text(l10n.currencySar,
                                               style: const TextStyle(
                                                   color: Colors.white70,
                                                   fontSize: 9)),
@@ -297,7 +291,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('سجل الحركات المصرفية المعتمدة',
+                        Text(l10n.transactionApprovedHistory,
                             style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,
@@ -308,9 +302,9 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                           decoration: BoxDecoration(
                               color: AppColors.surfaceLight,
                               borderRadius: BorderRadius.circular(8)),
-                          child: const Row(
+                          child: Row(
                             children: [
-                              Text('هذا الشهر (يناير 2025)',
+                              Text(l10n.transactionThisMonth,
                                   style: TextStyle(
                                       fontSize: 10,
                                       color: AppColors.primaryDark,
@@ -330,93 +324,97 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: [
-                          _buildFilterChip('الكل (6)'),
+                          _buildFilterChip(l10n.transactionAllFilter, 'all'),
                           const SizedBox(width: 8),
-                          _buildFilterChip('عمليات الإيداع (+3)'),
+                          _buildFilterChip(
+                              l10n.transactionDepositsFilter, 'deposits'),
                           const SizedBox(width: 8),
-                          _buildFilterChip('عمليات السحب (-3)'),
+                          _buildFilterChip(
+                              l10n.transactionWithdrawalsFilter, 'withdrawals'),
                         ],
                       ),
                     ),
                     const SizedBox(height: 24),
 
                     // 4. Group: Today
-                    _buildDateHeader('اليوم • 28 يناير 2025', 'عمليتان'),
+                    _buildDateHeader(l10n.transactionTodayGroup,
+                        l10n.transactionTwoOperations),
                     const SizedBox(height: 12),
                     _buildTransactionItem(
-                      title: 'إيداع مبيعات نقدية - متجر إلكتروني',
-                      subtitle: 'بطاقة مدى • بوابة الدفع الوطنية',
-                      amount: '+2,500.00',
+                      title: l10n.transactionDepositSales,
+                      subtitle: l10n.transactionNationalGateway,
+                      amount: '+2,500.00 ${l10n.currencySar}',
                       isPositive: true,
-                      status: 'ناجح ومكتمل',
+                      status: l10n.transactionSuccess,
                       ref: '#DEP-99412',
-                      time: '02:45 م',
-                      balanceAfter: '412,800.00 EGP',
+                      time: l10n.transactionTimeTodayDeposit,
+                      balanceAfter: '412,800.00 ${l10n.currencySar}',
                     ),
                     _buildTransactionItem(
-                      title: 'سحب أرباح للبنك - مصرف الراجحي',
-                      subtitle: 'آيبان: SA44****5521 • سريع SARIE',
-                      amount: '-50,000.00',
+                      title: l10n.transactionProfitWithdrawal,
+                      subtitle: l10n.transactionFastNetwork,
+                      amount: '-50,000.00 ${l10n.currencySar}',
                       isPositive: false,
-                      status: 'تحويل معتمد',
+                      status: l10n.transactionApproved,
                       ref: '#WTH-88204',
-                      time: '11:15 ص',
-                      balanceAfter: '388,300.00 EGP',
+                      time: l10n.transactionTimeTodayWithdrawal,
+                      balanceAfter: '388,300.00 ${l10n.currencySar}',
                     ),
 
                     const SizedBox(height: 24),
 
                     // 5. Group: Yesterday
-                    _buildDateHeader('أمس • 27 يناير 2025', 'عمليتان'),
+                    _buildDateHeader(l10n.transactionYesterdayGroup,
+                        l10n.transactionTwoOperations),
                     const SizedBox(height: 12),
                     _buildTransactionItem(
-                      title: 'إيداع طلبات وصلني',
-                      subtitle: 'تسوية لوجستية آلية متوافقة',
-                      amount: '+8,350.00 EGP',
+                      title: l10n.transactionWaslniDeposit,
+                      subtitle: l10n.transactionAutomatedSettlement,
+                      amount: '+8,350.00 ${l10n.currencySar}',
                       isPositive: true,
-                      status: 'مكتمل',
+                      status: l10n.transactionCompleted,
                       ref: '#DEP-99120',
-                      time: '06:30 م',
-                      balanceAfter: '438,300.00 EGP',
+                      time: l10n.transactionTimeYesterdayDeposit,
+                      balanceAfter: '438,300.00 ${l10n.currencySar}',
                     ),
                     _buildTransactionItem(
-                      title: 'سحب ارباح - البنك الأهلي',
-                      subtitle: 'آيبان: SA12****8894 • توثيق مؤسسي',
-                      amount: '-35,000.00 EGP',
+                      title: l10n.transactionSnbWithdrawal,
+                      subtitle: l10n.transactionCorporateVerification,
+                      amount: '-35,000.00 ${l10n.currencySar}',
                       isPositive: false,
-                      status: 'مصدق رقابياً',
+                      status: l10n.transactionCertified,
                       ref: '#WTH-87410',
-                      time: '09:20 ص',
-                      balanceAfter: '429,950.00 EGP',
+                      time: l10n.transactionTimeYesterdayWithdrawal,
+                      balanceAfter: '429,950.00 ${l10n.currencySar}',
                     ),
 
                     const SizedBox(height: 24),
 
                     // 6. Group: Last week
-                    _buildDateHeader(
-                        'الأسبوع الماضي • 23 يناير 2025', 'عمليتان'),
+                    _buildDateHeader(l10n.transactionLastWeekGroup,
+                        l10n.transactionTwoOperations),
                     const SizedBox(height: 12),
                     _buildTransactionItem(
-                      title: 'إيداع تسوية نزاع لصالح التاجر...',
-                      subtitle: 'قرار تحكيمي منصة المدفوعات #ARB-209',
-                      amount: '+1,200.00 EGP',
+                      title: l10n.transactionMerchantDisputeDeposit,
+                      subtitle: l10n.transactionArbitrationDecision,
+                      amount: '+1,200.00 ${l10n.currencySar}',
                       isPositive: true,
-                      status: 'تسوية نافذة',
+                      status: l10n.transactionEffectiveSettlement,
                       ref: '#DEP-98765',
-                      time: '04:10 م',
-                      balanceAfter: '464,950.00 EGP',
+                      time: l10n.transactionTimeLastWeekDeposit,
+                      balanceAfter: '464,950.00 ${l10n.currencySar}',
                       iconOverride: Icons.gavel,
                     ),
                     _buildTransactionItem(
-                      title: 'طلب سحب أرباح قيد المراجعة الفورية...',
-                      subtitle: 'مراجعة مطابقة الامتثال المالي (AML)',
-                      amount: '-12,500.00 EGP',
+                      title: l10n.transactionWithdrawalReview,
+                      subtitle: l10n.transactionAmlReview,
+                      amount: '-12,500.00 ${l10n.currencySar}',
                       isPositive: false,
-                      status: 'قيد التدقيق البنكي',
+                      status: l10n.transactionBankAudit,
                       ref: '#WTH-86500',
-                      time: '01:15 م',
-                      balanceAfter: '12,500.00 EGP',
-                      balanceLabel: 'الرصيد المحجوز:',
+                      time: l10n.transactionTimeLastWeekWithdrawal,
+                      balanceAfter: '12,500.00 ${l10n.currencySar}',
+                      balanceLabel: l10n.transactionHeldBalance,
                       statusColor: Colors.blue.shade50,
                       statusTextColor: Colors.blue.shade800,
                       iconOverride: Icons.assignment_late_outlined,
@@ -462,7 +460,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                       ),
                       icon: const Icon(Icons.picture_as_pdf_outlined, size: 18),
                       onPressed: () {},
-                      label: const Text('تحميل كشف الحساب المعتمد (PDF)',
+                      label: Text(l10n.transactionDownloadStatement,
                           style: TextStyle(
                               fontSize: 12, fontWeight: FontWeight.bold)),
                     ),
@@ -476,12 +474,12 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
     );
   }
 
-  Widget _buildFilterChip(String title) {
-    bool isSelected = _selectedFilter == title;
+  Widget _buildFilterChip(String title, String filterId) {
+    final isSelected = _selectedFilter == filterId;
     return GestureDetector(
       onTap: () {
         setState(() {
-          _selectedFilter = title;
+          _selectedFilter = filterId;
         });
       },
       child: Container(
@@ -497,9 +495,9 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (isSelected && title == 'الكل (6)')
+            if (isSelected && filterId == 'all')
               const Icon(Icons.list, size: 14, color: Colors.white),
-            if (isSelected && title == 'الكل (6)') const SizedBox(width: 4),
+            if (isSelected && filterId == 'all') const SizedBox(width: 4),
             Text(
               title,
               style: TextStyle(
@@ -545,11 +543,13 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
     required String ref,
     required String time,
     required String balanceAfter,
-    String balanceLabel = 'الرصيد بعد الحركة:',
+    String? balanceLabel,
     Color? statusColor,
     Color? statusTextColor,
     IconData? iconOverride,
   }) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
@@ -650,7 +650,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
               ),
               Row(
                 children: [
-                  Text(balanceLabel,
+                  Text(balanceLabel ?? l10n.transactionBalanceAfter,
                       style: const TextStyle(
                           fontSize: 9, color: AppColors.textSecondary)),
                   const SizedBox(width: 4),

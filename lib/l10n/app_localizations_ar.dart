@@ -197,7 +197,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get netRegulatoryRevenue => 'صافي الإيراد الرقابي';
 
   @override
-  String get comparedToLastMonth => 'مقارنة بالشهر السابق (249,450 ر.س)';
+  String get comparedToLastMonth => 'مقارنة بالشهر السابق (249,450 ج.م)';
 
   @override
   String get balancesUnderRegulatoryAudit => 'أرصدة معلقة تحت التدقيق الرقابي';
@@ -915,7 +915,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get approveDisputeSettlement =>
-      'اعتماد صرف تسوية النزاع #CMP-1035 بقيمة 1,200.00 ر.س للعميل د. طارق العمري.';
+      'اعتماد صرف تسوية النزاع #CMP-1035 بقيمة 1,200.00 ج.م للعميل د. طارق العمري.';
 
   @override
   String get referenceCode => 'المرجع:';
@@ -931,7 +931,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get periodicMerchantTransfers =>
-      'تحويل مستحقات دورية لـ 12 متجر معتمد عبر نظام المدفوعات الفورية بإجمالي 142,500.00 ر.س.';
+      'تحويل مستحقات دورية لـ 12 متجر معتمد عبر نظام المدفوعات الفورية بإجمالي 142,500.00 ج.م.';
 
   @override
   String get alRajhiBank => 'مصرف الراجحي';
@@ -971,4 +971,916 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get viewFullAuditActivity =>
       'عرض سجل الرقابة والحركات الكامل (342 حركة موثقة)';
+
+  @override
+  String get reconciliationEngine => 'KYC & IBAN VERIFICATION ENGINE';
+
+  @override
+  String get reconciliationImmediateCompliance => 'امتثال مصرفي فوري';
+
+  @override
+  String get reconciliationPageTitle =>
+      'مطابقة الحسابات البنكية ومكافحة الاحتيال';
+
+  @override
+  String get reconciliationAuthorityTitle => 'صلاحية إشرافية تنفيذية مقيدة';
+
+  @override
+  String get reconciliationAuthorityNotice =>
+      'للاطلاع والتحقق والاعتماد مصرح للمدير المالي حصرياً. تعديل بيانات الحساب البنكية ممنوع بتاتاً من قبل المشرفين الميدانيين.';
+
+  @override
+  String get reconciliationGovernmentPortal => 'بوابة وثائق وربط حكومي';
+
+  @override
+  String get reconciliationGovernmentSync =>
+      'تزامن حي ومباشر مع السجل التجاري والبنك المركزي';
+
+  @override
+  String get reconciliationConnected => 'متصل';
+
+  @override
+  String get reconciliationAccountDetails => 'بيانات المطابقة التفصيلية للحساب';
+
+  @override
+  String get reconciliationCommercialName => 'الاسم المعتمد في السجل التجاري';
+
+  @override
+  String get reconciliationCommercialEntity =>
+      'مؤسسة مدار التقنية لتقنية المعلومات';
+
+  @override
+  String get reconciliationBeneficiaryName => 'اسم المستفيد في الحساب البنكي';
+
+  @override
+  String get reconciliationBeneficiaryEntity => 'مؤسسة مدار التقنية';
+
+  @override
+  String get reconciliationFinalActions =>
+      'إجراءات الاعتماد النهائي (حصر صلاحيات المدير المالي):';
+
+  @override
+  String get reconciliationApproveAccount =>
+      'اعتماد الحساب البنكي وإرساله للإدارة';
+
+  @override
+  String get reconciliationApproveSuccess =>
+      'تم اعتماد الحساب البنكي وإرساله للإدارة.';
+
+  @override
+  String get reconciliationRequestIban => 'طلب شهادة آيبان حديثة ومختومة';
+
+  @override
+  String get reconciliationIbanRequestSent =>
+      'تم إرسال طلب شهادة آيبان حديثة ومختومة.';
+
+  @override
+  String get reconciliationRejectTransfer => 'رفض وتجميد التحويل للحساب';
+
+  @override
+  String get reconciliationRejectSuccess =>
+      'تم رفض الطلب وتسجيل سبب الرفض للمراجعة.';
+
+  @override
+  String get reconciliationComplianceReview =>
+      'فحص الامتثال المالي - بوابة وثائق الحكومة';
+
+  @override
+  String get reconciliationBusinessName => 'شركة مدار التقنية للتجارة';
+
+  @override
+  String get reconciliationNewAccountRequest =>
+      'طلب اعتماد حساب بنكي رئيسي جديد للصرف الدوري';
+
+  @override
+  String get reconciliationAmlScore => 'مؤشر توافق المعايير الرقابية (AML/CFT)';
+
+  @override
+  String get reconciliationAmlMatched =>
+      'تطابق آمن وفق بروتوكول مكافحة غسل الأموال وتمويل الإرهاب.';
+
+  @override
+  String get reconciliationMatchVerified => 'مطابق 100%  ✓';
+
+  @override
+  String get reconciliationBankName => 'مصرف الراجحي';
+
+  @override
+  String get reconciliationIbanLabel =>
+      '3. رقم الحساب الدولي (IBAN) والجهة البنكية';
+
+  @override
+  String get reconciliationRegistrationLabel =>
+      '4. السجل التجاري وحالة الصلاحية';
+
+  @override
+  String get reconciliationValidUntil => 'ساري المفعول حتى 1447/06/15هـ';
+
+  @override
+  String get reconciliationPreviewDocument => 'معاينة';
+
+  @override
+  String get reconciliationDocumentPreviewToast =>
+      'معاينة مستند doc-iban-5501.pdf';
+
+  @override
+  String get reconciliationNextAccount => 'الحساب التالي في قائمة الانتظار';
+
+  @override
+  String get reconciliationNextBusiness => 'متجر السهيلة للعطور';
+
+  @override
+  String get reconciliationNextBank =>
+      'البنك الأهلي السعودي  •  SA22 1000 **** **** 8819';
+
+  @override
+  String get reconciliationNameMismatch =>
+      'حالة المطابقة: اختلاف طفيف في اللقب التجاري (يتطلب مراجعة مستند التفويض والوكالة الشرعية قبل الصرف).';
+
+  @override
+  String get reconciliationAuditAlert => 'تنبيه تدقيق';
+
+  @override
+  String get reconciliationOpenAudit =>
+      'فتح ملف التدقيق الكامل للحساب #TRD-6022';
+
+  @override
+  String get withdrawSheetBrand => 'برواح المازوري للخدمات المالية';
+
+  @override
+  String get withdrawSheetTitle => 'طلب سحب الارباح من المالك';
+
+  @override
+  String get withdrawSheetAccount =>
+      'حساب الإدارة والرقابة التنفيذية — أ. سليمان الراجحي';
+
+  @override
+  String get withdrawSheetInstantAuth => 'مصادقة نفاذ فوري • سحب لحظي SARIE';
+
+  @override
+  String get withdrawSheetRequestId => 'طلب رقم #WD-8842';
+
+  @override
+  String get withdrawSheetAvailableBalance =>
+      'الرصيد المتاح الجاهز للصرف الفوري';
+
+  @override
+  String get withdrawSheetMinimumNotice =>
+      'الحد الأدنى للسحب 1,000 ج.م • بدون رسوم تحويل إدارية';
+
+  @override
+  String get withdrawSheetEnterAmount => 'أدخل المبلغ المطلوب سحبه';
+
+  @override
+  String get withdrawSheetSetMaximum => 'تحديد الحد الأقصى';
+
+  @override
+  String get withdrawSheetSelectBank => 'الحساب البنكي المستلم المعتمد';
+
+  @override
+  String get withdrawSheetIbanVerified => 'مدقق IBAN';
+
+  @override
+  String get withdrawSheetBankName => 'مصرف الراجحي';
+
+  @override
+  String get withdrawSheetBankStatus => 'حساب موثق لدى SAMA • نشط ومطابق';
+
+  @override
+  String get withdrawSheetPrimaryAccount => 'الحساب الرئيسي';
+
+  @override
+  String get withdrawSheetSubmitSuccess => 'تم رفع طلب السحب بنجاح';
+
+  @override
+  String get withdrawSheetConfirm => 'تأكيد ارسال طلب السحب للادارة';
+
+  @override
+  String get withdrawSheetCancel => 'إلغاء والتراجع';
+
+  @override
+  String get withdrawSheetAllAmount => 'الكل (52,000 ج.م)';
+
+  @override
+  String get withdrawSheetAmount25k => '25,000 ج.م';
+
+  @override
+  String get withdrawSheetAmount10k => '10,000 ج.م';
+
+  @override
+  String get withdrawSheetAmount5k => '5,000 ج.م';
+
+  @override
+  String get matrixLive => 'مباشر';
+
+  @override
+  String get matrixCfoPermission =>
+      'صلاحية سيادية حصرية للمدير المالي (CFO-01)';
+
+  @override
+  String get matrixIntro =>
+      'تحديد النسب الرسمية لاقتطاعات المنصة التلقائية وتحديث محرك التسويات والرسوم اللوجستية لكافة العمليات المالية المعتمدة.';
+
+  @override
+  String get matrixLastUpdate =>
+      'آخر تحديث: 01 يناير 2025 بموجب قرار مجلس الإدارة رقم BOD-44/B';
+
+  @override
+  String get matrixSalesRateTitle => 'النسبة العامة للمبيعات والمتاجر';
+
+  @override
+  String get matrixRateRange => 'النطاق: 10.0% - 2.0%';
+
+  @override
+  String get matrixCurrentRate => 'النسبة المطبقة حالياً';
+
+  @override
+  String get matrixSetTargetRate => 'ضبط النسبة المستهدفة';
+
+  @override
+  String get matrixMinimumRate => 'الحد الأدنى 2.0%';
+
+  @override
+  String get matrixReferenceRate => 'المرجعي 5.0%';
+
+  @override
+  String get matrixMaximumRate => 'الحد الأقصى 10.0%';
+
+  @override
+  String get matrixSalesRateNote =>
+      'تُطبق على جميع صفقات المتاجر، المنتجات الجديدة، ومبيعات الأجهزة المباشرة دون استثناءات محلية.';
+
+  @override
+  String get matrixSettlementFeesTitle => 'رسوم تسوية المحافظ والاسترداد';
+
+  @override
+  String get matrixCurrentSettlementFee => 'رسم التسوية الحالية';
+
+  @override
+  String get matrixFixedInstantFee => 'رسم ثابت إضافي (تسوية فورية)';
+
+  @override
+  String get matrixCostCoverage => 'تفصيل التغطية التكلفة:';
+
+  @override
+  String get matrixDeliveryFleet => 'أسطول وصلني & الشركاء';
+
+  @override
+  String get matrixCurrentCommission => 'العمولة المعتمدة حالياً';
+
+  @override
+  String get matrixDeliveryPercentage => 'نسبة مئوية من قيمة التوصيل';
+
+  @override
+  String get matrixFixedPerShipment => 'مبلغ مقطوع ثابت لكل شحنة';
+
+  @override
+  String get matrixAccountingReason => 'المسوغ المحاسبي والإلزامي للرقابة';
+
+  @override
+  String get matrixCancel => 'إلغاء';
+
+  @override
+  String get reconciliationFinanceSubtitle => 'الإدارة المالية والحسابات';
+
+  @override
+  String get departmentMerchantsTitle => 'محفظة قسم التجار والمتاجر';
+
+  @override
+  String get departmentEscrowTitle => 'محفظة المستعمل وعربون «وصلني»';
+
+  @override
+  String get departmentServicesTitle => 'محفظة طلبات الخدمات والصيانة';
+
+  @override
+  String get departmentCouriersTitle => 'محفظة مناديب التوصيل واللوجستيات';
+
+  @override
+  String get departmentActiveStores => 'المتاجر النشطة';
+
+  @override
+  String get departmentPendingRequests => 'طلبات معلقة';
+
+  @override
+  String get departmentPlatformCommission => 'عمولة المنصة';
+
+  @override
+  String get departmentActiveDeals => 'صفقات نشطة';
+
+  @override
+  String get departmentDisputes => 'نزاعات';
+
+  @override
+  String get departmentProtectionFee => 'رسوم حماية';
+
+  @override
+  String get departmentServiceProviders => 'مزودي خدمات';
+
+  @override
+  String get departmentActiveCouriers => 'مناديب نشطين';
+
+  @override
+  String get departmentPendingEntitlements => 'مستحقات معلقة';
+
+  @override
+  String get departmentShipmentFee => 'رسوم شحنة';
+
+  @override
+  String get departmentAuditedBadge => 'مدقق ومعتمد';
+
+  @override
+  String get departmentTotalBalance =>
+      'إجمالي الرصيد التجميعي المتاح للتسوية والسحب';
+
+  @override
+  String get departmentWalletSectionTitle => 'الرقابة وحسابات المتاجر';
+
+  @override
+  String get departmentSyncStatus => 'سداد وسريع متزامنان';
+
+  @override
+  String get departmentGovernanceTitle =>
+      'حوكمة التسويات والضوابط البنكية (CFO)';
+
+  @override
+  String get departmentLastReconciliation => 'آخر مطابقة بنكية: اليوم 02:45 م';
+
+  @override
+  String get departmentAvailableBalance => 'الرصيد المتاح للسحب';
+
+  @override
+  String get departmentUnderReview => 'تحت التدقيق والتسوية';
+
+  @override
+  String get departmentMonthlySales => 'المبيعات المكتملة للشهر';
+
+  @override
+  String get departmentOperationsUnit => 'عملية';
+
+  @override
+  String get departmentViewHistory => 'عرض سجل العمليات';
+
+  @override
+  String get departmentInstantSettlement => 'تسوية سريعة';
+
+  @override
+  String get departmentScheduledPayment => 'دفعة بنكية مجدولة';
+
+  @override
+  String get departmentUnderInspection => 'قيد المعاينة';
+
+  @override
+  String get departmentInShipping => 'قيد الشحن';
+
+  @override
+  String get departmentWeeklySettlement => 'تسوية أسبوعية';
+
+  @override
+  String get departmentActiveMatched => 'نشط ومطابق';
+
+  @override
+  String get departmentProtectedEscrow => 'ضمان محفوظ';
+
+  @override
+  String get departmentApprovedProvider => 'مزود معتمد';
+
+  @override
+  String get departmentStrategicPartner => 'شريك استراتيجي';
+
+  @override
+  String get departmentActiveCourier => 'مندوب نشط';
+
+  @override
+  String get departmentPendingSuffix => 'معلق';
+
+  @override
+  String get departmentMerchantHorizon => 'مؤسسة الأفق للتقنية والتجارة';
+
+  @override
+  String get departmentStoreElite => 'متجر الصفوة الذهبي';
+
+  @override
+  String get departmentSparkleJewelry => 'مجوهرات البريق الراقية';
+
+  @override
+  String get departmentEliteDevices => 'دار النخبة للأجهزة';
+
+  @override
+  String get departmentCamryEscrow => 'سيارة تويوتا كامري 2020';
+
+  @override
+  String get departmentIphoneEscrow => 'آيفون 14 برو ماكس';
+
+  @override
+  String get departmentItqanAc => 'مؤسسة إتقان للتكييف';
+
+  @override
+  String get departmentComprehensiveMaintenance => 'شركة الصيانة الشاملة';
+
+  @override
+  String get departmentZajelShipping => 'شركة زاجل للشحن';
+
+  @override
+  String get departmentWaslniCourier => 'مندوب أسطول وصلني (محمد أحمد)';
+
+  @override
+  String get departmentRecordPrefix => 'سجل:';
+
+  @override
+  String get departmentLicensePrefix => 'رخصة:';
+
+  @override
+  String get departmentEscrowPrefix => 'عربون تأمين';
+
+  @override
+  String get departmentCourierNumberPrefix => 'رقم المندوب:';
+
+  @override
+  String get departmentAllFilter => 'الكل';
+
+  @override
+  String get departmentHighestBalanceFilter => 'أعلى رصيد';
+
+  @override
+  String get departmentWithdrawalFilter => 'قيد السحب (8)';
+
+  @override
+  String get departmentGovernanceNotice =>
+      'تخضع جميع تحويلات المحفظة لمطابقة يومية تلقائية مع شبكة سريع للمدفوعات الفورية ونظام سداد. ووفقاً لتعليمات البنك المركزي السعودي، تُحجز العمليات المشتبه بها للتدقيق اليدوي من إدارة الامتثال المالي ببرواح المازوري.';
+
+  @override
+  String get matrixScreenTitle => 'تعديل مصفوفة نسب الأرباح والرسوم';
+
+  @override
+  String get matrixDefaultReason =>
+      'تعديل دوري لمواكبة تحديثات رسوم بوابات الدفع البنكية وتوسعة شبكة التوصيل الميداني';
+
+  @override
+  String get matrixLastUpdated =>
+      'آخر تحديث: 01 يناير 2025 بموجب قرار مجلس الإدارة رقم BOD-44/B';
+
+  @override
+  String get matrixCfoDescription =>
+      'تحديد النسب الرسمية لاقتطاعات المنصة التلقائية وتحديث محرك التسويات والرسوم اللوجستية لكافة العمليات المالية المعتمدة.';
+
+  @override
+  String get matrixAppliedRate => 'النسبة المطبقة حالياً';
+
+  @override
+  String get matrixTargetRate => 'ضبط النسبة المستهدفة';
+
+  @override
+  String get matrixMinimumValue => 'الحد الأدنى 2.0%';
+
+  @override
+  String get matrixReferenceValue => 'المرجعي 5.0%';
+
+  @override
+  String get matrixMaximumValue => 'الحد الأقصى 10.0%';
+
+  @override
+  String get matrixSalesNote =>
+      'تُطبق على جميع صفقات المتاجر، المنتجات الجديدة، ومبيعات الأجهزة المباشرة دون استثناءات محلية.';
+
+  @override
+  String get matrixCurrentSettlementRate => 'رسم التسوية الحالية';
+
+  @override
+  String get matrixInstantFixedFee => 'رسم ثابت إضافي (تسوية فورية)';
+
+  @override
+  String get matrixInstantFixedFeeNote =>
+      'تطبيق رسم مقطوع بقيمة 5.00 ج.م لكل تسوية مستعجلة';
+
+  @override
+  String get matrixCoverageDetails => 'تفصيل تغطية التكلفة:';
+
+  @override
+  String get matrixGatewayCoverage =>
+      'تغطية مصاريف بوابات الدفع (Mada / Visa / SARIE) بنسبة 0.85%';
+
+  @override
+  String get matrixOperatingMargin => '+ هامش تشغيلي وقائي بنسبة 0.40%';
+
+  @override
+  String get matrixSettlementNote =>
+      'تُقتطع تلقائياً عند طلب التسوية السريعة عبر شبكة المدفوعات اللوجستية الفورية واسترداد النزاعات.';
+
+  @override
+  String get matrixDeliveryTitle => 'عمولة قطاع التوصيل والنقل والشحن';
+
+  @override
+  String get matrixDeliveryDescription =>
+      'تُحتسب على كل عملية توصيل ناجحة لمناديب أسطول وصلني والشركات اللوجستية المتعاقدة وتُودع بالمحفظة المركزية.';
+
+  @override
+  String get matrixAuditReasonTitle => 'المسوغ المحاسبي والإلزامي للرقابة';
+
+  @override
+  String get matrixAuditReasonPrompt =>
+      'سبب وموجب تعديل النسب (إلزامي للرقابة والتدقيق المركزي):';
+
+  @override
+  String get matrixNotifyUsers =>
+      'إشعار فوري لجميع التجار والمناديب والمشرفين بتحديث قائمة الأسعار قبل 7 أيام من موعد التطبيق الإلزامي.';
+
+  @override
+  String get matrixSaveSuccess => 'تم رفع التعديلات للسجل المالي بنجاح';
+
+  @override
+  String get matrixSaveAndSend => 'حفظ وإرسال مصفوفة النسب رسمياً للإدارة';
+
+  @override
+  String get matrixAuditTrailNotice =>
+      'سيتم قيد هذا الإجراء تلقائياً في سجل التدقيق المالي المركزي SHA-256';
+
+  @override
+  String get settlementsScreenTitle => 'إدارة التسويات';
+
+  @override
+  String get settlementsSubtitle => 'برواح المازوري - الإدارة المالية';
+
+  @override
+  String get settlementBack => 'العودة';
+
+  @override
+  String get settlementsAuthority => 'صلاحيات المدير المالي التنفيذي';
+
+  @override
+  String get settlementsPageTitle => 'إدارة المحافظ الإلكترونية والتسويات';
+
+  @override
+  String get settlementsPageDescription =>
+      'تنفيذ حركات النقود المالية المصرح بها مع إرفاق السند القانوني ومحضر النزاع المالي المعتمد.';
+
+  @override
+  String get settlementsEscrowWallet => 'محفظة الضمان (Escrow)';
+
+  @override
+  String get settlementsReservedOrders => 'محجوز لأوامر نشطة';
+
+  @override
+  String get settlementsPendingBalance => 'رصيد التسويات المعلقة';
+
+  @override
+  String get settlementsReadyRefund => 'طلب استرداد جاهز للإقفال';
+
+  @override
+  String get addNewSettlement => 'إضافة تسوية جديدة';
+
+  @override
+  String get instantRefundSettlement => 'استرداد / تسوية فورية';
+
+  @override
+  String get filterAll => 'الكل';
+
+  @override
+  String get filterInReview => 'قيد المراجعة';
+
+  @override
+  String get filterApproved => 'معتمدة';
+
+  @override
+  String get filterDisputed => 'قيد نزاع';
+
+  @override
+  String get pendingSettlementRequests => 'طلبات التسوية المعلقة';
+
+  @override
+  String get settlementRequestOne => 'طلب';
+
+  @override
+  String get settlementVerifiedBank => 'حساب بنكي موثق';
+
+  @override
+  String get settlementMaintenanceDispute => 'نزاع صيانة';
+
+  @override
+  String get settlementFullRefund => 'استرداد مالي كامل';
+
+  @override
+  String get settlementAge35Minutes => 'منذ 35 دقيقة';
+
+  @override
+  String get settlementApprovedPartner => 'شريك معتمد - سجل تجاري';
+
+  @override
+  String get settlementCommissionCorrection => 'تصحيح عمولة';
+
+  @override
+  String get settlementCommissionSettlement => 'تسوية عمولة';
+
+  @override
+  String get settlementAgeTwoHours => 'منذ ساعتين';
+
+  @override
+  String get settlementIndependentProvider => 'مزود خدمة مستقل';
+
+  @override
+  String get settlementMediationDelivery => 'تسليم وساطة';
+
+  @override
+  String get settlementPenaltyDeduction => 'خصم جزائي';
+
+  @override
+  String get settlementAgeToday => 'اليوم 08:30 ص';
+
+  @override
+  String get recentSettlementsTitle => 'آخر التسويات المنفذة حديثاً';
+
+  @override
+  String get bankRefund => 'استرداد بنكي';
+
+  @override
+  String get settlementCustomerBank => 'العميل #USR-8810 - بنك البلاد';
+
+  @override
+  String get settlementToday1130 => 'اليوم 11:30 ص';
+
+  @override
+  String get compensationSettlement => 'تسوية تعويضية';
+
+  @override
+  String get settlementProviderCorrection => 'مزود الخدمة - تصحيح عمولة';
+
+  @override
+  String get settlementYesterday0915 => 'أمس 09:15 م';
+
+  @override
+  String get viewLabel => 'عرض';
+
+  @override
+  String get viewAllLabel => 'عرض الكل';
+
+  @override
+  String get createSettlementToast => 'إضافة تسوية جديدة';
+
+  @override
+  String get frozenScreenTitle => 'إظهار الطلبات المعلقة والمجمدة';
+
+  @override
+  String get frozenTotalTitle => 'إجمالي المبالغ والعمليات المجمدة احترازياً';
+
+  @override
+  String get frozenRequestCount => 'طلبات مجمدة';
+
+  @override
+  String get frozenProtocol => 'بروتوكول المادة 18 مكافحة الاحتيال';
+
+  @override
+  String get frozenAllFilter => 'الكل';
+
+  @override
+  String get frozenMerchantsFilter => 'تجار ومتاجر';
+
+  @override
+  String get frozenProvidersFilter => 'مقدمو خدمات';
+
+  @override
+  String get frozenSupervisorsFilter => 'المشرفون';
+
+  @override
+  String get frozenCouriersFilter => 'المناديب';
+
+  @override
+  String get frozenUsersFilter => 'المستخدمون';
+
+  @override
+  String get frozenAdsFilter => 'الإعلانات';
+
+  @override
+  String get frozenExport => 'تصدير بيان الأموال المجمدة (PDF / Excel)';
+
+  @override
+  String get frozenRefresh => 'تحديث حالة الحركات ومزامنة الرقابة اللحظية';
+
+  @override
+  String get frozenRequestOneName => 'تاجر مستلزمات حاسب';
+
+  @override
+  String get frozenRequestOneSubtitle => 'طلب سحب أرباح مالي دوري';
+
+  @override
+  String get frozenMerchantType => 'تجار ومتاجر';
+
+  @override
+  String get frozenPrecautionaryStatus => 'مجمد احترازياً';
+
+  @override
+  String get frozenRequestOneReason =>
+      'سبب التجميد: بلاغ نزاع مفتوح #CMP-1042 مع شبهة تلاعب في عروض ترويجية.';
+
+  @override
+  String get frozenSupervisorSaad => 'أ. سعد العتيبي';
+
+  @override
+  String get frozenTodayFourHours => 'اليوم • منذ 4 ساعات';
+
+  @override
+  String get frozenRestoreAndRelease => 'إعادة العمل وفك التجميد للصرف';
+
+  @override
+  String get frozenRejectAndForfeit => 'تأكيد الرفض والمصادرة';
+
+  @override
+  String get frozenRequestTwoName => 'ورشة الإتقان للكهرباء';
+
+  @override
+  String get frozenAnnualMaintenance => 'مستحقات عقود صيانة سنوية';
+
+  @override
+  String get frozenProviderType => 'مقدمو خدمات';
+
+  @override
+  String get frozenRequestTwoReason =>
+      'سبب التجميد: شكوى عدم اكتمال الصيانة المنزلية';
+
+  @override
+  String get frozenSupervisorAhmed => 'أ. أحمد حسان';
+
+  @override
+  String get frozenYesterdayJanuary => 'أمس • 27 يناير';
+
+  @override
+  String get frozenPartialFullRelease => 'فك التجميد الجزئي / الكامل';
+
+  @override
+  String get frozenCustomerRefund => 'تسوية استرداد للعميل';
+
+  @override
+  String get frozenRequestThreeName => 'مؤسسة الأفق للتجارة';
+
+  @override
+  String get frozenFastTransferPending => 'حوالة بنكية سريعة (SARIE) معلقة';
+
+  @override
+  String get frozenIbanMismatch => 'تعارض آيبان';
+
+  @override
+  String get frozenRequestThreeReason =>
+      'سبب التجميد: فشل التحقق الآلي من تطابق اسم المستفيد مع السجل التجاري في البنك المركزي السعودي.';
+
+  @override
+  String get frozenJanuary25 => '25 يناير 2025';
+
+  @override
+  String get frozenRecheckTransfer => 'إعادة التحقق وتنشيط الحوالة';
+
+  @override
+  String get frozenRequestIbanCertificate =>
+      'طلب شهادة آيبان جديدة مختومة من البنك';
+
+  @override
+  String get frozenPendingTransferAmount => 'المبلغ المعلق للحوالة:';
+
+  @override
+  String get frozenHeldAmount => 'المبلغ المحتجز للتجميد:';
+
+  @override
+  String get frozenRegisteredIban => 'الآيبان المسجل:';
+
+  @override
+  String get frozenGrossTransaction => 'إجمالي المعاملة:';
+
+  @override
+  String get frozenAccountNameMismatch => 'عدم تطابق اسم الحساب';
+
+  @override
+  String get frozenPlatformFeeDeduction => 'خصم عمولة المنصة:';
+
+  @override
+  String get frozenSupervisorLabel => 'مشرف:';
+
+  @override
+  String get frozenThawSuccess => 'تم فك التجميد ونقل الطلب لقائمة المراجعة';
+
+  @override
+  String get transactionHistoryTitle => 'سجل العمليات';
+
+  @override
+  String get transactionFinancialSubtitle => 'برواح المازوري - الإدارة المالية';
+
+  @override
+  String get transactionSupervisedBy => 'تحت إشراف: أ. سعد العتيبي';
+
+  @override
+  String get transactionAvailableBalance => 'رصيد المحفظة المتاح للتسوية';
+
+  @override
+  String get transactionTotalWithdrawals => 'إجمالي السحوبات';
+
+  @override
+  String get transactionTotalDeposits => 'إجمالي الإيداعات';
+
+  @override
+  String get transactionApprovedHistory => 'سجل الحركات المصرفية المعتمدة';
+
+  @override
+  String get transactionThisMonth => 'هذا الشهر (يناير 2025)';
+
+  @override
+  String get transactionAllFilter => 'الكل (6)';
+
+  @override
+  String get transactionDepositsFilter => 'عمليات الإيداع (+3)';
+
+  @override
+  String get transactionWithdrawalsFilter => 'عمليات السحب (-3)';
+
+  @override
+  String get transactionTodayGroup => 'اليوم • 28 يناير 2025';
+
+  @override
+  String get transactionTwoOperations => 'عمليتان';
+
+  @override
+  String get transactionDepositSales => 'إيداع مبيعات نقدية - متجر إلكتروني';
+
+  @override
+  String get transactionNationalGateway => 'بطاقة مدى • بوابة الدفع الوطنية';
+
+  @override
+  String get transactionSuccess => 'ناجح ومكتمل';
+
+  @override
+  String get transactionTimeTodayDeposit => '02:45 م';
+
+  @override
+  String get transactionProfitWithdrawal => 'سحب أرباح للبنك - مصرف الراجحي';
+
+  @override
+  String get transactionFastNetwork => 'آيبان: SA44****5521 • سريع SARIE';
+
+  @override
+  String get transactionApproved => 'تحويل معتمد';
+
+  @override
+  String get transactionTimeTodayWithdrawal => '11:15 ص';
+
+  @override
+  String get transactionYesterdayGroup => 'أمس • 27 يناير 2025';
+
+  @override
+  String get transactionWaslniDeposit => 'إيداع طلبات وصلني';
+
+  @override
+  String get transactionAutomatedSettlement => 'تسوية لوجستية آلية متوافقة';
+
+  @override
+  String get transactionCompleted => 'مكتمل';
+
+  @override
+  String get transactionTimeYesterdayDeposit => '06:30 م';
+
+  @override
+  String get transactionSnbWithdrawal => 'سحب أرباح - البنك الأهلي';
+
+  @override
+  String get transactionCorporateVerification =>
+      'آيبان: SA12****8894 • توثيق مؤسسي';
+
+  @override
+  String get transactionCertified => 'مصدق رقابياً';
+
+  @override
+  String get transactionTimeYesterdayWithdrawal => '09:20 ص';
+
+  @override
+  String get transactionLastWeekGroup => 'الأسبوع الماضي • 23 يناير 2025';
+
+  @override
+  String get transactionMerchantDisputeDeposit =>
+      'إيداع تسوية نزاع لصالح التاجر...';
+
+  @override
+  String get transactionArbitrationDecision =>
+      'قرار تحكيمي منصة المدفوعات #ARB-209';
+
+  @override
+  String get transactionEffectiveSettlement => 'تسوية نافذة';
+
+  @override
+  String get transactionTimeLastWeekDeposit => '04:10 م';
+
+  @override
+  String get transactionWithdrawalReview =>
+      'طلب سحب أرباح قيد المراجعة الفورية...';
+
+  @override
+  String get transactionAmlReview => 'مراجعة مطابقة الامتثال المالي (AML)';
+
+  @override
+  String get transactionBankAudit => 'قيد التدقيق البنكي';
+
+  @override
+  String get transactionTimeLastWeekWithdrawal => '01:15 م';
+
+  @override
+  String get transactionHeldBalance => 'الرصيد المحجوز:';
+
+  @override
+  String get transactionBalanceAfter => 'الرصيد بعد الحركة:';
+
+  @override
+  String get transactionDownloadStatement => 'تحميل كشف الحساب المعتمد (PDF)';
 }

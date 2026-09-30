@@ -33,7 +33,8 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isArabic = AppLocalizations.of(context)!.localeName == 'ar';
+    final l10n = AppLocalizations.of(context)!;
+    final isArabic = l10n.localeName == 'ar';
 
     return BlocProvider.value(
       value: _cubit,
@@ -53,9 +54,7 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
               ),
             ),
             title: Text(
-              isArabic
-                  ? 'إظهار الطلبات المعلقة والمجمدة'
-                  : 'Frozen & Pending Requests',
+              l10n.frozenScreenTitle,
               style: const TextStyle(
                   color: AppColors.textPrimary,
                   fontWeight: FontWeight.bold,
@@ -89,56 +88,54 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                 final List<Map<String, dynamic>> frozenRequests = [
                   {
                     'id': '1',
-                    'title': 'تاجر مستلزمات حاسب',
-                    'subtitle': 'طلب سحب أرباح مالي دوري',
+                    'title': l10n.frozenRequestOneName,
+                    'subtitle': l10n.frozenRequestOneSubtitle,
                     'icon': Icons.storefront,
                     'type': 'تجار ومتاجر',
-                    'status': 'مجمد احترازياً',
+                    'status': l10n.frozenPrecautionaryStatus,
                     'amount': 17955.00,
                     'grossAmount': 18900.00,
                     'feeAmount': 945.00,
-                    'reason':
-                        'سبب التجميد: بلاغ نزاع مفتوح #CMP-1042 مع شبهة تلاعب في عروض ترويجية.',
-                    'supervisor': 'أ. سعد العتيبي',
-                    'timeText': 'اليوم • منذ 4 ساعات',
-                    'actionButton': 'إعادة العمل وفك التجميد للصرف',
-                    'cancelButton': 'تأكيد الرفض والمصادرة',
+                    'reason': l10n.frozenRequestOneReason,
+                    'supervisor': l10n.frozenSupervisorSaad,
+                    'timeText': l10n.frozenTodayFourHours,
+                    'actionButton': l10n.frozenRestoreAndRelease,
+                    'cancelButton': l10n.frozenRejectAndForfeit,
                   },
                   {
                     'id': '2',
-                    'title': 'ورشة الإتقان للكهرباء',
-                    'subtitle': 'مستحقات عقود صيانة سنوية',
+                    'title': l10n.frozenRequestTwoName,
+                    'subtitle': l10n.frozenAnnualMaintenance,
                     'icon': Icons.build,
                     'type': 'مقدمو خدمات',
-                    'status': 'مجمد احترازياً',
+                    'status': l10n.frozenPrecautionaryStatus,
                     'amount': 6200.00,
                     'grossAmount': 7000.00,
                     'feeAmount': 800.00,
-                    'reason': 'سبب التجميد: شكوى عدم اكتمال الصيانة المنزلية',
-                    'supervisor': 'أ. أحمد حسان',
-                    'timeText': 'أمس • 27 يناير',
-                    'actionButton': 'فك التجميد الجزئي / الكامل',
-                    'cancelButton': 'تسوية استرداد للعميل',
+                    'reason': l10n.frozenRequestTwoReason,
+                    'supervisor': l10n.frozenSupervisorAhmed,
+                    'timeText': l10n.frozenYesterdayJanuary,
+                    'actionButton': l10n.frozenPartialFullRelease,
+                    'cancelButton': l10n.frozenCustomerRefund,
                     'cancelIcon': Icons.assignment_return_outlined,
                   },
                   {
                     'id': '3',
-                    'title': 'مؤسسة الأفق للتجارة',
-                    'subtitle': 'حوالة بنكية سريعة (SARIE) معلقة',
+                    'title': l10n.frozenRequestThreeName,
+                    'subtitle': l10n.frozenFastTransferPending,
                     'icon': Icons.account_balance,
                     'type': 'تجار ومتاجر',
-                    'status': 'تعارض آيبان',
+                    'status': l10n.frozenIbanMismatch,
                     'amount': 19295.00,
                     'grossAmount': null,
                     'feeAmount': null,
                     'ibanError': 'SA44*************0199',
-                    'reason':
-                        'سبب التجميد: فشل التحقق الآلي من تطابق اسم المستفيد مع السجل التجاري في البنك المركزي السعودي.',
+                    'reason': l10n.frozenRequestThreeReason,
                     'supervisor': '',
-                    'timeText': '25 يناير 2025',
-                    'actionButton': 'إعادة التحقق وتنشيط الحوالة',
+                    'timeText': l10n.frozenJanuary25,
+                    'actionButton': l10n.frozenRecheckTransfer,
                     'actionIcon': Icons.sync,
-                    'cancelButton': 'طلب شهادة آيبان جديدة مختومة من البنك',
+                    'cancelButton': l10n.frozenRequestIbanCertificate,
                     'cancelIcon': Icons.contact_page_outlined,
                   },
                 ];
@@ -171,9 +168,9 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                               ),
                               child: Column(
                                 children: [
-                                  const Text(
-                                    'إجمالي المبالغ والعمليات المجمدة احترازياً',
-                                    style: TextStyle(
+                                  Text(
+                                    l10n.frozenTotalTitle,
+                                    style: const TextStyle(
                                         color: Colors.white70, fontSize: 12),
                                   ),
                                   const SizedBox(height: 8),
@@ -226,15 +223,15 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              '$totalCount طلبات مجمده',
+                                              '$totalCount ${l10n.frozenRequestCount}',
                                               style: const TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 12,
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             const SizedBox(height: 2),
-                                            const Text(
-                                              'بروتوكول المادة 18 مكافحة الاحتيال',
+                                            Text(
+                                              l10n.frozenProtocol,
                                               style: TextStyle(
                                                   color: Colors.white60,
                                                   fontSize: 10),
@@ -254,24 +251,31 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                               scrollDirection: Axis.horizontal,
                               child: Row(
                                 children: [
-                                  _buildFilterChip('الكل', count: totalCount),
+                                  _buildFilterChip(l10n.frozenAllFilter,
+                                      filterValue: 'الكل', count: totalCount),
                                   const SizedBox(width: 8),
-                                  _buildFilterChip('تجار ومتاجر',
+                                  _buildFilterChip(l10n.frozenMerchantsFilter,
+                                      filterValue: 'تجار ومتاجر',
                                       icon: Icons.storefront),
                                   const SizedBox(width: 8),
-                                  _buildFilterChip('مقدمو خدمات',
+                                  _buildFilterChip(l10n.frozenProvidersFilter,
+                                      filterValue: 'مقدمو خدمات',
                                       icon: Icons.handyman_outlined),
                                   const SizedBox(width: 8),
-                                  _buildFilterChip('المشرفين',
+                                  _buildFilterChip(l10n.frozenSupervisorsFilter,
+                                      filterValue: 'المشرفين',
                                       icon: Icons.supervisor_account_outlined),
                                   const SizedBox(width: 8),
-                                  _buildFilterChip('المناديب',
+                                  _buildFilterChip(l10n.frozenCouriersFilter,
+                                      filterValue: 'المناديب',
                                       icon: Icons.local_shipping_outlined),
                                   const SizedBox(width: 8),
-                                  _buildFilterChip('مستخدمين',
+                                  _buildFilterChip(l10n.frozenUsersFilter,
+                                      filterValue: 'مستخدمين',
                                       icon: Icons.person_outline),
                                   const SizedBox(width: 8),
-                                  _buildFilterChip('اعلانات',
+                                  _buildFilterChip(l10n.frozenAdsFilter,
+                                      filterValue: 'اعلانات',
                                       icon: Icons.campaign_outlined),
                                 ],
                               ),
@@ -317,8 +321,7 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                               ),
                               icon: const Icon(Icons.ios_share, size: 18),
                               onPressed: () {},
-                              label: const Text(
-                                  'تصدير بيان الأموال المجمدة (PDF / Excel)',
+                              label: Text(l10n.frozenExport,
                                   style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.bold)),
@@ -342,8 +345,7 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                               onPressed: () {
                                 _cubit.loadDashboardData();
                               },
-                              label: const Text(
-                                  'تحديث حالة الحركات ومزامنة الرقابة اللحظية',
+                              label: Text(l10n.frozenRefresh,
                                   style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.bold)),
@@ -363,13 +365,15 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
     );
   }
 
-  Widget _buildFilterChip(String title, {int? count, IconData? icon}) {
-    bool isSelected = _selectedFilter == title;
+  Widget _buildFilterChip(String title,
+      {String? filterValue, int? count, IconData? icon}) {
+    final value = filterValue ?? title;
+    bool isSelected = _selectedFilter == value;
     // Specific logic matching screenshot: "الكل (3 طلبات)" with Dark Blue if selected
     return GestureDetector(
       onTap: () {
         setState(() {
-          _selectedFilter = title;
+          _selectedFilter = value;
         });
       },
       child: Container(
@@ -388,7 +392,9 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
               const SizedBox(width: 6),
             ],
             Text(
-              count != null ? '$title ($count طلبات)' : title,
+              count != null
+                  ? '$title ($count ${AppLocalizations.of(context)!.ordersUnit})'
+                  : title,
               style: TextStyle(
                 color: isSelected ? Colors.white : AppColors.textPrimary,
                 fontSize: 12,
@@ -402,6 +408,7 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
   }
 
   Widget _buildRequestCard(Map<String, dynamic> req) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -469,7 +476,7 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                               fontWeight: FontWeight.bold)),
                       const SizedBox(width: 4),
                       Icon(
-                          req['status'] == 'تعارض آيبان'
+                          req['ibanError'] != null
                               ? Icons.warning_amber_rounded
                               : Icons.pause_circle_outline,
                           size: 12,
@@ -493,8 +500,8 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                   children: [
                     Text(
                         req['ibanError'] != null
-                            ? 'المبلغ المعلق للحوالة:'
-                            : 'المبلغ المحتجز للتجميد:',
+                            ? l10n.frozenPendingTransferAmount
+                            : l10n.frozenHeldAmount,
                         style: const TextStyle(
                             fontSize: 11, color: AppColors.textSecondary)),
                     Expanded(
@@ -529,7 +536,8 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                   children: [
                     if (req['ibanError'] != null)
                       Expanded(
-                          child: Text('الآيبان المسجل: ${req['ibanError']}',
+                          child: Text(
+                              '${l10n.frozenRegisteredIban} ${req['ibanError']}',
                               style: const TextStyle(
                                   fontSize: 11, color: AppColors.textSecondary),
                               textDirection: TextDirection.ltr,
@@ -538,13 +546,13 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                     else
                       Flexible(
                           child: Text(
-                              'إجمالي المعاملة: ${CurrencyFormatter.format(req['grossAmount'])}',
+                              '${l10n.frozenGrossTransaction} ${CurrencyFormatter.format(req['grossAmount'])}',
                               style: const TextStyle(
                                   fontSize: 11, color: AppColors.textSecondary),
                               overflow: TextOverflow.ellipsis)),
                     const SizedBox(width: 8),
                     if (req['ibanError'] != null)
-                      Text('عدم تطابق اسم الحساب',
+                      Text(l10n.frozenAccountNameMismatch,
                           style: const TextStyle(
                               fontSize: 11,
                               color: AppColors.danger,
@@ -552,7 +560,7 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                     else
                       Flexible(
                           child: Text(
-                              'خصم عمولة المنصة: ${CurrencyFormatter.format(req['feeAmount'])}',
+                              '${l10n.frozenPlatformFeeDeduction} ${CurrencyFormatter.format(req['feeAmount'])}',
                               style: const TextStyle(
                                   fontSize: 11, color: AppColors.textSecondary),
                               overflow: TextOverflow.ellipsis)),
@@ -599,7 +607,8 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                           const Icon(Icons.assignment_ind_outlined,
                               size: 14, color: AppColors.textMuted),
                           const SizedBox(width: 6),
-                          Text('مشرف : ${req['supervisor']}',
+                          Text(
+                              '${l10n.frozenSupervisorLabel} ${req['supervisor']}',
                               style: const TextStyle(
                                   fontSize: 10,
                                   color: AppColors.textSecondary)),
@@ -640,9 +649,8 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                     ),
                     icon: Icon(req['actionIcon'] ?? Icons.lock_open, size: 16),
                     onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                          content: Text(
-                              'تم فك التجميد ونقل الطلب لقائمة المراجعة')));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(l10n.frozenThawSuccess)));
                       // Here logic to update status to pending/approved
                     },
                     label: Text(req['actionButton'],

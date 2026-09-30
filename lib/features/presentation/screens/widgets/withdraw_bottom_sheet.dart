@@ -31,7 +31,8 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final isArabic = AppLocalizations.of(context)!.localeName == 'ar';
+    final l10n = AppLocalizations.of(context)!;
+    final isArabic = l10n.localeName == 'ar';
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
 
     return Directionality(
@@ -90,17 +91,13 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  isArabic
-                                      ? 'برواح المازوري للخدمات المالية'
-                                      : 'Barwah Mazouri Financial Services',
+                                  l10n.withdrawSheetBrand,
                                   style: const TextStyle(
                                       fontSize: 10,
                                       color: AppColors.textSecondary),
                                 ),
                                 Text(
-                                  isArabic
-                                      ? 'طلب سحب الارباح من المالك'
-                                      : 'Owner profit withdrawal request',
+                                  l10n.withdrawSheetTitle,
                                   style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -132,8 +129,7 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                      'حساب الإدارة والرقابة التنفيذية — أ. سليمان الراجحي',
+                  Text(l10n.withdrawSheetAccount,
                       style: TextStyle(
                           fontSize: 11, color: AppColors.textSecondary)),
                   const Spacer(),
@@ -148,7 +144,7 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
                         Icon(Icons.verified_user_outlined,
                             size: 12, color: Colors.blue.shade700),
                         const SizedBox(width: 4),
-                        Text('مصادقة نفاذ فوري • سحب لحظي SARIE',
+                        Text(l10n.withdrawSheetInstantAuth,
                             style: TextStyle(
                                 fontSize: 9,
                                 color: Colors.blue.shade800,
@@ -162,9 +158,7 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
               Row(
                 children: [
                   Text(
-                    isArabic
-                        ? 'طلب رقم #WD-8842'
-                        : 'Withdrawal request #WD-8842',
+                    l10n.withdrawSheetRequestId,
                     style: const TextStyle(
                         fontSize: 10,
                         color: AppColors.textPrimary,
@@ -192,23 +186,23 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
                         const Icon(Icons.account_balance_wallet_outlined,
                             size: 14, color: AppColors.primaryDark),
                         const SizedBox(width: 4),
-                        const Text('الرصيد المتاح الجاهز للصرف الفوري',
+                        Text(l10n.withdrawSheetAvailableBalance,
                             style: TextStyle(
                                 fontSize: 11, color: AppColors.textSecondary)),
                       ],
                     ),
                     const SizedBox(height: 8),
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Text('52,000.00',
+                        const Text('52,000.00',
                             style: TextStyle(
                                 fontSize: 28,
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.primaryExtraDark)),
                         SizedBox(width: 4),
-                        Text('EGP',
+                        Text(l10n.currencySar,
                             style: TextStyle(
                                 fontSize: 12,
                                 color: AppColors.primaryDark,
@@ -228,8 +222,7 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
                           Icon(Icons.circle,
                               size: 6, color: Colors.blueGrey.shade400),
                           const SizedBox(width: 4),
-                          const Text(
-                              'الحد الأدنى للسحب 1,000 EGP • بدون رسوم تحويل إدارية',
+                          Text(l10n.withdrawSheetMinimumNotice,
                               style: TextStyle(
                                   fontSize: 9, color: AppColors.textSecondary)),
                         ],
@@ -244,7 +237,7 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('أدخل المبلغ المطلوب سحبه',
+                  Text(l10n.withdrawSheetEnterAmount,
                       style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
@@ -255,7 +248,7 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
                         _amountController.text = '52,000.00';
                       });
                     },
-                    child: Text('تحديد الحد الأقصى',
+                    child: Text(l10n.withdrawSheetSetMaximum,
                         style: TextStyle(
                             fontSize: 11,
                             color: Colors.blue.shade700,
@@ -294,7 +287,7 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
                       ),
                     ),
                     const SizedBox(width: 12),
-                    const Text('EGP',
+                    Text(l10n.currencySar,
                         style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
@@ -309,13 +302,17 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    _buildAmountChip('الكل (52,000 EGP)', '52,000.00', true),
+                    _buildAmountChip(
+                        l10n.withdrawSheetAllAmount, '52,000.00', true),
                     const SizedBox(width: 8),
-                    _buildAmountChip('25,000 EGP', '25,000.00', false),
+                    _buildAmountChip(
+                        l10n.withdrawSheetAmount25k, '25,000.00', false),
                     const SizedBox(width: 8),
-                    _buildAmountChip('10,000 EGP', '10,000.00', false),
+                    _buildAmountChip(
+                        l10n.withdrawSheetAmount10k, '10,000.00', false),
                     const SizedBox(width: 8),
-                    _buildAmountChip('5,000 EGP', '5,000.00', false),
+                    _buildAmountChip(
+                        l10n.withdrawSheetAmount5k, '5,000.00', false),
                   ],
                 ),
               ),
@@ -325,7 +322,7 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('الحساب البنكي المستلم المعتمد',
+                  Text(l10n.withdrawSheetSelectBank,
                       style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
@@ -335,7 +332,7 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
                       Icon(Icons.verified_user_outlined,
                           size: 12, color: Colors.blue.shade700),
                       const SizedBox(width: 4),
-                      Text('مدقق IBAN',
+                      Text(l10n.withdrawSheetIbanVerified,
                           style: TextStyle(
                               fontSize: 10,
                               color: Colors.blue.shade700,
@@ -347,9 +344,9 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
               const SizedBox(height: 8),
               _buildBankOption(
                 id: 'rajhi',
-                bankName: 'مصرف الراجحي',
+                bankName: l10n.withdrawSheetBankName,
                 iban: 'SA44 8000 0001 **** 3456',
-                status: 'حساب موثق لدى SAMA • نشط ومطابق',
+                status: l10n.withdrawSheetBankStatus,
                 isPrimary: true,
               ),
               const SizedBox(height: 24),
@@ -369,12 +366,12 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
                   icon: const Icon(Icons.flash_on, size: 18),
                   onPressed: () {
                     Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text('تم رفع طلب السحب بنجاح')));
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(l10n.withdrawSheetSubmitSuccess)));
                   },
-                  label: const Text('تأكيد ارسال طلب السحب للادارة',
-                      style:
-                          TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                  label: Text(l10n.withdrawSheetConfirm,
+                      style: const TextStyle(
+                          fontSize: 13, fontWeight: FontWeight.bold)),
                 ),
               ),
               const SizedBox(height: 12),
@@ -390,9 +387,9 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
                         borderRadius: BorderRadius.circular(12)),
                   ),
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('إلغاء والتراجع',
-                      style:
-                          TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                  child: Text(l10n.withdrawSheetCancel,
+                      style: const TextStyle(
+                          fontSize: 13, fontWeight: FontWeight.bold)),
                 ),
               ),
             ],
@@ -438,6 +435,7 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
     required String status,
     bool isPrimary = false,
   }) {
+    final l10n = AppLocalizations.of(context)!;
     bool isSelected = _selectedBankId == id;
     return GestureDetector(
       onTap: () {
@@ -483,7 +481,7 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
                           decoration: BoxDecoration(
                               color: Colors.blue.shade100,
                               borderRadius: BorderRadius.circular(10)),
-                          child: Text('الحساب الرئيسي',
+                          child: Text(l10n.withdrawSheetPrimaryAccount,
                               style: TextStyle(
                                   fontSize: 9,
                                   color: Colors.blue.shade800,

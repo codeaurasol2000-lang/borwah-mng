@@ -208,7 +208,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get netRegulatoryRevenue => 'Net Regulatory Revenue';
 
   @override
-  String get comparedToLastMonth => 'Compared to last month (249,450 SAR)';
+  String get comparedToLastMonth => 'Compared to last month (EGP 249,450)';
 
   @override
   String get balancesUnderRegulatoryAudit =>
@@ -947,7 +947,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get approveDisputeSettlement =>
-      'Approved dispute settlement #CMP-1035 for 1,200.00 SAR to Dr. Tareq Al-Omari.';
+      'Approved dispute settlement #CMP-1035 for EGP 1,200.00 to Dr. Tareq Al-Omari.';
 
   @override
   String get referenceCode => 'Reference:';
@@ -964,7 +964,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get periodicMerchantTransfers =>
-      'Periodic payouts to 12 approved stores through instant payments, totaling SAR 142,500.00.';
+      'Periodic payouts to 12 approved stores through instant payments, totaling EGP 142,500.00.';
 
   @override
   String get alRajhiBank => 'Al Rajhi Bank';
@@ -1005,4 +1005,951 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get viewFullAuditActivity =>
       'View full audit and activity log (342 documented events)';
+
+  @override
+  String get reconciliationEngine => 'KYC & IBAN VERIFICATION ENGINE';
+
+  @override
+  String get reconciliationImmediateCompliance =>
+      'Immediate banking compliance';
+
+  @override
+  String get reconciliationPageTitle =>
+      'Bank account reconciliation and fraud prevention';
+
+  @override
+  String get reconciliationAuthorityTitle =>
+      'Restricted executive supervisory authority';
+
+  @override
+  String get reconciliationAuthorityNotice =>
+      'Only the CFO may review, verify, and approve. Field supervisors are strictly prohibited from changing bank-account details.';
+
+  @override
+  String get reconciliationGovernmentPortal =>
+      'Government document and integration portal';
+
+  @override
+  String get reconciliationGovernmentSync =>
+      'Live synchronization with the commercial registry and central bank';
+
+  @override
+  String get reconciliationConnected => 'Connected';
+
+  @override
+  String get reconciliationAccountDetails =>
+      'Detailed account reconciliation data';
+
+  @override
+  String get reconciliationCommercialName => 'Registered commercial name';
+
+  @override
+  String get reconciliationCommercialEntity =>
+      'Madar Technology Information Systems Establishment';
+
+  @override
+  String get reconciliationBeneficiaryName => 'Bank-account beneficiary name';
+
+  @override
+  String get reconciliationBeneficiaryEntity =>
+      'Madar Technology Establishment';
+
+  @override
+  String get reconciliationFinalActions =>
+      'Final approval actions (CFO-only authority):';
+
+  @override
+  String get reconciliationApproveAccount =>
+      'Approve bank account and send to management';
+
+  @override
+  String get reconciliationApproveSuccess =>
+      'Bank account approved and sent to management.';
+
+  @override
+  String get reconciliationRequestIban =>
+      'Request a recent stamped IBAN certificate';
+
+  @override
+  String get reconciliationIbanRequestSent =>
+      'Request for a recent stamped IBAN certificate sent.';
+
+  @override
+  String get reconciliationRejectTransfer =>
+      'Reject and freeze transfers to this account';
+
+  @override
+  String get reconciliationRejectSuccess =>
+      'Request rejected and reason recorded for review.';
+
+  @override
+  String get reconciliationComplianceReview =>
+      'Financial compliance review - Government document portal';
+
+  @override
+  String get reconciliationBusinessName => 'Madar Technology Trading Company';
+
+  @override
+  String get reconciliationNewAccountRequest =>
+      'Request to approve a new primary bank account for recurring payouts';
+
+  @override
+  String get reconciliationAmlScore => 'AML/CFT regulatory compliance score';
+
+  @override
+  String get reconciliationAmlMatched =>
+      'Secure match under anti-money-laundering and counter-terrorism financing protocols.';
+
+  @override
+  String get reconciliationMatchVerified => '100% matched  ✓';
+
+  @override
+  String get reconciliationBankName => 'Al Rajhi Bank';
+
+  @override
+  String get reconciliationIbanLabel =>
+      '3. International bank account number (IBAN) and bank';
+
+  @override
+  String get reconciliationRegistrationLabel =>
+      '4. Commercial registration and validity status';
+
+  @override
+  String get reconciliationValidUntil => 'Valid through 1447/06/15 AH';
+
+  @override
+  String get reconciliationPreviewDocument => 'Preview';
+
+  @override
+  String get reconciliationDocumentPreviewToast =>
+      'Previewing document doc-iban-5501.pdf';
+
+  @override
+  String get reconciliationNextAccount => 'Next account in the waiting list';
+
+  @override
+  String get reconciliationNextBusiness => 'Suhaila Perfumes Store';
+
+  @override
+  String get reconciliationNextBank =>
+      'Saudi National Bank  •  SA22 1000 **** **** 8819';
+
+  @override
+  String get reconciliationNameMismatch =>
+      'Match status: minor trade-name discrepancy (review authorization and agency documents before payout).';
+
+  @override
+  String get reconciliationAuditAlert => 'Audit alert';
+
+  @override
+  String get reconciliationOpenAudit =>
+      'Open full audit file for account #TRD-6022';
+
+  @override
+  String get withdrawSheetBrand => 'Barwah Mazouri Financial Services';
+
+  @override
+  String get withdrawSheetTitle => 'Owner profit withdrawal request';
+
+  @override
+  String get withdrawSheetAccount =>
+      'Executive management and oversight account — Mr. Sulaiman Al-Rajhi';
+
+  @override
+  String get withdrawSheetInstantAuth =>
+      'Instant Nafath verification • real-time SARIE withdrawal';
+
+  @override
+  String get withdrawSheetRequestId => 'Request #WD-8842';
+
+  @override
+  String get withdrawSheetAvailableBalance =>
+      'Available balance ready for instant payout';
+
+  @override
+  String get withdrawSheetMinimumNotice =>
+      'Minimum withdrawal: EGP 1,000 • no administrative transfer fees';
+
+  @override
+  String get withdrawSheetEnterAmount => 'Enter the amount to withdraw';
+
+  @override
+  String get withdrawSheetSetMaximum => 'Set maximum';
+
+  @override
+  String get withdrawSheetSelectBank => 'Approved receiving bank account';
+
+  @override
+  String get withdrawSheetIbanVerified => 'IBAN verified';
+
+  @override
+  String get withdrawSheetBankName => 'Al Rajhi Bank';
+
+  @override
+  String get withdrawSheetBankStatus =>
+      'SAMA-verified account • active and reconciled';
+
+  @override
+  String get withdrawSheetPrimaryAccount => 'Primary account';
+
+  @override
+  String get withdrawSheetSubmitSuccess =>
+      'Withdrawal request submitted successfully';
+
+  @override
+  String get withdrawSheetConfirm =>
+      'Confirm and send withdrawal request to management';
+
+  @override
+  String get withdrawSheetCancel => 'Cancel';
+
+  @override
+  String get withdrawSheetAllAmount => 'All (EGP 52,000)';
+
+  @override
+  String get withdrawSheetAmount25k => 'EGP 25,000';
+
+  @override
+  String get withdrawSheetAmount10k => 'EGP 10,000';
+
+  @override
+  String get withdrawSheetAmount5k => 'EGP 5,000';
+
+  @override
+  String get matrixLive => 'Live';
+
+  @override
+  String get matrixCfoPermission => 'Exclusive CFO authority (CFO-01)';
+
+  @override
+  String get matrixIntro =>
+      'Set official automatic platform deductions and update settlement and logistics-fee engines for all approved financial operations.';
+
+  @override
+  String get matrixLastUpdate =>
+      'Last updated: January 1, 2025 under board resolution BOD-44/B';
+
+  @override
+  String get matrixSalesRateTitle => 'General sales and merchant rate';
+
+  @override
+  String get matrixRateRange => 'Range: 2.0% - 10.0%';
+
+  @override
+  String get matrixCurrentRate => 'Currently applied rate';
+
+  @override
+  String get matrixSetTargetRate => 'Set target rate';
+
+  @override
+  String get matrixMinimumRate => 'Minimum 2.0%';
+
+  @override
+  String get matrixReferenceRate => 'Reference 5.0%';
+
+  @override
+  String get matrixMaximumRate => 'Maximum 10.0%';
+
+  @override
+  String get matrixSalesRateNote =>
+      'Applies to all store deals, new products, and direct device sales without local exceptions.';
+
+  @override
+  String get matrixSettlementFeesTitle => 'Wallet settlement and refund fees';
+
+  @override
+  String get matrixCurrentSettlementFee => 'Current settlement fee';
+
+  @override
+  String get matrixFixedInstantFee =>
+      'Additional fixed fee (instant settlement)';
+
+  @override
+  String get matrixCostCoverage => 'Cost coverage details:';
+
+  @override
+  String get matrixDeliveryFleet => 'Waslni fleet & partners';
+
+  @override
+  String get matrixCurrentCommission => 'Currently approved commission';
+
+  @override
+  String get matrixDeliveryPercentage => 'Percentage of delivery value';
+
+  @override
+  String get matrixFixedPerShipment => 'Fixed amount per shipment';
+
+  @override
+  String get matrixAccountingReason =>
+      'Accounting rationale and mandatory audit note';
+
+  @override
+  String get matrixCancel => 'Cancel';
+
+  @override
+  String get reconciliationFinanceSubtitle => 'Finance Management & Accounts';
+
+  @override
+  String get departmentMerchantsTitle => 'Merchants & Retail Wallet';
+
+  @override
+  String get departmentEscrowTitle => 'Used Escrow & Waslni Wallet';
+
+  @override
+  String get departmentServicesTitle => 'Service Requests & Maintenance Wallet';
+
+  @override
+  String get departmentCouriersTitle => 'Delivery Agents & Logistics Wallet';
+
+  @override
+  String get departmentActiveStores => 'Active stores';
+
+  @override
+  String get departmentPendingRequests => 'Pending requests';
+
+  @override
+  String get departmentPlatformCommission => 'Platform commission';
+
+  @override
+  String get departmentActiveDeals => 'Active deals';
+
+  @override
+  String get departmentDisputes => 'Disputes';
+
+  @override
+  String get departmentProtectionFee => 'Protection fee';
+
+  @override
+  String get departmentServiceProviders => 'Service providers';
+
+  @override
+  String get departmentActiveCouriers => 'Active couriers';
+
+  @override
+  String get departmentPendingEntitlements => 'Pending entitlements';
+
+  @override
+  String get departmentShipmentFee => 'Shipment fee';
+
+  @override
+  String get departmentAuditedBadge => 'Audited and approved';
+
+  @override
+  String get departmentTotalBalance =>
+      'Total balance available for settlement and withdrawal';
+
+  @override
+  String get departmentWalletSectionTitle => 'Oversight and merchant accounts';
+
+  @override
+  String get departmentSyncStatus => 'SADAD and SARIE synchronized';
+
+  @override
+  String get departmentGovernanceTitle =>
+      'Settlement governance and banking controls (CFO)';
+
+  @override
+  String get departmentLastReconciliation =>
+      'Last bank reconciliation: today at 2:45 PM';
+
+  @override
+  String get departmentAvailableBalance => 'Available for withdrawal';
+
+  @override
+  String get departmentUnderReview => 'Under audit and settlement';
+
+  @override
+  String get departmentMonthlySales => 'Completed sales this month';
+
+  @override
+  String get departmentOperationsUnit => 'operations';
+
+  @override
+  String get departmentViewHistory => 'View transaction history';
+
+  @override
+  String get departmentInstantSettlement => 'Instant settlement';
+
+  @override
+  String get departmentScheduledPayment => 'Scheduled bank payment';
+
+  @override
+  String get departmentUnderInspection => 'Under inspection';
+
+  @override
+  String get departmentInShipping => 'In transit';
+
+  @override
+  String get departmentWeeklySettlement => 'Weekly settlement';
+
+  @override
+  String get departmentActiveMatched => 'Active and reconciled';
+
+  @override
+  String get departmentProtectedEscrow => 'Escrow protected';
+
+  @override
+  String get departmentApprovedProvider => 'Approved provider';
+
+  @override
+  String get departmentStrategicPartner => 'Strategic partner';
+
+  @override
+  String get departmentActiveCourier => 'Active courier';
+
+  @override
+  String get departmentPendingSuffix => 'pending';
+
+  @override
+  String get departmentMerchantHorizon =>
+      'Al Ofoq Technology and Trading Establishment';
+
+  @override
+  String get departmentStoreElite => 'Al Safwa Gold Store';
+
+  @override
+  String get departmentSparkleJewelry => 'Al Bareq Fine Jewelry';
+
+  @override
+  String get departmentEliteDevices => 'Elite Devices House';
+
+  @override
+  String get departmentCamryEscrow => '2020 Toyota Camry';
+
+  @override
+  String get departmentIphoneEscrow => 'iPhone 14 Pro Max';
+
+  @override
+  String get departmentItqanAc => 'Itqan Air Conditioning Establishment';
+
+  @override
+  String get departmentComprehensiveMaintenance =>
+      'Comprehensive Maintenance Company';
+
+  @override
+  String get departmentZajelShipping => 'Zajel Shipping Company';
+
+  @override
+  String get departmentWaslniCourier => 'Waslni fleet courier (Mohammed Ahmed)';
+
+  @override
+  String get departmentRecordPrefix => 'CR:';
+
+  @override
+  String get departmentLicensePrefix => 'License:';
+
+  @override
+  String get departmentEscrowPrefix => 'Escrow deposit';
+
+  @override
+  String get departmentCourierNumberPrefix => 'Courier ID:';
+
+  @override
+  String get departmentAllFilter => 'All';
+
+  @override
+  String get departmentHighestBalanceFilter => 'Highest balance';
+
+  @override
+  String get departmentWithdrawalFilter => 'Withdrawing (8)';
+
+  @override
+  String get departmentGovernanceNotice =>
+      'All wallet transfers are reconciled daily against the SARIE instant-payment network and SADAD. In accordance with Saudi Central Bank instructions, suspicious transactions are held for manual review by Barwah Mazouri Financial Compliance.';
+
+  @override
+  String get matrixScreenTitle => 'Update Profit & Fee Matrix';
+
+  @override
+  String get matrixDefaultReason =>
+      'Periodic update to reflect bank payment-gateway fee changes and expansion of the field-delivery network';
+
+  @override
+  String get matrixLastUpdated =>
+      'Last updated: January 1, 2025 under board resolution BOD-44/B';
+
+  @override
+  String get matrixCfoDescription =>
+      'Set official automatic platform deductions and update settlement and logistics-fee engines for all approved financial operations.';
+
+  @override
+  String get matrixAppliedRate => 'Currently applied rate';
+
+  @override
+  String get matrixTargetRate => 'Set target rate';
+
+  @override
+  String get matrixMinimumValue => 'Minimum 2.0%';
+
+  @override
+  String get matrixReferenceValue => 'Reference 5.0%';
+
+  @override
+  String get matrixMaximumValue => 'Maximum 10.0%';
+
+  @override
+  String get matrixSalesNote =>
+      'Applies to all store deals, new products, and direct device sales without local exceptions.';
+
+  @override
+  String get matrixCurrentSettlementRate => 'Current settlement rate';
+
+  @override
+  String get matrixInstantFixedFee =>
+      'Additional fixed fee (instant settlement)';
+
+  @override
+  String get matrixInstantFixedFeeNote =>
+      'Apply a fixed EGP 5.00 fee to each urgent settlement';
+
+  @override
+  String get matrixCoverageDetails => 'Cost coverage details:';
+
+  @override
+  String get matrixGatewayCoverage =>
+      'Payment-gateway fee coverage (Mada / Visa / SARIE) at 0.85%';
+
+  @override
+  String get matrixOperatingMargin => '+ 0.40% protective operating margin';
+
+  @override
+  String get matrixSettlementNote =>
+      'Automatically deducted for instant wallet settlement and dispute-refund requests.';
+
+  @override
+  String get matrixDeliveryTitle =>
+      'Delivery, transport, and shipping commission';
+
+  @override
+  String get matrixDeliveryDescription =>
+      'Applied to each successful delivery by Waslni fleet couriers and contracted logistics companies, then deposited into the central wallet.';
+
+  @override
+  String get matrixAuditReasonTitle =>
+      'Accounting rationale and mandatory audit note';
+
+  @override
+  String get matrixAuditReasonPrompt =>
+      'Reason for changing rates (required for central audit):';
+
+  @override
+  String get matrixNotifyUsers =>
+      'Notify all merchants, couriers, and supervisors 7 days before the updated price list takes effect.';
+
+  @override
+  String get matrixSaveSuccess =>
+      'Changes submitted to the financial ledger successfully';
+
+  @override
+  String get matrixSaveAndSend =>
+      'Save and formally send the rate matrix to management';
+
+  @override
+  String get matrixAuditTrailNotice =>
+      'This action will be recorded automatically in the central SHA-256 financial audit log';
+
+  @override
+  String get settlementsScreenTitle => 'Settlements Management';
+
+  @override
+  String get settlementsSubtitle => 'Barwah Mazouri - Finance Management';
+
+  @override
+  String get settlementBack => 'Back';
+
+  @override
+  String get settlementsAuthority => 'Executive CFO authority';
+
+  @override
+  String get settlementsPageTitle => 'Digital Wallets & Settlement Management';
+
+  @override
+  String get settlementsPageDescription =>
+      'Execute approved financial transfers with the required legal evidence and approved financial-dispute record.';
+
+  @override
+  String get settlementsEscrowWallet => 'Escrow wallet';
+
+  @override
+  String get settlementsReservedOrders => 'Reserved for active orders';
+
+  @override
+  String get settlementsPendingBalance => 'Pending settlement balance';
+
+  @override
+  String get settlementsReadyRefund => 'Refund request ready to close';
+
+  @override
+  String get addNewSettlement => 'Add new settlement';
+
+  @override
+  String get instantRefundSettlement => 'Refund / instant settlement';
+
+  @override
+  String get filterAll => 'All';
+
+  @override
+  String get filterInReview => 'In review';
+
+  @override
+  String get filterApproved => 'Approved';
+
+  @override
+  String get filterDisputed => 'Disputed';
+
+  @override
+  String get pendingSettlementRequests => 'Pending settlement requests';
+
+  @override
+  String get settlementRequestOne => 'requests';
+
+  @override
+  String get settlementVerifiedBank => 'Verified bank account';
+
+  @override
+  String get settlementMaintenanceDispute => 'Maintenance dispute';
+
+  @override
+  String get settlementFullRefund => 'Full refund';
+
+  @override
+  String get settlementAge35Minutes => '35 minutes ago';
+
+  @override
+  String get settlementApprovedPartner =>
+      'Approved partner - commercial registration';
+
+  @override
+  String get settlementCommissionCorrection => 'Commission correction';
+
+  @override
+  String get settlementCommissionSettlement => 'Commission settlement';
+
+  @override
+  String get settlementAgeTwoHours => 'Two hours ago';
+
+  @override
+  String get settlementIndependentProvider => 'Independent service provider';
+
+  @override
+  String get settlementMediationDelivery => 'Mediation delivery';
+
+  @override
+  String get settlementPenaltyDeduction => 'Penalty deduction';
+
+  @override
+  String get settlementAgeToday => 'Today at 8:30 AM';
+
+  @override
+  String get recentSettlementsTitle => 'Recently completed settlements';
+
+  @override
+  String get bankRefund => 'Bank refund';
+
+  @override
+  String get settlementCustomerBank => 'Customer #USR-8810 - Bank Albilad';
+
+  @override
+  String get settlementToday1130 => 'Today at 11:30 AM';
+
+  @override
+  String get compensationSettlement => 'Compensation settlement';
+
+  @override
+  String get settlementProviderCorrection =>
+      'Service provider - commission correction';
+
+  @override
+  String get settlementYesterday0915 => 'Yesterday at 9:15 PM';
+
+  @override
+  String get viewLabel => 'View';
+
+  @override
+  String get viewAllLabel => 'View all';
+
+  @override
+  String get createSettlementToast => 'Add new settlement';
+
+  @override
+  String get frozenScreenTitle => 'Frozen & Pending Requests';
+
+  @override
+  String get frozenTotalTitle =>
+      'Total precautionarily frozen amounts and transactions';
+
+  @override
+  String get frozenRequestCount => 'frozen requests';
+
+  @override
+  String get frozenProtocol => 'Article 18 anti-fraud protocol';
+
+  @override
+  String get frozenAllFilter => 'All';
+
+  @override
+  String get frozenMerchantsFilter => 'Merchants & stores';
+
+  @override
+  String get frozenProvidersFilter => 'Service providers';
+
+  @override
+  String get frozenSupervisorsFilter => 'Supervisors';
+
+  @override
+  String get frozenCouriersFilter => 'Couriers';
+
+  @override
+  String get frozenUsersFilter => 'Users';
+
+  @override
+  String get frozenAdsFilter => 'Advertisements';
+
+  @override
+  String get frozenExport => 'Export frozen funds statement (PDF / Excel)';
+
+  @override
+  String get frozenRefresh =>
+      'Refresh transaction status and synchronize live oversight';
+
+  @override
+  String get frozenRequestOneName => 'Computer supplies merchant';
+
+  @override
+  String get frozenRequestOneSubtitle => 'Recurring profit withdrawal request';
+
+  @override
+  String get frozenMerchantType => 'Merchants & stores';
+
+  @override
+  String get frozenPrecautionaryStatus => 'Frozen as a precaution';
+
+  @override
+  String get frozenRequestOneReason =>
+      'Freeze reason: open dispute #CMP-1042 with suspected promotional-offer manipulation.';
+
+  @override
+  String get frozenSupervisorSaad => 'Mr. Saad Al-Otaibi';
+
+  @override
+  String get frozenTodayFourHours => 'Today • 4 hours ago';
+
+  @override
+  String get frozenRestoreAndRelease => 'Restore and release funds for payout';
+
+  @override
+  String get frozenRejectAndForfeit => 'Confirm rejection and forfeiture';
+
+  @override
+  String get frozenRequestTwoName => 'Itqan Electrical Workshop';
+
+  @override
+  String get frozenAnnualMaintenance => 'Annual maintenance-contract dues';
+
+  @override
+  String get frozenProviderType => 'Service providers';
+
+  @override
+  String get frozenRequestTwoReason =>
+      'Freeze reason: complaint that home maintenance was incomplete';
+
+  @override
+  String get frozenSupervisorAhmed => 'Mr. Ahmed Hassan';
+
+  @override
+  String get frozenYesterdayJanuary => 'Yesterday • January 27';
+
+  @override
+  String get frozenPartialFullRelease => 'Release partially / fully';
+
+  @override
+  String get frozenCustomerRefund => 'Issue customer refund settlement';
+
+  @override
+  String get frozenRequestThreeName => 'Al Ofoq Trading Establishment';
+
+  @override
+  String get frozenFastTransferPending =>
+      'Pending instant bank transfer (SARIE)';
+
+  @override
+  String get frozenIbanMismatch => 'IBAN mismatch';
+
+  @override
+  String get frozenRequestThreeReason =>
+      'Freeze reason: automated verification could not match the beneficiary name with the commercial registry at the Saudi Central Bank.';
+
+  @override
+  String get frozenJanuary25 => 'January 25, 2025';
+
+  @override
+  String get frozenRecheckTransfer => 'Recheck and reactivate transfer';
+
+  @override
+  String get frozenRequestIbanCertificate =>
+      'Request a new stamped IBAN certificate from the bank';
+
+  @override
+  String get frozenPendingTransferAmount => 'Pending transfer amount:';
+
+  @override
+  String get frozenHeldAmount => 'Amount held for freeze:';
+
+  @override
+  String get frozenRegisteredIban => 'Registered IBAN:';
+
+  @override
+  String get frozenGrossTransaction => 'Gross transaction:';
+
+  @override
+  String get frozenAccountNameMismatch => 'Account name mismatch';
+
+  @override
+  String get frozenPlatformFeeDeduction => 'Platform fee deduction:';
+
+  @override
+  String get frozenSupervisorLabel => 'Supervisor:';
+
+  @override
+  String get frozenThawSuccess =>
+      'Request released and moved to the review queue';
+
+  @override
+  String get transactionHistoryTitle => 'Transaction History';
+
+  @override
+  String get transactionFinancialSubtitle =>
+      'Barwah Mazouri - Finance Management';
+
+  @override
+  String get transactionSupervisedBy => 'Supervised by: Mr. Saad Al-Otaibi';
+
+  @override
+  String get transactionAvailableBalance =>
+      'Wallet balance available for settlement';
+
+  @override
+  String get transactionTotalWithdrawals => 'Total withdrawals';
+
+  @override
+  String get transactionTotalDeposits => 'Total deposits';
+
+  @override
+  String get transactionApprovedHistory => 'Approved bank transaction history';
+
+  @override
+  String get transactionThisMonth => 'This month (January 2025)';
+
+  @override
+  String get transactionAllFilter => 'All (6)';
+
+  @override
+  String get transactionDepositsFilter => 'Deposits (+3)';
+
+  @override
+  String get transactionWithdrawalsFilter => 'Withdrawals (-3)';
+
+  @override
+  String get transactionTodayGroup => 'Today • January 28, 2025';
+
+  @override
+  String get transactionTwoOperations => '2 transactions';
+
+  @override
+  String get transactionDepositSales => 'Cash sales deposit - online store';
+
+  @override
+  String get transactionNationalGateway =>
+      'Mada card • National payment gateway';
+
+  @override
+  String get transactionSuccess => 'Successful and complete';
+
+  @override
+  String get transactionTimeTodayDeposit => '2:45 PM';
+
+  @override
+  String get transactionProfitWithdrawal =>
+      'Profit withdrawal to bank - Al Rajhi';
+
+  @override
+  String get transactionFastNetwork =>
+      'IBAN: SA44****5521 • SARIE instant transfer';
+
+  @override
+  String get transactionApproved => 'Transfer approved';
+
+  @override
+  String get transactionTimeTodayWithdrawal => '11:15 AM';
+
+  @override
+  String get transactionYesterdayGroup => 'Yesterday • January 27, 2025';
+
+  @override
+  String get transactionWaslniDeposit => 'Waslni orders deposit';
+
+  @override
+  String get transactionAutomatedSettlement =>
+      'Compliant automated logistics settlement';
+
+  @override
+  String get transactionCompleted => 'Completed';
+
+  @override
+  String get transactionTimeYesterdayDeposit => '6:30 PM';
+
+  @override
+  String get transactionSnbWithdrawal =>
+      'Profit withdrawal - Saudi National Bank';
+
+  @override
+  String get transactionCorporateVerification =>
+      'IBAN: SA12****8894 • Corporate verification';
+
+  @override
+  String get transactionCertified => 'Regulator certified';
+
+  @override
+  String get transactionTimeYesterdayWithdrawal => '9:20 AM';
+
+  @override
+  String get transactionLastWeekGroup => 'Last week • January 23, 2025';
+
+  @override
+  String get transactionMerchantDisputeDeposit =>
+      'Dispute settlement deposit to merchant...';
+
+  @override
+  String get transactionArbitrationDecision =>
+      'Payment platform arbitration decision #ARB-209';
+
+  @override
+  String get transactionEffectiveSettlement => 'Settlement effective';
+
+  @override
+  String get transactionTimeLastWeekDeposit => '4:10 PM';
+
+  @override
+  String get transactionWithdrawalReview =>
+      'Profit withdrawal request under immediate review...';
+
+  @override
+  String get transactionAmlReview =>
+      'Financial compliance reconciliation review (AML)';
+
+  @override
+  String get transactionBankAudit => 'Under bank audit';
+
+  @override
+  String get transactionTimeLastWeekWithdrawal => '1:15 PM';
+
+  @override
+  String get transactionHeldBalance => 'Balance held:';
+
+  @override
+  String get transactionBalanceAfter => 'Balance after transaction:';
+
+  @override
+  String get transactionDownloadStatement =>
+      'Download approved account statement (PDF)';
 }

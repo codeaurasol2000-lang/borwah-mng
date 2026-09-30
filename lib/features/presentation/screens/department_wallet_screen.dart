@@ -12,25 +12,17 @@ class DepartmentWalletScreen extends StatelessWidget {
   const DepartmentWalletScreen({super.key, required this.type});
 
   String _screenTitleFor(BuildContext context) {
-    final isArabic = AppLocalizations.of(context)!.localeName == 'ar';
+    final l10n = AppLocalizations.of(context)!;
 
     switch (type) {
       case DepartmentType.merchants:
-        return isArabic
-            ? 'محفظة قسم التجار والمتاجر'
-            : 'Merchants & Retail Wallet';
+        return l10n.departmentMerchantsTitle;
       case DepartmentType.usedEscrow:
-        return isArabic
-            ? 'محفظة المستعمل وعربون «وصلني»'
-            : 'Used Escrow & Waslni Wallet';
+        return l10n.departmentEscrowTitle;
       case DepartmentType.services:
-        return isArabic
-            ? 'محفظة طلبات الخدمات والصيانة'
-            : 'Service Requests & Maintenance Wallet';
+        return l10n.departmentServicesTitle;
       case DepartmentType.couriers:
-        return isArabic
-            ? 'محفظة مناديب التوصيل واللوجستيات'
-            : 'Delivery Agents & Logistics Wallet';
+        return l10n.departmentCouriersTitle;
     }
   }
 
@@ -47,151 +39,153 @@ class DepartmentWalletScreen extends StatelessWidget {
     }
   }
 
-  Map<String, String> get _stats {
+  Map<String, String> _statsFor(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     switch (type) {
       case DepartmentType.merchants:
         return {
-          'المتاجر النشطة': '142',
-          'طلبات معلقة': '8 (94.5 ألف)',
-          'عمولة المنصة': '4.5%',
+          l10n.departmentActiveStores: '142',
+          l10n.departmentPendingRequests: '8 (94,500)',
+          l10n.departmentPlatformCommission: '4.5%',
           'icon1': 'storefront',
         };
       case DepartmentType.usedEscrow:
         return {
-          'صفقات نشطة': '85',
-          'نزاعات': '3 (12.4 ألف)',
-          'رسوم حماية': '1.5%',
+          l10n.departmentActiveDeals: '85',
+          l10n.departmentDisputes: '3 (12,400)',
+          l10n.departmentProtectionFee: '1.5%',
           'icon1': 'handshake',
         };
       case DepartmentType.services:
         return {
-          'مزودي خدمات': '320',
-          'طلبات معلقة': '15 (45.2 ألف)',
-          'عمولة المنصة': '8.0%',
+          l10n.departmentServiceProviders: '320',
+          l10n.departmentPendingRequests: '15 (45,200)',
+          l10n.departmentPlatformCommission: '8.0%',
           'icon1': 'build',
         };
       case DepartmentType.couriers:
         return {
-          'مناديب نشطين': '1,200',
-          'مستحقات معلقة': '45 (18 ألف)',
-          'رسوم شحنة': '3 EGP',
+          l10n.departmentActiveCouriers: '1,200',
+          l10n.departmentPendingEntitlements: '45 (18,000)',
+          l10n.departmentShipmentFee: '3 EGP',
           'icon1': 'local_shipping',
         };
     }
   }
 
-  List<Map<String, dynamic>> get _listItems {
+  List<Map<String, dynamic>> _listItemsFor(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     switch (type) {
       case DepartmentType.merchants:
         return [
           {
-            'title': 'مؤسسة الأفق للتقنية والتجارة',
-            'id': 'سجل: 1010892341   #TRD-9041',
+            'title': l10n.departmentMerchantHorizon,
+            'id': '${l10n.departmentRecordPrefix} 1010892341   #TRD-9041',
             'available': 412800.00,
             'pending': 12500.00,
             'operations': '1,842',
-            'bankText': 'تسوية سريعة',
+            'bankText': l10n.departmentInstantSettlement,
             'bankIcon': Icons.flash_on,
-            'status': 'نشط ومطابق',
+            'status': l10n.departmentActiveMatched,
           },
           {
-            'title': 'متجر الصفوة الذهبي',
-            'id': 'سجل: 1010459810   #TRD-8820',
+            'title': l10n.departmentStoreElite,
+            'id': '${l10n.departmentRecordPrefix} 1010459810   #TRD-8820',
             'available': 325400.00,
             'pending': 24000.00,
             'operations': '965',
-            'bankText': 'بنك الراجحي',
+            'bankText': l10n.alRajhiMainOperating,
             'bankIcon': Icons.account_balance,
-            'status': 'نشط ومطابق',
+            'status': l10n.departmentActiveMatched,
           },
           {
-            'title': 'مجوهرات البريق الراقية',
-            'id': 'سجل: 1010334992   #TRD-7104',
+            'title': l10n.departmentSparkleJewelry,
+            'id': '${l10n.departmentRecordPrefix} 1010334992   #TRD-7104',
             'available': 184200.00,
             'pending': 58000.00,
             'operations': '420',
-            'bankText': 'دفعة بنكية مجدولة',
+            'bankText': l10n.departmentScheduledPayment,
             'bankIcon': Icons.sync,
-            'status': 'نشط ومطابق',
+            'status': l10n.departmentActiveMatched,
           },
           {
-            'title': 'دار النخبة للأجهزة',
-            'id': 'سجل: 1010198421   #TRD-6519',
+            'title': l10n.departmentEliteDevices,
+            'id': '${l10n.departmentRecordPrefix} 1010198421   #TRD-6519',
             'available': 98600.00,
             'pending': 0.00,
             'operations': '312',
-            'bankText': 'البنك الأهلي',
+            'bankText': l10n.snbEscrowAccount,
             'bankIcon': Icons.account_balance,
-            'status': 'نشط ومطابق',
+            'status': l10n.departmentActiveMatched,
           },
         ];
       case DepartmentType.usedEscrow:
         return [
           {
-            'title': 'سيارة تويوتا كامري 2020',
-            'id': 'عربون تأمين #ESC-1092',
+            'title': l10n.departmentCamryEscrow,
+            'id': '${l10n.departmentEscrowPrefix} #ESC-1092',
             'available': 5000.00,
             'pending': 0.00,
             'operations': '1',
-            'bankText': 'قيد المعاينة',
+            'bankText': l10n.departmentUnderInspection,
             'bankIcon': Icons.visibility,
-            'status': 'ضمان محفوظ',
+            'status': l10n.departmentProtectedEscrow,
           },
           {
-            'title': 'آيفون 14 برو ماكس',
-            'id': 'عربون تأمين #ESC-3321',
+            'title': l10n.departmentIphoneEscrow,
+            'id': '${l10n.departmentEscrowPrefix} #ESC-3321',
             'available': 500.00,
             'pending': 0.00,
             'operations': '1',
-            'bankText': 'قيد الشحن',
+            'bankText': l10n.departmentInShipping,
             'bankIcon': Icons.local_shipping,
-            'status': 'ضمان محفوظ',
+            'status': l10n.departmentProtectedEscrow,
           },
         ];
       case DepartmentType.services:
         return [
           {
-            'title': 'مؤسسة إتقان للتكييف',
-            'id': 'رخصة: 88214   #SRV-901',
+            'title': l10n.departmentItqanAc,
+            'id': '${l10n.departmentLicensePrefix} 88214   #SRV-901',
             'available': 25400.00,
             'pending': 3200.00,
             'operations': '142',
-            'bankText': 'تسوية سريعة',
+            'bankText': l10n.departmentInstantSettlement,
             'bankIcon': Icons.flash_on,
-            'status': 'مزود معتمد',
+            'status': l10n.departmentApprovedProvider,
           },
           {
-            'title': 'شركة الصيانة الشاملة',
-            'id': 'رخصة: 11029   #SRV-412',
+            'title': l10n.departmentComprehensiveMaintenance,
+            'id': '${l10n.departmentLicensePrefix} 11029   #SRV-412',
             'available': 18500.00,
             'pending': 0.00,
             'operations': '89',
-            'bankText': 'البنك الأهلي',
+            'bankText': l10n.snbEscrowAccount,
             'bankIcon': Icons.account_balance,
-            'status': 'مزود معتمد',
+            'status': l10n.departmentApprovedProvider,
           },
         ];
       case DepartmentType.couriers:
         return [
           {
-            'title': 'شركة زاجل للشحن',
-            'id': 'سجل: 40301122   #DEL-551',
+            'title': l10n.departmentZajelShipping,
+            'id': '${l10n.departmentRecordPrefix} 40301122   #DEL-551',
             'available': 145000.00,
             'pending': 12000.00,
             'operations': '14,200',
-            'bankText': 'تسوية أسبوعية',
+            'bankText': l10n.departmentWeeklySettlement,
             'bankIcon': Icons.calendar_today,
-            'status': 'شريك استراتيجي',
+            'status': l10n.departmentStrategicPartner,
           },
           {
-            'title': 'مندوب أسطول وصلني (محمد أحمد)',
-            'id': 'رقم المندوب: #C-1902',
+            'title': l10n.departmentWaslniCourier,
+            'id': '${l10n.departmentCourierNumberPrefix} #C-1902',
             'available': 450.00,
             'pending': 120.00,
             'operations': '45',
             'bankText': 'STC Pay',
             'bankIcon': Icons.account_balance_wallet,
-            'status': 'مندوب نشط',
+            'status': l10n.departmentActiveCourier,
           },
         ];
     }
@@ -199,7 +193,10 @@ class DepartmentWalletScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isArabic = AppLocalizations.of(context)!.localeName == 'ar';
+    final l10n = AppLocalizations.of(context)!;
+    final isArabic = l10n.localeName == 'ar';
+    final stats = _statsFor(context);
+    final listItems = _listItemsFor(context);
 
     return Directionality(
       textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
@@ -240,7 +237,6 @@ class DepartmentWalletScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           child: Column(
             children: [
-              // 1. Top Card
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
@@ -250,59 +246,71 @@ class DepartmentWalletScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          children: [
-                            const Icon(Icons.account_balance_wallet,
-                                color: Colors.white, size: 18),
-                            const SizedBox(width: 8),
-                            Text(_screenTitleFor(context),
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold)),
-                          ],
+                        const Icon(Icons.account_balance_wallet,
+                            color: Colors.white, size: 18),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(_screenTitleFor(context),
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis),
                         ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: const Row(
-                            children: [
-                              Text('مدقق ومعتمد',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 9)),
-                              SizedBox(width: 4),
-                              Icon(Icons.verified,
-                                  color: Colors.blueAccent, size: 12),
-                            ],
+                        const SizedBox(width: 8),
+                        Flexible(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Flexible(
+                                  child: Text(l10n.departmentAuditedBadge,
+                                      style: const TextStyle(
+                                          color: Colors.white, fontSize: 9),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis),
+                                ),
+                                const SizedBox(width: 4),
+                                const Icon(Icons.verified,
+                                    color: Colors.blueAccent, size: 12),
+                              ],
+                            ),
                           ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 20),
-                    const Text('إجمالي الرصيد التجميعي المتاح للتسوية والسحب',
-                        style: TextStyle(color: Colors.white60, fontSize: 11)),
+                    Text(l10n.departmentTotalBalance,
+                        style: const TextStyle(
+                            color: Colors.white60, fontSize: 11)),
                     const SizedBox(height: 8),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Text(
-                          CurrencyFormatter.format(_totalBalance,
-                              includeCurrency: false),
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 32,
-                              fontWeight: FontWeight.bold,
-                              height: 1),
+                        Flexible(
+                          child: Text(
+                            CurrencyFormatter.format(_totalBalance,
+                                includeCurrency: false),
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 32,
+                                fontWeight: FontWeight.bold,
+                                height: 1),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                         const SizedBox(width: 6),
-                        Text(AppLocalizations.of(context)!.currencySar,
+                        Text(l10n.currencySar,
                             style: const TextStyle(
                                 color: Colors.white70,
                                 fontSize: 14,
@@ -319,19 +327,19 @@ class DepartmentWalletScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(_stats.keys.elementAt(0),
+                              Text(stats.keys.elementAt(0),
                                   style: const TextStyle(
                                       color: Colors.white60, fontSize: 10)),
                               const SizedBox(height: 4),
                               Row(
                                 children: [
-                                  Text(_stats.values.elementAt(0),
+                                  Text(stats.values.elementAt(0),
                                       style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 14,
                                           fontWeight: FontWeight.bold)),
                                   const SizedBox(width: 4),
-                                  Icon(_getIconData(_stats['icon1']!),
+                                  Icon(_getIconData(stats['icon1']!),
                                       color: Colors.white60, size: 14),
                                 ],
                               ),
@@ -342,13 +350,13 @@ class DepartmentWalletScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(_stats.keys.elementAt(1),
+                              Text(stats.keys.elementAt(1),
                                   style: const TextStyle(
                                       color: Colors.white60, fontSize: 10)),
                               const SizedBox(height: 4),
                               Row(
                                 children: [
-                                  Text(_stats.values.elementAt(1).split(' ')[0],
+                                  Text(stats.values.elementAt(1).split(' ')[0],
                                       style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 14,
@@ -358,12 +366,10 @@ class DepartmentWalletScreen extends StatelessWidget {
                                       color: Colors.white60, size: 14),
                                 ],
                               ),
-                              if (_stats.values.elementAt(1).contains('('))
+                              if (stats.values.elementAt(1).contains('('))
                                 Text(
-                                    _stats.values.elementAt(1).substring(_stats
-                                        .values
-                                        .elementAt(1)
-                                        .indexOf('(')),
+                                    stats.values.elementAt(1).substring(
+                                        stats.values.elementAt(1).indexOf('(')),
                                     style: const TextStyle(
                                         color: Colors.white54, fontSize: 9)),
                             ],
@@ -373,14 +379,14 @@ class DepartmentWalletScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              Text(_stats.keys.elementAt(2),
+                              Text(stats.keys.elementAt(2),
                                   style: const TextStyle(
                                       color: Colors.white60, fontSize: 10)),
                               const SizedBox(height: 4),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  Text(_stats.values.elementAt(2),
+                                  Text(stats.values.elementAt(2),
                                       style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 14,
@@ -421,7 +427,7 @@ class DepartmentWalletScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                         color: AppColors.surfaceLight,
                         borderRadius: BorderRadius.circular(6)),
-                    child: const Text('سداد و سريع متزامنة',
+                    child: Text(l10n.departmentSyncStatus,
                         style: TextStyle(
                             fontSize: 9, color: AppColors.textSecondary)),
                   ),
@@ -434,12 +440,12 @@ class DepartmentWalletScreen extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    _buildFilterChip('الكل 142', true),
+                    _buildFilterChip('${l10n.departmentAllFilter} 142', true),
                     const SizedBox(width: 8),
-                    _buildFilterChip('أعلى رصيد', false,
+                    _buildFilterChip(l10n.departmentHighestBalanceFilter, false,
                         icon: Icons.trending_up),
                     const SizedBox(width: 8),
-                    _buildFilterChip('قيد السحب (8)', false,
+                    _buildFilterChip(l10n.departmentWithdrawalFilter, false,
                         icon: Icons.hourglass_empty),
                     const SizedBox(width: 8),
                     _buildFilterChip('', false,
@@ -455,7 +461,7 @@ class DepartmentWalletScreen extends StatelessWidget {
               const SizedBox(height: 16),
 
               // 4. List Items
-              ..._listItems.map((item) => Padding(
+              ...listItems.map((item) => Padding(
                     padding: const EdgeInsets.only(bottom: 16),
                     child: _buildListItemCard(context, item),
                   )),
@@ -472,8 +478,8 @@ class DepartmentWalletScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text('حوكمة التسويات والضوابط البنكية (CFO)',
-                            style: TextStyle(
+                        Text(l10n.departmentGovernanceTitle,
+                            style: const TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.primaryDark)),
@@ -484,7 +490,7 @@ class DepartmentWalletScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      'تخضع جميع تحويلات المحفظة لمطابقة يومية تلقائية مع شبكة "سريع" للمدفوعات الفورية ونظام "سداد"، وفقاً لتعليمات البنك المركزي السعودي يتم حجز العمليات المشتبه بها تلقائياً للتدقيق اليدوي من قبل إدارة الامتثال المالي ببرواح المازوري.',
+                      l10n.departmentGovernanceNotice,
                       style: TextStyle(
                           fontSize: 10,
                           color: Colors.grey.shade700,
@@ -503,8 +509,8 @@ class DepartmentWalletScreen extends StatelessWidget {
                             textDirection: TextDirection.ltr),
                         Row(
                           children: [
-                            const Text('آخر مطابقة بنكية: اليوم 02:45 م',
-                                style: TextStyle(
+                            Text(l10n.departmentLastReconciliation,
+                                style: const TextStyle(
                                     fontSize: 9,
                                     color: AppColors.textSecondary)),
                             const SizedBox(width: 4),

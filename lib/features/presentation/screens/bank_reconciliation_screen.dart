@@ -39,14 +39,12 @@ class BankReconciliationScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  isArabic ? 'برواح المازوري' : 'Barwah Mazouri',
+                  l10n.appName,
                   style: const TextStyle(
                       fontSize: 15, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  isArabic
-                      ? 'الإدارة المالية والحسابات'
-                      : 'Finance Management & Accounts',
+                  l10n.reconciliationFinanceSubtitle,
                   style: const TextStyle(
                       fontSize: 9, color: AppColors.textSecondary),
                 ),
@@ -69,13 +67,13 @@ class BankReconciliationScreen extends StatelessWidget {
             children: [
               _buildScreenHeading(context),
               const SizedBox(height: 12),
-              _buildAuthorityBanner(),
+              _buildAuthorityBanner(context),
               const SizedBox(height: 12),
-              _buildGovernmentConnection(),
+              _buildGovernmentConnection(context),
               const SizedBox(height: 14),
               _buildAccountCard(context),
               const SizedBox(height: 14),
-              _buildNextAccountCard(),
+              _buildNextAccountCard(context),
             ],
           ),
           bottomNavigationBar: _buildBottomNavigation(context),
@@ -85,7 +83,7 @@ class BankReconciliationScreen extends StatelessWidget {
   }
 
   Widget _buildScreenHeading(BuildContext context) {
-    final isArabic = AppLocalizations.of(context)!.localeName == 'ar';
+    final l10n = AppLocalizations.of(context)!;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -94,10 +92,8 @@ class BankReconciliationScreen extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                isArabic
-                    ? 'KYC & IBAN VERIFICATION ENGINE'
-                    : 'KYC & IBAN VERIFICATION ENGINE',
-                textAlign: isArabic ? TextAlign.left : TextAlign.left,
+                l10n.reconciliationEngine,
+                textAlign: TextAlign.left,
                 textDirection: TextDirection.ltr,
                 style: const TextStyle(fontSize: 8, color: AppColors.infoDark),
               ),
@@ -115,9 +111,7 @@ class BankReconciliationScreen extends StatelessWidget {
                       size: 11, color: AppColors.textSecondary),
                   const SizedBox(width: 4),
                   Text(
-                    isArabic
-                        ? 'امتثال مصرفي فوري'
-                        : 'Immediate banking compliance',
+                    l10n.reconciliationImmediateCompliance,
                     style: const TextStyle(
                         fontSize: 8, color: AppColors.textSecondary),
                   ),
@@ -130,10 +124,8 @@ class BankReconciliationScreen extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         Text(
-          isArabic
-              ? 'مطابقة الحسابات البنكية ومكافحة الاحتيال'
-              : 'Bank account reconciliation and fraud prevention',
-          textAlign: isArabic ? TextAlign.right : TextAlign.left,
+          l10n.reconciliationPageTitle,
+          textAlign: l10n.localeName == 'ar' ? TextAlign.right : TextAlign.left,
           style: const TextStyle(
               fontSize: 19,
               height: 1.35,
@@ -144,7 +136,8 @@ class BankReconciliationScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAuthorityBanner() {
+  Widget _buildAuthorityBanner(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -155,13 +148,17 @@ class BankReconciliationScreen extends StatelessWidget {
         children: [
           const Icon(Icons.gavel, color: Colors.white, size: 20),
           const SizedBox(width: 10),
-          const Expanded(
+          Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: l10n.localeName == 'ar'
+                  ? CrossAxisAlignment.end
+                  : CrossAxisAlignment.start,
               children: [
                 Text(
-                  'صلاحية إشرافية تنفيذية مقيدة',
-                  textAlign: TextAlign.right,
+                  l10n.reconciliationAuthorityTitle,
+                  textAlign: l10n.localeName == 'ar'
+                      ? TextAlign.right
+                      : TextAlign.left,
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 12,
@@ -169,8 +166,10 @@ class BankReconciliationScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 4),
                 Text(
-                  'للاطلاع والتحقق والاعتماد مصرح للمدير المالي حصرياً. تعديل بيانات الحساب البنكية ممنوع بتاتاً من قبل المشرفين الميدانيين.',
-                  textAlign: TextAlign.right,
+                  l10n.reconciliationAuthorityNotice,
+                  textAlign: l10n.localeName == 'ar'
+                      ? TextAlign.right
+                      : TextAlign.left,
                   style: TextStyle(
                       color: Colors.white70, fontSize: 9, height: 1.5),
                 ),
@@ -191,7 +190,8 @@ class BankReconciliationScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildGovernmentConnection() {
+  Widget _buildGovernmentConnection(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
       decoration: BoxDecoration(
@@ -203,27 +203,31 @@ class BankReconciliationScreen extends StatelessWidget {
           const Icon(Icons.account_balance_outlined,
               color: AppColors.primaryDark, size: 18),
           const SizedBox(width: 8),
-          const Expanded(
+          Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: l10n.localeName == 'ar'
+                  ? CrossAxisAlignment.end
+                  : CrossAxisAlignment.start,
               children: [
-                Text('بوابة وثائق وربط حكومي',
+                Text(l10n.reconciliationGovernmentPortal,
                     style:
                         TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
-                Text('تزامن حي ومباشر مع السجل التجاري والبنك المركزي',
+                Text(l10n.reconciliationGovernmentSync,
                     style:
                         TextStyle(fontSize: 8, color: AppColors.textSecondary)),
               ],
             ),
           ),
           const SizedBox(width: 8),
-          _statusPill('متصل', const Color(0xFFDCE8FF), AppColors.infoDark),
+          _statusPill(l10n.reconciliationConnected, const Color(0xFFDCE8FF),
+              AppColors.infoDark),
         ],
       ),
     );
   }
 
   Widget _buildAccountCard(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -237,18 +241,20 @@ class BankReconciliationScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _buildAccountIdentity(),
+          _buildAccountIdentity(context),
           const SizedBox(height: 14),
-          _buildComplianceScore(),
+          _buildComplianceScore(context),
           const SizedBox(height: 14),
-          const Row(
+          Row(
             children: [
               Icon(Icons.checklist, color: AppColors.info, size: 17),
               SizedBox(width: 6),
               Expanded(
                 child: Text(
-                  'بيانات المطابقة التفصيلية للحساب',
-                  textAlign: TextAlign.right,
+                  l10n.reconciliationAccountDetails,
+                  textAlign: l10n.localeName == 'ar'
+                      ? TextAlign.right
+                      : TextAlign.left,
                   style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
@@ -259,26 +265,29 @@ class BankReconciliationScreen extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           _buildMatchedName(
+            context,
             index: '1',
-            title: 'الاسم المعتمد في السجل التجاري',
-            value: 'مؤسسة مدار التقنية لتقنية المعلومات',
+            title: l10n.reconciliationCommercialName,
+            value: l10n.reconciliationCommercialEntity,
           ),
           const SizedBox(height: 7),
           _buildMatchedName(
+            context,
             index: '2',
-            title: 'اسم المستفيد في الحساب البنكي',
-            value: 'مؤسسة مدار التقنية',
+            title: l10n.reconciliationBeneficiaryName,
+            value: l10n.reconciliationBeneficiaryEntity,
           ),
           const SizedBox(height: 7),
-          _buildIbanRow(),
+          _buildIbanRow(context),
           const SizedBox(height: 7),
-          _buildCommercialRegistrationRow(),
+          _buildCommercialRegistrationRow(context),
           const SizedBox(height: 7),
           _buildDocumentRow(context),
           const SizedBox(height: 14),
-          const Text(
-            'إجراءات الاعتماد النهائي (حصر صلاحيات المدير المالي):',
-            textAlign: TextAlign.right,
+          Text(
+            l10n.reconciliationFinalActions,
+            textAlign:
+                l10n.localeName == 'ar' ? TextAlign.right : TextAlign.left,
             style: TextStyle(fontSize: 8, color: AppColors.textSecondary),
           ),
           const SizedBox(height: 6),
@@ -286,7 +295,7 @@ class BankReconciliationScreen extends StatelessWidget {
             height: 44,
             child: ElevatedButton.icon(
               onPressed: () => _showActionMessage(
-                  context, 'تم اعتماد الحساب البنكي وإرساله للإدارة.'),
+                  context, l10n.reconciliationApproveSuccess),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primaryDark,
                 foregroundColor: Colors.white,
@@ -294,8 +303,9 @@ class BankReconciliationScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10)),
               ),
               icon: const Icon(Icons.verified_outlined, size: 18),
-              label: const Text('اعتماد الحساب البنكي وإرساله للإدارة',
-                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+              label: Text(l10n.reconciliationApproveAccount,
+                  style: const TextStyle(
+                      fontSize: 11, fontWeight: FontWeight.bold)),
             ),
           ),
           const SizedBox(height: 6),
@@ -303,7 +313,7 @@ class BankReconciliationScreen extends StatelessWidget {
             height: 40,
             child: OutlinedButton.icon(
               onPressed: () => _showActionMessage(
-                  context, 'تم إرسال طلب شهادة آيبان حديثة ومختومة.'),
+                  context, l10n.reconciliationIbanRequestSent),
               style: OutlinedButton.styleFrom(
                 foregroundColor: AppColors.primaryDark,
                 backgroundColor: const Color(0xFFEFF1F3),
@@ -312,16 +322,16 @@ class BankReconciliationScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10)),
               ),
               icon: const Icon(Icons.edit_document, size: 16),
-              label: const Text('طلب شهادة آيبان حديثة ومختومة',
-                  style: TextStyle(fontSize: 10)),
+              label: Text(l10n.reconciliationRequestIban,
+                  style: const TextStyle(fontSize: 10)),
             ),
           ),
           const SizedBox(height: 6),
           SizedBox(
             height: 40,
             child: TextButton.icon(
-              onPressed: () => _showActionMessage(
-                  context, 'تم رفض الطلب وتسجيل سبب الرفض للمراجعة.'),
+              onPressed: () =>
+                  _showActionMessage(context, l10n.reconciliationRejectSuccess),
               style: TextButton.styleFrom(
                 foregroundColor: AppColors.dangerDark,
                 backgroundColor: const Color(0xFFFFE0DE),
@@ -329,8 +339,8 @@ class BankReconciliationScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10)),
               ),
               icon: const Icon(Icons.block, size: 16),
-              label: const Text('رفض وتجميد التحويل للحساب',
-                  style: TextStyle(fontSize: 10)),
+              label: Text(l10n.reconciliationRejectTransfer,
+                  style: const TextStyle(fontSize: 10)),
             ),
           ),
         ],
@@ -338,13 +348,14 @@ class BankReconciliationScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAccountIdentity() {
+  Widget _buildAccountIdentity(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Row(
           children: [
-            _statusPill('فحص الامتثال المالي - بوابة وثائق الحكومة',
+            _statusPill(l10n.reconciliationComplianceReview,
                 const Color(0xFFE4ECFF), AppColors.infoDark),
             const Spacer(),
             _statusPill('#TRD-5501', AppColors.primaryDark, Colors.white),
@@ -356,22 +367,28 @@ class BankReconciliationScreen extends StatelessWidget {
           decoration: const BoxDecoration(
               color: Color(0xFFF5F6F7),
               borderRadius: BorderRadius.all(Radius.circular(10))),
-          child: const Row(
+          child: Row(
             children: [
               Icon(Icons.apartment, color: AppColors.primaryDark, size: 20),
               SizedBox(width: 10),
               Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  crossAxisAlignment: l10n.localeName == 'ar'
+                      ? CrossAxisAlignment.end
+                      : CrossAxisAlignment.start,
                   children: [
-                    Text('شركة مدار التقنية للتجارة',
-                        textAlign: TextAlign.right,
+                    Text(l10n.reconciliationBusinessName,
+                        textAlign: l10n.localeName == 'ar'
+                            ? TextAlign.right
+                            : TextAlign.left,
                         style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
                             color: AppColors.primaryDark)),
-                    Text('طلب اعتماد حساب بنكي رئيسي جديد للصرف الدوري',
-                        textAlign: TextAlign.right,
+                    Text(l10n.reconciliationNewAccountRequest,
+                        textAlign: l10n.localeName == 'ar'
+                            ? TextAlign.right
+                            : TextAlign.left,
                         style: TextStyle(
                             fontSize: 9, color: AppColors.textSecondary)),
                   ],
@@ -384,7 +401,8 @@ class BankReconciliationScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildComplianceScore() {
+  Widget _buildComplianceScore(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: const BoxDecoration(
@@ -392,15 +410,17 @@ class BankReconciliationScreen extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(12))),
       child: Column(
         children: [
-          const Row(
+          Row(
             children: [
               Icon(Icons.shield_outlined,
                   color: AppColors.primaryDark, size: 18),
               SizedBox(width: 6),
               Expanded(
                 child: Text(
-                  'مؤشر توافق المعايير الرقابية (AML/CFT)',
-                  textAlign: TextAlign.right,
+                  l10n.reconciliationAmlScore,
+                  textAlign: l10n.localeName == 'ar'
+                      ? TextAlign.right
+                      : TextAlign.left,
                   style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.bold,
@@ -427,14 +447,16 @@ class BankReconciliationScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 7),
-          const Row(
+          Row(
             children: [
               Icon(Icons.check_circle_outline, color: AppColors.info, size: 13),
               SizedBox(width: 5),
               Expanded(
                 child: Text(
-                  'تطابق آمن وفق بروتوكول مكافحة غسل الأموال وتمويل الإرهاب.',
-                  textAlign: TextAlign.right,
+                  l10n.reconciliationAmlMatched,
+                  textAlign: l10n.localeName == 'ar'
+                      ? TextAlign.right
+                      : TextAlign.left,
                   style: TextStyle(fontSize: 8, color: AppColors.primaryDark),
                 ),
               ),
@@ -446,7 +468,11 @@ class BankReconciliationScreen extends StatelessWidget {
   }
 
   Widget _buildMatchedName(
-      {required String index, required String title, required String value}) {
+    BuildContext context, {
+    required String index,
+    required String title,
+    required String value,
+  }) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 8),
       decoration: const BoxDecoration(
@@ -458,7 +484,9 @@ class BankReconciliationScreen extends StatelessWidget {
           Row(
             children: [
               _statusPill(
-                  'مطابق 100%  ✓', const Color(0xFFDDE3E8), AppColors.infoDark),
+                  AppLocalizations.of(context)!.reconciliationMatchVerified,
+                  const Color(0xFFDDE3E8),
+                  AppColors.infoDark),
               const Spacer(),
               Text('$index. $title',
                   style: const TextStyle(
@@ -475,7 +503,8 @@ class BankReconciliationScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildIbanRow() {
+  Widget _buildIbanRow(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(9),
       decoration: BoxDecoration(
@@ -486,10 +515,10 @@ class BankReconciliationScreen extends StatelessWidget {
         children: [
           Row(
             children: [
-              _statusPill('مصرف الراجحي (SAR)', AppColors.surfaceLight,
+              _statusPill(l10n.reconciliationBankName, AppColors.surfaceLight,
                   AppColors.primaryDark),
               const Spacer(),
-              const Text('3. رقم الحساب الدولي (IBAN) والجهة البنكية',
+              Text(l10n.reconciliationIbanLabel,
                   style:
                       TextStyle(fontSize: 8, color: AppColors.textSecondary)),
             ],
@@ -520,7 +549,8 @@ class BankReconciliationScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCommercialRegistrationRow() {
+  Widget _buildCommercialRegistrationRow(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 8),
       decoration: BoxDecoration(
@@ -528,11 +558,13 @@ class BankReconciliationScreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(9)),
       child: Row(
         children: [
-          const Expanded(
+          Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: l10n.localeName == 'ar'
+                  ? CrossAxisAlignment.end
+                  : CrossAxisAlignment.start,
               children: [
-                Text('4. السجل التجاري وحالة الصلاحية',
+                Text(l10n.reconciliationRegistrationLabel,
                     style:
                         TextStyle(fontSize: 8, color: AppColors.textSecondary)),
                 SizedBox(height: 4),
@@ -546,7 +578,7 @@ class BankReconciliationScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          _statusPill('ساري المفعول حتى 1447/06/15هـ', const Color(0xFFE0E4E7),
+          _statusPill(l10n.reconciliationValidUntil, const Color(0xFFE0E4E7),
               AppColors.textSecondary),
         ],
       ),
@@ -554,6 +586,7 @@ class BankReconciliationScreen extends StatelessWidget {
   }
 
   Widget _buildDocumentRow(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: BoxDecoration(
@@ -562,8 +595,8 @@ class BankReconciliationScreen extends StatelessWidget {
       child: Row(
         children: [
           OutlinedButton.icon(
-            onPressed: () =>
-                _showActionMessage(context, 'معاينة مستند doc-iban-5501.pdf'),
+            onPressed: () => _showActionMessage(
+                context, l10n.reconciliationDocumentPreviewToast),
             style: OutlinedButton.styleFrom(
               foregroundColor: AppColors.primaryDark,
               backgroundColor: Colors.white,
@@ -572,7 +605,8 @@ class BankReconciliationScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 9),
             ),
             icon: const Icon(Icons.visibility_outlined, size: 14),
-            label: const Text('معاينة', style: TextStyle(fontSize: 9)),
+            label: Text(l10n.reconciliationPreviewDocument,
+                style: const TextStyle(fontSize: 9)),
           ),
           const Spacer(),
           const Text('doc-iban-5501.pdf',
@@ -595,7 +629,8 @@ class BankReconciliationScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildNextAccountCard() {
+  Widget _buildNextAccountCard(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -608,9 +643,11 @@ class BankReconciliationScreen extends StatelessWidget {
               const Icon(Icons.pending_actions,
                   color: AppColors.textSecondary, size: 17),
               const SizedBox(width: 6),
-              const Expanded(
-                child: Text('الحساب التالي في قائمة الانتظار',
-                    textAlign: TextAlign.right,
+              Expanded(
+                child: Text(l10n.reconciliationNextAccount,
+                    textAlign: l10n.localeName == 'ar'
+                        ? TextAlign.right
+                        : TextAlign.left,
                     style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.bold,
@@ -630,25 +667,32 @@ class BankReconciliationScreen extends StatelessWidget {
               children: [
                 const Icon(Icons.info_outline, color: AppColors.info, size: 16),
                 const SizedBox(width: 7),
-                const Expanded(
+                Expanded(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                    crossAxisAlignment: l10n.localeName == 'ar'
+                        ? CrossAxisAlignment.end
+                        : CrossAxisAlignment.start,
                     children: [
-                      Text('متجر السهيلة للعطور',
-                          textAlign: TextAlign.right,
+                      Text(l10n.reconciliationNextBusiness,
+                          textAlign: l10n.localeName == 'ar'
+                              ? TextAlign.right
+                              : TextAlign.left,
                           style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
                               color: AppColors.primaryDark)),
                       SizedBox(height: 4),
-                      Text('البنك الأهلي السعودي  •  SA22 1000 **** **** 8819',
-                          textAlign: TextAlign.right,
+                      Text(l10n.reconciliationNextBank,
+                          textAlign: l10n.localeName == 'ar'
+                              ? TextAlign.right
+                              : TextAlign.left,
                           style: TextStyle(
                               fontSize: 8, color: AppColors.textSecondary)),
                       SizedBox(height: 5),
-                      Text(
-                          'حالة المطابقة: اختلاف طفيف في اللقب التجاري (يتطلب مراجعة مستند التفويض والوكالة الشرعية قبل الصرف).',
-                          textAlign: TextAlign.right,
+                      Text(l10n.reconciliationNameMismatch,
+                          textAlign: l10n.localeName == 'ar'
+                              ? TextAlign.right
+                              : TextAlign.left,
                           style: TextStyle(
                               fontSize: 8,
                               color: AppColors.textSecondary,
@@ -657,8 +701,8 @@ class BankReconciliationScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 6),
-                _statusPill('تنبيه تدقيق', const Color(0xFFFFE0DE),
-                    AppColors.dangerDark),
+                _statusPill(l10n.reconciliationAuditAlert,
+                    const Color(0xFFFFE0DE), AppColors.dangerDark),
               ],
             ),
           ),
@@ -668,13 +712,15 @@ class BankReconciliationScreen extends StatelessWidget {
             decoration: BoxDecoration(
                 color: const Color(0xFFE9ECEF),
                 borderRadius: BorderRadius.circular(9)),
-            child: const Row(
+            child: Row(
               children: [
                 Icon(Icons.arrow_back, size: 14, color: AppColors.primaryDark),
                 SizedBox(width: 6),
                 Expanded(
-                  child: Text('فتح ملف التدقيق الكامل للحساب #TRD-6022',
-                      textAlign: TextAlign.right,
+                  child: Text(l10n.reconciliationOpenAudit,
+                      textAlign: l10n.localeName == 'ar'
+                          ? TextAlign.right
+                          : TextAlign.left,
                       style:
                           TextStyle(fontSize: 9, color: AppColors.primaryDark)),
                 ),
@@ -687,8 +733,6 @@ class BankReconciliationScreen extends StatelessWidget {
   }
 
   Widget _buildBottomNavigation(BuildContext context) {
-    final isArabic = AppLocalizations.of(context)!.localeName == 'ar';
-
     return BottomNavigationBar(
       backgroundColor: Colors.white,
       type: BottomNavigationBarType.fixed,
@@ -707,19 +751,19 @@ class BankReconciliationScreen extends StatelessWidget {
       items: [
         BottomNavigationBarItem(
             icon: const Icon(Icons.history_edu, size: 24),
-            label: isArabic ? 'التدقيق' : 'Audit'),
+            label: AppLocalizations.of(context)!.navAudit),
         BottomNavigationBarItem(
             icon: const Icon(Icons.percent, size: 24),
-            label: isArabic ? 'العمولات' : 'Commissions'),
+            label: AppLocalizations.of(context)!.navCommissions),
         BottomNavigationBarItem(
             icon: const Icon(Icons.sync_alt, size: 24),
-            label: isArabic ? 'التسويات' : 'Settlements'),
+            label: AppLocalizations.of(context)!.navSettlements),
         BottomNavigationBarItem(
             icon: const Icon(Icons.fact_check_outlined, size: 24),
-            label: isArabic ? 'المطابقة' : 'Reconciliation'),
+            label: AppLocalizations.of(context)!.navReconciliation),
         BottomNavigationBarItem(
             icon: const Icon(Icons.account_balance, size: 24),
-            label: isArabic ? 'الرئيسية' : 'Home'),
+            label: AppLocalizations.of(context)!.navHome),
       ],
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'currency_formatter.dart';
 
 class AppLocaleController extends ChangeNotifier {
   AppLocaleController._();
@@ -16,6 +17,7 @@ class AppLocaleController extends ChangeNotifier {
     }
 
     _locale = Locale(languageCode);
+    CurrencyFormatter.setLocale(languageCode);
 
     final preferences = await SharedPreferences.getInstance();
     await preferences.setString('app_language', languageCode);
@@ -25,6 +27,7 @@ class AppLocaleController extends ChangeNotifier {
   Future<void> load() async {
     final preferences = await SharedPreferences.getInstance();
     final languageCode = preferences.getString('app_language');
+    CurrencyFormatter.setLocale(languageCode ?? _locale.languageCode);
 
     if (languageCode == 'ar' || languageCode == 'en') {
       final savedLanguageCode = languageCode!;

@@ -76,91 +76,88 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
             // =========================
             // App Bar
             // =========================
-            appBar: _isNavVisible
-                ? AppBar(
-                    titleSpacing: 0,
-                    leading: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (_) => const ProfileScreen()),
-                          );
-                        },
-                        child: const CircleAvatar(
-                          backgroundColor: AppColors.surfaceLight,
-                          child: Icon(
-                            Icons.person_outline,
-                            color: AppColors.primaryDark,
-                          ),
-                        ),
-                      ),
+            appBar: AppBar(
+              titleSpacing: 0,
+              leading: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const ProfileScreen()),
+                    );
+                  },
+                  child: const CircleAvatar(
+                    backgroundColor: AppColors.surfaceLight,
+                    child: Icon(
+                      Icons.person_outline,
+                      color: AppColors.primaryDark,
                     ),
-                    title: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          l10n.appName,
-                          style: const TextStyle(
-                            color: AppColors.primaryDark,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            const Icon(
-                              Icons.verified_outlined,
-                              size: 13,
-                              color: AppColors.info,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              l10n.cfoRole,
-                              style: const TextStyle(
-                                fontSize: 10,
-                                color: AppColors.textSecondary,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                  ),
+                ),
+              ),
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    l10n.appName,
+                    style: const TextStyle(
+                      color: AppColors.primaryDark,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
                     ),
-                    actions: [
-                      IconButton(
-                        tooltip: l10n.switchLanguage,
-                        onPressed: AppLocaleController.instance.toggle,
-                        icon: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(Icons.translate,
-                                color: AppColors.primaryDark, size: 19),
-                            const SizedBox(width: 3),
-                            Text(
-                              l10n.localeName == 'ar'
-                                  ? l10n.languageEnglish
-                                  : l10n.languageArabic,
-                              style: const TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.primaryDark),
-                            ),
-                          ],
-                        ),
+                  ),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.verified_outlined,
+                        size: 13,
+                        color: AppColors.info,
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16),
-                        child: Icon(
-                          Icons.shield_outlined,
-                          color: AppColors.primaryDark,
+                      const SizedBox(width: 4),
+                      Text(
+                        l10n.cfoRole,
+                        style: const TextStyle(
+                          fontSize: 10,
+                          color: AppColors.textSecondary,
                         ),
                       ),
                     ],
-                  )
-                : null,
+                  ),
+                ],
+              ),
+              actions: [
+                IconButton(
+                  tooltip: l10n.switchLanguage,
+                  onPressed: AppLocaleController.instance.toggle,
+                  icon: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.translate,
+                          color: AppColors.primaryDark, size: 19),
+                      const SizedBox(width: 3),
+                      Text(
+                        l10n.localeName == 'ar'
+                            ? l10n.languageEnglish
+                            : l10n.languageArabic,
+                        style: const TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.primaryDark),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: Icon(
+                    Icons.shield_outlined,
+                    color: AppColors.primaryDark,
+                  ),
+                ),
+              ],
+            ),
 
             // =========================
             // Body
