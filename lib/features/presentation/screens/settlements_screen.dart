@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../l10n/app_localizations.dart';
 import '../widgets/finance_navigation.dart';
+import '../widgets/new_settlement_bottom_sheet.dart';
 
 class SettlementsScreen extends StatefulWidget {
   const SettlementsScreen({super.key});
@@ -352,9 +353,7 @@ class _SettlementsScreenState extends State<SettlementsScreen> {
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
         onTap: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.createSettlementToast)),
-          );
+          NewSettlementBottomSheet.show(context);
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),

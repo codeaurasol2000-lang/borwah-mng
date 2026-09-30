@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../screens/expenses_management_screen.dart';
-import '../screens/frozen_requests_screen.dart';
-import '../screens/merchant_withdrawals_screen.dart';
+import '../screens/bank_reconciliation_screen.dart';
+import '../screens/commissions_screen.dart';
 import '../screens/subscriptions_screen.dart';
 
 class FinanceNavigation {
@@ -18,12 +17,12 @@ class FinanceNavigation {
     if (index == 0) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (_) => const FrozenRequestsScreen()),
+        MaterialPageRoute(builder: (_) => const BankReconciliationScreen()),
       );
     } else if (index == 1) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (_) => const ExpensesManagementScreen()),
+        MaterialPageRoute(builder: (_) => const CommissionsScreen()),
       );
     } else if (index == 2) {
       Navigator.push(
@@ -33,7 +32,7 @@ class FinanceNavigation {
     } else if (index == 3) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (_) => const MerchantWithdrawalsScreen()),
+        MaterialPageRoute(builder: (_) => const BankReconciliationScreen()),
       );
     } else if (index == 4 && currentIndex != 4) {
       Navigator.popUntil(context, (route) => route.isFirst);
