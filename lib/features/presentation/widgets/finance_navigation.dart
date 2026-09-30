@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../screens/bank_reconciliation_screen.dart';
-import '../screens/settlements_screen.dart';
+import '../screens/expenses_management_screen.dart';
+import '../screens/frozen_requests_screen.dart';
+import '../screens/merchant_withdrawals_screen.dart';
+import '../screens/subscriptions_screen.dart';
 
 class FinanceNavigation {
   const FinanceNavigation._();
@@ -13,18 +15,28 @@ class FinanceNavigation {
   }) {
     if (index == currentIndex) return;
 
-    if (index == 2) {
+    if (index == 0) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (_) => const SettlementsScreen()),
+        MaterialPageRoute(builder: (_) => const FrozenRequestsScreen()),
+      );
+    } else if (index == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const ExpensesManagementScreen()),
+      );
+    } else if (index == 2) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const SubscriptionsScreen()),
       );
     } else if (index == 3) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (_) => const BankReconciliationScreen()),
+        MaterialPageRoute(builder: (_) => const MerchantWithdrawalsScreen()),
       );
     } else if (index == 4 && currentIndex != 4) {
-      Navigator.pop(context);
+      Navigator.popUntil(context, (route) => route.isFirst);
     }
   }
 }
@@ -45,10 +57,10 @@ class FinanceSwipeNavigation extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       onHorizontalDragEnd: (details) {
         final velocity = details.primaryVelocity ?? 0;
-        if (velocity == 0) return;
+        if (velocity.abs() < 100) return;
 
         final targetIndex = velocity < 0 ? currentIndex - 1 : currentIndex + 1;
-        if (targetIndex >= 2 && targetIndex <= 4) {
+        if (targetIndex >= 0 && targetIndex <= 4) {
           FinanceNavigation.openTab(
             context,
             targetIndex,

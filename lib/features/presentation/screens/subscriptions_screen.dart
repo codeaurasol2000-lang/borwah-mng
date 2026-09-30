@@ -977,43 +977,43 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                         left: BorderSide(color: Color(0xFFEEEEEE))),
                   ),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                          isAutoReady
-                              ? l10n.availableBalance
-                              : l10n.grossAmount,
-                          style: const TextStyle(
-                              fontSize: 10, color: Colors.grey)),
+                      const Text(
+                        'إجمالي السعر المطلوب',
+                        style: TextStyle(
+                            fontSize: 10, color: AppColors.textSecondary, fontWeight: FontWeight.w600),
+                      ),
                       const SizedBox(height: 4),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.baseline,
+                        textBaseline: TextBaseline.alphabetic,
                         children: [
                           Flexible(
                             child: Text(
-                                CurrencyFormatter.format(sub.totalAmount,
-                                    includeCurrency: false),
-                                style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black87),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis),
-                          ),
-                          const SizedBox(width: 2),
-                          Text(l10n.currencySar,
+                              CurrencyFormatter.format(sub.totalAmount,
+                                  includeCurrency: false),
                               style: const TextStyle(
-                                  fontSize: 10, color: Colors.blue)),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.primaryExtraDark),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          const Text('ر.س',
+                              style: TextStyle(
+                                  fontSize: 10, color: AppColors.primaryDark, fontWeight: FontWeight.bold)),
                         ],
                       ),
                       const SizedBox(height: 4),
                       Text(
                         isAutoReady
-                            ? l10n.sufficientWalletBalance
-                            : l10n.taxInclusive15,
-                        style:
-                            TextStyle(fontSize: 9, color: Colors.grey.shade600),
+                            ? 'رصيد كافي بالمحفظة'
+                            : 'شامل الضريبة 15%',
+                        style: TextStyle(
+                            fontSize: 9, color: isAutoReady ? AppColors.success : Colors.grey.shade600),
                       ),
                     ],
                   ),

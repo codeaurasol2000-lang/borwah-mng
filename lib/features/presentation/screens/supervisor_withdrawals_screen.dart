@@ -80,8 +80,7 @@ class _SupervisorWithdrawalsScreenState
     final l10n = AppLocalizations.of(context)!;
 
     return Directionality(
-      textDirection:
-          l10n.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
+      textDirection: TextDirection.rtl,
       child: Scaffold(
         backgroundColor: const Color(0xFFF9FAFB),
         appBar: AppBar(
@@ -96,7 +95,7 @@ class _SupervisorWithdrawalsScreenState
             ),
           ),
           title: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(l10n.navWithdrawalOrders,
                   style: const TextStyle(
@@ -107,10 +106,9 @@ class _SupervisorWithdrawalsScreenState
                   style: const TextStyle(color: Colors.grey, fontSize: 11)),
             ],
           ),
-          centerTitle: true,
           actions: [
             IconButton(
-              icon: const Icon(Icons.arrow_forward, color: Colors.black),
+              icon: const Icon(Icons.arrow_forward_ios, color: Colors.black, size: 18),
               onPressed: () => Navigator.pop(context),
             ),
           ],
@@ -634,15 +632,14 @@ class _SupervisorWithdrawalsScreenState
                         child: Text(grossTitle,
                             style: TextStyle(
                                 fontSize: 11, color: Colors.grey.shade700))),
-                    Flexible(
-                        child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(
-                                '${CurrencyFormatter.format(req.grossAmount, includeCurrency: false)} ${l10n.currencySar}',
-                                style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black87)))),
+                    FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                            '${CurrencyFormatter.format(req.grossAmount, includeCurrency: false)} ${l10n.currencySar}',
+                            style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87))),
                   ],
                 ),
                 if (req.platformFeePercentage > 0) ...[
@@ -665,15 +662,14 @@ class _SupervisorWithdrawalsScreenState
                           ],
                         ),
                       ),
-                      Flexible(
-                          child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                  '- ${CurrencyFormatter.format(req.platformFeeAmount, includeCurrency: false)} ${l10n.currencySar}',
-                                  style: const TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: AppColors.danger)))),
+                      FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                          '- ${CurrencyFormatter.format(req.platformFeeAmount, includeCurrency: false)} ${l10n.currencySar}',
+                          style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.danger))),
                     ],
                   ),
                 ],
@@ -697,16 +693,15 @@ class _SupervisorWithdrawalsScreenState
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        Flexible(
-                            child: FittedBox(
-                                fit: BoxFit.scaleDown,
-                                child: Text(
-                                    CurrencyFormatter.format(req.netAmount,
-                                        includeCurrency: false),
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w900,
-                                        color: Colors.black87)))),
+                        FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                                CurrencyFormatter.format(req.netAmount,
+                                    includeCurrency: false),
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w900,
+                                    color: Colors.black87))),
                         const SizedBox(width: 4),
                         Text(l10n.currencySar,
                             style: const TextStyle(

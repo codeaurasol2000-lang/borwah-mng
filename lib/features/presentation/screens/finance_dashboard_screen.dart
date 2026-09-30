@@ -66,8 +66,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
       create: (_) => FinanceDashboardCubit(getFinanceSummaryUseCase: sl())
         ..loadDashboardData(),
       child: Directionality(
-        textDirection:
-            l10n.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
+        textDirection: TextDirection.rtl,
         child: FinanceSwipeNavigation(
           currentIndex: 4,
           child: Scaffold(
