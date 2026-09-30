@@ -259,7 +259,7 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                                       icon: Icons.storefront),
                                   const SizedBox(width: 8),
                                   _buildFilterChip(l10n.frozenProvidersFilter,
-                                      filterValue: 'مقدمو خدمات',
+                                      filterValue: 'مقدموا خدمات',
                                       icon: Icons.handyman_outlined),
                                   const SizedBox(width: 8),
                                   _buildFilterChip(l10n.frozenSupervisorsFilter,
