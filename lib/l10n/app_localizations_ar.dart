@@ -92,7 +92,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get cfoBadgeCode => '#CF0-01';
 
   @override
-  String get currencySar => 'ر.س';
+  String get currencySar => 'ج.م';
 
   @override
   String get totalAggregatedLiquidity =>

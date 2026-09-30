@@ -13,7 +13,8 @@ class ExpensesManagementScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => BankAccountsCubit(getBankAccountsUseCase: sl())..loadBankAccounts(),
+      create: (context) =>
+          BankAccountsCubit(getBankAccountsUseCase: sl())..loadBankAccounts(),
       child: const _ExpensesManagementScreenContent(),
     );
   }
@@ -23,11 +24,14 @@ class _ExpensesManagementScreenContent extends StatefulWidget {
   const _ExpensesManagementScreenContent();
 
   @override
-  State<_ExpensesManagementScreenContent> createState() => _ExpensesManagementScreenState();
+  State<_ExpensesManagementScreenContent> createState() =>
+      _ExpensesManagementScreenState();
 }
 
-class _ExpensesManagementScreenState extends State<_ExpensesManagementScreenContent> {
-  final TextEditingController _amountController = TextEditingController(text: '14,500.00');
+class _ExpensesManagementScreenState
+    extends State<_ExpensesManagementScreenContent> {
+  final TextEditingController _amountController =
+      TextEditingController(text: '14,500.00');
   final TextEditingController _reasonController = TextEditingController();
   String _selectedPaymentMethod = 'rajhi'; // Default selected
 
@@ -43,7 +47,8 @@ class _ExpensesManagementScreenState extends State<_ExpensesManagementScreenCont
     final l10n = AppLocalizations.of(context)!;
 
     return Directionality(
-      textDirection: l10n.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
+      textDirection:
+          l10n.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
         backgroundColor: AppColors.backgroundLight,
         appBar: AppBar(
@@ -51,12 +56,16 @@ class _ExpensesManagementScreenState extends State<_ExpensesManagementScreenCont
           elevation: 0.5,
           scrolledUnderElevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_forward_ios, color: AppColors.textPrimary, size: 18),
+            icon: const Icon(Icons.arrow_forward_ios,
+                color: AppColors.textPrimary, size: 18),
             onPressed: () => Navigator.pop(context),
           ),
           title: Text(
             l10n.expensesManagementTitle,
-            style: const TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 16),
+            style: const TextStyle(
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.bold,
+                fontSize: 16),
           ),
           centerTitle: true,
           actions: const [
@@ -80,7 +89,8 @@ class _ExpensesManagementScreenState extends State<_ExpensesManagementScreenCont
                 icon: Icons.payments_outlined,
                 title: l10n.amountToDisburse,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
                     color: AppColors.surfaceLight,
                     borderRadius: BorderRadius.circular(12),
@@ -89,19 +99,26 @@ class _ExpensesManagementScreenState extends State<_ExpensesManagementScreenCont
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
                           color: AppColors.cardBorder,
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Text(l10n.currencySar, style: const TextStyle(fontWeight: FontWeight.bold)),
+                        child: Text(l10n.currencySar,
+                            style:
+                                const TextStyle(fontWeight: FontWeight.bold)),
                       ),
                       Expanded(
                         child: TextField(
                           controller: _amountController,
-                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                          keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true),
                           textAlign: TextAlign.left,
-                          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                          style: const TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textPrimary),
                           decoration: const InputDecoration(
                             border: InputBorder.none,
                             isDense: true,
@@ -122,15 +139,18 @@ class _ExpensesManagementScreenState extends State<_ExpensesManagementScreenCont
                 child: BlocBuilder<BankAccountsCubit, BankAccountsState>(
                   builder: (context, state) {
                     if (state is BankAccountsLoading) {
-                      return const Center(child: CircularProgressIndicator(color: AppColors.primaryDark));
+                      return const Center(
+                          child: CircularProgressIndicator(
+                              color: AppColors.primaryDark));
                     } else if (state is BankAccountsLoaded) {
                       final accounts = state.accounts;
                       if (accounts.isEmpty) {
                         return Center(child: Text(l10n.noAccountsAvailable));
                       }
-                      
+
                       // Select first by default if not set
-                      if (!accounts.any((a) => a.id == _selectedPaymentMethod)) {
+                      if (!accounts
+                          .any((a) => a.id == _selectedPaymentMethod)) {
                         WidgetsBinding.instance.addPostFrameCallback((_) {
                           setState(() {
                             _selectedPaymentMethod = accounts.first.id;
@@ -146,8 +166,11 @@ class _ExpensesManagementScreenState extends State<_ExpensesManagementScreenCont
                               id: account.id,
                               title: account.bankName,
                               subtitle: account.iban,
-                              balanceLabel: account.accountType.contains('ضمان') ? l10n.escrowBalanceLabel : l10n.currentLedgerBalanceLabel,
-                              balanceValue: '${CurrencyFormatter.format(account.balance)} ${l10n.currencySar}',
+                              balanceLabel: account.accountType.contains('ضمان')
+                                  ? l10n.escrowBalanceLabel
+                                  : l10n.currentLedgerBalanceLabel,
+                              balanceValue:
+                                  '${CurrencyFormatter.format(account.balance, includeCurrency: false)} ${l10n.currencySar}',
                             ),
                           );
                         }).toList(),
@@ -166,25 +189,31 @@ class _ExpensesManagementScreenState extends State<_ExpensesManagementScreenCont
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(l10n.detailedExpenseReason, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                    Text(l10n.detailedExpenseReason,
+                        style: const TextStyle(
+                            fontSize: 11, color: AppColors.textSecondary)),
                     const SizedBox(height: 8),
                     TextField(
                       controller: _reasonController,
                       maxLines: 2,
                       decoration: InputDecoration(
                         hintText: l10n.expenseDetailsHint,
-                        hintStyle: const TextStyle(fontSize: 12, color: AppColors.textMuted),
+                        hintStyle: const TextStyle(
+                            fontSize: 12, color: AppColors.textMuted),
                         filled: true,
                         fillColor: AppColors.surfaceLight,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
                       ),
                     ),
                     const SizedBox(height: 16),
-                    Text(l10n.invoiceSupportDocument, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                    Text(l10n.invoiceSupportDocument,
+                        style: const TextStyle(
+                            fontSize: 11, color: AppColors.textSecondary)),
                     const SizedBox(height: 8),
                     Container(
                       width: double.infinity,
@@ -196,9 +225,14 @@ class _ExpensesManagementScreenState extends State<_ExpensesManagementScreenCont
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(Icons.attach_file, color: AppColors.info, size: 16),
+                          const Icon(Icons.attach_file,
+                              color: AppColors.info, size: 16),
                           const SizedBox(width: 8),
-                          Text(l10n.attachDocumentOptional, style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.blue.shade800)),
+                          Text(l10n.attachDocumentOptional,
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blue.shade800)),
                         ],
                       ),
                     ),
@@ -215,7 +249,10 @@ class _ExpensesManagementScreenState extends State<_ExpensesManagementScreenCont
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: AppColors.cardBorder),
                   boxShadow: [
-                    BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 4, offset: const Offset(0, 2)),
+                    BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.02),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2)),
                   ],
                 ),
                 child: Row(
@@ -223,19 +260,29 @@ class _ExpensesManagementScreenState extends State<_ExpensesManagementScreenCont
                   children: [
                     Container(
                       padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(color: AppColors.surfaceLight, borderRadius: BorderRadius.circular(8)),
-                      child: const Icon(Icons.gavel, color: AppColors.textSecondary, size: 20),
+                      decoration: BoxDecoration(
+                          color: AppColors.surfaceLight,
+                          borderRadius: BorderRadius.circular(8)),
+                      child: const Icon(Icons.gavel,
+                          color: AppColors.textSecondary, size: 20),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(l10n.strictFinancialDisbursementGovernance, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                          Text(l10n.strictFinancialDisbursementGovernance,
+                              style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.textPrimary)),
                           const SizedBox(height: 4),
                           Text(
                             l10n.disbursementGovernanceNote,
-                            style: TextStyle(fontSize: 10, color: Colors.grey.shade600, height: 1.4),
+                            style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.grey.shade600,
+                                height: 1.4),
                           ),
                         ],
                       ),
@@ -250,15 +297,19 @@ class _ExpensesManagementScreenState extends State<_ExpensesManagementScreenCont
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primaryDark,
                   padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
                   elevation: 0,
                 ),
                 icon: const Icon(Icons.fingerprint, size: 18),
                 onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.paymentApprovedSuccessfully)));
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(l10n.paymentApprovedSuccessfully)));
                   Navigator.pop(context);
                 },
-                label: Text(l10n.approvePaymentOrder, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                label: Text(l10n.approvePaymentOrder,
+                    style: const TextStyle(
+                        fontSize: 13, fontWeight: FontWeight.bold)),
               ),
               const SizedBox(height: 12),
               OutlinedButton(
@@ -267,10 +318,13 @@ class _ExpensesManagementScreenState extends State<_ExpensesManagementScreenCont
                   backgroundColor: AppColors.surfaceLight,
                   side: const BorderSide(color: Colors.transparent),
                   padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
                 ),
                 onPressed: () => Navigator.pop(context),
-                child: Text(l10n.cancelPaymentOrder, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                child: Text(l10n.cancelPaymentOrder,
+                    style: const TextStyle(
+                        fontSize: 12, fontWeight: FontWeight.bold)),
               ),
               const SizedBox(height: 20),
             ],
@@ -280,7 +334,8 @@ class _ExpensesManagementScreenState extends State<_ExpensesManagementScreenCont
     );
   }
 
-  Widget _buildSectionCard({required IconData icon, required String title, required Widget child}) {
+  Widget _buildSectionCard(
+      {required IconData icon, required String title, required Widget child}) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -288,7 +343,10 @@ class _ExpensesManagementScreenState extends State<_ExpensesManagementScreenCont
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.cardBorder),
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 4, offset: const Offset(0, 2)),
+          BoxShadow(
+              color: Colors.black.withValues(alpha: 0.02),
+              blurRadius: 4,
+              offset: const Offset(0, 2)),
         ],
       ),
       child: Column(
@@ -298,7 +356,11 @@ class _ExpensesManagementScreenState extends State<_ExpensesManagementScreenCont
             children: [
               Icon(icon, color: AppColors.info, size: 18),
               const SizedBox(width: 8),
-              Text(title, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+              Text(title,
+                  style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.textPrimary)),
             ],
           ),
           const SizedBox(height: 16),
@@ -323,7 +385,8 @@ class _ExpensesManagementScreenState extends State<_ExpensesManagementScreenCont
         decoration: BoxDecoration(
           color: isSelected ? Colors.blue.shade50 : AppColors.surfaceLight,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: isSelected ? Colors.blue.shade200 : Colors.transparent),
+          border: Border.all(
+              color: isSelected ? Colors.blue.shade200 : Colors.transparent),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -332,15 +395,31 @@ class _ExpensesManagementScreenState extends State<_ExpensesManagementScreenCont
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: isSelected ? AppColors.textPrimary : Colors.black87)),
+                  Text(title,
+                      style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: isSelected
+                              ? AppColors.textPrimary
+                              : Colors.black87)),
                   const SizedBox(height: 4),
-                  Text(subtitle, style: const TextStyle(fontSize: 10, color: AppColors.textSecondary), textDirection: TextDirection.ltr, textAlign: TextAlign.right),
+                  Text(subtitle,
+                      style: const TextStyle(
+                          fontSize: 10, color: AppColors.textSecondary),
+                      textDirection: TextDirection.ltr,
+                      textAlign: TextAlign.right),
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      Text(balanceLabel, style: const TextStyle(fontSize: 10, color: AppColors.textSecondary)),
+                      Text(balanceLabel,
+                          style: const TextStyle(
+                              fontSize: 10, color: AppColors.textSecondary)),
                       const SizedBox(width: 4),
-                      Text(balanceValue, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                      Text(balanceValue,
+                          style: const TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textPrimary)),
                     ],
                   ),
                 ],
@@ -351,7 +430,11 @@ class _ExpensesManagementScreenState extends State<_ExpensesManagementScreenCont
               height: 20,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: isSelected ? AppColors.primaryDark : AppColors.textMuted, width: isSelected ? 6 : 1.5),
+                border: Border.all(
+                    color: isSelected
+                        ? AppColors.primaryDark
+                        : AppColors.textMuted,
+                    width: isSelected ? 6 : 1.5),
               ),
             ),
           ],

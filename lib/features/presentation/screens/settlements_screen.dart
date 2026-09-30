@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../l10n/app_localizations.dart';
+import '../widgets/finance_navigation.dart';
 
 class SettlementsScreen extends StatefulWidget {
   const SettlementsScreen({super.key});
@@ -90,96 +91,105 @@ class _SettlementsScreenState extends State<SettlementsScreen> {
 
     return Directionality(
       textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-      child: Scaffold(
-        backgroundColor: AppColors.backgroundLight,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0.5,
-          scrolledUnderElevation: 0,
-          leading: IconButton(
-            tooltip: isArabic ? 'العودة' : 'Back',
-            icon: Icon(
-              isArabic ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
-              size: 19,
-            ),
-            onPressed: () => Navigator.pop(context),
-          ),
-          title: Column(
-            children: [
-              Text(
-                isArabic ? 'إدارة التسويات' : 'Settlements Management',
-                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+      child: FinanceSwipeNavigation(
+        currentIndex: 2,
+        child: Scaffold(
+          backgroundColor: AppColors.backgroundLight,
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            elevation: 0.5,
+            scrolledUnderElevation: 0,
+            leading: IconButton(
+              tooltip: isArabic ? 'العودة' : 'Back',
+              icon: Icon(
+                isArabic ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
+                size: 19,
               ),
-              Text(
-                isArabic ? 'برواح المازوري - الإدارة المالية' : 'Barwah Mazouri - Finance Management',
-                style: const TextStyle(fontSize: 10, color: AppColors.textSecondary),
+              onPressed: () => Navigator.pop(context),
+            ),
+            title: Column(
+              children: [
+                Text(
+                  isArabic ? 'إدارة التسويات' : 'Settlements Management',
+                  style: const TextStyle(
+                      fontSize: 15, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  isArabic
+                      ? 'برواح المازوري - الإدارة المالية'
+                      : 'Barwah Mazouri - Finance Management',
+                  style: const TextStyle(
+                      fontSize: 10, color: AppColors.textSecondary),
+                ),
+              ],
+            ),
+            centerTitle: true,
+            actions: const [
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: CircleAvatar(
+                  radius: 16,
+                  backgroundColor: AppColors.primaryDark,
+                  child:
+                      Icon(Icons.person_outline, color: Colors.white, size: 17),
+                ),
               ),
             ],
           ),
-          centerTitle: true,
-          actions: const [
-            Padding(
-              padding: EdgeInsets.all(10),
-              child: CircleAvatar(
-                radius: 16,
-                backgroundColor: AppColors.primaryDark,
-                child:
-                    Icon(Icons.person_outline, color: Colors.white, size: 17),
-              ),
+          body: ListView(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+            children: [
+              _buildHeader(),
+              const SizedBox(height: 14),
+              _buildBalances(),
+              const SizedBox(height: 14),
+              _buildAddSettlementAction(),
+              const SizedBox(height: 14),
+              _buildFilters(),
+              const SizedBox(height: 16),
+              _buildRequestsHeader(),
+              const SizedBox(height: 8),
+              ..._filteredRequests.map(_buildRequestCard),
+              const SizedBox(height: 14),
+              _buildRecentSettlementsHeader(),
+              const SizedBox(height: 8),
+              ..._recentSettlements.map(_buildRecentSettlement),
+              const SizedBox(height: 8),
+            ],
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            backgroundColor: Colors.white,
+            type: BottomNavigationBarType.fixed,
+            currentIndex: 2,
+            selectedItemColor: AppColors.primaryDark,
+            unselectedItemColor: AppColors.textSecondary,
+            selectedLabelStyle:
+                const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+            unselectedLabelStyle: const TextStyle(fontSize: 10),
+            elevation: 16,
+            onTap: (index) => FinanceNavigation.openTab(
+              context,
+              index,
+              currentIndex: 2,
             ),
-          ],
-        ),
-        body: ListView(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
-          children: [
-            _buildHeader(),
-            const SizedBox(height: 14),
-            _buildBalances(),
-            const SizedBox(height: 14),
-            _buildAddSettlementAction(),
-            const SizedBox(height: 14),
-            _buildFilters(),
-            const SizedBox(height: 16),
-            _buildRequestsHeader(),
-            const SizedBox(height: 8),
-            ..._filteredRequests.map(_buildRequestCard),
-            const SizedBox(height: 14),
-            _buildRecentSettlementsHeader(),
-            const SizedBox(height: 8),
-            ..._recentSettlements.map(_buildRecentSettlement),
-            const SizedBox(height: 8),
-          ],
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Colors.white,
-          type: BottomNavigationBarType.fixed,
-          currentIndex: 2,
-          selectedItemColor: AppColors.primaryDark,
-          unselectedItemColor: AppColors.textSecondary,
-          selectedLabelStyle:
-              const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
-          unselectedLabelStyle: const TextStyle(fontSize: 10),
-          elevation: 16,
-          onTap: (index) {
-            if (index == 4) Navigator.pop(context);
-          },
-          items: [
-            BottomNavigationBarItem(
-                icon: const Icon(Icons.history_edu, size: 24),
-                label: isArabic ? 'التدقيق' : 'Audit'),
-            BottomNavigationBarItem(
-                icon: const Icon(Icons.percent, size: 24),
-                label: isArabic ? 'العمولات' : 'Commissions'),
-            BottomNavigationBarItem(
-                icon: const Icon(Icons.sync_alt, size: 24),
-                label: isArabic ? 'التسويات' : 'Settlements'),
-            BottomNavigationBarItem(
-                icon: const Icon(Icons.fact_check_outlined, size: 24),
-                label: isArabic ? 'المطابقة' : 'Reconciliation'),
-            BottomNavigationBarItem(
-                icon: const Icon(Icons.account_balance, size: 24),
-                label: isArabic ? 'الرئيسية' : 'Home'),
-          ],
+            items: [
+              BottomNavigationBarItem(
+                  icon: const Icon(Icons.history_edu, size: 24),
+                  label: isArabic ? 'التدقيق' : 'Audit'),
+              BottomNavigationBarItem(
+                  icon: const Icon(Icons.percent, size: 24),
+                  label: isArabic ? 'العمولات' : 'Commissions'),
+              BottomNavigationBarItem(
+                  icon: const Icon(Icons.sync_alt, size: 24),
+                  label: isArabic ? 'التسويات' : 'Settlements'),
+              BottomNavigationBarItem(
+                  icon: const Icon(Icons.fact_check_outlined, size: 24),
+                  label: isArabic ? 'المطابقة' : 'Reconciliation'),
+              BottomNavigationBarItem(
+                  icon: const Icon(Icons.account_balance, size: 24),
+                  label: isArabic ? 'الرئيسية' : 'Home'),
+            ],
+          ),
         ),
       ),
     );
@@ -215,8 +225,11 @@ class _SettlementsScreenState extends State<SettlementsScreen> {
                       const SizedBox(width: 4),
                       Flexible(
                         child: Text(
-                          isArabic ? 'صلاحيات المدير المالي التنفيذي' : 'Executive CFO Authority',
-                          style: const TextStyle(color: Colors.white, fontSize: 9),
+                          isArabic
+                              ? 'صلاحيات المدير المالي التنفيذي'
+                              : 'Executive CFO Authority',
+                          style:
+                              const TextStyle(color: Colors.white, fontSize: 9),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -234,7 +247,9 @@ class _SettlementsScreenState extends State<SettlementsScreen> {
           ),
           const SizedBox(height: 14),
           Text(
-            isArabic ? 'إدارة المحافظ الإلكترونية والتسويات' : 'Digital Wallets & Settlement Management',
+            isArabic
+                ? 'إدارة المحافظ الإلكترونية والتسويات'
+                : 'Digital Wallets & Settlement Management',
             textAlign: isArabic ? TextAlign.right : TextAlign.left,
             style: const TextStyle(
                 color: Colors.white, fontSize: 19, fontWeight: FontWeight.bold),
@@ -245,7 +260,8 @@ class _SettlementsScreenState extends State<SettlementsScreen> {
                 ? 'تنفيذ حركات النقود المالية المصرح بها مع إرفاق السند القانوني ومحضر النزاع المالي المعتمد.'
                 : 'Execution of approved financial cash movements with attached legal evidence and approved dispute record.',
             textAlign: isArabic ? TextAlign.right : TextAlign.left,
-            style: const TextStyle(color: Colors.white70, fontSize: 9, height: 1.6),
+            style: const TextStyle(
+                color: Colors.white70, fontSize: 9, height: 1.6),
           ),
         ],
       ),
@@ -504,7 +520,7 @@ class _SettlementsScreenState extends State<SettlementsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    '${request.amount} ر.س',
+                    '${request.amount} EGP',
                     textDirection: TextDirection.ltr,
                     style: const TextStyle(
                         fontSize: 12,
@@ -613,7 +629,7 @@ class _SettlementsScreenState extends State<SettlementsScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text('${settlement.amount} ر.س',
+              Text('${settlement.amount} EGP',
                   style: const TextStyle(
                       fontSize: 11, fontWeight: FontWeight.bold)),
               Text(settlement.time,

@@ -12,13 +12,18 @@ class EditMatrixScreen extends StatefulWidget {
 
 class _EditMatrixScreenState extends State<EditMatrixScreen> {
   final TextEditingController _reasonController = TextEditingController(
-    text: 'تعديل دوري لمواكبة تحديثات رسوم بوابات الدفع البنكية وتوسعة شبكة التوصيل الميداني',
+    text:
+        'تعديل دوري لمواكبة تحديثات رسوم بوابات الدفع البنكية وتوسعة شبكة التوصيل الميداني',
   );
-  
-  final TextEditingController _salesPercentageController = TextEditingController(text: '4.50');
-  final TextEditingController _settlementFeeController = TextEditingController(text: '1.25');
-  final TextEditingController _deliveryCommissionController = TextEditingController(text: '7.00');
-  final TextEditingController _deliveryFixedController = TextEditingController(text: '3.00');
+
+  final TextEditingController _salesPercentageController =
+      TextEditingController(text: '4.50');
+  final TextEditingController _settlementFeeController =
+      TextEditingController(text: '1.25');
+  final TextEditingController _deliveryCommissionController =
+      TextEditingController(text: '7.00');
+  final TextEditingController _deliveryFixedController =
+      TextEditingController(text: '3.00');
 
   bool _addFixedFee = true;
   bool _notifyAll = true;
@@ -63,8 +68,13 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
             ),
           ),
           title: Text(
-            isArabic ? 'تعديل مصفوفة نسب الأرباح والرسوم' : 'Update Profit & Fee Matrix',
-            style: const TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 16),
+            isArabic
+                ? 'تعديل مصفوفة نسب الأرباح والرسوم'
+                : 'Update Profit & Fee Matrix',
+            style: const TextStyle(
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.bold,
+                fontSize: 16),
             overflow: TextOverflow.ellipsis,
           ),
           actions: [
@@ -98,23 +108,30 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                       children: [
                         Row(
                           children: [
-                            const Icon(Icons.circle, color: Colors.greenAccent, size: 8),
+                            const Icon(Icons.circle,
+                                color: Colors.greenAccent, size: 8),
                             const SizedBox(width: 4),
-                            const Text('مباشر', style: TextStyle(color: Colors.white, fontSize: 10)),
+                            const Text('مباشر',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 10)),
                           ],
                         ),
                         const Spacer(),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 4),
                           decoration: BoxDecoration(
                             color: Colors.white.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: const Row(
                             children: [
-                              Icon(Icons.verified_user_outlined, color: Colors.white, size: 12),
+                              Icon(Icons.verified_user_outlined,
+                                  color: Colors.white, size: 12),
                               SizedBox(width: 6),
-                              Text('صلاحية سيادية حصرية للمدير المالي (CFO-01)', style: TextStyle(color: Colors.white, fontSize: 9)),
+                              Text('صلاحية سيادية حصرية للمدير المالي (CFO-01)',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 9)),
                             ],
                           ),
                         ),
@@ -123,7 +140,11 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                     const SizedBox(height: 16),
                     const Text(
                       'تحديد النسب الرسمية لاقتطاعات المنصة التلقائية وتحديث محرك التسويات والرسوم اللوجستية لكافة العمليات المالية المعتمدة.',
-                      style: TextStyle(color: Colors.white, fontSize: 11, height: 1.5, fontWeight: FontWeight.w500),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 11,
+                          height: 1.5,
+                          fontWeight: FontWeight.w500),
                     ),
                     const SizedBox(height: 16),
                     const Text(
@@ -145,22 +166,38 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                          decoration: BoxDecoration(color: AppColors.surfaceLight, borderRadius: BorderRadius.circular(6)),
-                          child: const Text('النطاق: 10.0% - 2.0%', style: TextStyle(fontSize: 10, color: AppColors.primaryDark, fontWeight: FontWeight.bold), textDirection: TextDirection.ltr),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                              color: AppColors.surfaceLight,
+                              borderRadius: BorderRadius.circular(6)),
+                          child: const Text('النطاق: 10.0% - 2.0%',
+                              style: TextStyle(
+                                  fontSize: 10,
+                                  color: AppColors.primaryDark,
+                                  fontWeight: FontWeight.bold),
+                              textDirection: TextDirection.ltr),
                         ),
-                        const Text('النسبة المطبقة حالياً', style: TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                        const Text('النسبة المطبقة حالياً',
+                            style: TextStyle(
+                                fontSize: 11, color: AppColors.textSecondary)),
                       ],
                     ),
                     const SizedBox(height: 4),
                     Align(
                       alignment: Alignment.centerRight,
-                      child: Text('${_salesPercentageController.text}%', style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                      child: Text('${_salesPercentageController.text}%',
+                          style: const TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textPrimary)),
                     ),
                     const SizedBox(height: 12),
                     Container(
                       padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(color: AppColors.surfaceMuted, borderRadius: BorderRadius.circular(12)),
+                      decoration: BoxDecoration(
+                          color: AppColors.surfaceMuted,
+                          borderRadius: BorderRadius.circular(12)),
                       child: Column(
                         children: [
                           Row(
@@ -168,18 +205,28 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                             children: [
                               Container(
                                 width: 100,
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-                                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8)),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 2),
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(8)),
                                 child: Row(
                                   children: [
-                                    const Text('%', style: TextStyle(color: AppColors.primaryDark, fontWeight: FontWeight.bold)),
+                                    const Text('%',
+                                        style: TextStyle(
+                                            color: AppColors.primaryDark,
+                                            fontWeight: FontWeight.bold)),
                                     const SizedBox(width: 8),
                                     Expanded(
                                       child: TextField(
                                         controller: _salesPercentageController,
-                                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                        keyboardType: const TextInputType
+                                            .numberWithOptions(decimal: true),
                                         textAlign: TextAlign.right,
-                                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                                        style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: AppColors.textPrimary),
                                         decoration: const InputDecoration(
                                           border: InputBorder.none,
                                           isDense: true,
@@ -190,16 +237,28 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                                   ],
                                 ),
                               ),
-                              const Text('ضبط النسبة المستهدفة', style: TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                              const Text('ضبط النسبة المستهدفة',
+                                  style: TextStyle(
+                                      fontSize: 11,
+                                      color: AppColors.textSecondary)),
                             ],
                           ),
                           const SizedBox(height: 12),
                           const Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('الحد الأدنى 2.0%', style: TextStyle(fontSize: 9, color: AppColors.textSecondary)),
-                              Text('المرجعي 5.0%', style: TextStyle(fontSize: 9, color: AppColors.textSecondary)),
-                              Text('الحد الأقصى 10.0%', style: TextStyle(fontSize: 9, color: AppColors.textSecondary)),
+                              Text('الحد الأدنى 2.0%',
+                                  style: TextStyle(
+                                      fontSize: 9,
+                                      color: AppColors.textSecondary)),
+                              Text('المرجعي 5.0%',
+                                  style: TextStyle(
+                                      fontSize: 9,
+                                      color: AppColors.textSecondary)),
+                              Text('الحد الأقصى 10.0%',
+                                  style: TextStyle(
+                                      fontSize: 9,
+                                      color: AppColors.textSecondary)),
                             ],
                           ),
                         ],
@@ -209,12 +268,16 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(Icons.info_outline, size: 14, color: AppColors.info),
+                        const Icon(Icons.info_outline,
+                            size: 14, color: AppColors.info),
                         const SizedBox(width: 6),
                         Expanded(
                           child: Text(
                             'تُطبق على جميع صفقات المتاجر، المنتجات الجديدة، ومبيعات الأجهزة المباشرة دون استثناءات محلية.',
-                            style: TextStyle(fontSize: 10, color: Colors.grey.shade600, height: 1.4),
+                            style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.grey.shade600,
+                                height: 1.4),
                           ),
                         ),
                       ],
@@ -235,16 +298,28 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                       children: [
                         Container(
                           width: 80,
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                          decoration: BoxDecoration(color: AppColors.surfaceLight, borderRadius: BorderRadius.circular(6)),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 2),
+                          decoration: BoxDecoration(
+                              color: AppColors.surfaceLight,
+                              borderRadius: BorderRadius.circular(6)),
                           child: Row(
                             children: [
-                              const Text('% ', style: TextStyle(fontSize: 10, color: AppColors.primaryDark, fontWeight: FontWeight.bold)),
+                              const Text('% ',
+                                  style: TextStyle(
+                                      fontSize: 10,
+                                      color: AppColors.primaryDark,
+                                      fontWeight: FontWeight.bold)),
                               Expanded(
                                 child: TextField(
                                   controller: _settlementFeeController,
-                                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                                  style: const TextStyle(fontSize: 10, color: AppColors.primaryDark, fontWeight: FontWeight.bold),
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                          decimal: true),
+                                  style: const TextStyle(
+                                      fontSize: 10,
+                                      color: AppColors.primaryDark,
+                                      fontWeight: FontWeight.bold),
                                   decoration: const InputDecoration(
                                     border: InputBorder.none,
                                     isDense: true,
@@ -255,18 +330,27 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                             ],
                           ),
                         ),
-                        const Text('رسم التسوية الحالية', style: TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                        const Text('رسم التسوية الحالية',
+                            style: TextStyle(
+                                fontSize: 11, color: AppColors.textSecondary)),
                       ],
                     ),
                     const SizedBox(height: 4),
                     Align(
                       alignment: Alignment.centerRight,
-                      child: Text('${_settlementFeeController.text}%', style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                      child: Text('${_settlementFeeController.text}%',
+                          style: const TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textPrimary)),
                     ),
                     const SizedBox(height: 12),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      decoration: BoxDecoration(color: AppColors.surfaceMuted, borderRadius: BorderRadius.circular(12)),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
+                      decoration: BoxDecoration(
+                          color: AppColors.surfaceMuted,
+                          borderRadius: BorderRadius.circular(12)),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -282,9 +366,17 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              const Text('رسم ثابت إضافي (تسوية فورية)', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                              const Text('رسم ثابت إضافي (تسوية فورية)',
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.textPrimary)),
                               const SizedBox(height: 2),
-                              Text('تطبيق رسم مقطوع بقيمة 5.00 ر.س لكل تسوية مستعجلة', style: TextStyle(fontSize: 9, color: Colors.grey.shade600)),
+                              Text(
+                                  'تطبيق رسم مقطوع بقيمة 5.00 ر.س لكل تسوية مستعجلة',
+                                  style: TextStyle(
+                                      fontSize: 9,
+                                      color: Colors.grey.shade600)),
                             ],
                           ),
                         ],
@@ -293,16 +385,23 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                     const SizedBox(height: 12),
                     Container(
                       padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(color: AppColors.surfaceLight, borderRadius: BorderRadius.circular(10)),
+                      decoration: BoxDecoration(
+                          color: AppColors.surfaceLight,
+                          borderRadius: BorderRadius.circular(10)),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Icon(Icons.pie_chart_outline, size: 14, color: Colors.blue.shade700),
+                              Icon(Icons.pie_chart_outline,
+                                  size: 14, color: Colors.blue.shade700),
                               const SizedBox(width: 4),
-                              Text('تفصيل التغطية التكلفة:', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.blue.shade700)),
+                              Text('تفصيل التغطية التكلفة:',
+                                  style: TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue.shade700)),
                             ],
                           ),
                           const SizedBox(height: 4),
@@ -310,18 +409,27 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                             AppLocalizations.of(context)!.localeName == 'ar'
                                 ? 'تغطية مصاريف بوابات الدفع (Mada / Visa / SARIE) بنسبة 0.85%'
                                 : 'Coverage of payment gateway fees (Mada / Visa / SARIE) at 0.85%',
-                            style: const TextStyle(fontSize: 9, color: AppColors.textPrimary),
-                            textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
+                            style: const TextStyle(
+                                fontSize: 9, color: AppColors.textPrimary),
+                            textDirection:
+                                AppLocalizations.of(context)!.localeName == 'ar'
+                                    ? TextDirection.rtl
+                                    : TextDirection.ltr,
                           ),
                           const SizedBox(height: 2),
-                          const Text('+ هامش تشغيلي وقائي بنسبة 0.40%', style: TextStyle(fontSize: 9, color: AppColors.textPrimary)),
+                          const Text('+ هامش تشغيلي وقائي بنسبة 0.40%',
+                              style: TextStyle(
+                                  fontSize: 9, color: AppColors.textPrimary)),
                         ],
                       ),
                     ),
                     const SizedBox(height: 12),
                     Text(
                       'تُقتطع تلقائياً عند طلب التسوية السريعة عبر شبكة المدفوعات اللوجستية الفورية واسترداد النزاعات.',
-                      style: TextStyle(fontSize: 10, color: Colors.grey.shade600, height: 1.4),
+                      style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.grey.shade600,
+                          height: 1.4),
                       textAlign: TextAlign.right,
                     ),
                   ],
@@ -339,44 +447,73 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                          decoration: BoxDecoration(color: Colors.blue.shade50, borderRadius: BorderRadius.circular(6)),
-                          child: Text('أسطول وصلني & الشركاء', style: TextStyle(fontSize: 10, color: Colors.blue.shade800, fontWeight: FontWeight.bold)),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                              color: Colors.blue.shade50,
+                              borderRadius: BorderRadius.circular(6)),
+                          child: Text('أسطول وصلني & الشركاء',
+                              style: TextStyle(
+                                  fontSize: 10,
+                                  color: Colors.blue.shade800,
+                                  fontWeight: FontWeight.bold)),
                         ),
-                        const Text('العمولة المعتمدة حالياً', style: TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                        const Text('العمولة المعتمدة حالياً',
+                            style: TextStyle(
+                                fontSize: 11, color: AppColors.textSecondary)),
                       ],
                     ),
                     const SizedBox(height: 4),
                     Align(
                       alignment: Alignment.centerLeft,
-                      child: Text('${_deliveryCommissionType == 'percentage' ? _deliveryCommissionController.text + '%' : _deliveryFixedController.text + ' ر.س'}', style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                      child: Text(
+                          '${_deliveryCommissionType == 'percentage' ? _deliveryCommissionController.text + '%' : _deliveryFixedController.text + ' EGP'}',
+                          style: const TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textPrimary)),
                     ),
                     const SizedBox(height: 12),
-                    
+
                     // Options
                     GestureDetector(
-                      onTap: () => setState(() => _deliveryCommissionType = 'percentage'),
+                      onTap: () => setState(
+                          () => _deliveryCommissionType = 'percentage'),
                       child: Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: _deliveryCommissionType == 'percentage' ? AppColors.surfaceMuted : Colors.transparent,
+                          color: _deliveryCommissionType == 'percentage'
+                              ? AppColors.surfaceMuted
+                              : Colors.transparent,
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: _deliveryCommissionType == 'percentage' ? AppColors.cardBorder : Colors.transparent),
+                          border: Border.all(
+                              color: _deliveryCommissionType == 'percentage'
+                                  ? AppColors.cardBorder
+                                  : Colors.transparent),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
                               width: 80,
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-                              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(6), border: Border.all(color: Colors.grey.shade300)),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 2),
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(6),
+                                  border:
+                                      Border.all(color: Colors.grey.shade300)),
                               child: Row(
                                 children: [
                                   Expanded(
                                     child: TextField(
                                       controller: _deliveryCommissionController,
-                                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                                      keyboardType:
+                                          const TextInputType.numberWithOptions(
+                                              decimal: true),
+                                      style: const TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold),
                                       decoration: const InputDecoration(
                                         border: InputBorder.none,
                                         isDense: true,
@@ -384,15 +521,30 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                                       ),
                                     ),
                                   ),
-                                  const Text('%', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                                  const Text('%',
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold)),
                                 ],
                               ),
                             ),
                             Row(
                               children: [
-                                const Text('نسبة مئوية من قيمة التوصيل', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                                const Text('نسبة مئوية من قيمة التوصيل',
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.textPrimary)),
                                 const SizedBox(width: 8),
-                                Icon(_deliveryCommissionType == 'percentage' ? Icons.radio_button_checked : Icons.radio_button_unchecked, color: _deliveryCommissionType == 'percentage' ? AppColors.primaryDark : Colors.grey, size: 20),
+                                Icon(
+                                    _deliveryCommissionType == 'percentage'
+                                        ? Icons.radio_button_checked
+                                        : Icons.radio_button_unchecked,
+                                    color:
+                                        _deliveryCommissionType == 'percentage'
+                                            ? AppColors.primaryDark
+                                            : Colors.grey,
+                                    size: 20),
                               ],
                             ),
                           ],
@@ -400,28 +552,43 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () => setState(() => _deliveryCommissionType = 'fixed'),
+                      onTap: () =>
+                          setState(() => _deliveryCommissionType = 'fixed'),
                       child: Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: _deliveryCommissionType == 'fixed' ? AppColors.surfaceMuted : Colors.transparent,
+                          color: _deliveryCommissionType == 'fixed'
+                              ? AppColors.surfaceMuted
+                              : Colors.transparent,
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: _deliveryCommissionType == 'fixed' ? AppColors.cardBorder : Colors.transparent),
+                          border: Border.all(
+                              color: _deliveryCommissionType == 'fixed'
+                                  ? AppColors.cardBorder
+                                  : Colors.transparent),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Container(
                               width: 80,
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-                              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(6), border: Border.all(color: Colors.grey.shade300)),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 2),
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(6),
+                                  border:
+                                      Border.all(color: Colors.grey.shade300)),
                               child: Row(
                                 children: [
                                   Expanded(
                                     child: TextField(
                                       controller: _deliveryFixedController,
-                                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                                      style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                                      keyboardType:
+                                          const TextInputType.numberWithOptions(
+                                              decimal: true),
+                                      style: const TextStyle(
+                                          fontSize: 11,
+                                          color: AppColors.textSecondary),
                                       decoration: const InputDecoration(
                                         border: InputBorder.none,
                                         isDense: true,
@@ -429,32 +596,49 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                                       ),
                                     ),
                                   ),
-                                  const Text('ر.س', style: TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                                  const Text('EGP',
+                                      style: TextStyle(
+                                          fontSize: 11,
+                                          color: AppColors.textSecondary)),
                                 ],
                               ),
                             ),
                             Row(
                               children: [
-                                const Text('مبلغ مقطوع ثابت لكل شحنة', style: TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                                const Text('مبلغ مقطوع ثابت لكل شحنة',
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        color: AppColors.textSecondary)),
                                 const SizedBox(width: 8),
-                                Icon(_deliveryCommissionType == 'fixed' ? Icons.radio_button_checked : Icons.radio_button_unchecked, color: _deliveryCommissionType == 'fixed' ? AppColors.primaryDark : Colors.grey, size: 20),
+                                Icon(
+                                    _deliveryCommissionType == 'fixed'
+                                        ? Icons.radio_button_checked
+                                        : Icons.radio_button_unchecked,
+                                    color: _deliveryCommissionType == 'fixed'
+                                        ? AppColors.primaryDark
+                                        : Colors.grey,
+                                    size: 20),
                               ],
                             ),
                           ],
                         ),
                       ),
                     ),
-                    
+
                     const SizedBox(height: 12),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(Icons.check_circle_outline, size: 14, color: AppColors.info),
+                        const Icon(Icons.check_circle_outline,
+                            size: 14, color: AppColors.info),
                         const SizedBox(width: 6),
                         Expanded(
                           child: Text(
                             'تُحتسب على كل عملية توصيل ناجحة لمناديب أسطول وصلني والشركات اللوجستية المتعاقدة وتُودع بالمحفظة المركزية.',
-                            style: TextStyle(fontSize: 10, color: Colors.grey.shade600, height: 1.4),
+                            style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.grey.shade600,
+                                height: 1.4),
                           ),
                         ),
                       ],
@@ -480,17 +664,27 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                       children: [
                         Icon(Icons.gavel, color: AppColors.danger, size: 18),
                         SizedBox(width: 8),
-                        Text('المسوغ المحاسبي والإلزامي للرقابة', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                        Text('المسوغ المحاسبي والإلزامي للرقابة',
+                            style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.textPrimary)),
                       ],
                     ),
                     const SizedBox(height: 8),
-                    const Text('سبب وموجب تعديل النسب (إلزامي للرقابة والتدقيق المركزي):', style: TextStyle(fontSize: 10, color: AppColors.textSecondary)),
+                    const Text(
+                        'سبب وموجب تعديل النسب (إلزامي للرقابة والتدقيق المركزي):',
+                        style: TextStyle(
+                            fontSize: 10, color: AppColors.textSecondary)),
                     const SizedBox(height: 12),
                     TextField(
                       controller: _reasonController,
                       maxLines: 4,
                       textAlign: TextAlign.right,
-                      style: const TextStyle(fontSize: 12, color: AppColors.textSecondary, height: 1.5),
+                      style: const TextStyle(
+                          fontSize: 12,
+                          color: AppColors.textSecondary,
+                          height: 1.5),
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: AppColors.surfaceLight,
@@ -512,17 +706,26 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                             width: 18,
                             height: 18,
                             decoration: BoxDecoration(
-                              color: _notifyAll ? AppColors.primaryExtraDark : Colors.white,
+                              color: _notifyAll
+                                  ? AppColors.primaryExtraDark
+                                  : Colors.white,
                               borderRadius: BorderRadius.circular(4),
-                              border: Border.all(color: AppColors.primaryExtraDark),
+                              border:
+                                  Border.all(color: AppColors.primaryExtraDark),
                             ),
-                            child: _notifyAll ? const Icon(Icons.check, size: 12, color: Colors.white) : null,
+                            child: _notifyAll
+                                ? const Icon(Icons.check,
+                                    size: 12, color: Colors.white)
+                                : null,
                           ),
                           const SizedBox(width: 12),
                           const Expanded(
                             child: Text(
                               'إشعار فوري لجميع التجار والمناديب والمشرفين بتحديث قائمة الأسعار قبل 7 أيام من موعد التطبيق الإلزامي.',
-                              style: TextStyle(fontSize: 10, color: AppColors.textPrimary, height: 1.4),
+                              style: TextStyle(
+                                  fontSize: 10,
+                                  color: AppColors.textPrimary,
+                                  height: 1.4),
                               textAlign: TextAlign.right,
                             ),
                           ),
@@ -545,10 +748,13 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                         backgroundColor: AppColors.surfaceLight,
                         side: const BorderSide(color: Colors.transparent),
                         padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
                       ),
                       onPressed: () => Navigator.pop(context),
-                      child: const Text('إلغاء', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                      child: const Text('إلغاء',
+                          style: TextStyle(
+                              fontSize: 13, fontWeight: FontWeight.bold)),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -559,15 +765,23 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                         backgroundColor: AppColors.primaryExtraDark,
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
                         elevation: 0,
                       ),
-                      icon: const Icon(Icons.drive_file_rename_outline, size: 18),
+                      icon:
+                          const Icon(Icons.drive_file_rename_outline, size: 18),
                       onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('تم رفع التعديلات للسجل المالي بنجاح')));
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text(
+                                    'تم رفع التعديلات للسجل المالي بنجاح')));
                         Navigator.pop(context);
                       },
-                      label: const Text('حفظ وإرسال مصفوفة النسب رسمياً للإدارة', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                      label: const Text(
+                          'حفظ وإرسال مصفوفة النسب رسمياً للإدارة',
+                          style: TextStyle(
+                              fontSize: 11, fontWeight: FontWeight.bold)),
                     ),
                   ),
                 ],
@@ -576,9 +790,13 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
               const Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Icon(Icons.lock_outline, size: 12, color: AppColors.textSecondary),
+                  Icon(Icons.lock_outline,
+                      size: 12, color: AppColors.textSecondary),
                   SizedBox(width: 6),
-                  Text('سيتم قيد هذا الإجراء تلقائياً في سجل التدقيق المالي المركزي SHA-256', style: TextStyle(fontSize: 9, color: AppColors.textSecondary)),
+                  Text(
+                      'سيتم قيد هذا الإجراء تلقائياً في سجل التدقيق المالي المركزي SHA-256',
+                      style: TextStyle(
+                          fontSize: 9, color: AppColors.textSecondary)),
                 ],
               ),
               const SizedBox(height: 20),
@@ -589,7 +807,8 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
     );
   }
 
-  Widget _buildCard({required IconData icon, required String title, required Widget child}) {
+  Widget _buildCard(
+      {required IconData icon, required String title, required Widget child}) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -605,7 +824,9 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
             children: [
               Container(
                 padding: const EdgeInsets.all(6),
-                decoration: BoxDecoration(color: AppColors.surfaceLight, borderRadius: BorderRadius.circular(8)),
+                decoration: BoxDecoration(
+                    color: AppColors.surfaceLight,
+                    borderRadius: BorderRadius.circular(8)),
                 child: Icon(icon, size: 16, color: AppColors.primaryDark),
               ),
               const SizedBox(width: 8),
@@ -613,7 +834,10 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                 child: Text(
                   title,
                   textAlign: TextAlign.right,
-                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                  style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.textPrimary),
                 ),
               ),
             ],

@@ -257,7 +257,7 @@ abstract class AppLocalizations {
   /// No description provided for @currencySar.
   ///
   /// In ar, this message translates to:
-  /// **'ر.س'**
+  /// **'ج.م'**
   String get currencySar;
 
   /// No description provided for @totalAggregatedLiquidity.

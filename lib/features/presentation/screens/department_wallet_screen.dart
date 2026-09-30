@@ -16,13 +16,21 @@ class DepartmentWalletScreen extends StatelessWidget {
 
     switch (type) {
       case DepartmentType.merchants:
-        return isArabic ? 'محفظة قسم التجار والمتاجر' : 'Merchants & Retail Wallet';
+        return isArabic
+            ? 'محفظة قسم التجار والمتاجر'
+            : 'Merchants & Retail Wallet';
       case DepartmentType.usedEscrow:
-        return isArabic ? 'محفظة المستعمل وعربون «وصلني»' : 'Used Escrow & Waslni Wallet';
+        return isArabic
+            ? 'محفظة المستعمل وعربون «وصلني»'
+            : 'Used Escrow & Waslni Wallet';
       case DepartmentType.services:
-        return isArabic ? 'محفظة طلبات الخدمات والصيانة' : 'Service Requests & Maintenance Wallet';
+        return isArabic
+            ? 'محفظة طلبات الخدمات والصيانة'
+            : 'Service Requests & Maintenance Wallet';
       case DepartmentType.couriers:
-        return isArabic ? 'محفظة مناديب التوصيل واللوجستيات' : 'Delivery Agents & Logistics Wallet';
+        return isArabic
+            ? 'محفظة مناديب التوصيل واللوجستيات'
+            : 'Delivery Agents & Logistics Wallet';
     }
   }
 
@@ -66,7 +74,7 @@ class DepartmentWalletScreen extends StatelessWidget {
         return {
           'مناديب نشطين': '1,200',
           'مستحقات معلقة': '45 (18 ألف)',
-          'رسوم شحنة': '3 ر.س',
+          'رسوم شحنة': '3 EGP',
           'icon1': 'local_shipping',
         };
     }
@@ -210,7 +218,10 @@ class DepartmentWalletScreen extends StatelessWidget {
           ),
           title: Text(
             _screenTitleFor(context),
-            style: const TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 16),
+            style: const TextStyle(
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.bold,
+                fontSize: 16),
           ),
           centerTitle: true,
           actions: [
@@ -243,44 +254,64 @@ class DepartmentWalletScreen extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            const Icon(Icons.account_balance_wallet, color: Colors.white, size: 18),
+                            const Icon(Icons.account_balance_wallet,
+                                color: Colors.white, size: 18),
                             const SizedBox(width: 8),
-                            Text(_screenTitleFor(context), style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
+                            Text(_screenTitleFor(context),
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold)),
                           ],
                         ),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
                             color: Colors.white.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: const Row(
                             children: [
-                              Text('مدقق ومعتمد', style: TextStyle(color: Colors.white, fontSize: 9)),
+                              Text('مدقق ومعتمد',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 9)),
                               SizedBox(width: 4),
-                              Icon(Icons.verified, color: Colors.blueAccent, size: 12),
+                              Icon(Icons.verified,
+                                  color: Colors.blueAccent, size: 12),
                             ],
                           ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 20),
-                    const Text('إجمالي الرصيد التجميعي المتاح للتسوية والسحب', style: TextStyle(color: Colors.white60, fontSize: 11)),
+                    const Text('إجمالي الرصيد التجميعي المتاح للتسوية والسحب',
+                        style: TextStyle(color: Colors.white60, fontSize: 11)),
                     const SizedBox(height: 8),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          CurrencyFormatter.format(_totalBalance),
-                          style: const TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold, height: 1),
+                          CurrencyFormatter.format(_totalBalance,
+                              includeCurrency: false),
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 32,
+                              fontWeight: FontWeight.bold,
+                              height: 1),
                         ),
                         const SizedBox(width: 6),
-                        const Text('ر.س', style: TextStyle(color: Colors.white70, fontSize: 14, fontWeight: FontWeight.bold)),
+                        Text(AppLocalizations.of(context)!.currencySar,
+                            style: const TextStyle(
+                                color: Colors.white70,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold)),
                       ],
                     ),
                     const SizedBox(height: 20),
-                    Container(height: 1, color: Colors.white.withValues(alpha: 0.1)),
+                    Container(
+                        height: 1, color: Colors.white.withValues(alpha: 0.1)),
                     const SizedBox(height: 16),
                     Row(
                       children: [
@@ -288,13 +319,20 @@ class DepartmentWalletScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(_stats.keys.elementAt(0), style: const TextStyle(color: Colors.white60, fontSize: 10)),
+                              Text(_stats.keys.elementAt(0),
+                                  style: const TextStyle(
+                                      color: Colors.white60, fontSize: 10)),
                               const SizedBox(height: 4),
                               Row(
                                 children: [
-                                  Text(_stats.values.elementAt(0), style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold)),
+                                  Text(_stats.values.elementAt(0),
+                                      style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold)),
                                   const SizedBox(width: 4),
-                                  Icon(_getIconData(_stats['icon1']!), color: Colors.white60, size: 14),
+                                  Icon(_getIconData(_stats['icon1']!),
+                                      color: Colors.white60, size: 14),
                                 ],
                               ),
                             ],
@@ -304,17 +342,30 @@ class DepartmentWalletScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(_stats.keys.elementAt(1), style: const TextStyle(color: Colors.white60, fontSize: 10)),
+                              Text(_stats.keys.elementAt(1),
+                                  style: const TextStyle(
+                                      color: Colors.white60, fontSize: 10)),
                               const SizedBox(height: 4),
                               Row(
                                 children: [
-                                  Text(_stats.values.elementAt(1).split(' ')[0], style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold)),
+                                  Text(_stats.values.elementAt(1).split(' ')[0],
+                                      style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold)),
                                   const SizedBox(width: 4),
-                                  const Icon(Icons.assignment_late_outlined, color: Colors.white60, size: 14),
+                                  const Icon(Icons.assignment_late_outlined,
+                                      color: Colors.white60, size: 14),
                                 ],
                               ),
                               if (_stats.values.elementAt(1).contains('('))
-                                Text(_stats.values.elementAt(1).substring(_stats.values.elementAt(1).indexOf('(')), style: const TextStyle(color: Colors.white54, fontSize: 9)),
+                                Text(
+                                    _stats.values.elementAt(1).substring(_stats
+                                        .values
+                                        .elementAt(1)
+                                        .indexOf('(')),
+                                    style: const TextStyle(
+                                        color: Colors.white54, fontSize: 9)),
                             ],
                           ),
                         ),
@@ -322,14 +373,21 @@ class DepartmentWalletScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              Text(_stats.keys.elementAt(2), style: const TextStyle(color: Colors.white60, fontSize: 10)),
+                              Text(_stats.keys.elementAt(2),
+                                  style: const TextStyle(
+                                      color: Colors.white60, fontSize: 10)),
                               const SizedBox(height: 4),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  Text(_stats.values.elementAt(2), style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold)),
+                                  Text(_stats.values.elementAt(2),
+                                      style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold)),
                                   const SizedBox(width: 4),
-                                  const Icon(Icons.pie_chart_outline, color: Colors.white60, size: 14),
+                                  const Icon(Icons.pie_chart_outline,
+                                      color: Colors.white60, size: 14),
                                 ],
                               ),
                             ],
@@ -350,13 +408,22 @@ class DepartmentWalletScreen extends StatelessWidget {
                     children: [
                       Icon(Icons.tune, color: AppColors.primaryDark, size: 18),
                       SizedBox(width: 8),
-                      Text('الرقابة وحسابات المتاجر', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                      Text('الرقابة وحسابات المتاجر',
+                          style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textPrimary)),
                     ],
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(color: AppColors.surfaceLight, borderRadius: BorderRadius.circular(6)),
-                    child: const Text('سداد و سريع متزامنة', style: TextStyle(fontSize: 9, color: AppColors.textSecondary)),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                        color: AppColors.surfaceLight,
+                        borderRadius: BorderRadius.circular(6)),
+                    child: const Text('سداد و سريع متزامنة',
+                        style: TextStyle(
+                            fontSize: 9, color: AppColors.textSecondary)),
                   ),
                 ],
               ),
@@ -369,13 +436,19 @@ class DepartmentWalletScreen extends StatelessWidget {
                   children: [
                     _buildFilterChip('الكل 142', true),
                     const SizedBox(width: 8),
-                    _buildFilterChip('أعلى رصيد', false, icon: Icons.trending_up),
+                    _buildFilterChip('أعلى رصيد', false,
+                        icon: Icons.trending_up),
                     const SizedBox(width: 8),
-                    _buildFilterChip('قيد السحب (8)', false, icon: Icons.hourglass_empty),
+                    _buildFilterChip('قيد السحب (8)', false,
+                        icon: Icons.hourglass_empty),
                     const SizedBox(width: 8),
-                    _buildFilterChip('', false, icon: Icons.lock_outline, isIconOnly: true),
+                    _buildFilterChip('', false,
+                        icon: Icons.lock_outline, isIconOnly: true),
                     const SizedBox(width: 8),
-                    _buildFilterChip('', false, icon: Icons.warning_amber_rounded, isIconOnly: true, iconColor: AppColors.danger),
+                    _buildFilterChip('', false,
+                        icon: Icons.warning_amber_rounded,
+                        isIconOnly: true,
+                        iconColor: AppColors.danger),
                   ],
                 ),
               ),
@@ -383,9 +456,9 @@ class DepartmentWalletScreen extends StatelessWidget {
 
               // 4. List Items
               ..._listItems.map((item) => Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: _buildListItemCard(context, item),
-              )),
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: _buildListItemCard(context, item),
+                  )),
 
               // 5. Bottom Info
               Container(
@@ -399,27 +472,44 @@ class DepartmentWalletScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text('حوكمة التسويات والضوابط البنكية (CFO)', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.primaryDark)),
+                        const Text('حوكمة التسويات والضوابط البنكية (CFO)',
+                            style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.primaryDark)),
                         const SizedBox(width: 8),
-                        Icon(Icons.verified_user_outlined, color: Colors.blue.shade700, size: 18),
+                        Icon(Icons.verified_user_outlined,
+                            color: Colors.blue.shade700, size: 18),
                       ],
                     ),
                     const SizedBox(height: 12),
                     Text(
                       'تخضع جميع تحويلات المحفظة لمطابقة يومية تلقائية مع شبكة "سريع" للمدفوعات الفورية ونظام "سداد"، وفقاً لتعليمات البنك المركزي السعودي يتم حجز العمليات المشتبه بها تلقائياً للتدقيق اليدوي من قبل إدارة الامتثال المالي ببرواح المازوري.',
-                      style: TextStyle(fontSize: 10, color: Colors.grey.shade700, height: 1.5),
+                      style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.grey.shade700,
+                          height: 1.5),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('ISO-20022 COMPLIANT', style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: AppColors.textSecondary), textDirection: TextDirection.ltr),
+                        const Text('ISO-20022 COMPLIANT',
+                            style: TextStyle(
+                                fontSize: 9,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.textSecondary),
+                            textDirection: TextDirection.ltr),
                         Row(
                           children: [
-                            const Text('آخر مطابقة بنكية: اليوم 02:45 م', style: TextStyle(fontSize: 9, color: AppColors.textSecondary)),
+                            const Text('آخر مطابقة بنكية: اليوم 02:45 م',
+                                style: TextStyle(
+                                    fontSize: 9,
+                                    color: AppColors.textSecondary)),
                             const SizedBox(width: 4),
-                            Icon(Icons.circle, size: 6, color: Colors.blue.shade400),
+                            Icon(Icons.circle,
+                                size: 6, color: Colors.blue.shade400),
                           ],
                         ),
                       ],
@@ -435,19 +525,26 @@ class DepartmentWalletScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildFilterChip(String title, bool isSelected, {IconData? icon, bool isIconOnly = false, Color? iconColor}) {
+  Widget _buildFilterChip(String title, bool isSelected,
+      {IconData? icon, bool isIconOnly = false, Color? iconColor}) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: isIconOnly ? 10 : 16, vertical: 8),
+      padding:
+          EdgeInsets.symmetric(horizontal: isIconOnly ? 10 : 16, vertical: 8),
       decoration: BoxDecoration(
         color: isSelected ? AppColors.primaryExtraDark : Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: isSelected ? AppColors.primaryExtraDark : AppColors.cardBorder),
+        border: Border.all(
+            color:
+                isSelected ? AppColors.primaryExtraDark : AppColors.cardBorder),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           if (icon != null) ...[
-            Icon(icon, size: 14, color: iconColor ?? (isSelected ? Colors.white : Colors.blue.shade700)),
+            Icon(icon,
+                size: 14,
+                color: iconColor ??
+                    (isSelected ? Colors.white : Colors.blue.shade700)),
             if (!isIconOnly) const SizedBox(width: 6),
           ],
           if (!isIconOnly)
@@ -473,7 +570,10 @@ class DepartmentWalletScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.cardBorder),
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 8, offset: const Offset(0, 4)),
+          BoxShadow(
+              color: Colors.black.withValues(alpha: 0.02),
+              blurRadius: 8,
+              offset: const Offset(0, 4)),
         ],
       ),
       child: Column(
@@ -492,7 +592,8 @@ class DepartmentWalletScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Center(
-                    child: Icon(Icons.storefront, color: Colors.white, size: 20), // Generic icon
+                    child: Icon(Icons.storefront,
+                        color: Colors.white, size: 20), // Generic icon
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -500,30 +601,48 @@ class DepartmentWalletScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(item['title'], style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                      Text(item['title'],
+                          style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textPrimary)),
                       const SizedBox(height: 4),
                       Row(
                         children: [
-                          const Icon(Icons.security, size: 12, color: Colors.blue),
+                          const Icon(Icons.security,
+                              size: 12, color: Colors.blue),
                           const SizedBox(width: 4),
-                          Expanded(child: Text(item['id'], style: const TextStyle(fontSize: 10, color: AppColors.textSecondary), textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr, overflow: TextOverflow.ellipsis)),
+                          Expanded(
+                              child: Text(item['id'],
+                                  style: const TextStyle(
+                                      fontSize: 10,
+                                      color: AppColors.textSecondary),
+                                  textDirection: isArabic
+                                      ? TextDirection.rtl
+                                      : TextDirection.ltr,
+                                  overflow: TextOverflow.ellipsis)),
                         ],
                       ),
                     ],
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.blue.shade50,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Text(item['status'], style: TextStyle(fontSize: 9, color: Colors.blue.shade700, fontWeight: FontWeight.bold)),
+                  child: Text(item['status'],
+                      style: TextStyle(
+                          fontSize: 9,
+                          color: Colors.blue.shade700,
+                          fontWeight: FontWeight.bold)),
                 ),
               ],
             ),
           ),
-          
+
           // Amounts Box
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -540,14 +659,29 @@ class DepartmentWalletScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('الرصيد المتاح للسحب', style: TextStyle(fontSize: 10, color: AppColors.textSecondary)),
+                        const Text('الرصيد المتاح للسحب',
+                            style: TextStyle(
+                                fontSize: 10, color: AppColors.textSecondary)),
                         const SizedBox(height: 4),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Flexible(child: Text(CurrencyFormatter.format(item['available']), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primaryExtraDark), maxLines: 1, overflow: TextOverflow.ellipsis)),
+                            Flexible(
+                                child: Text(
+                                    CurrencyFormatter.format(item['available'],
+                                        includeCurrency: false),
+                                    style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.primaryExtraDark),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis)),
                             const SizedBox(width: 2),
-                            const Text('ر.س', style: TextStyle(fontSize: 10, color: AppColors.primaryDark, fontWeight: FontWeight.bold)),
+                            Text(AppLocalizations.of(context)!.currencySar,
+                                style: const TextStyle(
+                                    fontSize: 10,
+                                    color: AppColors.primaryDark,
+                                    fontWeight: FontWeight.bold)),
                           ],
                         ),
                       ],
@@ -561,14 +695,29 @@ class DepartmentWalletScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('تحت التدقيق والتسوية', style: TextStyle(fontSize: 10, color: AppColors.textSecondary)),
+                        const Text('تحت التدقيق والتسوية',
+                            style: TextStyle(
+                                fontSize: 10, color: AppColors.textSecondary)),
                         const SizedBox(height: 4),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Flexible(child: Text(CurrencyFormatter.format(item['pending']), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.primaryDark), maxLines: 1, overflow: TextOverflow.ellipsis)),
+                            Flexible(
+                                child: Text(
+                                    CurrencyFormatter.format(item['pending'],
+                                        includeCurrency: false),
+                                    style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.primaryDark),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis)),
                             const SizedBox(width: 2),
-                            const Text('ر.س معلق', style: TextStyle(fontSize: 9, color: AppColors.textSecondary)),
+                            Text(
+                                '${AppLocalizations.of(context)!.currencySar} ${isArabic ? 'معلق' : 'pending'}',
+                                style: const TextStyle(
+                                    fontSize: 9,
+                                    color: AppColors.textSecondary)),
                           ],
                         ),
                       ],
@@ -578,9 +727,9 @@ class DepartmentWalletScreen extends StatelessWidget {
               ],
             ),
           ),
-          
+
           const SizedBox(height: 12),
-          
+
           // Bottom Info Row
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -589,24 +738,30 @@ class DepartmentWalletScreen extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.shopping_bag_outlined, size: 14, color: AppColors.textSecondary),
+                    const Icon(Icons.shopping_bag_outlined,
+                        size: 14, color: AppColors.textSecondary),
                     const SizedBox(width: 6),
-                    Text('المبيعات المكتملة للشهر: ${item['operations']} عملية', style: const TextStyle(fontSize: 10, color: AppColors.textPrimary)),
+                    Text('المبيعات المكتملة للشهر: ${item['operations']} عملية',
+                        style: const TextStyle(
+                            fontSize: 10, color: AppColors.textPrimary)),
                   ],
                 ),
                 Row(
                   children: [
-                    Icon(item['bankIcon'], size: 14, color: Colors.blue.shade700),
+                    Icon(item['bankIcon'],
+                        size: 14, color: Colors.blue.shade700),
                     const SizedBox(width: 4),
-                    Text(item['bankText'], style: TextStyle(fontSize: 10, color: Colors.blue.shade700)),
+                    Text(item['bankText'],
+                        style: TextStyle(
+                            fontSize: 10, color: Colors.blue.shade700)),
                   ],
                 ),
               ],
             ),
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Action Button
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -617,7 +772,8 @@ class DepartmentWalletScreen extends StatelessWidget {
                   backgroundColor: AppColors.primaryExtraDark,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 12),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
                   elevation: 0,
                 ),
                 icon: const Icon(Icons.receipt_long, size: 16),
@@ -633,7 +789,9 @@ class DepartmentWalletScreen extends StatelessWidget {
                     ),
                   );
                 },
-                label: const Text('عرض سجل العمليات', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                label: const Text('عرض سجل العمليات',
+                    style:
+                        TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
               ),
             ),
           ),
@@ -644,11 +802,16 @@ class DepartmentWalletScreen extends StatelessWidget {
 
   IconData _getIconData(String name) {
     switch (name) {
-      case 'storefront': return Icons.storefront;
-      case 'handshake': return Icons.handshake;
-      case 'build': return Icons.build;
-      case 'local_shipping': return Icons.local_shipping;
-      default: return Icons.account_balance_wallet;
+      case 'storefront':
+        return Icons.storefront;
+      case 'handshake':
+        return Icons.handshake;
+      case 'build':
+        return Icons.build;
+      case 'local_shipping':
+        return Icons.local_shipping;
+      default:
+        return Icons.account_balance_wallet;
     }
   }
 }

@@ -21,7 +21,8 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
   @override
   void initState() {
     super.initState();
-    _cubit = FinanceDashboardCubit(getFinanceSummaryUseCase: sl())..loadDashboardData();
+    _cubit = FinanceDashboardCubit(getFinanceSummaryUseCase: sl())
+      ..loadDashboardData();
   }
 
   @override
@@ -52,8 +53,13 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
               ),
             ),
             title: Text(
-              isArabic ? 'إظهار الطلبات المعلقة والمجمدة' : 'Frozen & Pending Requests',
-              style: const TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold, fontSize: 16),
+              isArabic
+                  ? 'إظهار الطلبات المعلقة والمجمدة'
+                  : 'Frozen & Pending Requests',
+              style: const TextStyle(
+                  color: AppColors.textPrimary,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16),
             ),
             actions: [
               IconButton(
@@ -69,13 +75,15 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
           body: BlocBuilder<FinanceDashboardCubit, FinanceDashboardState>(
             builder: (context, state) {
               if (state is FinanceDashboardLoading) {
-                return const Center(child: CircularProgressIndicator(color: AppColors.primaryDark));
+                return const Center(
+                    child: CircularProgressIndicator(
+                        color: AppColors.primaryDark));
               } else if (state is FinanceDashboardLoaded) {
                 // Here we simulate fetching the frozen requests from the data we loaded or direct call.
-                // For demonstration, we'll construct them statically matching the UI, 
+                // For demonstration, we'll construct them statically matching the UI,
                 // but realistically they should come from the cubit or usecase.
                 // The prompt mentions "الاعلانات الي هتكون ظاهره في هذه الشاشه هي نفس الاعلانات الي ظاهره في شاشة طلبات السحب... ولكن ستكون فقط الاعلانات الي حالتها معلق او مجمد"
-                // Let's create the mock ones according to the screenshot for visual pixel-perfection, 
+                // Let's create the mock ones according to the screenshot for visual pixel-perfection,
                 // but structured to be filtered.
 
                 final List<Map<String, dynamic>> frozenRequests = [
@@ -89,7 +97,8 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                     'amount': 17955.00,
                     'grossAmount': 18900.00,
                     'feeAmount': 945.00,
-                    'reason': 'سبب التجميد: بلاغ نزاع مفتوح #CMP-1042 مع شبهة تلاعب في عروض ترويجية.',
+                    'reason':
+                        'سبب التجميد: بلاغ نزاع مفتوح #CMP-1042 مع شبهة تلاعب في عروض ترويجية.',
                     'supervisor': 'أ. سعد العتيبي',
                     'timeText': 'اليوم • منذ 4 ساعات',
                     'actionButton': 'إعادة العمل وفك التجميد للصرف',
@@ -123,7 +132,8 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                     'grossAmount': null,
                     'feeAmount': null,
                     'ibanError': 'SA44*************0199',
-                    'reason': 'سبب التجميد: فشل التحقق الآلي من تطابق اسم المستفيد مع السجل التجاري في البنك المركزي السعودي.',
+                    'reason':
+                        'سبب التجميد: فشل التحقق الآلي من تطابق اسم المستفيد مع السجل التجاري في البنك المركزي السعودي.',
                     'supervisor': '',
                     'timeText': '25 يناير 2025',
                     'actionButton': 'إعادة التحقق وتنشيط الحوالة',
@@ -138,7 +148,8 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                   return req['type'] == _selectedFilter;
                 }).toList();
 
-                final double totalAmount = filteredRequests.fold(0.0, (sum, req) => sum + (req['amount'] as double));
+                final double totalAmount = filteredRequests.fold(
+                    0.0, (sum, req) => sum + (req['amount'] as double));
                 final int totalCount = filteredRequests.length;
 
                 return Column(
@@ -146,7 +157,8 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                     Expanded(
                       child: SingleChildScrollView(
                         physics: const BouncingScrollPhysics(),
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 20),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
@@ -161,7 +173,8 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                                 children: [
                                   const Text(
                                     'إجمالي المبالغ والعمليات المجمدة احترازياً',
-                                    style: TextStyle(color: Colors.white70, fontSize: 12),
+                                    style: TextStyle(
+                                        color: Colors.white70, fontSize: 12),
                                   ),
                                   const SizedBox(height: 8),
                                   Row(
@@ -170,18 +183,27 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                                     children: [
                                       Text(
                                         CurrencyFormatter.format(totalAmount),
-                                        style: const TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold, height: 1),
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 32,
+                                            fontWeight: FontWeight.bold,
+                                            height: 1),
                                       ),
                                       const SizedBox(width: 4),
-                                      const Text(
-                                        'ر.س',
-                                        style: TextStyle(color: Colors.white70, fontSize: 14, fontWeight: FontWeight.bold),
+                                      Text(
+                                        AppLocalizations.of(context)!
+                                            .currencySar,
+                                        style: TextStyle(
+                                            color: Colors.white70,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold),
                                       ),
                                     ],
                                   ),
                                   const SizedBox(height: 16),
                                   Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 10),
                                     decoration: BoxDecoration(
                                       color: Colors.white.withOpacity(0.05),
                                       borderRadius: BorderRadius.circular(10),
@@ -191,23 +213,31 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                                         Container(
                                           padding: const EdgeInsets.all(6),
                                           decoration: BoxDecoration(
-                                            color: Colors.white.withOpacity(0.1),
+                                            color:
+                                                Colors.white.withOpacity(0.1),
                                             shape: BoxShape.circle,
                                           ),
-                                          child: const Icon(Icons.lock_outline, color: Colors.white70, size: 16),
+                                          child: const Icon(Icons.lock_outline,
+                                              color: Colors.white70, size: 16),
                                         ),
                                         const SizedBox(width: 12),
                                         Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               '$totalCount طلبات مجمده',
-                                              style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+                                              style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold),
                                             ),
                                             const SizedBox(height: 2),
                                             const Text(
                                               'بروتوكول المادة 18 مكافحة الاحتيال',
-                                              style: TextStyle(color: Colors.white60, fontSize: 10),
+                                              style: TextStyle(
+                                                  color: Colors.white60,
+                                                  fontSize: 10),
                                             ),
                                           ],
                                         ),
@@ -226,17 +256,23 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                                 children: [
                                   _buildFilterChip('الكل', count: totalCount),
                                   const SizedBox(width: 8),
-                                  _buildFilterChip('تجار ومتاجر', icon: Icons.storefront),
+                                  _buildFilterChip('تجار ومتاجر',
+                                      icon: Icons.storefront),
                                   const SizedBox(width: 8),
-                                  _buildFilterChip('مقدمو خدمات', icon: Icons.handyman_outlined),
+                                  _buildFilterChip('مقدمو خدمات',
+                                      icon: Icons.handyman_outlined),
                                   const SizedBox(width: 8),
-                                  _buildFilterChip('المشرفين', icon: Icons.supervisor_account_outlined),
+                                  _buildFilterChip('المشرفين',
+                                      icon: Icons.supervisor_account_outlined),
                                   const SizedBox(width: 8),
-                                  _buildFilterChip('المناديب', icon: Icons.local_shipping_outlined),
+                                  _buildFilterChip('المناديب',
+                                      icon: Icons.local_shipping_outlined),
                                   const SizedBox(width: 8),
-                                  _buildFilterChip('مستخدمين', icon: Icons.person_outline),
+                                  _buildFilterChip('مستخدمين',
+                                      icon: Icons.person_outline),
                                   const SizedBox(width: 8),
-                                  _buildFilterChip('اعلانات', icon: Icons.campaign_outlined),
+                                  _buildFilterChip('اعلانات',
+                                      icon: Icons.campaign_outlined),
                                 ],
                               ),
                             ),
@@ -244,22 +280,24 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
 
                             // 3. Requests List
                             ...filteredRequests.map((req) => Padding(
-                              padding: const EdgeInsets.only(bottom: 16),
-                              child: _buildRequestCard(req),
-                            )),
-                            
+                                  padding: const EdgeInsets.only(bottom: 16),
+                                  child: _buildRequestCard(req),
+                                )),
                           ],
                         ),
                       ),
                     ),
-                    
+
                     // 4. Bottom Sticky Actions
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         boxShadow: [
-                          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, -5)),
+                          BoxShadow(
+                              color: Colors.black.withOpacity(0.05),
+                              blurRadius: 10,
+                              offset: const Offset(0, -5)),
                         ],
                       ),
                       child: Column(
@@ -271,13 +309,19 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: const Color(0xFFE2E8F0),
                                 foregroundColor: AppColors.textPrimary,
-                                padding: const EdgeInsets.symmetric(vertical: 14),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 14),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
                                 elevation: 0,
                               ),
                               icon: const Icon(Icons.ios_share, size: 18),
                               onPressed: () {},
-                              label: const Text('تصدير بيان الأموال المجمدة (PDF / Excel)', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                              label: const Text(
+                                  'تصدير بيان الأموال المجمدة (PDF / Excel)',
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold)),
                             ),
                           ),
                           const SizedBox(height: 10),
@@ -287,15 +331,22 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                               style: OutlinedButton.styleFrom(
                                 foregroundColor: AppColors.textSecondary,
                                 backgroundColor: const Color(0xFFF8FAFC),
-                                side: const BorderSide(color: Colors.transparent),
-                                padding: const EdgeInsets.symmetric(vertical: 14),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                side:
+                                    const BorderSide(color: Colors.transparent),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 14),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
                               ),
                               icon: const Icon(Icons.sync, size: 18),
                               onPressed: () {
                                 _cubit.loadDashboardData();
                               },
-                              label: const Text('تحديث حالة الحركات ومزامنة الرقابة اللحظية', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                              label: const Text(
+                                  'تحديث حالة الحركات ومزامنة الرقابة اللحظية',
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold)),
                             ),
                           ),
                         ],
@@ -331,7 +382,9 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             if (icon != null) ...[
-              Icon(icon, size: 16, color: isSelected ? Colors.white : AppColors.textSecondary),
+              Icon(icon,
+                  size: 16,
+                  color: isSelected ? Colors.white : AppColors.textSecondary),
               const SizedBox(width: 6),
             ],
             Text(
@@ -366,24 +419,41 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: req['type'] == 'تجار ومتاجر' ? Colors.red.shade50 : (req['type'] == 'مقدمو خدمات' ? Colors.blue.shade50 : AppColors.surfaceLight),
+                    color: req['type'] == 'تجار ومتاجر'
+                        ? Colors.red.shade50
+                        : (req['type'] == 'مقدمو خدمات'
+                            ? Colors.blue.shade50
+                            : AppColors.surfaceLight),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Icon(req['icon'], size: 20, color: req['type'] == 'تجار ومتاجر' ? Colors.red.shade700 : (req['type'] == 'مقدمو خدمات' ? Colors.blue.shade700 : AppColors.primaryDark)),
+                  child: Icon(req['icon'],
+                      size: 20,
+                      color: req['type'] == 'تجار ومتاجر'
+                          ? Colors.red.shade700
+                          : (req['type'] == 'مقدمو خدمات'
+                              ? Colors.blue.shade700
+                              : AppColors.primaryDark)),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(req['title'], style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                      Text(req['title'],
+                          style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textPrimary)),
                       const SizedBox(height: 2),
-                      Text(req['subtitle'], style: const TextStyle(fontSize: 10, color: AppColors.textSecondary)),
+                      Text(req['subtitle'],
+                          style: const TextStyle(
+                              fontSize: 10, color: AppColors.textSecondary)),
                     ],
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: AppColors.dangerLight,
                     borderRadius: BorderRadius.circular(20),
@@ -392,9 +462,18 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(req['status'], style: const TextStyle(fontSize: 10, color: AppColors.danger, fontWeight: FontWeight.bold)),
+                      Text(req['status'],
+                          style: const TextStyle(
+                              fontSize: 10,
+                              color: AppColors.danger,
+                              fontWeight: FontWeight.bold)),
                       const SizedBox(width: 4),
-                      Icon(req['status'] == 'تعارض آيبان' ? Icons.warning_amber_rounded : Icons.pause_circle_outline, size: 12, color: AppColors.danger),
+                      Icon(
+                          req['status'] == 'تعارض آيبان'
+                              ? Icons.warning_amber_rounded
+                              : Icons.pause_circle_outline,
+                          size: 12,
+                          color: AppColors.danger),
                     ],
                   ),
                 ),
@@ -412,15 +491,33 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(req['ibanError'] != null ? 'المبلغ المعلق للحوالة:' : 'المبلغ المحتجز للتجميد:', style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                    Text(
+                        req['ibanError'] != null
+                            ? 'المبلغ المعلق للحوالة:'
+                            : 'المبلغ المحتجز للتجميد:',
+                        style: const TextStyle(
+                            fontSize: 11, color: AppColors.textSecondary)),
                     Expanded(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Flexible(child: Text(CurrencyFormatter.format(req['amount']), style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textPrimary), overflow: TextOverflow.ellipsis, maxLines: 1)),
+                          Flexible(
+                              child: Text(
+                                  CurrencyFormatter.format(req['amount'],
+                                      includeCurrency: false),
+                                  style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.textPrimary),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1)),
                           const SizedBox(width: 4),
-                          const Text('ر.س', style: TextStyle(fontSize: 12, color: AppColors.textPrimary, fontWeight: FontWeight.bold)),
+                          Text(AppLocalizations.of(context)!.currencySar,
+                              style: const TextStyle(
+                                  fontSize: 12,
+                                  color: AppColors.textPrimary,
+                                  fontWeight: FontWeight.bold)),
                         ],
                       ),
                     ),
@@ -431,16 +528,34 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     if (req['ibanError'] != null)
-                      Expanded(child: Text('الآيبان المسجل: ${req['ibanError']}', style: const TextStyle(fontSize: 11, color: AppColors.textSecondary), textDirection: TextDirection.ltr, textAlign: TextAlign.left, overflow: TextOverflow.ellipsis))
+                      Expanded(
+                          child: Text('الآيبان المسجل: ${req['ibanError']}',
+                              style: const TextStyle(
+                                  fontSize: 11, color: AppColors.textSecondary),
+                              textDirection: TextDirection.ltr,
+                              textAlign: TextAlign.left,
+                              overflow: TextOverflow.ellipsis))
                     else
-                      Flexible(child: Text('إجمالي المعاملة: ${CurrencyFormatter.format(req['grossAmount'])} ر.س', style: const TextStyle(fontSize: 11, color: AppColors.textSecondary), overflow: TextOverflow.ellipsis)),
-
+                      Flexible(
+                          child: Text(
+                              'إجمالي المعاملة: ${CurrencyFormatter.format(req['grossAmount'])}',
+                              style: const TextStyle(
+                                  fontSize: 11, color: AppColors.textSecondary),
+                              overflow: TextOverflow.ellipsis)),
                     const SizedBox(width: 8),
-
                     if (req['ibanError'] != null)
-                      Text('عدم تطابق اسم الحساب', style: const TextStyle(fontSize: 11, color: AppColors.danger, fontWeight: FontWeight.bold))
+                      Text('عدم تطابق اسم الحساب',
+                          style: const TextStyle(
+                              fontSize: 11,
+                              color: AppColors.danger,
+                              fontWeight: FontWeight.bold))
                     else
-                      Flexible(child: Text('خصم عمولة المنصة: ${CurrencyFormatter.format(req['feeAmount'])} ر.س', style: const TextStyle(fontSize: 11, color: AppColors.textSecondary), overflow: TextOverflow.ellipsis)),
+                      Flexible(
+                          child: Text(
+                              'خصم عمولة المنصة: ${CurrencyFormatter.format(req['feeAmount'])}',
+                              style: const TextStyle(
+                                  fontSize: 11, color: AppColors.textSecondary),
+                              overflow: TextOverflow.ellipsis)),
                   ],
                 ),
               ],
@@ -456,12 +571,20 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(req['ibanError'] != null ? Icons.do_not_disturb_alt : Icons.warning_amber_rounded, color: AppColors.danger, size: 18),
+                    Icon(
+                        req['ibanError'] != null
+                            ? Icons.do_not_disturb_alt
+                            : Icons.warning_amber_rounded,
+                        color: AppColors.danger,
+                        size: 18),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         req['reason'],
-                        style: const TextStyle(fontSize: 11, color: AppColors.textPrimary, height: 1.4),
+                        style: const TextStyle(
+                            fontSize: 11,
+                            color: AppColors.textPrimary,
+                            height: 1.4),
                       ),
                     ),
                   ],
@@ -473,18 +596,25 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                     if (req['supervisor'] != '')
                       Row(
                         children: [
-                          const Icon(Icons.assignment_ind_outlined, size: 14, color: AppColors.textMuted),
+                          const Icon(Icons.assignment_ind_outlined,
+                              size: 14, color: AppColors.textMuted),
                           const SizedBox(width: 6),
-                          Text('مشرف : ${req['supervisor']}', style: const TextStyle(fontSize: 10, color: AppColors.textSecondary)),
+                          Text('مشرف : ${req['supervisor']}',
+                              style: const TextStyle(
+                                  fontSize: 10,
+                                  color: AppColors.textSecondary)),
                         ],
                       )
                     else
                       const SizedBox(),
                     Row(
                       children: [
-                        const Icon(Icons.access_time, size: 14, color: AppColors.textMuted),
+                        const Icon(Icons.access_time,
+                            size: 14, color: AppColors.textMuted),
                         const SizedBox(width: 6),
-                        Text(req['timeText'], style: const TextStyle(fontSize: 10, color: AppColors.textSecondary)),
+                        Text(req['timeText'],
+                            style: const TextStyle(
+                                fontSize: 10, color: AppColors.textSecondary)),
                       ],
                     ),
                   ],
@@ -505,14 +635,19 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                       backgroundColor: AppColors.primaryExtraDark,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
                     ),
                     icon: Icon(req['actionIcon'] ?? Icons.lock_open, size: 16),
                     onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('تم فك التجميد ونقل الطلب لقائمة المراجعة')));
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text(
+                              'تم فك التجميد ونقل الطلب لقائمة المراجعة')));
                       // Here logic to update status to pending/approved
                     },
-                    label: Text(req['actionButton'], style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                    label: Text(req['actionButton'],
+                        style: const TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.bold)),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -520,15 +655,21 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                   width: double.infinity,
                   child: OutlinedButton.icon(
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: req['cancelIcon'] != null ? AppColors.textSecondary : AppColors.danger,
+                      foregroundColor: req['cancelIcon'] != null
+                          ? AppColors.textSecondary
+                          : AppColors.danger,
                       backgroundColor: AppColors.surfaceLight,
                       side: const BorderSide(color: Colors.transparent),
                       padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
                     ),
-                    icon: Icon(req['cancelIcon'] ?? Icons.highlight_off, size: 16),
+                    icon: Icon(req['cancelIcon'] ?? Icons.highlight_off,
+                        size: 16),
                     onPressed: () {},
-                    label: Text(req['cancelButton'], style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                    label: Text(req['cancelButton'],
+                        style: const TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.bold)),
                   ),
                 ),
               ],

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../l10n/app_localizations.dart';
-import 'settlements_screen.dart';
+import '../widgets/finance_navigation.dart';
 
 class BankReconciliationScreen extends StatelessWidget {
   const BankReconciliationScreen({super.key});
@@ -19,59 +19,67 @@ class BankReconciliationScreen extends StatelessWidget {
 
     return Directionality(
       textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF4F6F8),
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          scrolledUnderElevation: 0,
-          leading: const Padding(
-            padding: EdgeInsets.all(8),
-            child: CircleAvatar(
-              backgroundColor: AppColors.primaryDark,
-              child: Icon(Icons.shield_outlined, color: Colors.white, size: 19),
-            ),
-          ),
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                isArabic ? 'برواح المازوري' : 'Barwah Mazouri',
-                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+      child: FinanceSwipeNavigation(
+        currentIndex: 3,
+        child: Scaffold(
+          backgroundColor: const Color(0xFFF4F6F8),
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            elevation: 0,
+            scrolledUnderElevation: 0,
+            leading: const Padding(
+              padding: EdgeInsets.all(8),
+              child: CircleAvatar(
+                backgroundColor: AppColors.primaryDark,
+                child:
+                    Icon(Icons.shield_outlined, color: Colors.white, size: 19),
               ),
-              Text(
-                isArabic ? 'الإدارة المالية والحسابات' : 'Finance Management & Accounts',
-                style: const TextStyle(fontSize: 9, color: AppColors.textSecondary),
+            ),
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  isArabic ? 'برواح المازوري' : 'Barwah Mazouri',
+                  style: const TextStyle(
+                      fontSize: 15, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  isArabic
+                      ? 'الإدارة المالية والحسابات'
+                      : 'Finance Management & Accounts',
+                  style: const TextStyle(
+                      fontSize: 9, color: AppColors.textSecondary),
+                ),
+              ],
+            ),
+            actions: const [
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: CircleAvatar(
+                  radius: 15,
+                  backgroundColor: AppColors.primaryDark,
+                  child:
+                      Icon(Icons.person_outline, color: Colors.white, size: 17),
+                ),
               ),
             ],
           ),
-          actions: const [
-            Padding(
-              padding: EdgeInsets.all(10),
-              child: CircleAvatar(
-                radius: 15,
-                backgroundColor: AppColors.primaryDark,
-                child:
-                    Icon(Icons.person_outline, color: Colors.white, size: 17),
-              ),
-            ),
-          ],
+          body: ListView(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+            children: [
+              _buildScreenHeading(context),
+              const SizedBox(height: 12),
+              _buildAuthorityBanner(),
+              const SizedBox(height: 12),
+              _buildGovernmentConnection(),
+              const SizedBox(height: 14),
+              _buildAccountCard(context),
+              const SizedBox(height: 14),
+              _buildNextAccountCard(),
+            ],
+          ),
+          bottomNavigationBar: _buildBottomNavigation(context),
         ),
-        body: ListView(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
-          children: [
-            _buildScreenHeading(context),
-            const SizedBox(height: 12),
-            _buildAuthorityBanner(),
-            const SizedBox(height: 12),
-            _buildGovernmentConnection(),
-            const SizedBox(height: 14),
-            _buildAccountCard(context),
-            const SizedBox(height: 14),
-            _buildNextAccountCard(),
-          ],
-        ),
-        bottomNavigationBar: _buildBottomNavigation(context),
       ),
     );
   }
@@ -86,7 +94,9 @@ class BankReconciliationScreen extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                isArabic ? 'KYC & IBAN VERIFICATION ENGINE' : 'KYC & IBAN VERIFICATION ENGINE',
+                isArabic
+                    ? 'KYC & IBAN VERIFICATION ENGINE'
+                    : 'KYC & IBAN VERIFICATION ENGINE',
                 textAlign: isArabic ? TextAlign.left : TextAlign.left,
                 textDirection: TextDirection.ltr,
                 style: const TextStyle(fontSize: 8, color: AppColors.infoDark),
@@ -105,8 +115,11 @@ class BankReconciliationScreen extends StatelessWidget {
                       size: 11, color: AppColors.textSecondary),
                   const SizedBox(width: 4),
                   Text(
-                    isArabic ? 'امتثال مصرفي فوري' : 'Immediate banking compliance',
-                    style: const TextStyle(fontSize: 8, color: AppColors.textSecondary),
+                    isArabic
+                        ? 'امتثال مصرفي فوري'
+                        : 'Immediate banking compliance',
+                    style: const TextStyle(
+                        fontSize: 8, color: AppColors.textSecondary),
                   ),
                 ],
               ),
@@ -117,7 +130,9 @@ class BankReconciliationScreen extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         Text(
-          isArabic ? 'مطابقة الحسابات البنكية ومكافحة الاحتيال' : 'Bank account reconciliation and fraud prevention',
+          isArabic
+              ? 'مطابقة الحسابات البنكية ومكافحة الاحتيال'
+              : 'Bank account reconciliation and fraud prevention',
           textAlign: isArabic ? TextAlign.right : TextAlign.left,
           style: const TextStyle(
               fontSize: 19,
@@ -684,14 +699,11 @@ class BankReconciliationScreen extends StatelessWidget {
           const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
       unselectedLabelStyle: const TextStyle(fontSize: 10),
       elevation: 16,
-      onTap: (index) {
-        if (index == 2) {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (_) => const SettlementsScreen()));
-        } else if (index == 4) {
-          Navigator.pop(context);
-        }
-      },
+      onTap: (index) => FinanceNavigation.openTab(
+        context,
+        index,
+        currentIndex: 3,
+      ),
       items: [
         BottomNavigationBarItem(
             icon: const Icon(Icons.history_edu, size: 24),

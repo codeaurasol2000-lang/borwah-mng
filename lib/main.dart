@@ -34,8 +34,6 @@ class BarwahApp extends StatelessWidget {
       child: AnimatedBuilder(
         animation: AppLocaleController.instance,
         builder: (context, child) {
-          final isArabic = AppLocalizations.of(context)?.localeName == 'ar';
-
           return MaterialApp(
             onGenerateTitle: (context) => AppLocalizations.of(context)!.appName,
             debugShowCheckedModeBanner: false,
@@ -44,6 +42,9 @@ class BarwahApp extends StatelessWidget {
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             theme: AppTheme.lightTheme,
             builder: (context, child) {
+              final isArabic =
+                  Localizations.localeOf(context).languageCode == 'ar';
+
               return Directionality(
                 textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
                 child: child ?? const SizedBox.shrink(),
