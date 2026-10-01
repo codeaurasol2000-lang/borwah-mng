@@ -6,6 +6,7 @@ import '../../../core/utils/currency_formatter.dart';
 import '../controllers/bank_accounts/bank_accounts_cubit.dart';
 import '../controllers/bank_accounts/bank_accounts_state.dart';
 import '../../../l10n/app_localizations.dart';
+import '../widgets/finance_navigation.dart';
 
 class ExpensesManagementScreen extends StatelessWidget {
   const ExpensesManagementScreen({super.key});
@@ -51,32 +52,11 @@ class _ExpensesManagementScreenState
           l10n.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
         backgroundColor: AppColors.backgroundLight,
-        appBar: AppBar(
-          backgroundColor: AppColors.surface,
-          elevation: 0.5,
-          scrolledUnderElevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_forward_ios,
-                color: AppColors.textPrimary, size: 18),
-            onPressed: () => Navigator.pop(context),
-          ),
-          title: Text(
-            l10n.expensesManagementTitle,
-            style: const TextStyle(
-                color: AppColors.textPrimary,
-                fontWeight: FontWeight.bold,
-                fontSize: 16),
-          ),
-          centerTitle: true,
-          actions: const [
-            Padding(
-              padding: EdgeInsets.all(8.0),
-              child: CircleAvatar(
-                backgroundColor: AppColors.surfaceLight,
-                child: Icon(Icons.person_outline, color: AppColors.primaryDark),
-              ),
-            ),
-          ],
+        appBar: FinancePageAppBar(
+          title: l10n.expensesManagementTitle,
+          subtitle: l10n.financialDepartment,
+          showBackButton: true,
+          onBackPressed: () => Navigator.pop(context),
         ),
         body: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),

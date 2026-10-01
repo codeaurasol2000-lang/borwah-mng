@@ -6,6 +6,7 @@ import '../../../core/utils/currency_formatter.dart';
 import '../../../l10n/app_localizations.dart';
 import '../controllers/dashboard/finance_dashboard_cubit.dart';
 import '../controllers/dashboard/finance_dashboard_state.dart';
+import '../widgets/finance_navigation.dart';
 
 class FrozenRequestsScreen extends StatefulWidget {
   const FrozenRequestsScreen({super.key});
@@ -42,34 +43,11 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
         textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
         child: Scaffold(
           backgroundColor: AppColors.backgroundLight,
-          appBar: AppBar(
-            backgroundColor: AppColors.surface,
-            elevation: 0.5,
-            scrolledUnderElevation: 0,
-            leading: const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: CircleAvatar(
-                backgroundColor: AppColors.surfaceLight,
-                child: Icon(Icons.person_outline, color: AppColors.primaryDark),
-              ),
-            ),
-            title: Text(
-              l10n.frozenScreenTitle,
-              style: const TextStyle(
-                  color: AppColors.textPrimary,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16),
-            ),
-            actions: [
-              IconButton(
-                icon: Icon(
-                  isArabic ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
-                  color: AppColors.textPrimary,
-                  size: 18,
-                ),
-                onPressed: () => Navigator.pop(context),
-              ),
-            ],
+          appBar: FinancePageAppBar(
+            title: l10n.frozenScreenTitle,
+            subtitle: l10n.financialDepartment,
+            showBackButton: true,
+            onBackPressed: () => Navigator.pop(context),
           ),
           body: BlocBuilder<FinanceDashboardCubit, FinanceDashboardState>(
             builder: (context, state) {

@@ -5,6 +5,7 @@ import '../../../core/utils/currency_formatter.dart';
 import '../../finance/domain/entities/withdrawal_request_entity.dart';
 import '../../finance/domain/usecases/get_merchant_withdrawals_usecase.dart';
 import '../../../l10n/app_localizations.dart';
+import '../widgets/finance_navigation.dart';
 
 class MerchantWithdrawalsScreen extends StatefulWidget {
   const MerchantWithdrawalsScreen({super.key});
@@ -80,38 +81,15 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     return Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection:
+          l10n.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
         backgroundColor: const Color(0xFFF9FAFB),
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0.5,
-          scrolledUnderElevation: 0,
-          leading: const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: CircleAvatar(
-              backgroundColor: AppColors.primaryDark,
-              child: Icon(Icons.person, color: Colors.white, size: 20),
-            ),
-          ),
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(l10n.navWithdrawalOrders,
-                  style: const TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16)),
-              Text(l10n.financialManagementSubtitle,
-                  style: const TextStyle(color: Colors.grey, fontSize: 11)),
-            ],
-          ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.arrow_forward_ios, color: Colors.black, size: 18),
-              onPressed: () => Navigator.pop(context),
-            ),
-          ],
+        appBar: FinancePageAppBar(
+          title: l10n.navWithdrawalOrders,
+          subtitle: l10n.financialManagementSubtitle,
+          showBackButton: true,
+          onBackPressed: () => Navigator.pop(context),
         ),
         body: _isLoading
             ? const Center(

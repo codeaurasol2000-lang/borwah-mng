@@ -37,6 +37,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get languageEnglish => 'English';
 
   @override
+  String get logout => 'Sign out';
+
+  @override
+  String get logoutConfirmTitle => 'Confirm sign out';
+
+  @override
+  String get logoutConfirmMessage => 'Do you want to sign out of your account?';
+
+  @override
+  String get logoutCancel => 'Cancel';
+
+  @override
+  String get logoutConfirm => 'Sign out';
+
+  @override
   String get appSubtitle => 'Field Management & Supervision System';
 
   @override
@@ -1578,6 +1593,64 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settlementsReadyRefund => 'Refund request ready to close';
+
+  @override
+  String get settlementSheetTitle => 'New settlement request';
+
+  @override
+  String get settlementOffsetMode => 'Balance offset';
+
+  @override
+  String get settlementRefundMode => 'Refund';
+
+  @override
+  String get settlementTypeLabel => 'Settlement type';
+
+  @override
+  String get settlementTypeInstant => 'Instant settlement';
+
+  @override
+  String get settlementBeneficiaryLabel => 'Beneficiary';
+
+  @override
+  String get settlementBeneficiaryAudit => 'Verification and audit';
+
+  @override
+  String get settlementAmountLabel => 'Settlement amount';
+
+  @override
+  String get settlementReferenceLabel => 'Reference';
+
+  @override
+  String get settlementNotesLabel => 'Settlement notes';
+
+  @override
+  String get settlementNotesHint => 'Enter settlement request details';
+
+  @override
+  String get settlementPaymentDetailsTitle => 'Payment details';
+
+  @override
+  String get settlementPaymentMethodLabel => 'Payment method';
+
+  @override
+  String get settlementPaymentBankTransfer => 'Bank transfer';
+
+  @override
+  String get settlementDateLabel => 'Date';
+
+  @override
+  String get settlementStatusLabel => 'Status';
+
+  @override
+  String get settlementStatusUnderReview => 'Under review';
+
+  @override
+  String get settlementSubmit => 'Submit request';
+
+  @override
+  String get settlementSubmitSuccess =>
+      'Settlement request submitted successfully';
 
   @override
   String get addNewSettlement => 'Add new settlement';

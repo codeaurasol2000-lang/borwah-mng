@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../../l10n/app_localizations.dart';
 
 class NewSettlementBottomSheet extends StatefulWidget {
   const NewSettlementBottomSheet({super.key});
@@ -21,11 +22,8 @@ class NewSettlementBottomSheet extends StatefulWidget {
 class _NewSettlementBottomSheetState extends State<NewSettlementBottomSheet> {
   final _amountController = TextEditingController(text: '1,200.00');
   final _referenceController = TextEditingController(text: 'ORD-78190');
-  final _descriptionController = TextEditingController(
-    text: 'طلب تسوية متعلقة بحساب التاجر رقم 1542',
-  );
+  final _descriptionController = TextEditingController();
 
-  final String _selectedType = 'التسوية الفورية';
   bool _isRefund = false;
 
   @override
@@ -38,29 +36,34 @@ class _NewSettlementBottomSheetState extends State<NewSettlementBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final isArabic = l10n.localeName == 'ar';
     return SafeArea(
-      child: Container(
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.90,
-        ),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(26),
-            topRight: Radius.circular(26),
+      child: Directionality(
+        textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+        child: Container(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.90,
           ),
-        ),
-        child: Padding(
-          padding: EdgeInsets.only(
-            left: 16,
-            right: 16,
-            top: 12,
-            bottom: MediaQuery.of(context).viewInsets.bottom + 12,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(26),
+              topRight: Radius.circular(26),
+            ),
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
+          child: Padding(
+            padding: EdgeInsets.only(
+              left: 16,
+              right: 16,
+              top: 12,
+              bottom: MediaQuery.of(context).viewInsets.bottom + 12,
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
               const Center(
                 child: SizedBox(
                   width: 46,
@@ -80,16 +83,20 @@ class _NewSettlementBottomSheetState extends State<NewSettlementBottomSheet> {
                     onPressed: () => Navigator.pop(context),
                     icon: const Icon(Icons.close, color: AppColors.primaryDark),
                   ),
-                  const Spacer(),
-                  const Text(
-                    'إضافة طلب تسوية',
-                    style: TextStyle(
+                  Expanded(
+                    child: Text(
+                    l10n.settlementSheetTitle,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: AppColors.primaryDark,
                     ),
+                    ),
                   ),
-                  const SizedBox(width: 46),
+                  const SizedBox(width: 48),
                 ],
               ),
               const SizedBox(height: 14),
@@ -103,7 +110,7 @@ class _NewSettlementBottomSheetState extends State<NewSettlementBottomSheet> {
                   children: [
                     Expanded(
                       child: _ModeChip(
-                        label: 'مقاصة الرصيد',
+                        label: l10n.settlementOffsetMode,
                         selected: !_isRefund,
                         onTap: () => setState(() => _isRefund = false),
                       ),
@@ -111,7 +118,7 @@ class _NewSettlementBottomSheetState extends State<NewSettlementBottomSheet> {
                     const SizedBox(width: 8),
                     Expanded(
                       child: _ModeChip(
-                        label: 'استرداد',
+                        label: l10n.settlementRefundMode,
                         selected: _isRefund,
                         onTap: () => setState(() => _isRefund = true),
                       ),
@@ -121,37 +128,41 @@ class _NewSettlementBottomSheetState extends State<NewSettlementBottomSheet> {
               ),
               const SizedBox(height: 16),
               _InfoField(
-                label: 'نوع التسوية',
-                value: _selectedType,
+                label: l10n.settlementTypeLabel,
+                value: l10n.settlementTypeInstant,
                 trailing: const Icon(Icons.keyboard_arrow_down_rounded),
                 onTap: () {},
               ),
               const SizedBox(height: 10),
               _InfoField(
-                label: 'المستفيد',
-                value: 'التحقق والتدقيق',
+                label: l10n.settlementBeneficiaryLabel,
+                value: l10n.settlementBeneficiaryAudit,
                 trailing: const Icon(Icons.person_outline_rounded),
                 onTap: () {},
               ),
               const SizedBox(height: 10),
               _LabeledInput(
-                label: 'قيمة التسوية',
+                label: l10n.settlementAmountLabel,
                 controller: _amountController,
-                prefix: 'ر.س',
+                prefix: l10n.currencySar,
                 keyboardType: TextInputType.number,
+                isArabic: isArabic,
               ),
               const SizedBox(height: 10),
               _LabeledInput(
-                label: 'المرجع',
+                label: l10n.settlementReferenceLabel,
                 controller: _referenceController,
                 prefix: '#',
+                isArabic: isArabic,
               ),
               const SizedBox(height: 10),
               _LabeledInput(
-                label: 'ملاحظات التسوية',
+                label: l10n.settlementNotesLabel,
                 controller: _descriptionController,
                 minLines: 3,
                 maxLines: 4,
+                hintText: l10n.settlementNotesHint,
+                isArabic: isArabic,
               ),
               const SizedBox(height: 16),
               Container(
@@ -163,21 +174,25 @@ class _NewSettlementBottomSheetState extends State<NewSettlementBottomSheet> {
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: const [
+                  children: [
                     Text(
-                      'تفاصيل الدفع',
-                      style: TextStyle(
+                      l10n.settlementPaymentDetailsTitle,
+                      style: const TextStyle(
                         fontSize: 12,
                         color: AppColors.primaryDark,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 10),
-                    _DetailRow(label: 'طريقة الدفع', value: 'حوالة بنكية'),
-                    SizedBox(height: 8),
-                    _DetailRow(label: 'التاريخ', value: '30/09/2026'),
-                    SizedBox(height: 8),
-                    _DetailRow(label: 'الحالة', value: 'قيد المراجعة'),
+                    const SizedBox(height: 10),
+                    _DetailRow(
+                      label: l10n.settlementPaymentMethodLabel,
+                      value: l10n.settlementPaymentBankTransfer),
+                    const SizedBox(height: 8),
+                    _DetailRow(label: l10n.settlementDateLabel, value: '30/09/2026'),
+                    const SizedBox(height: 8),
+                    _DetailRow(
+                      label: l10n.settlementStatusLabel,
+                      value: l10n.settlementStatusUnderReview),
                   ],
                 ),
               ),
@@ -188,8 +203,8 @@ class _NewSettlementBottomSheetState extends State<NewSettlementBottomSheet> {
                   onPressed: () {
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('تم إرسال طلب التسوية بنجاح'),
+                      SnackBar(
+                        content: Text(l10n.settlementSubmitSuccess),
                       ),
                     );
                   },
@@ -200,16 +215,18 @@ class _NewSettlementBottomSheetState extends State<NewSettlementBottomSheet> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Text(
-                    'إرسال الطلب',
-                    style: TextStyle(
+                  child: Text(
+                    l10n.settlementSubmit,
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
               ),
-            ],
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -284,7 +301,9 @@ class _InfoField extends StatelessWidget {
             Expanded(
               child: Text(
                 value,
-                textAlign: TextAlign.right,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.end,
                 style: const TextStyle(
                   color: AppColors.primaryDark,
                   fontSize: 12,
@@ -293,11 +312,16 @@ class _InfoField extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 10),
-            Text(
-              label,
-              style: const TextStyle(
-                color: AppColors.textSecondary,
-                fontSize: 11,
+            Flexible(
+              child: Text(
+                label,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.end,
+                style: const TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 11,
+                ),
               ),
             ),
           ],
@@ -314,6 +338,8 @@ class _LabeledInput extends StatelessWidget {
   final TextInputType? keyboardType;
   final int minLines;
   final int maxLines;
+  final String? hintText;
+  final bool isArabic;
 
   const _LabeledInput({
     required this.label,
@@ -322,6 +348,8 @@ class _LabeledInput extends StatelessWidget {
     this.keyboardType,
     this.minLines = 1,
     this.maxLines = 1,
+    this.hintText,
+    this.isArabic = true,
   });
 
   @override
@@ -331,7 +359,7 @@ class _LabeledInput extends StatelessWidget {
       children: [
         Text(
           label,
-          textAlign: TextAlign.right,
+          textAlign: isArabic ? TextAlign.right : TextAlign.left,
           style: const TextStyle(
             color: AppColors.textSecondary,
             fontSize: 11,
@@ -344,9 +372,10 @@ class _LabeledInput extends StatelessWidget {
           keyboardType: keyboardType,
           minLines: minLines,
           maxLines: maxLines,
-          textAlign: TextAlign.right,
+          textAlign: isArabic ? TextAlign.right : TextAlign.left,
+          textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
           decoration: InputDecoration(
-            hintText: label,
+            hintText: hintText ?? label,
             filled: true,
             fillColor: AppColors.surfaceLight,
             prefixText: prefix,
@@ -386,21 +415,30 @@ class _DetailRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          value,
-          style: const TextStyle(
-            color: AppColors.primaryDark,
-            fontSize: 11,
-            fontWeight: FontWeight.w600,
+        Expanded(
+          child: Text(
+            value,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              color: AppColors.primaryDark,
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
-        Text(
-          label,
-          style: const TextStyle(
-            color: AppColors.textSecondary,
-            fontSize: 10,
+        const SizedBox(width: 8),
+        Flexible(
+          child: Text(
+            label,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.end,
+            style: const TextStyle(
+              color: AppColors.textSecondary,
+              fontSize: 10,
+            ),
           ),
         ),
       ],

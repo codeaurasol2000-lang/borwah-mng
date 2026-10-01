@@ -19,13 +19,19 @@ import '../../../l10n/app_localizations.dart';
 import '../widgets/finance_navigation.dart';
 
 class FinanceDashboardScreen extends StatefulWidget {
-  const FinanceDashboardScreen({super.key});
+  final bool showBottomNavigation;
+
+  const FinanceDashboardScreen({
+    super.key,
+    this.showBottomNavigation = true,
+  });
 
   @override
   State<FinanceDashboardScreen> createState() => _FinanceDashboardScreenState();
 }
 
-class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
+class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
+    with AutomaticKeepAliveClientMixin<FinanceDashboardScreen> {
   final ScrollController _scrollController = ScrollController();
   bool _isNavVisible = true;
 
@@ -59,104 +65,113 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     final l10n = AppLocalizations.of(context)!;
 
     return BlocProvider(
       create: (_) => FinanceDashboardCubit(getFinanceSummaryUseCase: sl())
         ..loadDashboardData(),
       child: Directionality(
-        textDirection: TextDirection.rtl,
+        textDirection:
+            l10n.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
         child: FinanceSwipeNavigation(
           currentIndex: 4,
+          enabled: widget.showBottomNavigation,
           child: Scaffold(
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
 
             // =========================
             // App Bar
             // =========================
-            appBar: AppBar(
-              titleSpacing: 0,
-              leading: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const ProfileScreen()),
-                    );
-                  },
-                  child: const CircleAvatar(
-                    backgroundColor: AppColors.surfaceLight,
-                    child: Icon(
-                      Icons.person_outline,
-                      color: AppColors.primaryDark,
-                    ),
-                  ),
-                ),
-              ),
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    l10n.appName,
-                    style: const TextStyle(
-                      color: AppColors.primaryDark,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.verified_outlined,
-                        size: 13,
-                        color: AppColors.info,
+            appBar: widget.showBottomNavigation
+                ? AppBar(
+                    titleSpacing: 0,
+                    leading: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => const ProfileScreen()),
+                          );
+                        },
+                        child: const CircleAvatar(
+                          backgroundColor: AppColors.surfaceLight,
+                          child: Icon(
+                            Icons.person_outline,
+                            color: AppColors.primaryDark,
+                          ),
+                        ),
                       ),
-                      const SizedBox(width: 4),
-                      Text(
-                        l10n.cfoRole,
-                        style: const TextStyle(
-                          fontSize: 10,
-                          color: AppColors.textSecondary,
+                    ),
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          l10n.appName,
+                          style: const TextStyle(
+                            color: AppColors.primaryDark,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.verified_outlined,
+                              size: 13,
+                              color: AppColors.info,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              l10n.cfoRole,
+                              style: const TextStyle(
+                                fontSize: 10,
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    actions: [
+                      IconButton(
+                        tooltip: l10n.switchLanguage,
+                        onPressed: AppLocaleController.instance.toggle,
+                        icon: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.translate,
+                                color: AppColors.primaryDark, size: 19),
+                            const SizedBox(width: 3),
+                            Text(
+                              l10n.localeName == 'ar'
+                                  ? l10n.languageEnglish
+                                  : l10n.languageArabic,
+                              style: const TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.primaryDark),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        child: Icon(
+                          Icons.shield_outlined,
+                          color: AppColors.primaryDark,
                         ),
                       ),
                     ],
-                  ),
-                ],
-              ),
-              actions: [
-                IconButton(
-                  tooltip: l10n.switchLanguage,
-                  onPressed: AppLocaleController.instance.toggle,
-                  icon: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.translate,
-                          color: AppColors.primaryDark, size: 19),
-                      const SizedBox(width: 3),
-                      Text(
-                        l10n.localeName == 'ar'
-                            ? l10n.languageEnglish
-                            : l10n.languageArabic,
-                        style: const TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.primaryDark),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Icon(
-                    Icons.shield_outlined,
-                    color: AppColors.primaryDark,
-                  ),
-                ),
-              ],
-            ),
+                  )
+                : null,
 
             // =========================
             // Body
@@ -1331,64 +1346,22 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen> {
                 // =========================
                 // Floating Bottom Navigation
                 // =========================
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: AnimatedSlide(
-                    duration: const Duration(milliseconds: 300),
-                    offset: _isNavVisible ? Offset.zero : const Offset(0, 1),
-                    child: BottomNavigationBar(
-                      backgroundColor: Colors.white,
-                      type: BottomNavigationBarType.fixed,
-                      selectedItemColor: AppColors.primaryDark,
-                      unselectedItemColor: AppColors.textSecondary,
-                      selectedLabelStyle: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 10,
-                        color: AppColors.primaryDark,
-                      ),
-                      unselectedLabelStyle: const TextStyle(
-                        fontWeight: FontWeight.normal,
-                        fontSize: 10,
-                        color: AppColors.textSecondary,
-                      ),
-                      elevation: 16,
-                      currentIndex: 4,
-                      onTap: (index) => FinanceNavigation.openTab(
-                        context,
-                        index,
+                if (widget.showBottomNavigation)
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: AnimatedSlide(
+                      duration: const Duration(milliseconds: 300),
+                      offset: _isNavVisible ? Offset.zero : const Offset(0, 1),
+                      child: FinanceBottomNavigationBar(
                         currentIndex: 4,
+                        onTap: (index) => FinanceNavigation.openTab(
+                          context,
+                          index,
+                          currentIndex: 4,
+                        ),
                       ),
-                      items: [
-                        BottomNavigationBarItem(
-                          icon: Icon(Icons.history_edu, size: 24),
-                          label: l10n.navAudit,
-                        ),
-                        BottomNavigationBarItem(
-                          icon: Icon(Icons.percent, size: 24),
-                          label: l10n.navCommissions,
-                        ),
-                        BottomNavigationBarItem(
-                          icon: Icon(Icons.sync_alt, size: 24),
-                          label: l10n.navSettlements,
-                        ),
-                        BottomNavigationBarItem(
-                          icon: Icon(
-                            Icons.fact_check_outlined,
-                            size: 24,
-                          ),
-                          label: l10n.navReconciliation,
-                        ),
-                        BottomNavigationBarItem(
-                          icon: Icon(
-                            Icons.account_balance,
-                            size: 24,
-                          ),
-                          label: l10n.navHome,
-                        ),
-                      ],
                     ),
                   ),
-                ),
               ],
             ),
           ),

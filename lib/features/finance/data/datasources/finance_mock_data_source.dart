@@ -1,4 +1,5 @@
 import '../../domain/entities/subscription_request_entity.dart';
+import '../../domain/entities/department_wallet_entity.dart';
 import '../../domain/entities/withdrawal_request_entity.dart';
 import '../models/bank_account_model.dart';
 import '../models/finance_summary_model.dart';
@@ -116,6 +117,144 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
     // إرجاع الحسابات البنكية فورياً
     await Future.delayed(Duration.zero);
     return _mockBankAccounts;
+  }
+
+  @override
+  Future<DepartmentWalletEntity> getDepartmentWallet(
+      DepartmentType type) async {
+    await Future.delayed(Duration.zero);
+    return switch (type) {
+      DepartmentType.merchants => const DepartmentWalletEntity(
+          type: DepartmentType.merchants,
+          totalBalance: 2150000,
+          primaryMetricCount: 142,
+          pendingMetricCount: 8,
+          pendingMetricAmount: 94500,
+          feeValue: '4.5%',
+          items: [
+            DepartmentWalletItemEntity(
+              title: 'مؤسسة الأفق للتقنية والتجارة',
+              reference: 'السجل التجاري 101089234   #TRD-9041',
+              availableBalance: 412800,
+              pendingBalance: 12500,
+              operationsCount: 1842,
+              channel: DepartmentWalletChannel.instantSettlement,
+              status: DepartmentWalletStatus.activeMatched,
+            ),
+            DepartmentWalletItemEntity(
+              title: 'متجر الصفوة الذهبي',
+              reference: 'السجل التجاري 1010459810   #TRD-8820',
+              availableBalance: 325400,
+              pendingBalance: 24000,
+              operationsCount: 965,
+              channel: DepartmentWalletChannel.alRajhiMainOperating,
+              status: DepartmentWalletStatus.activeMatched,
+            ),
+            DepartmentWalletItemEntity(
+              title: 'مجوهرات البريق الراقية',
+              reference: 'السجل التجاري 1010334992   #TRD-7104',
+              availableBalance: 184200,
+              pendingBalance: 58000,
+              operationsCount: 420,
+              channel: DepartmentWalletChannel.scheduledPayment,
+              status: DepartmentWalletStatus.activeMatched,
+            ),
+            DepartmentWalletItemEntity(
+              title: 'دار النخبة للأجهزة',
+              reference: 'السجل التجاري 1010198421   #TRD-6519',
+              availableBalance: 98600,
+              pendingBalance: 0,
+              operationsCount: 312,
+              channel: DepartmentWalletChannel.snbEscrow,
+              status: DepartmentWalletStatus.activeMatched,
+            ),
+          ],
+        ),
+      DepartmentType.usedEscrow => const DepartmentWalletEntity(
+          type: DepartmentType.usedEscrow,
+          totalBalance: 980000,
+          primaryMetricCount: 85,
+          pendingMetricCount: 3,
+          pendingMetricAmount: 12400,
+          feeValue: '1.5%',
+          items: [
+            DepartmentWalletItemEntity(
+              title: 'سيارة تويوتا كامري 2020',
+              reference: 'عربون الصفقة #ESC-1092',
+              availableBalance: 5000,
+              pendingBalance: 0,
+              operationsCount: 1,
+              channel: DepartmentWalletChannel.underInspection,
+              status: DepartmentWalletStatus.protectedEscrow,
+            ),
+            DepartmentWalletItemEntity(
+              title: 'آيفون 14 برو ماكس',
+              reference: 'عربون الصفقة #ESC-3321',
+              availableBalance: 500,
+              pendingBalance: 0,
+              operationsCount: 1,
+              channel: DepartmentWalletChannel.inShipping,
+              status: DepartmentWalletStatus.protectedEscrow,
+            ),
+          ],
+        ),
+      DepartmentType.services => const DepartmentWalletEntity(
+          type: DepartmentType.services,
+          totalBalance: 620000,
+          primaryMetricCount: 320,
+          pendingMetricCount: 15,
+          pendingMetricAmount: 45200,
+          feeValue: '8.0%',
+          items: [
+            DepartmentWalletItemEntity(
+              title: 'مؤسسة التبريد المتقن',
+              reference: 'رخصة 88214   #SRV-901',
+              availableBalance: 25400,
+              pendingBalance: 3200,
+              operationsCount: 142,
+              channel: DepartmentWalletChannel.instantSettlement,
+              status: DepartmentWalletStatus.approvedProvider,
+            ),
+            DepartmentWalletItemEntity(
+              title: 'مؤسسة الصيانة الشاملة',
+              reference: 'رخصة 11029   #SRV-412',
+              availableBalance: 18500,
+              pendingBalance: 0,
+              operationsCount: 89,
+              channel: DepartmentWalletChannel.snbEscrow,
+              status: DepartmentWalletStatus.approvedProvider,
+            ),
+          ],
+        ),
+      DepartmentType.couriers => const DepartmentWalletEntity(
+          type: DepartmentType.couriers,
+          totalBalance: 450000,
+          primaryMetricCount: 1200,
+          pendingMetricCount: 45,
+          pendingMetricAmount: 18000,
+          feeValue: '3',
+          items: [
+            DepartmentWalletItemEntity(
+              title: 'شركة زاجل للشحن',
+              reference: 'السجل التجاري 40301122   #DEL-551',
+              availableBalance: 145000,
+              pendingBalance: 12000,
+              operationsCount: 14200,
+              channel: DepartmentWalletChannel.weeklySettlement,
+              status: DepartmentWalletStatus.strategicPartner,
+            ),
+            DepartmentWalletItemEntity(
+              title: 'مندوب وصلني',
+              reference: 'رقم المندوب #C-1902',
+              availableBalance: 450,
+              pendingBalance: 120,
+              operationsCount: 45,
+              channel: DepartmentWalletChannel.stcPay,
+              status: DepartmentWalletStatus.activeCourier,
+            ),
+          ],
+        ),
+    };
   }
 
   @override

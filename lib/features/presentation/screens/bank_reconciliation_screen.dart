@@ -4,7 +4,14 @@ import '../../../l10n/app_localizations.dart';
 import '../widgets/finance_navigation.dart';
 
 class BankReconciliationScreen extends StatelessWidget {
-  const BankReconciliationScreen({super.key});
+  final int currentIndex;
+  final bool showBottomNavigation;
+
+  const BankReconciliationScreen({
+    super.key,
+    this.currentIndex = 3,
+    this.showBottomNavigation = true,
+  });
 
   void _showActionMessage(BuildContext context, String message) {
     ScaffoldMessenger.of(context)
@@ -20,48 +27,51 @@ class BankReconciliationScreen extends StatelessWidget {
     return Directionality(
       textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
       child: FinanceSwipeNavigation(
-        currentIndex: 3,
+        currentIndex: currentIndex,
+        enabled: showBottomNavigation,
         child: Scaffold(
           backgroundColor: const Color(0xFFF4F6F8),
-          appBar: AppBar(
-            backgroundColor: Colors.white,
-            elevation: 0,
-            scrolledUnderElevation: 0,
-            leading: const Padding(
-              padding: EdgeInsets.all(8),
-              child: CircleAvatar(
-                backgroundColor: AppColors.primaryDark,
-                child:
-                    Icon(Icons.shield_outlined, color: Colors.white, size: 19),
-              ),
-            ),
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  l10n.appName,
-                  style: const TextStyle(
-                      fontSize: 15, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  l10n.reconciliationFinanceSubtitle,
-                  style: const TextStyle(
-                      fontSize: 9, color: AppColors.textSecondary),
-                ),
-              ],
-            ),
-            actions: const [
-              Padding(
-                padding: EdgeInsets.all(10),
-                child: CircleAvatar(
-                  radius: 15,
-                  backgroundColor: AppColors.primaryDark,
-                  child:
-                      Icon(Icons.person_outline, color: Colors.white, size: 17),
-                ),
-              ),
-            ],
-          ),
+          appBar: showBottomNavigation
+              ? AppBar(
+                  backgroundColor: Colors.white,
+                  elevation: 0,
+                  scrolledUnderElevation: 0,
+                  leading: const Padding(
+                    padding: EdgeInsets.all(8),
+                    child: CircleAvatar(
+                      backgroundColor: AppColors.primaryDark,
+                      child: Icon(Icons.shield_outlined,
+                          color: Colors.white, size: 19),
+                    ),
+                  ),
+                  title: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.appName,
+                        style: const TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        l10n.reconciliationFinanceSubtitle,
+                        style: const TextStyle(
+                            fontSize: 9, color: AppColors.textSecondary),
+                      ),
+                    ],
+                  ),
+                  actions: const [
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                      child: CircleAvatar(
+                        radius: 15,
+                        backgroundColor: AppColors.primaryDark,
+                        child: Icon(Icons.person_outline,
+                            color: Colors.white, size: 17),
+                      ),
+                    ),
+                  ],
+                )
+              : null,
           body: ListView(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
             children: [
@@ -76,7 +86,8 @@ class BankReconciliationScreen extends StatelessWidget {
               _buildNextAccountCard(context),
             ],
           ),
-          bottomNavigationBar: _buildBottomNavigation(context),
+          bottomNavigationBar:
+              showBottomNavigation ? _buildBottomNavigation(context) : null,
         ),
       ),
     );
@@ -495,7 +506,7 @@ class BankReconciliationScreen extends StatelessWidget {
           ),
           const SizedBox(height: 5),
           Text(value,
-              textAlign: TextAlign.right,
+              textAlign: TextAlign.end,
               style:
                   const TextStyle(fontSize: 12, color: AppColors.primaryDark)),
         ],
@@ -535,7 +546,7 @@ class BankReconciliationScreen extends StatelessWidget {
                 Expanded(
                   child: Text(
                     'SA44 8000 0123 6080 1012 3456',
-                    textAlign: TextAlign.right,
+                    textAlign: TextAlign.end,
                     textDirection: TextDirection.ltr,
                     style:
                         TextStyle(fontSize: 13, color: AppColors.primaryDark),
@@ -733,39 +744,7 @@ class BankReconciliationScreen extends StatelessWidget {
   }
 
   Widget _buildBottomNavigation(BuildContext context) {
-    return BottomNavigationBar(
-      backgroundColor: Colors.white,
-      type: BottomNavigationBarType.fixed,
-      currentIndex: 3,
-      selectedItemColor: AppColors.primaryDark,
-      unselectedItemColor: AppColors.textSecondary,
-      selectedLabelStyle:
-          const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
-      unselectedLabelStyle: const TextStyle(fontSize: 10),
-      elevation: 16,
-      onTap: (index) => FinanceNavigation.openTab(
-        context,
-        index,
-        currentIndex: 3,
-      ),
-      items: [
-        BottomNavigationBarItem(
-            icon: const Icon(Icons.history_edu, size: 24),
-            label: AppLocalizations.of(context)!.navAudit),
-        BottomNavigationBarItem(
-            icon: const Icon(Icons.percent, size: 24),
-            label: AppLocalizations.of(context)!.navCommissions),
-        BottomNavigationBarItem(
-            icon: const Icon(Icons.sync_alt, size: 24),
-            label: AppLocalizations.of(context)!.navSettlements),
-        BottomNavigationBarItem(
-            icon: const Icon(Icons.fact_check_outlined, size: 24),
-            label: AppLocalizations.of(context)!.navReconciliation),
-        BottomNavigationBarItem(
-            icon: const Icon(Icons.account_balance, size: 24),
-            label: AppLocalizations.of(context)!.navHome),
-      ],
-    );
+    return FinanceBottomNavigationBar(currentIndex: currentIndex);
   }
 
   Widget _statusPill(String label, Color background, Color foreground) {

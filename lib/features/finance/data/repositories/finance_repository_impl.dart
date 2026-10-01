@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import '../../../../core/errors/failures.dart';
 import '../../domain/entities/bank_account_entity.dart';
+import '../../domain/entities/department_wallet_entity.dart';
 import '../../domain/entities/finance_summary_entity.dart';
 import '../../domain/entities/subscription_request_entity.dart';
 import '../../domain/entities/withdrawal_request_entity.dart';
@@ -56,6 +57,17 @@ class FinanceRepositoryImpl implements FinanceRepository {
   Future<Either<Failure, List<SubscriptionRequestEntity>>> getSubscriptions() async {
     try {
       final result = await remoteDataSource.getSubscriptions();
+      return Right(result);
+    } catch (e) {
+      return const Left(ServerFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, DepartmentWalletEntity>> getDepartmentWallet(
+      DepartmentType type) async {
+    try {
+      final result = await remoteDataSource.getDepartmentWallet(type);
       return Right(result);
     } catch (e) {
       return const Left(ServerFailure());

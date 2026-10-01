@@ -5,6 +5,7 @@ import '../../../core/utils/currency_formatter.dart';
 import '../../finance/domain/entities/subscription_request_entity.dart';
 import '../../finance/domain/usecases/get_subscriptions_usecase.dart';
 import '../../../l10n/app_localizations.dart';
+import '../widgets/finance_navigation.dart';
 
 class SubscriptionsScreen extends StatefulWidget {
   const SubscriptionsScreen({super.key});
@@ -97,36 +98,11 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
           l10n.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
         backgroundColor: const Color(0xFFF9FAFB),
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0.5,
-          scrolledUnderElevation: 0,
-          leading: const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: CircleAvatar(
-              backgroundColor: AppColors.primaryDark,
-              child: Icon(Icons.person, color: Colors.white, size: 20),
-            ),
-          ),
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(l10n.subscriptionOrdersTitle,
-                  style: const TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16)),
-              Text(l10n.financialManagementSubtitle,
-                  style: const TextStyle(color: Colors.grey, fontSize: 11)),
-            ],
-          ),
-          centerTitle: true,
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.arrow_forward, color: Colors.black),
-              onPressed: () => Navigator.pop(context),
-            ),
-          ],
+        appBar: FinancePageAppBar(
+          title: l10n.subscriptionOrdersTitle,
+          subtitle: l10n.financialManagementSubtitle,
+          showBackButton: true,
+          onBackPressed: () => Navigator.pop(context),
         ),
         body: _isLoading
             ? const Center(
@@ -982,7 +958,9 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                       const Text(
                         'إجمالي السعر المطلوب',
                         style: TextStyle(
-                            fontSize: 10, color: AppColors.textSecondary, fontWeight: FontWeight.w600),
+                            fontSize: 10,
+                            color: AppColors.textSecondary,
+                            fontWeight: FontWeight.w600),
                       ),
                       const SizedBox(height: 4),
                       Row(
@@ -1004,16 +982,19 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                           const SizedBox(width: 4),
                           const Text('ر.س',
                               style: TextStyle(
-                                  fontSize: 10, color: AppColors.primaryDark, fontWeight: FontWeight.bold)),
+                                  fontSize: 10,
+                                  color: AppColors.primaryDark,
+                                  fontWeight: FontWeight.bold)),
                         ],
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        isAutoReady
-                            ? 'رصيد كافي بالمحفظة'
-                            : 'شامل الضريبة 15%',
+                        isAutoReady ? 'رصيد كافي بالمحفظة' : 'شامل الضريبة 15%',
                         style: TextStyle(
-                            fontSize: 9, color: isAutoReady ? AppColors.success : Colors.grey.shade600),
+                            fontSize: 9,
+                            color: isAutoReady
+                                ? AppColors.success
+                                : Colors.grey.shade600),
                       ),
                     ],
                   ),

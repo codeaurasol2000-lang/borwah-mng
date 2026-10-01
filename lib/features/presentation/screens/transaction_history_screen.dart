@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/utils/currency_formatter.dart';
 import '../../../l10n/app_localizations.dart';
+import '../widgets/finance_navigation.dart';
 
 class TransactionHistoryScreen extends StatefulWidget {
   final String title;
@@ -32,46 +33,11 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
       textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
         backgroundColor: AppColors.backgroundLight,
-        appBar: AppBar(
-          backgroundColor: AppColors.backgroundLight,
-          elevation: 0,
-          scrolledUnderElevation: 0,
-          leading: const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: CircleAvatar(
-              backgroundColor: AppColors.surfaceLight,
-              child: Icon(Icons.person_outline, color: AppColors.primaryDark),
-            ),
-          ),
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                l10n.transactionHistoryTitle,
-                style: const TextStyle(
-                    color: AppColors.textPrimary,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16),
-              ),
-              Text(
-                l10n.transactionFinancialSubtitle,
-                style: const TextStyle(
-                    fontSize: 10, color: AppColors.textSecondary),
-              ),
-            ],
-          ),
-          centerTitle: true,
-          actions: [
-            IconButton(
-              icon: Icon(
-                isArabic ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
-                color: AppColors.textPrimary,
-                size: 18,
-              ),
-              onPressed: () => Navigator.pop(context),
-            ),
-          ],
+        appBar: FinancePageAppBar(
+          title: l10n.transactionHistoryTitle,
+          subtitle: l10n.transactionFinancialSubtitle,
+          showBackButton: true,
+          onBackPressed: () => Navigator.pop(context),
         ),
         body: Column(
           children: [

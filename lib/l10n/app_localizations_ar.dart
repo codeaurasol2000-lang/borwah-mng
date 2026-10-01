@@ -37,6 +37,21 @@ class AppLocalizationsAr extends AppLocalizations {
   String get languageEnglish => 'English';
 
   @override
+  String get logout => 'تسجيل الخروج';
+
+  @override
+  String get logoutConfirmTitle => 'تأكيد تسجيل الخروج';
+
+  @override
+  String get logoutConfirmMessage => 'هل تريد تسجيل الخروج من حسابك؟';
+
+  @override
+  String get logoutCancel => 'إلغاء';
+
+  @override
+  String get logoutConfirm => 'تسجيل الخروج';
+
+  @override
   String get appSubtitle => 'نظام الإدارة والإشراف الميداني';
 
   @override
@@ -1524,6 +1539,63 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get settlementsReadyRefund => 'طلب استرداد جاهز للإقفال';
+
+  @override
+  String get settlementSheetTitle => 'إضافة طلب تسوية';
+
+  @override
+  String get settlementOffsetMode => 'مقاصة الرصيد';
+
+  @override
+  String get settlementRefundMode => 'استرداد';
+
+  @override
+  String get settlementTypeLabel => 'نوع التسوية';
+
+  @override
+  String get settlementTypeInstant => 'التسوية الفورية';
+
+  @override
+  String get settlementBeneficiaryLabel => 'المستفيد';
+
+  @override
+  String get settlementBeneficiaryAudit => 'التحقق والتدقيق';
+
+  @override
+  String get settlementAmountLabel => 'قيمة التسوية';
+
+  @override
+  String get settlementReferenceLabel => 'المرجع';
+
+  @override
+  String get settlementNotesLabel => 'ملاحظات التسوية';
+
+  @override
+  String get settlementNotesHint => 'أدخل تفاصيل طلب التسوية';
+
+  @override
+  String get settlementPaymentDetailsTitle => 'تفاصيل الدفع';
+
+  @override
+  String get settlementPaymentMethodLabel => 'طريقة الدفع';
+
+  @override
+  String get settlementPaymentBankTransfer => 'حوالة بنكية';
+
+  @override
+  String get settlementDateLabel => 'التاريخ';
+
+  @override
+  String get settlementStatusLabel => 'الحالة';
+
+  @override
+  String get settlementStatusUnderReview => 'قيد المراجعة';
+
+  @override
+  String get settlementSubmit => 'إرسال الطلب';
+
+  @override
+  String get settlementSubmitSuccess => 'تم إرسال طلب التسوية بنجاح';
 
   @override
   String get addNewSettlement => 'إضافة تسوية جديدة';

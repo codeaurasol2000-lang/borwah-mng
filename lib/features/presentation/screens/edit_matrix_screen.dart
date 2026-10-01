@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../l10n/app_localizations.dart';
+import '../widgets/finance_navigation.dart';
 
 class EditMatrixScreen extends StatefulWidget {
   const EditMatrixScreen({super.key});
@@ -65,35 +66,11 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
       textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
         backgroundColor: AppColors.backgroundLight,
-        appBar: AppBar(
-          backgroundColor: AppColors.backgroundLight,
-          elevation: 0,
-          scrolledUnderElevation: 0,
-          leading: const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: CircleAvatar(
-              backgroundColor: AppColors.surfaceLight,
-              child: Icon(Icons.person_outline, color: AppColors.primaryDark),
-            ),
-          ),
-          title: Text(
-            l10n.matrixScreenTitle,
-            style: const TextStyle(
-                color: AppColors.textPrimary,
-                fontWeight: FontWeight.bold,
-                fontSize: 16),
-            overflow: TextOverflow.ellipsis,
-          ),
-          actions: [
-            IconButton(
-              icon: Icon(
-                isArabic ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
-                color: AppColors.textPrimary,
-                size: 18,
-              ),
-              onPressed: () => Navigator.pop(context),
-            ),
-          ],
+        appBar: FinancePageAppBar(
+          title: l10n.matrixScreenTitle,
+          subtitle: l10n.financialDepartment,
+          showBackButton: true,
+          onBackPressed: () => Navigator.pop(context),
         ),
         body: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),

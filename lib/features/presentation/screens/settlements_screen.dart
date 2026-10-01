@@ -5,13 +5,16 @@ import '../widgets/finance_navigation.dart';
 import '../widgets/new_settlement_bottom_sheet.dart';
 
 class SettlementsScreen extends StatefulWidget {
-  const SettlementsScreen({super.key});
+  final bool showBottomNavigation;
+
+  const SettlementsScreen({super.key, this.showBottomNavigation = true});
 
   @override
   State<SettlementsScreen> createState() => _SettlementsScreenState();
 }
 
-class _SettlementsScreenState extends State<SettlementsScreen> {
+class _SettlementsScreenState extends State<SettlementsScreen>
+    with AutomaticKeepAliveClientMixin<SettlementsScreen> {
   static const _filters = ['الكل', 'قيد المراجعة', 'معتمدة', 'قيد نزاع'];
 
   static const _requests = [
@@ -86,7 +89,11 @@ class _SettlementsScreenState extends State<SettlementsScreen> {
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     final l10n = AppLocalizations.of(context)!;
     final isArabic = l10n.localeName == 'ar';
 
@@ -94,47 +101,54 @@ class _SettlementsScreenState extends State<SettlementsScreen> {
       textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
       child: FinanceSwipeNavigation(
         currentIndex: 2,
+        enabled: widget.showBottomNavigation,
         child: Scaffold(
           backgroundColor: AppColors.backgroundLight,
-          appBar: AppBar(
-            backgroundColor: Colors.white,
-            elevation: 0.5,
-            scrolledUnderElevation: 0,
-            leading: IconButton(
-              tooltip: l10n.settlementBack,
-              icon: Icon(
-                isArabic ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
-                size: 19,
-              ),
-              onPressed: () => Navigator.pop(context),
-            ),
-            title: Column(
-              children: [
-                Text(
-                  l10n.settlementsScreenTitle,
-                  style: const TextStyle(
-                      fontSize: 15, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  l10n.settlementsSubtitle,
-                  style: const TextStyle(
-                      fontSize: 10, color: AppColors.textSecondary),
-                ),
-              ],
-            ),
-            centerTitle: true,
-            actions: const [
-              Padding(
-                padding: EdgeInsets.all(10),
-                child: CircleAvatar(
-                  radius: 16,
-                  backgroundColor: AppColors.primaryDark,
-                  child:
-                      Icon(Icons.person_outline, color: Colors.white, size: 17),
-                ),
-              ),
-            ],
-          ),
+          appBar: widget.showBottomNavigation
+              ? AppBar(
+                  backgroundColor: Colors.white,
+                  elevation: 0.5,
+                  scrolledUnderElevation: 0,
+                  leading: widget.showBottomNavigation
+                      ? IconButton(
+                          tooltip: l10n.settlementBack,
+                          icon: Icon(
+                            isArabic
+                                ? Icons.arrow_forward_ios
+                                : Icons.arrow_back_ios,
+                            size: 19,
+                          ),
+                          onPressed: () => Navigator.pop(context),
+                        )
+                      : null,
+                  title: Column(
+                    children: [
+                      Text(
+                        l10n.settlementsScreenTitle,
+                        style: const TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        l10n.settlementsSubtitle,
+                        style: const TextStyle(
+                            fontSize: 10, color: AppColors.textSecondary),
+                      ),
+                    ],
+                  ),
+                  centerTitle: true,
+                  actions: const [
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                      child: CircleAvatar(
+                        radius: 16,
+                        backgroundColor: AppColors.primaryDark,
+                        child: Icon(Icons.person_outline,
+                            color: Colors.white, size: 17),
+                      ),
+                    ),
+                  ],
+                )
+              : null,
           body: ListView(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
             children: [
@@ -156,39 +170,9 @@ class _SettlementsScreenState extends State<SettlementsScreen> {
               const SizedBox(height: 8),
             ],
           ),
-          bottomNavigationBar: BottomNavigationBar(
-            backgroundColor: Colors.white,
-            type: BottomNavigationBarType.fixed,
-            currentIndex: 2,
-            selectedItemColor: AppColors.primaryDark,
-            unselectedItemColor: AppColors.textSecondary,
-            selectedLabelStyle:
-                const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
-            unselectedLabelStyle: const TextStyle(fontSize: 10),
-            elevation: 16,
-            onTap: (index) => FinanceNavigation.openTab(
-              context,
-              index,
-              currentIndex: 2,
-            ),
-            items: [
-              BottomNavigationBarItem(
-                  icon: const Icon(Icons.history_edu, size: 24),
-                  label: l10n.navAudit),
-              BottomNavigationBarItem(
-                  icon: const Icon(Icons.percent, size: 24),
-                  label: l10n.navCommissions),
-              BottomNavigationBarItem(
-                  icon: const Icon(Icons.sync_alt, size: 24),
-                  label: l10n.navSettlements),
-              BottomNavigationBarItem(
-                  icon: const Icon(Icons.fact_check_outlined, size: 24),
-                  label: l10n.navReconciliation),
-              BottomNavigationBarItem(
-                  icon: const Icon(Icons.account_balance, size: 24),
-                  label: l10n.navHome),
-            ],
-          ),
+          bottomNavigationBar: widget.showBottomNavigation
+              ? const FinanceBottomNavigationBar(currentIndex: 2)
+              : null,
         ),
       ),
     );
@@ -236,9 +220,9 @@ class _SettlementsScreenState extends State<SettlementsScreen> {
                 ),
               ),
               const Spacer(),
-              Text(
+              const Text(
                 '#SETTL-2024-098',
-                style: const TextStyle(color: Colors.white70, fontSize: 8),
+                style: TextStyle(color: Colors.white70, fontSize: 8),
                 textDirection: TextDirection.ltr,
               ),
             ],
@@ -296,6 +280,7 @@ class _SettlementsScreenState extends State<SettlementsScreen> {
     required IconData icon,
     required Color color,
   }) {
+    final isArabic = AppLocalizations.of(context)!.localeName == 'ar';
     return Container(
       constraints: const BoxConstraints(minHeight: 92),
       padding: const EdgeInsets.all(10),
@@ -314,7 +299,7 @@ class _SettlementsScreenState extends State<SettlementsScreen> {
               Expanded(
                 child: Text(
                   title,
-                  textAlign: TextAlign.right,
+                  textAlign: TextAlign.end,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
@@ -324,18 +309,26 @@ class _SettlementsScreenState extends State<SettlementsScreen> {
             ],
           ),
           const SizedBox(height: 7),
-          Text(
-            amount,
-            textAlign: TextAlign.right,
-            style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: AppColors.primaryDark),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text(
+                amount,
+                style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryDark),
+              ),
+              const SizedBox(width: 4),
+              Text(isArabic ? 'ر.س' : 'SAR',
+                  style: const TextStyle(
+                      fontSize: 9, color: AppColors.textSecondary)),
+            ],
           ),
           const SizedBox(height: 4),
           Text(
             subtitle,
-            textAlign: TextAlign.right,
+            textAlign: TextAlign.end,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(fontSize: 8, color: AppColors.info),
@@ -365,8 +358,8 @@ class _SettlementsScreenState extends State<SettlementsScreen> {
               Expanded(
                 child: Text(
                   l10n.addNewSettlement,
-                  textAlign: TextAlign.right,
-                  style: TextStyle(
+                  textAlign: TextAlign.end,
+                  style: const TextStyle(
                       color: Colors.white,
                       fontSize: 13,
                       fontWeight: FontWeight.bold),
@@ -381,7 +374,7 @@ class _SettlementsScreenState extends State<SettlementsScreen> {
                 ),
                 child: Text(
                   l10n.instantRefundSettlement,
-                  style: TextStyle(color: Colors.white70, fontSize: 8),
+                  style: const TextStyle(color: Colors.white70, fontSize: 8),
                 ),
               ),
             ],
@@ -434,8 +427,8 @@ class _SettlementsScreenState extends State<SettlementsScreen> {
         Expanded(
           child: Text(
             l10n.pendingSettlementRequests,
-            textAlign: TextAlign.right,
-            style: TextStyle(
+            textAlign: TextAlign.end,
+            style: const TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.bold,
                 color: AppColors.primaryDark),
@@ -516,6 +509,7 @@ class _SettlementsScreenState extends State<SettlementsScreen> {
 
   Widget _buildRequestCard(_SettlementRequest request) {
     final l10n = AppLocalizations.of(context)!;
+    final isArabic = l10n.localeName == 'ar';
     final labels = _localizedRequestLabels(request, l10n);
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
@@ -567,7 +561,7 @@ class _SettlementsScreenState extends State<SettlementsScreen> {
                       request.name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.right,
+                      textAlign: TextAlign.end,
                       style: const TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.bold,
@@ -577,7 +571,7 @@ class _SettlementsScreenState extends State<SettlementsScreen> {
                       labels.description,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.right,
+                      textAlign: TextAlign.end,
                       style: const TextStyle(
                           fontSize: 8, color: AppColors.textSecondary),
                     ),
@@ -588,13 +582,20 @@ class _SettlementsScreenState extends State<SettlementsScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(
-                    '${request.amount} EGP',
-                    textDirection: TextDirection.ltr,
-                    style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primaryDark),
+                  Row(
+                    children: [
+                      Text(
+                        request.amount,
+                        style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.primaryDark),
+                      ),
+                      const SizedBox(width: 3),
+                      Text(isArabic ? 'ر.س' : 'SAR',
+                          style: const TextStyle(
+                              fontSize: 8, color: AppColors.textSecondary)),
+                    ],
                   ),
                   Text(labels.age,
                       style:
@@ -652,13 +653,18 @@ class _SettlementsScreenState extends State<SettlementsScreen> {
         Expanded(
           child: Text(
             l10n.recentSettlementsTitle,
-            textAlign: TextAlign.right,
-            style: TextStyle(
+            textAlign: TextAlign.end,
+            style: const TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.bold,
                 color: AppColors.primaryDark),
           ),
         ),
+        Text(
+          l10n.localeName == 'ar' ? '142 عملية' : '142 transactions',
+          style: const TextStyle(fontSize: 9, color: AppColors.info),
+        ),
+        const SizedBox(width: 6),
         TextButton(
           onPressed: () {},
           style: TextButton.styleFrom(
@@ -671,6 +677,7 @@ class _SettlementsScreenState extends State<SettlementsScreen> {
 
   Widget _buildRecentSettlement(_RecentSettlement settlement) {
     final l10n = AppLocalizations.of(context)!;
+    final isArabic = l10n.localeName == 'ar';
     final labels = _localizedRecentLabels(settlement, l10n);
     return Container(
       margin: const EdgeInsets.only(bottom: 7),
@@ -702,9 +709,17 @@ class _SettlementsScreenState extends State<SettlementsScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text('${settlement.amount} EGP',
-                  style: const TextStyle(
-                      fontSize: 11, fontWeight: FontWeight.bold)),
+              Row(
+                children: [
+                  Text(settlement.amount,
+                      style: const TextStyle(
+                          fontSize: 11, fontWeight: FontWeight.bold)),
+                  const SizedBox(width: 3),
+                  Text(isArabic ? 'ر.س' : 'SAR',
+                      style: const TextStyle(
+                          fontSize: 8, color: AppColors.textSecondary)),
+                ],
+              ),
               Text(labels.time,
                   style: const TextStyle(
                       fontSize: 8, color: AppColors.textSecondary)),

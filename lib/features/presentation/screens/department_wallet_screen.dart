@@ -1,20 +1,52 @@
 import 'package:flutter/material.dart';
+import '../../../core/di/injection_container.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/utils/currency_formatter.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../finance/domain/entities/department_wallet_entity.dart';
+import '../../finance/domain/usecases/get_department_wallet_usecase.dart';
 import 'transaction_history_screen.dart';
+import '../widgets/finance_navigation.dart';
 
-enum DepartmentType { merchants, usedEscrow, services, couriers }
-
-class DepartmentWalletScreen extends StatelessWidget {
+class DepartmentWalletScreen extends StatefulWidget {
   final DepartmentType type;
 
   const DepartmentWalletScreen({super.key, required this.type});
 
+  @override
+  State<DepartmentWalletScreen> createState() => _DepartmentWalletScreenState();
+}
+
+class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
+  DepartmentWalletEntity? _wallet;
+  bool _isLoading = true;
+  String? _errorMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadWallet();
+  }
+
+  Future<void> _loadWallet() async {
+    final result = await sl<GetDepartmentWalletUseCase>()(widget.type);
+    if (!mounted) return;
+    result.fold(
+      (failure) => setState(() {
+        _errorMessage = failure.message;
+        _isLoading = false;
+      }),
+      (wallet) => setState(() {
+        _wallet = wallet;
+        _isLoading = false;
+      }),
+    );
+  }
+
   String _screenTitleFor(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    switch (type) {
+    switch (widget.type) {
       case DepartmentType.merchants:
         return l10n.departmentMerchantsTitle;
       case DepartmentType.usedEscrow:
@@ -26,48 +58,38 @@ class DepartmentWalletScreen extends StatelessWidget {
     }
   }
 
-  double get _totalBalance {
-    switch (type) {
-      case DepartmentType.merchants:
-        return 2150000.00;
-      case DepartmentType.usedEscrow:
-        return 980000.00;
-      case DepartmentType.services:
-        return 620000.00;
-      case DepartmentType.couriers:
-        return 450000.00;
-    }
-  }
-
-  Map<String, String> _statsFor(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    switch (type) {
+  Map<String, String> _statsFor(
+      DepartmentWalletEntity wallet, AppLocalizations l10n) {
+    final pending =
+        '${wallet.pendingMetricCount} (${CurrencyFormatter.format(wallet.pendingMetricAmount, includeCurrency: false)})';
+    switch (wallet.type) {
       case DepartmentType.merchants:
         return {
-          l10n.departmentActiveStores: '142',
-          l10n.departmentPendingRequests: '8 (94,500)',
-          l10n.departmentPlatformCommission: '4.5%',
+          l10n.departmentActiveStores: '${wallet.primaryMetricCount}',
+          l10n.departmentPendingRequests: pending,
+          l10n.departmentPlatformCommission: wallet.feeValue,
           'icon1': 'storefront',
         };
       case DepartmentType.usedEscrow:
         return {
-          l10n.departmentActiveDeals: '85',
-          l10n.departmentDisputes: '3 (12,400)',
-          l10n.departmentProtectionFee: '1.5%',
+          l10n.departmentActiveDeals: '${wallet.primaryMetricCount}',
+          l10n.departmentDisputes: pending,
+          l10n.departmentProtectionFee: wallet.feeValue,
           'icon1': 'handshake',
         };
       case DepartmentType.services:
         return {
-          l10n.departmentServiceProviders: '320',
-          l10n.departmentPendingRequests: '15 (45,200)',
-          l10n.departmentPlatformCommission: '8.0%',
+          l10n.departmentServiceProviders: '${wallet.primaryMetricCount}',
+          l10n.departmentPendingRequests: pending,
+          l10n.departmentPlatformCommission: wallet.feeValue,
           'icon1': 'build',
         };
       case DepartmentType.couriers:
         return {
-          l10n.departmentActiveCouriers: '1,200',
-          l10n.departmentPendingEntitlements: '45 (18,000)',
-          l10n.departmentShipmentFee: '3 EGP',
+          l10n.departmentActiveCouriers: '${wallet.primaryMetricCount}',
+          l10n.departmentPendingEntitlements: pending,
+          l10n.departmentShipmentFee:
+              '${wallet.feeValue} ${l10n.currencySar}',
           'icon1': 'local_shipping',
         };
     }
@@ -75,7 +97,7 @@ class DepartmentWalletScreen extends StatelessWidget {
 
   List<Map<String, dynamic>> _listItemsFor(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    switch (type) {
+    switch (widget.type) {
       case DepartmentType.merchants:
         return [
           {
@@ -195,44 +217,30 @@ class DepartmentWalletScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final isArabic = l10n.localeName == 'ar';
-    final stats = _statsFor(context);
-    final listItems = _listItemsFor(context);
 
     return Directionality(
       textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
         backgroundColor: AppColors.backgroundLight,
-        appBar: AppBar(
-          backgroundColor: AppColors.backgroundLight,
-          elevation: 0,
-          scrolledUnderElevation: 0,
-          leading: const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: CircleAvatar(
-              backgroundColor: AppColors.surfaceLight,
-              child: Icon(Icons.person_outline, color: AppColors.primaryDark),
-            ),
-          ),
-          title: Text(
-            _screenTitleFor(context),
-            style: const TextStyle(
-                color: AppColors.textPrimary,
-                fontWeight: FontWeight.bold,
-                fontSize: 16),
-          ),
-          centerTitle: true,
-          actions: [
-            IconButton(
-              icon: Icon(
-                isArabic ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
-                color: AppColors.textPrimary,
-                size: 18,
-              ),
-              onPressed: () => Navigator.pop(context),
-            ),
-          ],
+        appBar: FinancePageAppBar(
+          title: _screenTitleFor(context),
+          subtitle: l10n.financialDepartment,
+          showBackButton: true,
+          onBackPressed: () => Navigator.pop(context),
         ),
-        body: SingleChildScrollView(
+        body: _isLoading
+          ? const Center(
+            child: CircularProgressIndicator(
+              color: AppColors.primaryDark))
+          : _errorMessage != null
+            ? Center(child: Text(_errorMessage!))
+            : _wallet == null
+              ? const SizedBox.shrink()
+              : Builder(builder: (context) {
+                final wallet = _wallet!;
+                final stats = _statsFor(wallet, l10n);
+                final listItems = _listItemsFor(wallet, l10n);
+                return SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           child: Column(
@@ -298,7 +306,7 @@ class DepartmentWalletScreen extends StatelessWidget {
                       children: [
                         Flexible(
                           child: Text(
-                            CurrencyFormatter.format(_totalBalance,
+                            CurrencyFormatter.format(wallet.totalBalance,
                                 includeCurrency: false),
                             style: const TextStyle(
                                 color: Colors.white,
@@ -327,17 +335,24 @@ class DepartmentWalletScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(stats.keys.elementAt(0),
+                                Text(stats.keys.elementAt(0),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
                                       color: Colors.white60, fontSize: 10)),
                               const SizedBox(height: 4),
                               Row(
                                 children: [
-                                  Text(stats.values.elementAt(0),
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold)),
+                                  Flexible(
+                                    child: FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(stats.values.elementAt(0),
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold)),
+                                    ),
+                                  ),
                                   const SizedBox(width: 4),
                                   Icon(_getIconData(stats['icon1']!),
                                       color: Colors.white60, size: 14),
@@ -350,17 +365,25 @@ class DepartmentWalletScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(stats.keys.elementAt(1),
+                                Text(stats.keys.elementAt(1),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
                                       color: Colors.white60, fontSize: 10)),
                               const SizedBox(height: 4),
                               Row(
                                 children: [
-                                  Text(stats.values.elementAt(1).split(' ')[0],
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold)),
+                                  Flexible(
+                                    child: FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                          stats.values.elementAt(1).split(' ')[0],
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold)),
+                                    ),
+                                  ),
                                   const SizedBox(width: 4),
                                   const Icon(Icons.assignment_late_outlined,
                                       color: Colors.white60, size: 14),
@@ -379,18 +402,25 @@ class DepartmentWalletScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              Text(stats.keys.elementAt(2),
+                                Text(stats.keys.elementAt(2),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
                                       color: Colors.white60, fontSize: 10)),
                               const SizedBox(height: 4),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  Text(stats.values.elementAt(2),
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold)),
+                                  Flexible(
+                                    child: FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(stats.values.elementAt(2),
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold)),
+                                    ),
+                                  ),
                                   const SizedBox(width: 4),
                                   const Icon(Icons.pie_chart_outline,
                                       color: Colors.white60, size: 14),
@@ -410,15 +440,19 @@ class DepartmentWalletScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Row(
+                  Row(
                     children: [
-                      Icon(Icons.tune, color: AppColors.primaryDark, size: 18),
-                      SizedBox(width: 8),
-                      Text('الرقابة وحسابات المتاجر',
-                          style: TextStyle(
+                      const Icon(Icons.tune, color: AppColors.primaryDark, size: 18),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(l10n.departmentWalletSectionTitle,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
                               color: AppColors.textPrimary)),
+                      ),
                     ],
                   ),
                   Container(
@@ -568,7 +602,8 @@ class DepartmentWalletScreen extends StatelessWidget {
   }
 
   Widget _buildListItemCard(BuildContext context, Map<String, dynamic> item) {
-    final isArabic = AppLocalizations.of(context)!.localeName == 'ar';
+    final l10n = AppLocalizations.of(context)!;
+    final isArabic = l10n.localeName == 'ar';
 
     return Container(
       decoration: BoxDecoration(
@@ -607,7 +642,9 @@ class DepartmentWalletScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(item['title'],
+                        Text(item['title'],
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
@@ -632,18 +669,23 @@ class DepartmentWalletScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.blue.shade50,
-                    borderRadius: BorderRadius.circular(12),
+                Flexible(
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.blue.shade50,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(item['status'],
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.end,
+                        style: TextStyle(
+                            fontSize: 9,
+                            color: Colors.blue.shade700,
+                            fontWeight: FontWeight.bold)),
                   ),
-                  child: Text(item['status'],
-                      style: TextStyle(
-                          fontSize: 9,
-                          color: Colors.blue.shade700,
-                          fontWeight: FontWeight.bold)),
                 ),
               ],
             ),
@@ -665,8 +707,10 @@ class DepartmentWalletScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('الرصيد المتاح للسحب',
-                            style: TextStyle(
+                        Text(l10n.departmentAvailableBalance,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
                                 fontSize: 10, color: AppColors.textSecondary)),
                         const SizedBox(height: 4),
                         Row(
@@ -701,8 +745,10 @@ class DepartmentWalletScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('تحت التدقيق والتسوية',
-                            style: TextStyle(
+                        Text(l10n.departmentUnderReview,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
                                 fontSize: 10, color: AppColors.textSecondary)),
                         const SizedBox(height: 4),
                         Row(
@@ -719,11 +765,15 @@ class DepartmentWalletScreen extends StatelessWidget {
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis)),
                             const SizedBox(width: 2),
-                            Text(
-                                '${AppLocalizations.of(context)!.currencySar} ${isArabic ? 'معلق' : 'pending'}',
+                            Flexible(
+                              child: Text(
+                                '${AppLocalizations.of(context)!.currencySar} ${isArabic ? l10n.departmentPendingSuffix : 'pending'}',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
-                                    fontSize: 9,
-                                    color: AppColors.textSecondary)),
+                                  fontSize: 9,
+                                  color: AppColors.textSecondary)),
+                            ),
                           ],
                         ),
                       ],
@@ -740,27 +790,41 @@ class DepartmentWalletScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    const Icon(Icons.shopping_bag_outlined,
-                        size: 14, color: AppColors.textSecondary),
-                    const SizedBox(width: 6),
-                    Text('المبيعات المكتملة للشهر: ${item['operations']} عملية',
-                        style: const TextStyle(
-                            fontSize: 10, color: AppColors.textPrimary)),
-                  ],
+                Expanded(
+                  child: Row(
+                    children: [
+                      const Icon(Icons.shopping_bag_outlined,
+                          size: 14, color: AppColors.textSecondary),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text(
+                          '${l10n.departmentMonthlySales}: ${item['operations']} ${l10n.departmentOperationsUnit}',
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                              fontSize: 10, color: AppColors.textPrimary),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                Row(
-                  children: [
-                    Icon(item['bankIcon'],
-                        size: 14, color: Colors.blue.shade700),
-                    const SizedBox(width: 4),
-                    Text(item['bankText'],
-                        style: TextStyle(
-                            fontSize: 10, color: Colors.blue.shade700)),
-                  ],
+                const SizedBox(width: 8),
+                Flexible(
+                  child: Row(
+                    children: [
+                      Icon(item['bankIcon'],
+                          size: 14, color: Colors.blue.shade700),
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: Text(item['bankText'],
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: 10, color: Colors.blue.shade700)),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -795,9 +859,9 @@ class DepartmentWalletScreen extends StatelessWidget {
                     ),
                   );
                 },
-                label: const Text('عرض سجل العمليات',
-                    style:
-                        TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                label: Text(l10n.departmentViewHistory,
+                  style: const TextStyle(
+                    fontSize: 11, fontWeight: FontWeight.bold)),
               ),
             ),
           ),

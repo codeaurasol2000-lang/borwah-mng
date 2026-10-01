@@ -152,6 +152,36 @@ abstract class AppLocalizations {
   /// **'English'**
   String get languageEnglish;
 
+  /// No description provided for @logout.
+  ///
+  /// In ar, this message translates to:
+  /// **'تسجيل الخروج'**
+  String get logout;
+
+  /// No description provided for @logoutConfirmTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد تسجيل الخروج'**
+  String get logoutConfirmTitle;
+
+  /// No description provided for @logoutConfirmMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'هل تريد تسجيل الخروج من حسابك؟'**
+  String get logoutConfirmMessage;
+
+  /// No description provided for @logoutCancel.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء'**
+  String get logoutCancel;
+
+  /// No description provided for @logoutConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'تسجيل الخروج'**
+  String get logoutConfirm;
+
   /// No description provided for @appSubtitle.
   ///
   /// In ar, this message translates to:
@@ -2935,6 +2965,120 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'طلب استرداد جاهز للإقفال'**
   String get settlementsReadyRefund;
+
+  /// No description provided for @settlementSheetTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إضافة طلب تسوية'**
+  String get settlementSheetTitle;
+
+  /// No description provided for @settlementOffsetMode.
+  ///
+  /// In ar, this message translates to:
+  /// **'مقاصة الرصيد'**
+  String get settlementOffsetMode;
+
+  /// No description provided for @settlementRefundMode.
+  ///
+  /// In ar, this message translates to:
+  /// **'استرداد'**
+  String get settlementRefundMode;
+
+  /// No description provided for @settlementTypeLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'نوع التسوية'**
+  String get settlementTypeLabel;
+
+  /// No description provided for @settlementTypeInstant.
+  ///
+  /// In ar, this message translates to:
+  /// **'التسوية الفورية'**
+  String get settlementTypeInstant;
+
+  /// No description provided for @settlementBeneficiaryLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'المستفيد'**
+  String get settlementBeneficiaryLabel;
+
+  /// No description provided for @settlementBeneficiaryAudit.
+  ///
+  /// In ar, this message translates to:
+  /// **'التحقق والتدقيق'**
+  String get settlementBeneficiaryAudit;
+
+  /// No description provided for @settlementAmountLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيمة التسوية'**
+  String get settlementAmountLabel;
+
+  /// No description provided for @settlementReferenceLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'المرجع'**
+  String get settlementReferenceLabel;
+
+  /// No description provided for @settlementNotesLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملاحظات التسوية'**
+  String get settlementNotesLabel;
+
+  /// No description provided for @settlementNotesHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل تفاصيل طلب التسوية'**
+  String get settlementNotesHint;
+
+  /// No description provided for @settlementPaymentDetailsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تفاصيل الدفع'**
+  String get settlementPaymentDetailsTitle;
+
+  /// No description provided for @settlementPaymentMethodLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'طريقة الدفع'**
+  String get settlementPaymentMethodLabel;
+
+  /// No description provided for @settlementPaymentBankTransfer.
+  ///
+  /// In ar, this message translates to:
+  /// **'حوالة بنكية'**
+  String get settlementPaymentBankTransfer;
+
+  /// No description provided for @settlementDateLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'التاريخ'**
+  String get settlementDateLabel;
+
+  /// No description provided for @settlementStatusLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحالة'**
+  String get settlementStatusLabel;
+
+  /// No description provided for @settlementStatusUnderReview.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيد المراجعة'**
+  String get settlementStatusUnderReview;
+
+  /// No description provided for @settlementSubmit.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال الطلب'**
+  String get settlementSubmit;
+
+  /// No description provided for @settlementSubmitSuccess.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إرسال طلب التسوية بنجاح'**
+  String get settlementSubmitSuccess;
 
   /// No description provided for @addNewSettlement.
   ///
