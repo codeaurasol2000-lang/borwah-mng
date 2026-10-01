@@ -34,7 +34,7 @@ class FinancePageAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final isArabic = l10n.localeName == 'ar';
+    final isArabic = l10n.localeName.startsWith('ar');
 
     return AppBar(
       centerTitle: false,

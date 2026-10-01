@@ -66,7 +66,7 @@ class _BankAccountsScreenContentState
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final isArabic = l10n.localeName == 'ar';
+    final isArabic = l10n.localeName.startsWith('ar');
 
     return Directionality(
       textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
@@ -587,7 +587,7 @@ class _BankAccountsScreenContentState
       builder: (ctx) {
         return Directionality(
           textDirection:
-              l10n.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
+              l10n.localeName.startsWith('ar') ? TextDirection.rtl : TextDirection.ltr,
           child: Padding(
             padding: EdgeInsets.only(
               left: 16,
@@ -645,7 +645,7 @@ class _BankAccountsScreenContentState
       context: context,
       builder: (ctx) => Directionality(
         textDirection:
-            l10n.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
+            l10n.localeName.startsWith('ar') ? TextDirection.rtl : TextDirection.ltr,
         child: AlertDialog(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),

@@ -60,7 +60,7 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final isArabic = l10n.localeName == 'ar';
+    final isArabic = l10n.localeName.startsWith('ar');
 
     return Directionality(
       textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,

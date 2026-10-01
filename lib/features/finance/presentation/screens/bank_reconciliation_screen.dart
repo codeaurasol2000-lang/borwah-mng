@@ -22,7 +22,7 @@ class BankReconciliationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final isArabic = l10n.localeName == 'ar';
+    final isArabic = l10n.localeName.startsWith('ar');
 
     return Directionality(
       textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
@@ -136,7 +136,7 @@ class BankReconciliationScreen extends StatelessWidget {
         const SizedBox(height: 6),
         Text(
           l10n.reconciliationPageTitle,
-          textAlign: l10n.localeName == 'ar' ? TextAlign.right : TextAlign.left,
+          textAlign: l10n.localeName.startsWith('ar') ? TextAlign.right : TextAlign.left,
           style: const TextStyle(
               fontSize: 19,
               height: 1.35,
@@ -161,13 +161,13 @@ class BankReconciliationScreen extends StatelessWidget {
           const SizedBox(width: 10),
           Expanded(
             child: Column(
-              crossAxisAlignment: l10n.localeName == 'ar'
+              crossAxisAlignment: l10n.localeName.startsWith('ar')
                   ? CrossAxisAlignment.end
                   : CrossAxisAlignment.start,
               children: [
                 Text(
                   l10n.reconciliationAuthorityTitle,
-                  textAlign: l10n.localeName == 'ar'
+                  textAlign: l10n.localeName.startsWith('ar')
                       ? TextAlign.right
                       : TextAlign.left,
                   style: TextStyle(
@@ -178,7 +178,7 @@ class BankReconciliationScreen extends StatelessWidget {
                 SizedBox(height: 4),
                 Text(
                   l10n.reconciliationAuthorityNotice,
-                  textAlign: l10n.localeName == 'ar'
+                  textAlign: l10n.localeName.startsWith('ar')
                       ? TextAlign.right
                       : TextAlign.left,
                   style: TextStyle(
@@ -216,7 +216,7 @@ class BankReconciliationScreen extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: Column(
-              crossAxisAlignment: l10n.localeName == 'ar'
+              crossAxisAlignment: l10n.localeName.startsWith('ar')
                   ? CrossAxisAlignment.end
                   : CrossAxisAlignment.start,
               children: [
@@ -263,7 +263,7 @@ class BankReconciliationScreen extends StatelessWidget {
               Expanded(
                 child: Text(
                   l10n.reconciliationAccountDetails,
-                  textAlign: l10n.localeName == 'ar'
+                  textAlign: l10n.localeName.startsWith('ar')
                       ? TextAlign.right
                       : TextAlign.left,
                   style: TextStyle(
@@ -298,7 +298,7 @@ class BankReconciliationScreen extends StatelessWidget {
           Text(
             l10n.reconciliationFinalActions,
             textAlign:
-                l10n.localeName == 'ar' ? TextAlign.right : TextAlign.left,
+                l10n.localeName.startsWith('ar') ? TextAlign.right : TextAlign.left,
             style: TextStyle(fontSize: 8, color: AppColors.textSecondary),
           ),
           const SizedBox(height: 6),
@@ -384,12 +384,12 @@ class BankReconciliationScreen extends StatelessWidget {
               SizedBox(width: 10),
               Expanded(
                 child: Column(
-                  crossAxisAlignment: l10n.localeName == 'ar'
+                  crossAxisAlignment: l10n.localeName.startsWith('ar')
                       ? CrossAxisAlignment.end
                       : CrossAxisAlignment.start,
                   children: [
                     Text(l10n.reconciliationBusinessName,
-                        textAlign: l10n.localeName == 'ar'
+                        textAlign: l10n.localeName.startsWith('ar')
                             ? TextAlign.right
                             : TextAlign.left,
                         style: TextStyle(
@@ -397,7 +397,7 @@ class BankReconciliationScreen extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                             color: AppColors.primaryDark)),
                     Text(l10n.reconciliationNewAccountRequest,
-                        textAlign: l10n.localeName == 'ar'
+                        textAlign: l10n.localeName.startsWith('ar')
                             ? TextAlign.right
                             : TextAlign.left,
                         style: TextStyle(
@@ -429,7 +429,7 @@ class BankReconciliationScreen extends StatelessWidget {
               Expanded(
                 child: Text(
                   l10n.reconciliationAmlScore,
-                  textAlign: l10n.localeName == 'ar'
+                  textAlign: l10n.localeName.startsWith('ar')
                       ? TextAlign.right
                       : TextAlign.left,
                   style: TextStyle(
@@ -465,7 +465,7 @@ class BankReconciliationScreen extends StatelessWidget {
               Expanded(
                 child: Text(
                   l10n.reconciliationAmlMatched,
-                  textAlign: l10n.localeName == 'ar'
+                  textAlign: l10n.localeName.startsWith('ar')
                       ? TextAlign.right
                       : TextAlign.left,
                   style: TextStyle(fontSize: 8, color: AppColors.primaryDark),
@@ -571,7 +571,7 @@ class BankReconciliationScreen extends StatelessWidget {
         children: [
           Expanded(
             child: Column(
-              crossAxisAlignment: l10n.localeName == 'ar'
+              crossAxisAlignment: l10n.localeName.startsWith('ar')
                   ? CrossAxisAlignment.end
                   : CrossAxisAlignment.start,
               children: [
@@ -656,7 +656,7 @@ class BankReconciliationScreen extends StatelessWidget {
               const SizedBox(width: 6),
               Expanded(
                 child: Text(l10n.reconciliationNextAccount,
-                    textAlign: l10n.localeName == 'ar'
+                    textAlign: l10n.localeName.startsWith('ar')
                         ? TextAlign.right
                         : TextAlign.left,
                     style: TextStyle(
@@ -680,12 +680,12 @@ class BankReconciliationScreen extends StatelessWidget {
                 const SizedBox(width: 7),
                 Expanded(
                   child: Column(
-                    crossAxisAlignment: l10n.localeName == 'ar'
+                    crossAxisAlignment: l10n.localeName.startsWith('ar')
                         ? CrossAxisAlignment.end
                         : CrossAxisAlignment.start,
                     children: [
                       Text(l10n.reconciliationNextBusiness,
-                          textAlign: l10n.localeName == 'ar'
+                          textAlign: l10n.localeName.startsWith('ar')
                               ? TextAlign.right
                               : TextAlign.left,
                           style: TextStyle(
@@ -694,14 +694,14 @@ class BankReconciliationScreen extends StatelessWidget {
                               color: AppColors.primaryDark)),
                       SizedBox(height: 4),
                       Text(l10n.reconciliationNextBank,
-                          textAlign: l10n.localeName == 'ar'
+                          textAlign: l10n.localeName.startsWith('ar')
                               ? TextAlign.right
                               : TextAlign.left,
                           style: TextStyle(
                               fontSize: 8, color: AppColors.textSecondary)),
                       SizedBox(height: 5),
                       Text(l10n.reconciliationNameMismatch,
-                          textAlign: l10n.localeName == 'ar'
+                          textAlign: l10n.localeName.startsWith('ar')
                               ? TextAlign.right
                               : TextAlign.left,
                           style: TextStyle(
@@ -729,7 +729,7 @@ class BankReconciliationScreen extends StatelessWidget {
                 SizedBox(width: 6),
                 Expanded(
                   child: Text(l10n.reconciliationOpenAudit,
-                      textAlign: l10n.localeName == 'ar'
+                      textAlign: l10n.localeName.startsWith('ar')
                           ? TextAlign.right
                           : TextAlign.left,
                       style:

@@ -82,7 +82,7 @@ class _SupervisorWithdrawalsScreenState
 
     return Directionality(
       textDirection:
-          l10n.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
+          l10n.localeName.startsWith('ar') ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
         backgroundColor: const Color(0xFFF9FAFB),
         appBar: FinancePageAppBar(

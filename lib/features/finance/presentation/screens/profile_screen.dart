@@ -19,7 +19,7 @@ class ProfileScreen extends StatelessWidget {
 
     return Directionality(
       textDirection:
-          l10n.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
+          l10n.localeName.startsWith('ar') ? TextDirection.rtl : TextDirection.ltr,
       child: Scaffold(
         backgroundColor: AppColors.backgroundLight,
         appBar: FinancePageAppBar(

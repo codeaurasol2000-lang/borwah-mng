@@ -35,7 +35,7 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final isArabic = l10n.localeName == 'ar';
+    final isArabic = l10n.localeName.startsWith('ar');
 
     return BlocProvider.value(
       value: _cubit,

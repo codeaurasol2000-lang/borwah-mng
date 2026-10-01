@@ -78,7 +78,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
         ..loadDashboardData(),
       child: Directionality(
         textDirection:
-            l10n.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
+            l10n.localeName.startsWith('ar') ? TextDirection.rtl : TextDirection.ltr,
         child: FinanceSwipeNavigation(
           currentIndex: 4,
           enabled: widget.showBottomNavigation,
@@ -152,7 +152,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                 color: AppColors.primaryDark, size: 19),
                             const SizedBox(width: 3),
                             Text(
-                              l10n.localeName == 'ar'
+                              l10n.localeName.startsWith('ar')
                                   ? l10n.languageEnglish
                                   : l10n.languageArabic,
                               style: const TextStyle(

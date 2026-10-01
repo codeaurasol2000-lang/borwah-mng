@@ -95,7 +95,7 @@ class _SettlementsScreenState extends State<SettlementsScreen>
   Widget build(BuildContext context) {
     super.build(context);
     final l10n = AppLocalizations.of(context)!;
-    final isArabic = l10n.localeName == 'ar';
+    final isArabic = l10n.localeName.startsWith('ar');
 
     return Directionality(
       textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
@@ -180,7 +180,7 @@ class _SettlementsScreenState extends State<SettlementsScreen>
 
   Widget _buildHeader() {
     final l10n = AppLocalizations.of(context)!;
-    final isArabic = l10n.localeName == 'ar';
+    final isArabic = l10n.localeName.startsWith('ar');
 
     return Container(
       padding: const EdgeInsets.all(14),
@@ -509,7 +509,7 @@ class _SettlementsScreenState extends State<SettlementsScreen>
 
   Widget _buildRequestCard(_SettlementRequest request) {
     final l10n = AppLocalizations.of(context)!;
-    final isArabic = l10n.localeName == 'ar';
+    final isArabic = l10n.localeName.startsWith('ar');
     final labels = _localizedRequestLabels(request, l10n);
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
@@ -661,7 +661,7 @@ class _SettlementsScreenState extends State<SettlementsScreen>
           ),
         ),
         Text(
-          l10n.localeName == 'ar' ? '142 عملية' : '142 transactions',
+          l10n.localeName.startsWith('ar') ? '142 عملية' : '142 transactions',
           style: const TextStyle(fontSize: 9, color: AppColors.info),
         ),
         const SizedBox(width: 6),
@@ -677,7 +677,7 @@ class _SettlementsScreenState extends State<SettlementsScreen>
 
   Widget _buildRecentSettlement(_RecentSettlement settlement) {
     final l10n = AppLocalizations.of(context)!;
-    final isArabic = l10n.localeName == 'ar';
+    final isArabic = l10n.localeName.startsWith('ar');
     final labels = _localizedRecentLabels(settlement, l10n);
     return Container(
       margin: const EdgeInsets.only(bottom: 7),

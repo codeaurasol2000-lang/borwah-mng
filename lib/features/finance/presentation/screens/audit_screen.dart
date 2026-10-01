@@ -143,7 +143,7 @@ class _AuditScreenState extends State<AuditScreen>
   Widget build(BuildContext context) {
     super.build(context);
     final l10n = AppLocalizations.of(context)!;
-    final isArabic = l10n.localeName == 'ar';
+    final isArabic = l10n.localeName.startsWith('ar');
 
     return Directionality(
       textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
@@ -511,7 +511,7 @@ class _AuditScreenState extends State<AuditScreen>
       onPressed: () {},
       icon: const Icon(Icons.download_rounded, size: 17),
       label: Text(
-        l10n.localeName == 'ar'
+        l10n.localeName.startsWith('ar')
             ? 'تصدير السجل الكامل بصيغة Excel / PDF مشفر'
             : 'Export complete encrypted log as Excel / PDF',
       ),
