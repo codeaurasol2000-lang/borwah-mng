@@ -258,7 +258,6 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                               ),
 
                               const SizedBox(height: 14),
-
                               // =========================
                               // 2. بطاقة المسؤول التنفيذي
                               // =========================
