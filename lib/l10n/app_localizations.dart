@@ -1457,7 +1457,7 @@ abstract class AppLocalizations {
   /// No description provided for @homeServicesProvider.
   ///
   /// In ar, this message translates to:
-  /// **'مقدم خدمات منزلية'**
+  /// **'مزود خدمات منزلية'**
   String get homeServicesProvider;
 
   /// No description provided for @targetedPackageType.
@@ -1493,7 +1493,7 @@ abstract class AppLocalizations {
   /// No description provided for @sufficientWalletBalance.
   ///
   /// In ar, this message translates to:
-  /// **'رصيد كافٍ في المحفظة'**
+  /// **'رصيد كافي بالمحفظة'**
   String get sufficientWalletBalance;
 
   /// No description provided for @paymentMethod.
@@ -3781,6 +3781,282 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'تحميل كشف الحساب المعتمد (PDF)'**
   String get transactionDownloadStatement;
+
+  /// No description provided for @totalRequiredAmount.
+  ///
+  /// In ar, this message translates to:
+  /// **'إجمالي السعر المطلوب'**
+  String get totalRequiredAmount;
+
+  /// No description provided for @goldenAnnualPackage.
+  ///
+  /// In ar, this message translates to:
+  /// **'الباقة الذهبية السنوية'**
+  String get goldenAnnualPackage;
+
+  /// No description provided for @proServiceProvider.
+  ///
+  /// In ar, this message translates to:
+  /// **'مزود خدمة احترافي'**
+  String get proServiceProvider;
+
+  /// No description provided for @vipAnnualPackage.
+  ///
+  /// In ar, this message translates to:
+  /// **'باقة VIP السنوية'**
+  String get vipAnnualPackage;
+
+  /// No description provided for @unlimitedDeliveryPackage.
+  ///
+  /// In ar, this message translates to:
+  /// **'باقة التوصيل اللامحدود'**
+  String get unlimitedDeliveryPackage;
+
+  /// No description provided for @featuredWeekPackage.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعلان مميز (أسبوع واحد)'**
+  String get featuredWeekPackage;
+
+  /// No description provided for @directBankTransferSadad.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحويل بنكي مباشر (سداد / الراجحي)'**
+  String get directBankTransferSadad;
+
+  /// No description provided for @directDebitEscrow.
+  ///
+  /// In ar, this message translates to:
+  /// **'خصم مباشر من المحفظة الضامنة (Escrow)'**
+  String get directDebitEscrow;
+
+  /// No description provided for @creditCardMada.
+  ///
+  /// In ar, this message translates to:
+  /// **'بطاقة ائتمانية (مدى)'**
+  String get creditCardMada;
+
+  /// No description provided for @walletDeduction.
+  ///
+  /// In ar, this message translates to:
+  /// **'خصم من المحفظة'**
+  String get walletDeduction;
+
+  /// No description provided for @directBankTransferSnb.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحويل بنكي مباشر (الأهلي)'**
+  String get directBankTransferSnb;
+
+  /// No description provided for @availableBalanceLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'رصيد متاح'**
+  String get availableBalanceLabel;
+
+  /// No description provided for @featuredMerchantSubscription.
+  ///
+  /// In ar, this message translates to:
+  /// **'اشتراك تاجر مميز'**
+  String get featuredMerchantSubscription;
+
+  /// No description provided for @premiumUser.
+  ///
+  /// In ar, this message translates to:
+  /// **'مستخدم مميز'**
+  String get premiumUser;
+
+  /// No description provided for @deliveryCourier.
+  ///
+  /// In ar, this message translates to:
+  /// **'مندوب توصيل'**
+  String get deliveryCourier;
+
+  /// No description provided for @commercialAds.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعلانات تجارية'**
+  String get commercialAds;
+
+  /// No description provided for @eliteElectronicsStore.
+  ///
+  /// In ar, this message translates to:
+  /// **'متجر النخبة للإلكترونيات'**
+  String get eliteElectronicsStore;
+
+  /// No description provided for @maintenanceWorkshop.
+  ///
+  /// In ar, this message translates to:
+  /// **'ورشة الصيانة المتكاملة...'**
+  String get maintenanceWorkshop;
+
+  /// No description provided for @vipUserUpgrade.
+  ///
+  /// In ar, this message translates to:
+  /// **'ترقية مستخدم VIP'**
+  String get vipUserUpgrade;
+
+  /// No description provided for @fastCourierPackage.
+  ///
+  /// In ar, this message translates to:
+  /// **'باقة المندوب السريع'**
+  String get fastCourierPackage;
+
+  /// No description provided for @mainBannerAd.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعلان بانر رئيسي'**
+  String get mainBannerAd;
+
+  /// No description provided for @alRajhiBankName.
+  ///
+  /// In ar, this message translates to:
+  /// **'مصرف الراجحي'**
+  String get alRajhiBankName;
+
+  /// No description provided for @snbBankName.
+  ///
+  /// In ar, this message translates to:
+  /// **'البنك الأهلي السعودي (SNB)'**
+  String get snbBankName;
+
+  /// No description provided for @riyadBankName.
+  ///
+  /// In ar, this message translates to:
+  /// **'بنك الرياض'**
+  String get riyadBankName;
+
+  /// No description provided for @madaGatewayName.
+  ///
+  /// In ar, this message translates to:
+  /// **'بوابة سداد و مدى (Mada Gateway)'**
+  String get madaGatewayName;
+
+  /// No description provided for @stcPayWalletName.
+  ///
+  /// In ar, this message translates to:
+  /// **'محفظة STC Pay المركزية'**
+  String get stcPayWalletName;
+
+  /// No description provided for @operatingAccountType.
+  ///
+  /// In ar, this message translates to:
+  /// **'حساب تشغيلي'**
+  String get operatingAccountType;
+
+  /// No description provided for @escrowAccountType.
+  ///
+  /// In ar, this message translates to:
+  /// **'حساب ضمان Escrow'**
+  String get escrowAccountType;
+
+  /// No description provided for @electronicPaymentGatewayType.
+  ///
+  /// In ar, this message translates to:
+  /// **'بوابة دفع إلكتروني'**
+  String get electronicPaymentGatewayType;
+
+  /// No description provided for @digitalWalletType.
+  ///
+  /// In ar, this message translates to:
+  /// **'محفظة رقمية'**
+  String get digitalWalletType;
+
+  /// No description provided for @reconciliationNewCommercialAccountRequest.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب ربط وتوثيق حساب تجاري جديد'**
+  String get reconciliationNewCommercialAccountRequest;
+
+  /// No description provided for @reconciliationSupplierAccountRequest.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب ربط حساب مورد معتمد'**
+  String get reconciliationSupplierAccountRequest;
+
+  /// No description provided for @reconciliationFreelanceProviderRequest.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب ربط حساب مزود خدمة مستقل'**
+  String get reconciliationFreelanceProviderRequest;
+
+  /// No description provided for @reconciliationMatchDescription100.
+  ///
+  /// In ar, this message translates to:
+  /// **'تطابق الاسم التجاري والبنكي موثق بنسبة 100%'**
+  String get reconciliationMatchDescription100;
+
+  /// No description provided for @reconciliationMatchDescription96.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختلاف طفيف في اللواحق القانونية للاسم التجاري'**
+  String get reconciliationMatchDescription96;
+
+  /// No description provided for @reconciliationMatchDescription89.
+  ///
+  /// In ar, this message translates to:
+  /// **'مؤسسة فردية تتطلب شهادة آيبان حديثة مختومة'**
+  String get reconciliationMatchDescription89;
+
+  /// No description provided for @reconciliationWarning96.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم رصد اختلاف بين لاحقة السجل والحساب البنكي'**
+  String get reconciliationWarning96;
+
+  /// No description provided for @reconciliationWarning89.
+  ///
+  /// In ar, this message translates to:
+  /// **'شهادة الآيبان المرفقة تعود لأكثر من 6 أشهر'**
+  String get reconciliationWarning89;
+
+  /// No description provided for @reconciliationCommercialName1.
+  ///
+  /// In ar, this message translates to:
+  /// **'مؤسسة التجارة المتقدمة المحدودة'**
+  String get reconciliationCommercialName1;
+
+  /// No description provided for @reconciliationBeneficiaryName1.
+  ///
+  /// In ar, this message translates to:
+  /// **'مؤسسة التجارة المتقدمة للخدمات والتوكيلات'**
+  String get reconciliationBeneficiaryName1;
+
+  /// No description provided for @reconciliationCommercialName2.
+  ///
+  /// In ar, this message translates to:
+  /// **'شركة مدار الرواد للمقاولات العامة'**
+  String get reconciliationCommercialName2;
+
+  /// No description provided for @reconciliationBeneficiaryName2.
+  ///
+  /// In ar, this message translates to:
+  /// **'شركة مدار الرواد للتجارة والمقاولات ش.ش.و'**
+  String get reconciliationBeneficiaryName2;
+
+  /// No description provided for @reconciliationCommercialName3.
+  ///
+  /// In ar, this message translates to:
+  /// **'مؤسسة القمة الرقمية لتقنية المعلومات'**
+  String get reconciliationCommercialName3;
+
+  /// No description provided for @reconciliationBeneficiaryName3.
+  ///
+  /// In ar, this message translates to:
+  /// **'فهد سليمان عبد الله العتيبي'**
+  String get reconciliationBeneficiaryName3;
+
+  /// No description provided for @reconciliationHijriSuffix.
+  ///
+  /// In ar, this message translates to:
+  /// **'هـ'**
+  String get reconciliationHijriSuffix;
+
+  /// No description provided for @reconciliationFreezeRequest.
+  ///
+  /// In ar, this message translates to:
+  /// **'تجميد الطلب'**
+  String get reconciliationFreezeRequest;
 }
 
 class _AppLocalizationsDelegate

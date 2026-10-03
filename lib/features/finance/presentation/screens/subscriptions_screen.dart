@@ -6,6 +6,7 @@ import '../../domain/entities/subscription_request_entity.dart';
 import '../../domain/usecases/get_subscriptions_usecase.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/widgets/finance_dialogs.dart';
+import '../utils/finance_localizer.dart';
 import '../widgets/finance_navigation.dart';
 
 class SubscriptionsScreen extends StatefulWidget {
@@ -596,10 +597,14 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                           ],
                         ),
                         const SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        Wrap(
+                          alignment: WrapAlignment.spaceBetween,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          runSpacing: 8,
+                          spacing: 8,
                           children: [
                             Row(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 const Icon(Icons.lock_outline,
                                     size: 14, color: Colors.grey),
@@ -610,6 +615,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                               ],
                             ),
                             Row(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 _buildSmallButton(l10n.pdfReport,
                                     Icons.picture_as_pdf, Colors.red),
@@ -743,6 +749,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
         border: Border.all(color: Colors.grey.shade300),
       ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, size: 14, color: color),
           const SizedBox(width: 4),
@@ -808,7 +815,8 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      sub.providerName,
+                      FinanceLocalizer.localizeProviderName(
+                          context, sub.providerName),
                       style: const TextStyle(
                           fontWeight: FontWeight.w900,
                           fontSize: 14,
@@ -929,7 +937,8 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                             const SizedBox(width: 4),
                           Flexible(
                             child: Text(
-                              sub.targetPackageName,
+                              FinanceLocalizer.localizePackageName(
+                                  context, sub.targetPackageName),
                               style: const TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.bold,
@@ -970,9 +979,9 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'إجمالي السعر المطلوب',
-                        style: TextStyle(
+                      Text(
+                        l10n.totalRequiredAmount,
+                        style: const TextStyle(
                             fontSize: 10,
                             color: AppColors.textSecondary,
                             fontWeight: FontWeight.w600),
@@ -995,8 +1004,8 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                             ),
                           ),
                           const SizedBox(width: 4),
-                          const Text('ر.س',
-                              style: TextStyle(
+                          Text(l10n.currencySar,
+                              style: const TextStyle(
                                   fontSize: 10,
                                   color: AppColors.primaryDark,
                                   fontWeight: FontWeight.bold)),
@@ -1004,7 +1013,9 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        isAutoReady ? 'رصيد كافي بالمحفظة' : 'شامل الضريبة 15%',
+                        isAutoReady
+                            ? l10n.sufficientWalletBalance
+                            : l10n.taxInclusive15,
                         style: TextStyle(
                             fontSize: 9,
                             color: isAutoReady
@@ -1039,14 +1050,17 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    sub.paymentMethod,
+                    FinanceLocalizer.localizePaymentMethod(
+                        context, sub.paymentMethod),
                     style: const TextStyle(fontSize: 11, color: Colors.black87),
                   ),
                 ),
                 if (isAutoReady && sub.availableBalance != null)
                   Flexible(
                     child: Text(
-                      sub.availableBalance!,
+                      FinanceLocalizer.localizeAvailableBalance(
+                              context, sub.availableBalance) ??
+                          sub.availableBalance!,
                       style:
                           TextStyle(fontSize: 10, color: Colors.blue.shade700),
                       maxLines: 2,

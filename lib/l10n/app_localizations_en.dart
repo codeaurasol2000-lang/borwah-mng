@@ -778,7 +778,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get semiAnnualDuration => 'Semi-Annual (6 Months)';
 
   @override
-  String get sufficientWalletBalance => 'Sufficient Balance in Wallet';
+  String get sufficientWalletBalance => 'Sufficient wallet balance';
 
   @override
   String get paymentMethod => 'Payment Method:';
@@ -1090,8 +1090,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Request for a recent stamped IBAN certificate sent.';
 
   @override
-  String get reconciliationRejectTransfer =>
-      'Reject and freeze transfers to this account';
+  String get reconciliationRejectTransfer => 'Reject and freeze transfers';
 
   @override
   String get reconciliationRejectSuccess =>
@@ -2025,4 +2024,156 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get transactionDownloadStatement =>
       'Download approved account statement (PDF)';
+
+  @override
+  String get totalRequiredAmount => 'Total Required Amount';
+
+  @override
+  String get goldenAnnualPackage => 'Golden Annual Package';
+
+  @override
+  String get proServiceProvider => 'Professional Service Provider';
+
+  @override
+  String get vipAnnualPackage => 'VIP Annual Package';
+
+  @override
+  String get unlimitedDeliveryPackage => 'Unlimited Delivery Package';
+
+  @override
+  String get featuredWeekPackage => 'Featured Listing (1 Week)';
+
+  @override
+  String get directBankTransferSadad =>
+      'Direct Bank Transfer (SADAD / Al Rajhi)';
+
+  @override
+  String get directDebitEscrow => 'Direct Debit from Escrow Wallet';
+
+  @override
+  String get creditCardMada => 'Credit Card (Mada)';
+
+  @override
+  String get walletDeduction => 'Deduction from Wallet';
+
+  @override
+  String get directBankTransferSnb => 'Direct Bank Transfer (SNB)';
+
+  @override
+  String get availableBalanceLabel => 'Available balance';
+
+  @override
+  String get featuredMerchantSubscription => 'Featured Merchant Subscription';
+
+  @override
+  String get premiumUser => 'Premium User';
+
+  @override
+  String get deliveryCourier => 'Delivery Courier';
+
+  @override
+  String get commercialAds => 'Commercial Ads';
+
+  @override
+  String get eliteElectronicsStore => 'Elite Electronics Store';
+
+  @override
+  String get maintenanceWorkshop => 'Comprehensive Maintenance Workshop...';
+
+  @override
+  String get vipUserUpgrade => 'VIP User Upgrade';
+
+  @override
+  String get fastCourierPackage => 'Fast Courier Package';
+
+  @override
+  String get mainBannerAd => 'Main Banner Ad';
+
+  @override
+  String get alRajhiBankName => 'Al Rajhi Bank';
+
+  @override
+  String get snbBankName => 'Saudi National Bank (SNB)';
+
+  @override
+  String get riyadBankName => 'Riyad Bank';
+
+  @override
+  String get madaGatewayName => 'SADAD & Mada Gateway';
+
+  @override
+  String get stcPayWalletName => 'Central STC Pay Wallet';
+
+  @override
+  String get operatingAccountType => 'Operating Account';
+
+  @override
+  String get escrowAccountType => 'Escrow Account';
+
+  @override
+  String get electronicPaymentGatewayType => 'Electronic Payment Gateway';
+
+  @override
+  String get digitalWalletType => 'Digital Wallet';
+
+  @override
+  String get reconciliationNewCommercialAccountRequest =>
+      'New Commercial Account Link & Verification Request';
+
+  @override
+  String get reconciliationSupplierAccountRequest =>
+      'Approved Supplier Account Link Request';
+
+  @override
+  String get reconciliationFreelanceProviderRequest =>
+      'Freelance Service Provider Account Link Request';
+
+  @override
+  String get reconciliationMatchDescription100 =>
+      '100% Verified match between commercial and bank name';
+
+  @override
+  String get reconciliationMatchDescription96 =>
+      'Minor variance in legal suffixes of the commercial name';
+
+  @override
+  String get reconciliationMatchDescription89 =>
+      'Sole proprietorship requires a recent stamped IBAN certificate';
+
+  @override
+  String get reconciliationWarning96 =>
+      'Variance detected between CR suffix and bank account name';
+
+  @override
+  String get reconciliationWarning89 =>
+      'Attached IBAN certificate is older than 6 months';
+
+  @override
+  String get reconciliationCommercialName1 =>
+      'Advanced Trading Establishment Ltd.';
+
+  @override
+  String get reconciliationBeneficiaryName1 =>
+      'Advanced Trading Est. for Services & Agencies';
+
+  @override
+  String get reconciliationCommercialName2 =>
+      'Madar Al-Ruwad General Contracting Co.';
+
+  @override
+  String get reconciliationBeneficiaryName2 =>
+      'Madar Al-Ruwad Trading & Contracting LLC';
+
+  @override
+  String get reconciliationCommercialName3 => 'Digital Summit IT Establishment';
+
+  @override
+  String get reconciliationBeneficiaryName3 =>
+      'Fahad Sulaiman Abdullah Al-Otaibi';
+
+  @override
+  String get reconciliationHijriSuffix => 'AH';
+
+  @override
+  String get reconciliationFreezeRequest => 'Freeze Request';
 }

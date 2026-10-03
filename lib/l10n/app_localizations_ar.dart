@@ -732,7 +732,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get premiumMerchantSubscription => 'اشتراك تاجر مميز';
 
   @override
-  String get homeServicesProvider => 'مقدم خدمات منزلية';
+  String get homeServicesProvider => 'مزود خدمات منزلية';
 
   @override
   String get targetedPackageType => 'نوع الباقة المستهدفة';
@@ -750,7 +750,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get semiAnnualDuration => 'نصف سنوي (6 أشهر)';
 
   @override
-  String get sufficientWalletBalance => 'رصيد كافٍ في المحفظة';
+  String get sufficientWalletBalance => 'رصيد كافي بالمحفظة';
 
   @override
   String get paymentMethod => 'طريقة السداد:';
@@ -1955,4 +1955,153 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get transactionDownloadStatement => 'تحميل كشف الحساب المعتمد (PDF)';
+
+  @override
+  String get totalRequiredAmount => 'إجمالي السعر المطلوب';
+
+  @override
+  String get goldenAnnualPackage => 'الباقة الذهبية السنوية';
+
+  @override
+  String get proServiceProvider => 'مزود خدمة احترافي';
+
+  @override
+  String get vipAnnualPackage => 'باقة VIP السنوية';
+
+  @override
+  String get unlimitedDeliveryPackage => 'باقة التوصيل اللامحدود';
+
+  @override
+  String get featuredWeekPackage => 'إعلان مميز (أسبوع واحد)';
+
+  @override
+  String get directBankTransferSadad => 'تحويل بنكي مباشر (سداد / الراجحي)';
+
+  @override
+  String get directDebitEscrow => 'خصم مباشر من المحفظة الضامنة (Escrow)';
+
+  @override
+  String get creditCardMada => 'بطاقة ائتمانية (مدى)';
+
+  @override
+  String get walletDeduction => 'خصم من المحفظة';
+
+  @override
+  String get directBankTransferSnb => 'تحويل بنكي مباشر (الأهلي)';
+
+  @override
+  String get availableBalanceLabel => 'رصيد متاح';
+
+  @override
+  String get featuredMerchantSubscription => 'اشتراك تاجر مميز';
+
+  @override
+  String get premiumUser => 'مستخدم مميز';
+
+  @override
+  String get deliveryCourier => 'مندوب توصيل';
+
+  @override
+  String get commercialAds => 'إعلانات تجارية';
+
+  @override
+  String get eliteElectronicsStore => 'متجر النخبة للإلكترونيات';
+
+  @override
+  String get maintenanceWorkshop => 'ورشة الصيانة المتكاملة...';
+
+  @override
+  String get vipUserUpgrade => 'ترقية مستخدم VIP';
+
+  @override
+  String get fastCourierPackage => 'باقة المندوب السريع';
+
+  @override
+  String get mainBannerAd => 'إعلان بانر رئيسي';
+
+  @override
+  String get alRajhiBankName => 'مصرف الراجحي';
+
+  @override
+  String get snbBankName => 'البنك الأهلي السعودي (SNB)';
+
+  @override
+  String get riyadBankName => 'بنك الرياض';
+
+  @override
+  String get madaGatewayName => 'بوابة سداد و مدى (Mada Gateway)';
+
+  @override
+  String get stcPayWalletName => 'محفظة STC Pay المركزية';
+
+  @override
+  String get operatingAccountType => 'حساب تشغيلي';
+
+  @override
+  String get escrowAccountType => 'حساب ضمان Escrow';
+
+  @override
+  String get electronicPaymentGatewayType => 'بوابة دفع إلكتروني';
+
+  @override
+  String get digitalWalletType => 'محفظة رقمية';
+
+  @override
+  String get reconciliationNewCommercialAccountRequest =>
+      'طلب ربط وتوثيق حساب تجاري جديد';
+
+  @override
+  String get reconciliationSupplierAccountRequest => 'طلب ربط حساب مورد معتمد';
+
+  @override
+  String get reconciliationFreelanceProviderRequest =>
+      'طلب ربط حساب مزود خدمة مستقل';
+
+  @override
+  String get reconciliationMatchDescription100 =>
+      'تطابق الاسم التجاري والبنكي موثق بنسبة 100%';
+
+  @override
+  String get reconciliationMatchDescription96 =>
+      'اختلاف طفيف في اللواحق القانونية للاسم التجاري';
+
+  @override
+  String get reconciliationMatchDescription89 =>
+      'مؤسسة فردية تتطلب شهادة آيبان حديثة مختومة';
+
+  @override
+  String get reconciliationWarning96 =>
+      'تم رصد اختلاف بين لاحقة السجل والحساب البنكي';
+
+  @override
+  String get reconciliationWarning89 =>
+      'شهادة الآيبان المرفقة تعود لأكثر من 6 أشهر';
+
+  @override
+  String get reconciliationCommercialName1 => 'مؤسسة التجارة المتقدمة المحدودة';
+
+  @override
+  String get reconciliationBeneficiaryName1 =>
+      'مؤسسة التجارة المتقدمة للخدمات والتوكيلات';
+
+  @override
+  String get reconciliationCommercialName2 =>
+      'شركة مدار الرواد للمقاولات العامة';
+
+  @override
+  String get reconciliationBeneficiaryName2 =>
+      'شركة مدار الرواد للتجارة والمقاولات ش.ش.و';
+
+  @override
+  String get reconciliationCommercialName3 =>
+      'مؤسسة القمة الرقمية لتقنية المعلومات';
+
+  @override
+  String get reconciliationBeneficiaryName3 => 'فهد سليمان عبد الله العتيبي';
+
+  @override
+  String get reconciliationHijriSuffix => 'هـ';
+
+  @override
+  String get reconciliationFreezeRequest => 'تجميد الطلب';
 }

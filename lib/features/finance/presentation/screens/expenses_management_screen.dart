@@ -7,6 +7,7 @@ import '../controllers/bank_accounts/bank_accounts_cubit.dart';
 import '../controllers/bank_accounts/bank_accounts_state.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/widgets/finance_dialogs.dart';
+import '../utils/finance_localizer.dart';
 import '../widgets/finance_navigation.dart';
 
 class ExpensesManagementScreen extends StatelessWidget {
@@ -146,7 +147,7 @@ class _ExpensesManagementScreenState
                             padding: const EdgeInsets.only(bottom: 10),
                             child: _buildPaymentOption(
                               id: account.id,
-                              title: account.bankName,
+                              title: FinanceLocalizer.localizeBankName(context, account.bankName),
                               subtitle: account.iban,
                               balanceLabel: account.accountType.contains('ضمان')
                                   ? l10n.escrowBalanceLabel

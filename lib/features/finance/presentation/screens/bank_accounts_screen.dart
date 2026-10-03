@@ -7,6 +7,7 @@ import '../../domain/entities/bank_account_entity.dart';
 import '../controllers/bank_accounts/bank_accounts_cubit.dart';
 import '../controllers/bank_accounts/bank_accounts_state.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../utils/finance_localizer.dart';
 import '../widgets/finance_navigation.dart';
 
 class BankAccountsScreen extends StatelessWidget {
@@ -469,7 +470,8 @@ class _BankAccountsScreenContentState
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      account.bankName,
+                      FinanceLocalizer.localizeBankName(
+                          context, account.bankName),
                       style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 13,
@@ -478,7 +480,8 @@ class _BankAccountsScreenContentState
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
-                      account.accountType,
+                      FinanceLocalizer.localizeAccountType(
+                          context, account.accountType),
                       style: const TextStyle(fontSize: 11, color: Colors.grey),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
