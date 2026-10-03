@@ -4,6 +4,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../core/widgets/finance_dialogs.dart';
 import '../controllers/dashboard/finance_dashboard_cubit.dart';
 import '../controllers/dashboard/finance_dashboard_state.dart';
 import '../widgets/finance_navigation.dart';
@@ -18,6 +19,7 @@ class FrozenRequestsScreen extends StatefulWidget {
 class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
   String _selectedFilter = 'الكل'; // Filters: الكل, تجار ومتاجر, مقدمو خدمات
   late FinanceDashboardCubit _cubit;
+  List<Map<String, dynamic>>? _frozenRequests;
 
   @override
   void initState() {
@@ -63,7 +65,7 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                 // Let's create the mock ones according to the screenshot for visual pixel-perfection,
                 // but structured to be filtered.
 
-                final List<Map<String, dynamic>> frozenRequests = [
+                _frozenRequests ??= [
                   {
                     'id': '1',
                     'title': l10n.frozenRequestOneName,
@@ -118,7 +120,7 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                   },
                 ];
 
-                final filteredRequests = frozenRequests.where((req) {
+                final filteredRequests = _frozenRequests!.where((req) {
                   if (_selectedFilter == 'الكل') return true;
                   return req['type'] == _selectedFilter;
                 }).toList();
@@ -156,22 +158,33 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
-                                      Text(
-                                        CurrencyFormatter.format(totalAmount),
-                                        style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 32,
-                                            fontWeight: FontWeight.bold,
-                                            height: 1),
-                                      ),
-                                      const SizedBox(width: 4),
-                                      Text(
-                                        AppLocalizations.of(context)!
-                                            .currencySar,
-                                        style: TextStyle(
-                                            color: Colors.white70,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold),
+                                      Flexible(
+                                        child: FittedBox(
+                                          fit: BoxFit.scaleDown,
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                            children: [
+                                              Text(
+                                                CurrencyFormatter.format(totalAmount),
+                                                style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 32,
+                                                    fontWeight: FontWeight.bold,
+                                                    height: 1),
+                                              ),
+                                              const SizedBox(width: 4),
+                                              Text(
+                                                AppLocalizations.of(context)!
+                                                    .currencySar,
+                                                style: const TextStyle(
+                                                    color: Colors.white70,
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.bold),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -180,7 +193,7 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 16, vertical: 10),
                                     decoration: BoxDecoration(
-                                      color: Colors.white.withOpacity(0.05),
+                                      color: Colors.white.withValues(alpha: 0.05),
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     child: Row(
@@ -189,32 +202,34 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                                           padding: const EdgeInsets.all(6),
                                           decoration: BoxDecoration(
                                             color:
-                                                Colors.white.withOpacity(0.1),
+                                                Colors.white.withValues(alpha: 0.1),
                                             shape: BoxShape.circle,
                                           ),
                                           child: const Icon(Icons.lock_outline,
                                               color: Colors.white70, size: 16),
                                         ),
                                         const SizedBox(width: 12),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              '$totalCount ${l10n.frozenRequestCount}',
-                                              style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            const SizedBox(height: 2),
-                                            Text(
-                                              l10n.frozenProtocol,
-                                              style: TextStyle(
-                                                  color: Colors.white60,
-                                                  fontSize: 10),
-                                            ),
-                                          ],
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                '$totalCount ${l10n.frozenRequestCount}',
+                                                style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.bold),
+                                              ),
+                                              const SizedBox(height: 2),
+                                              Text(
+                                                l10n.frozenProtocol,
+                                                style: const TextStyle(
+                                                    color: Colors.white60,
+                                                    fontSize: 10),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -277,7 +292,7 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                         color: Colors.white,
                         boxShadow: [
                           BoxShadow(
-                              color: Colors.black.withOpacity(0.05),
+                              color: Colors.black.withValues(alpha: 0.05),
                               blurRadius: 10,
                               offset: const Offset(0, -5)),
                         ],
@@ -300,7 +315,7 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                               icon: const Icon(Icons.ios_share, size: 18),
                               onPressed: () {},
                               label: Text(l10n.frozenExport,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.bold)),
                             ),
@@ -324,7 +339,7 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                                 _cubit.loadDashboardData();
                               },
                               label: Text(l10n.frozenRefresh,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.bold)),
                             ),
@@ -436,30 +451,37 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                     ],
                   ),
                 ),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: AppColors.dangerLight,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: AppColors.dangerBorder),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(req['status'],
-                          style: const TextStyle(
-                              fontSize: 10,
-                              color: AppColors.danger,
-                              fontWeight: FontWeight.bold)),
-                      const SizedBox(width: 4),
-                      Icon(
-                          req['ibanError'] != null
-                              ? Icons.warning_amber_rounded
-                              : Icons.pause_circle_outline,
-                          size: 12,
-                          color: AppColors.danger),
-                    ],
+                const SizedBox(width: 8),
+                Flexible(
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: AppColors.dangerLight,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: AppColors.dangerBorder),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Flexible(
+                          child: Text(req['status'],
+                              style: const TextStyle(
+                                  fontSize: 10,
+                                  color: AppColors.danger,
+                                  fontWeight: FontWeight.bold),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis),
+                        ),
+                        const SizedBox(width: 4),
+                        Icon(
+                            req['ibanError'] != null
+                                ? Icons.warning_amber_rounded
+                                : Icons.pause_circle_outline,
+                            size: 12,
+                            color: AppColors.danger),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -476,12 +498,17 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                        req['ibanError'] != null
-                            ? l10n.frozenPendingTransferAmount
-                            : l10n.frozenHeldAmount,
-                        style: const TextStyle(
-                            fontSize: 11, color: AppColors.textSecondary)),
+                    Flexible(
+                      child: Text(
+                          req['ibanError'] != null
+                              ? l10n.frozenPendingTransferAmount
+                              : l10n.frozenHeldAmount,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                              fontSize: 11, color: AppColors.textSecondary)),
+                    ),
+                    const SizedBox(width: 8),
                     Expanded(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
@@ -530,11 +557,15 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                               overflow: TextOverflow.ellipsis)),
                     const SizedBox(width: 8),
                     if (req['ibanError'] != null)
-                      Text(l10n.frozenAccountNameMismatch,
-                          style: const TextStyle(
-                              fontSize: 11,
-                              color: AppColors.danger,
-                              fontWeight: FontWeight.bold))
+                      Flexible(
+                        child: Text(l10n.frozenAccountNameMismatch,
+                            style: const TextStyle(
+                                fontSize: 11,
+                                color: AppColors.danger,
+                                fontWeight: FontWeight.bold),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis),
+                      )
                     else
                       Flexible(
                           child: Text(
@@ -580,17 +611,24 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     if (req['supervisor'] != '')
-                      Row(
-                        children: [
-                          const Icon(Icons.assignment_ind_outlined,
-                              size: 14, color: AppColors.textMuted),
-                          const SizedBox(width: 6),
-                          Text(
-                              '${l10n.frozenSupervisorLabel} ${req['supervisor']}',
-                              style: const TextStyle(
-                                  fontSize: 10,
-                                  color: AppColors.textSecondary)),
-                        ],
+                      Flexible(
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.assignment_ind_outlined,
+                                size: 14, color: AppColors.textMuted),
+                            const SizedBox(width: 6),
+                            Flexible(
+                              child: Text(
+                                  '${l10n.frozenSupervisorLabel} ${req['supervisor']}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                      fontSize: 10,
+                                      color: AppColors.textSecondary)),
+                            ),
+                          ],
+                        ),
                       )
                     else
                       const SizedBox(),
@@ -626,12 +664,30 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                           borderRadius: BorderRadius.circular(10)),
                     ),
                     icon: Icon(req['actionIcon'] ?? Icons.lock_open, size: 16),
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(l10n.frozenThawSuccess)));
-                      // Here logic to update status to pending/approved
+                    onPressed: () async {
+                      final confirmed = await FinanceDialogs.showUnfreezeDialog(
+                        context,
+                        title: req['title'],
+                        amount: req['amount'] as double,
+                      );
+                      if (confirmed && mounted) {
+                        setState(() {
+                          _frozenRequests!
+                              .removeWhere((item) => item['id'] == req['id']);
+                        });
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(l10n.localeName.startsWith('ar')
+                                ? 'تم فك التجميد بنجاح وإرسال أمر الصرف للإدارة للموافقة'
+                                : 'Unfrozen successfully and disbursement order sent to Admin'),
+                            backgroundColor: AppColors.success,
+                          ),
+                        );
+                      }
                     },
                     label: Text(req['actionButton'],
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                             fontSize: 12, fontWeight: FontWeight.bold)),
                   ),
@@ -652,8 +708,35 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                     ),
                     icon: Icon(req['cancelIcon'] ?? Icons.highlight_off,
                         size: 16),
-                    onPressed: () {},
+                    onPressed: () async {
+                      final isArabic = l10n.localeName.startsWith('ar');
+                      final reason = await FinanceDialogs.showRejectionDialog(
+                        context,
+                        title: isArabic
+                            ? 'تأكيد رفض الطلب والمصادرة'
+                            : 'Confirm Rejection & Confiscation',
+                        hint: isArabic
+                            ? 'اكتب سبب الرفض والمصادرة الرقابية بالتفصيل...'
+                            : 'Enter confiscation/rejection reason...',
+                      );
+                      if (reason != null && mounted) {
+                        setState(() {
+                          _frozenRequests!
+                              .removeWhere((item) => item['id'] == req['id']);
+                        });
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(isArabic
+                                ? 'تم تأكيد رفض الطلب والمصادرة وتوثيق السبب'
+                                : 'Request confirmed rejected and confiscated'),
+                            backgroundColor: AppColors.danger,
+                          ),
+                        );
+                      }
+                    },
                     label: Text(req['cancelButton'],
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                             fontSize: 12, fontWeight: FontWeight.bold)),
                   ),

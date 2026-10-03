@@ -5,6 +5,7 @@ import '../../../../core/utils/currency_formatter.dart';
 import '../../domain/entities/withdrawal_request_entity.dart';
 import '../../domain/usecases/get_merchant_withdrawals_usecase.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../core/widgets/finance_dialogs.dart';
 import '../widgets/finance_navigation.dart';
 
 class MerchantWithdrawalsScreen extends StatefulWidget {
@@ -48,14 +49,16 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
   }
 
   int _countFor(String type) {
-    if (type == 'التجار')
+    if (type == 'التجار') {
       return _requests
           .where((r) => r.beneficiaryType == BeneficiaryType.merchant)
           .length;
-    if (type == 'المستخدمين')
+    }
+    if (type == 'المستخدمين') {
       return _requests
           .where((r) => r.beneficiaryType != BeneficiaryType.merchant)
           .length;
+    }
     return _requests.length;
   }
 
@@ -102,7 +105,7 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                     children: [
                       // 1. Tag
                       Align(
-                        alignment: Alignment.centerLeft,
+                        alignment: AlignmentDirectional.centerStart,
                         child: Container(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 10, vertical: 4),
@@ -113,11 +116,15 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(l10n.bankingAndCashSurveillanceGateway,
-                                  style: const TextStyle(
-                                      color: AppColors.primaryDark,
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.bold)),
+                              Flexible(
+                                child: Text(l10n.bankingAndCashSurveillanceGateway,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                        color: AppColors.primaryDark,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold)),
+                              ),
                               const SizedBox(width: 4),
                               Icon(Icons.verified,
                                   color: Colors.blue.shade700, size: 14),
@@ -329,11 +336,16 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Icon(icon, color: color, size: 20),
-              Text(title,
-                  style: const TextStyle(
-                      fontSize: 11,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w600)),
+              const SizedBox(width: 4),
+              Flexible(
+                child: Text(title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        fontSize: 11,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w600)),
+              ),
             ],
           ),
           const SizedBox(height: 12),
@@ -429,23 +441,28 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: isDanger
-                                ? AppColors.dangerLight
-                                : const Color(0xFFE5E7EB),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Text(
-                            req.requestNumber,
-                            style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                                color: isDanger
-                                    ? AppColors.danger
-                                    : Colors.black87),
+                        const SizedBox(width: 4),
+                        Flexible(
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: isDanger
+                                  ? AppColors.dangerLight
+                                  : const Color(0xFFE5E7EB),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              req.requestNumber,
+                              style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                  color: isDanger
+                                      ? AppColors.danger
+                                      : Colors.black87),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ),
                       ],
@@ -478,25 +495,29 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                 ),
               ),
               if (!isDanger)
-                Container(
-                  margin: const EdgeInsets.only(right: 8),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: isReady
-                        ? Colors.blue.shade100
-                        : const Color(0xFFF1F5F9),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    isReady
-                        ? l10n.readyForInstantDisbursement
-                        : l10n.underReviewStatus,
-                    style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                        color:
-                            isReady ? AppColors.primaryDark : Colors.black87),
+                Flexible(
+                  child: Container(
+                    margin: const EdgeInsets.only(right: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: isReady
+                          ? Colors.blue.shade100
+                          : const Color(0xFFF1F5F9),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      isReady
+                          ? l10n.readyForInstantDisbursement
+                          : l10n.underReviewStatus,
+                      style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color:
+                              isReady ? AppColors.primaryDark : Colors.black87),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ),
             ],
@@ -728,11 +749,15 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                       Icon(Icons.check_circle,
                           color: Colors.blue.shade700, size: 16),
                       const SizedBox(width: 6),
-                      Text(l10n.automatedTaxAuditResult,
-                          style: const TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.primaryDark)),
+                      Expanded(
+                        child: Text(l10n.automatedTaxAuditResult,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.primaryDark)),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 6),
@@ -799,53 +824,143 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
             children: [
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      isDanger ? AppColors.primaryDark : AppColors.primaryDark,
+                  backgroundColor: AppColors.primaryDark,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12)),
                   elevation: 0,
                 ),
-                icon: Icon(
-                    isDanger
-                        ? Icons.folder_off_outlined
-                        : Icons.check_circle_outline,
-                    size: 18),
-                onPressed: () {},
+                icon: const Icon(Icons.check_circle_outline, size: 18),
+                onPressed: () async {
+                  final isArabic = l10n.localeName.startsWith('ar');
+                  final messenger = ScaffoldMessenger.of(context);
+                  final confirmed = await FinanceDialogs.showApprovalDialog(
+                    context,
+                    title: isArabic
+                        ? 'اعتماد طلب السحب'
+                        : 'Approve Withdrawal Request',
+                    description: isArabic
+                        ? 'هل تريد اعتماد طلب سحب ${req.beneficiaryName} بقيمة ${CurrencyFormatter.format(req.netAmount)} وإرساله للإدارة للموافقة؟'
+                        : 'Do you want to approve the withdrawal request for ${req.beneficiaryName} (${CurrencyFormatter.format(req.netAmount)}) and send it to management?',
+                  );
+                  if (confirmed && mounted) {
+                    setState(() {
+                      _requests.removeWhere((r) => r.id == req.id);
+                    });
+                    messenger.showSnackBar(
+                      SnackBar(
+                        content: Text(isArabic
+                            ? 'تم اعتماد طلب السحب بنجاح وإرساله للإدارة للموافقة عليه'
+                            : 'Withdrawal request approved and sent to management'),
+                        backgroundColor: AppColors.success,
+                      ),
+                    );
+                  }
+                },
                 label: Text(
-                  isDanger
-                      ? l10n.rejectAndNotifyCustomer
-                      : (isReady
-                          ? l10n.approveAndIssueBankOrder
-                          : l10n.approveAndSendToAdmin),
+                  isReady
+                      ? l10n.approveAndIssueBankOrder
+                      : l10n.approveAndSendToAdmin,
                   style: const TextStyle(
                       fontSize: 13, fontWeight: FontWeight.bold),
                 ),
               ),
               const SizedBox(height: 8),
-              OutlinedButton.icon(
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: AppColors.danger,
-                  side: BorderSide(
-                      color:
-                          isDanger ? AppColors.danger : AppColors.dangerLight),
-                  backgroundColor: isDanger
-                      ? AppColors.dangerLight.withValues(alpha: 0.3)
-                      : AppColors.dangerLight.withValues(alpha: 0.3),
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                ),
-                icon: Icon(
-                    isDanger ? Icons.cancel_outlined : Icons.lock_outline,
-                    size: 18),
-                onPressed: () {},
-                label: Text(
-                  isDanger ? l10n.freezeRequest : l10n.freezeRequestTemporarily,
-                  style: const TextStyle(
-                      fontSize: 13, fontWeight: FontWeight.bold),
-                ),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: AppColors.danger,
+                        side: const BorderSide(color: AppColors.danger),
+                        padding: const EdgeInsets.symmetric(vertical: 11),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                      ),
+                      icon: const Icon(Icons.cancel_outlined, size: 16),
+                      onPressed: () async {
+                        final isArabic = l10n.localeName.startsWith('ar');
+                        final messenger = ScaffoldMessenger.of(context);
+                        final reason = await FinanceDialogs.showRejectionDialog(
+                          context,
+                          title: isArabic
+                              ? 'رفض طلب السحب'
+                              : 'Reject Withdrawal',
+                        );
+                        if (reason != null && mounted) {
+                          setState(() {
+                            _requests.removeWhere((r) => r.id == req.id);
+                          });
+                          messenger.showSnackBar(
+                            SnackBar(
+                              content: Text(isArabic
+                                  ? 'تم رفض الطلب وإرسال سبب الرفض لرئيس المشرفين للمراجعة'
+                                  : 'Request rejected and submitted to Head Supervisor'),
+                              backgroundColor: AppColors.danger,
+                            ),
+                          );
+                        }
+                      },
+                      label: Text(
+                        l10n.localeName.startsWith('ar')
+                            ? 'رفض الطلب'
+                            : 'Reject',
+                        style: const TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.orange.shade800,
+                        backgroundColor: Colors.orange.shade50,
+                        side: BorderSide(color: Colors.orange.shade200),
+                        padding: const EdgeInsets.symmetric(vertical: 11),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                      ),
+                      icon: const Icon(Icons.pause_circle_outline, size: 16),
+                      onPressed: () async {
+                        final isArabic = l10n.localeName.startsWith('ar');
+                        final messenger = ScaffoldMessenger.of(context);
+                        final confirmed = await FinanceDialogs.showFreezeDialog(
+                          context,
+                          requestTitle: req.beneficiaryName,
+                        );
+                        if (confirmed && mounted) {
+                          setState(() {
+                            final idx =
+                                _requests.indexWhere((r) => r.id == req.id);
+                            if (idx != -1) {
+                              _requests[idx] = req.copyWith(
+                                status: RequestStatus.underInvestigation,
+                                alertNotice: isArabic
+                                    ? 'تم تجميد الطلب احترازياً بقرار المشرف المالي'
+                                    : 'Precautionarily frozen by finance supervisor',
+                              );
+                            }
+                          });
+                          messenger.showSnackBar(
+                            SnackBar(
+                              content: Text(isArabic
+                                  ? 'تم تجميد الطلب ونقله إلى قائمة التدقيق الرقابي'
+                                  : 'Request frozen and moved to audit inspection'),
+                              backgroundColor: AppColors.warning,
+                            ),
+                          );
+                        }
+                      },
+                      label: Text(
+                        l10n.freezeRequestTemporarily,
+                        style: const TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

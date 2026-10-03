@@ -3,6 +3,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../widgets/finance_navigation.dart';
 import '../widgets/new_settlement_bottom_sheet.dart';
+import 'settlement_details_screen.dart';
 
 class SettlementsScreen extends StatefulWidget {
   final bool showBottomNavigation;
@@ -248,13 +249,16 @@ class _SettlementsScreenState extends State<SettlementsScreen>
 
   Widget _buildBalances() {
     final l10n = AppLocalizations.of(context)!;
+    final isArabic = l10n.localeName.startsWith('ar');
     return Row(
       children: [
         Expanded(
           child: _buildBalanceCard(
             title: l10n.settlementsEscrowWallet,
             amount: '148,650.00',
-            subtitle: l10n.settlementsReservedOrders,
+            subtitle: isArabic
+                ? 'مربوط بـ مصرف الراجحي الرسمي'
+                : 'Linked to Al Rajhi Official Bank',
             icon: Icons.account_balance_wallet_outlined,
             color: AppColors.info,
           ),
@@ -511,118 +515,150 @@ class _SettlementsScreenState extends State<SettlementsScreen>
     final l10n = AppLocalizations.of(context)!;
     final isArabic = l10n.localeName.startsWith('ar');
     final labels = _localizedRequestLabels(request, l10n);
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.white,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.cardBorder),
-      ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              _buildTag(labels.badge, request.badgeColor),
-              const SizedBox(width: 5),
-              _buildTag(labels.status, AppColors.surfaceLight,
-                  textColor: AppColors.infoDark),
-              const Spacer(),
-              Text(
-                request.id,
-                textDirection: TextDirection.ltr,
-                style: const TextStyle(
-                    fontSize: 8,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textSecondary),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => SettlementDetailsScreen(
+                id: request.id,
+                name: request.name,
+                description: labels.description,
+                amount: request.amount,
+                reference: request.reference,
+                referenceTitle: labels.referenceTitle,
+                badge: labels.badge,
+                status: labels.status,
+                initials: request.initials,
+                age: labels.age,
+                color: request.color,
+                badgeColor: request.badgeColor,
               ),
-            ],
+            ),
+          );
+        },
+        child: Container(
+          margin: const EdgeInsets.only(bottom: 8),
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: AppColors.cardBorder),
           ),
-          const SizedBox(height: 8),
-          Row(
+          child: Column(
             children: [
-              CircleAvatar(
-                radius: 17,
-                backgroundColor: request.color,
-                child: Text(
-                  request.initials,
-                  style: const TextStyle(
-                      color: AppColors.infoDark,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      request.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.end,
-                      style: const TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.primaryDark),
-                    ),
-                    Text(
-                      labels.description,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.end,
-                      style: const TextStyle(
-                          fontSize: 8, color: AppColors.textSecondary),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 8),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
+              Row(
                 children: [
-                  Row(
-                    children: [
-                      Text(
-                        request.amount,
-                        style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.primaryDark),
-                      ),
-                      const SizedBox(width: 3),
-                      Text(isArabic ? 'ر.س' : 'SAR',
+                  _buildTag(labels.badge, request.badgeColor),
+                  const SizedBox(width: 5),
+                  _buildTag(labels.status, AppColors.surfaceLight,
+                      textColor: AppColors.infoDark),
+                  const Spacer(),
+                  Text(
+                    request.id,
+                    textDirection: TextDirection.ltr,
+                    style: const TextStyle(
+                        fontSize: 8,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textSecondary),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 17,
+                    backgroundColor: request.color,
+                    child: Text(
+                      request.initials,
+                      style: const TextStyle(
+                          color: AppColors.infoDark,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          request.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.end,
                           style: const TextStyle(
-                              fontSize: 8, color: AppColors.textSecondary)),
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.primaryDark),
+                        ),
+                        Text(
+                          labels.description,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.end,
+                          style: const TextStyle(
+                              fontSize: 8, color: AppColors.textSecondary),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            request.amount,
+                            style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.primaryDark),
+                          ),
+                          const SizedBox(width: 3),
+                          Text(isArabic ? 'ر.س' : 'SAR',
+                              style: const TextStyle(
+                                  fontSize: 8, color: AppColors.textSecondary)),
+                        ],
+                      ),
+                      Text(labels.age,
+                          style:
+                              const TextStyle(fontSize: 8, color: AppColors.info)),
                     ],
                   ),
-                  Text(labels.age,
-                      style:
-                          const TextStyle(fontSize: 8, color: AppColors.info)),
+                ],
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 7),
+                child: Divider(height: 1, color: AppColors.surfaceLight),
+              ),
+              Row(
+                children: [
+                  _buildTag('${labels.referenceTitle} ${request.reference}',
+                      AppColors.surfaceLight,
+                      textColor: AppColors.infoDark),
+                  const Spacer(),
+                  Icon(
+                    isArabic ? Icons.arrow_back : Icons.arrow_forward,
+                    size: 14,
+                    color: AppColors.primaryDark,
+                  ),
+                  const SizedBox(width: 3),
+                  Text(l10n.viewLabel,
+                      style: const TextStyle(
+                          fontSize: 9,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.primaryDark)),
                 ],
               ),
             ],
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 7),
-            child: Divider(height: 1, color: AppColors.surfaceLight),
-          ),
-          Row(
-            children: [
-              _buildTag('${labels.referenceTitle} ${request.reference}',
-                  AppColors.surfaceLight,
-                  textColor: AppColors.infoDark),
-              const Spacer(),
-              const Icon(Icons.arrow_back,
-                  size: 14, color: AppColors.primaryDark),
-              const SizedBox(width: 3),
-              Text(l10n.viewLabel,
-                  style: const TextStyle(
-                      fontSize: 9, color: AppColors.primaryDark)),
-            ],
-          ),
-        ],
+        ),
       ),
     );
   }

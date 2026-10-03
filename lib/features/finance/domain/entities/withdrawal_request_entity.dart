@@ -44,6 +44,48 @@ class WithdrawalRequestEntity extends Equatable {
     this.transferMethod,
   });
 
+  WithdrawalRequestEntity copyWith({
+    String? id,
+    String? requestNumber,
+    String? beneficiaryName,
+    String? beneficiaryRole,
+    BeneficiaryType? beneficiaryType,
+    double? grossAmount,
+    double? platformFeePercentage,
+    double? platformFeeAmount,
+    double? netAmount,
+    String? bankName,
+    String? iban,
+    String? dateText,
+    RequestStatus? status,
+    String? auditCheckResult,
+    String? alertNotice,
+    bool? isInstantTransferReady,
+    String? sourceOfFunds,
+    String? transferMethod,
+  }) {
+    return WithdrawalRequestEntity(
+      id: id ?? this.id,
+      requestNumber: requestNumber ?? this.requestNumber,
+      beneficiaryName: beneficiaryName ?? this.beneficiaryName,
+      beneficiaryRole: beneficiaryRole ?? this.beneficiaryRole,
+      beneficiaryType: beneficiaryType ?? this.beneficiaryType,
+      grossAmount: grossAmount ?? this.grossAmount,
+      platformFeePercentage: platformFeePercentage ?? this.platformFeePercentage,
+      platformFeeAmount: platformFeeAmount ?? this.platformFeeAmount,
+      netAmount: netAmount ?? this.netAmount,
+      bankName: bankName ?? this.bankName,
+      iban: iban ?? this.iban,
+      dateText: dateText ?? this.dateText,
+      status: status ?? this.status,
+      auditCheckResult: auditCheckResult ?? this.auditCheckResult,
+      alertNotice: alertNotice ?? this.alertNotice,
+      isInstantTransferReady: isInstantTransferReady ?? this.isInstantTransferReady,
+      sourceOfFunds: sourceOfFunds ?? this.sourceOfFunds,
+      transferMethod: transferMethod ?? this.transferMethod,
+    );
+  }
+
   @override
   List<Object?> get props => [id, requestNumber, netAmount, status];
 }

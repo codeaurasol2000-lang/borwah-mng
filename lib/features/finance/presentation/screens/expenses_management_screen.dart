@@ -6,6 +6,7 @@ import '../../../../core/utils/currency_formatter.dart';
 import '../controllers/bank_accounts/bank_accounts_cubit.dart';
 import '../controllers/bank_accounts/bank_accounts_state.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../core/widgets/finance_dialogs.dart';
 import '../widgets/finance_navigation.dart';
 
 class ExpensesManagementScreen extends StatelessWidget {
@@ -35,6 +36,7 @@ class _ExpensesManagementScreenState
       TextEditingController(text: '14,500.00');
   final TextEditingController _reasonController = TextEditingController();
   String _selectedPaymentMethod = 'rajhi'; // Default selected
+  bool _hasAttachedDocument = false;
 
   @override
   void dispose() {
@@ -195,25 +197,69 @@ class _ExpensesManagementScreenState
                         style: const TextStyle(
                             fontSize: 11, color: AppColors.textSecondary)),
                     const SizedBox(height: 8),
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      decoration: BoxDecoration(
-                        color: AppColors.surfaceLight,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(Icons.attach_file,
-                              color: AppColors.info, size: 16),
-                          const SizedBox(width: 8),
-                          Text(l10n.attachDocumentOptional,
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          _hasAttachedDocument = !_hasAttachedDocument;
+                        });
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(_hasAttachedDocument
+                                ? (l10n.localeName.startsWith('ar')
+                                    ? 'تم إرفاق مستند الفاتورة (فاتورة_مصروف.pdf)'
+                                    : 'Invoice document attached (invoice_receipt.pdf)')
+                                : (l10n.localeName.startsWith('ar')
+                                    ? 'تمت إزالة المستند المرفق'
+                                    : 'Attached document removed')),
+                            duration: const Duration(seconds: 2),
+                          ),
+                        );
+                      },
+                      borderRadius: BorderRadius.circular(12),
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        decoration: BoxDecoration(
+                          color: _hasAttachedDocument
+                              ? Colors.green.shade50
+                              : AppColors.surfaceLight,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: _hasAttachedDocument
+                                ? Colors.green.shade300
+                                : Colors.transparent,
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              _hasAttachedDocument
+                                  ? Icons.check_circle
+                                  : Icons.attach_file,
+                              color: _hasAttachedDocument
+                                  ? Colors.green.shade700
+                                  : AppColors.info,
+                              size: 16,
+                            ),
+                            const SizedBox(width: 8),
+                            Flexible(
+                              child: Text(
+                              _hasAttachedDocument
+                                  ? (l10n.localeName.startsWith('ar')
+                                      ? 'مرفق: فاتورة_مصروف.pdf (انقر للإلغاء)'
+                                      : 'Attached: invoice_receipt.pdf (tap to remove)')
+                                  : l10n.attachDocumentOptional,
                               style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.blue.shade800)),
+                                  color: _hasAttachedDocument
+                                      ? Colors.green.shade800
+                                      : Colors.blue.shade800),
+                            ),
+                        ),
                         ],
+                        ),
                       ),
                     ),
                   ],
@@ -281,11 +327,47 @@ class _ExpensesManagementScreenState
                       borderRadius: BorderRadius.circular(12)),
                   elevation: 0,
                 ),
-                icon: const Icon(Icons.fingerprint, size: 18),
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(l10n.paymentApprovedSuccessfully)));
-                  Navigator.pop(context);
+                icon: const Icon(Icons.send_outlined, size: 18),
+                onPressed: () async {
+                  final isArabic = l10n.localeName.startsWith('ar');
+                  final reason = _reasonController.text.trim();
+                  if (reason.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(isArabic
+                            ? 'يرجى كتابة سبب المصروف أولاً'
+                            : 'Please enter the expense reason first'),
+                        backgroundColor: AppColors.warning,
+                      ),
+                    );
+                    return;
+                  }
+
+                  final messenger = ScaffoldMessenger.of(context);
+                  final navigator = Navigator.of(context);
+
+                  final confirmed = await FinanceDialogs.showApprovalDialog(
+                    context,
+                    title: isArabic
+                        ? 'إرسال بيان الصرف للأدمن'
+                        : 'Submit Payment Order to Admin',
+                    description: isArabic
+                        ? 'هل تريد تأكيد إرسال بيان الدفع بمبلغ ${_amountController.text} إلى المستخدم الأدمن للموافقة عليه أو رفضه؟'
+                        : 'Do you want to confirm submitting this payout statement for ${_amountController.text} to Admin for approval?',
+                    confirmText: isArabic ? 'تأكيد وإرسال للأدمن' : 'Send to Admin',
+                  );
+
+                  if (confirmed && mounted) {
+                    messenger.showSnackBar(
+                      SnackBar(
+                        content: Text(isArabic
+                            ? 'تم إرسال بيان الصرف بنجاح إلى المستخدم الأدمن للمصادقة عليه'
+                            : 'Payment statement successfully sent to Admin for approval'),
+                        backgroundColor: AppColors.success,
+                      ),
+                    );
+                    navigator.pop();
+                  }
                 },
                 label: Text(l10n.approvePaymentOrder,
                     style: const TextStyle(
@@ -336,11 +418,15 @@ class _ExpensesManagementScreenState
             children: [
               Icon(icon, color: AppColors.info, size: 18),
               const SizedBox(width: 8),
-              Text(title,
-                  style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.textPrimary)),
+              Expanded(
+                child: Text(title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textPrimary)),
+              ),
             ],
           ),
           const SizedBox(height: 16),
@@ -391,9 +477,13 @@ class _ExpensesManagementScreenState
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      Text(balanceLabel,
-                          style: const TextStyle(
-                              fontSize: 10, color: AppColors.textSecondary)),
+                      Flexible(
+                        child: Text(balanceLabel,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                                fontSize: 10, color: AppColors.textSecondary)),
+                      ),
                       const SizedBox(width: 4),
                       Text(balanceValue,
                           style: const TextStyle(

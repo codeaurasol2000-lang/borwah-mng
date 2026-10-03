@@ -10,6 +10,7 @@ class AppLocaleController extends ChangeNotifier {
   Locale _locale = const Locale('ar');
 
   Locale get locale => _locale;
+  bool get isArabic => _locale.languageCode == 'ar';
 
   Future<void> setLocale(String languageCode) async {
     if (languageCode != 'ar' && languageCode != 'en') {

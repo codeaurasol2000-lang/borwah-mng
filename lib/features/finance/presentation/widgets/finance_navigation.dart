@@ -39,13 +39,17 @@ class FinancePageAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       centerTitle: false,
       titleSpacing: 12,
+      backgroundColor: Colors.white,
+      elevation: 0.5,
+      scrolledUnderElevation: 0,
       leading: showBackButton
           ? IconButton(
               tooltip: l10n.settlementBack,
               onPressed: onBackPressed,
               icon: Icon(
                   isArabic ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
-                  size: 18),
+                  size: 18,
+                  color: AppColors.primaryDark),
             )
           : null,
       title: Column(
@@ -68,23 +72,34 @@ class FinancePageAppBar extends StatelessWidget implements PreferredSizeWidget {
         ],
       ),
       actions: [
-        IconButton(
-          tooltip: l10n.switchLanguage,
-          onPressed: AppLocaleController.instance.toggle,
-          icon: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.translate,
-                  color: AppColors.primaryDark, size: 18),
-              const SizedBox(width: 3),
-              Text(
-                isArabic ? l10n.languageEnglish : l10n.languageArabic,
-                style: const TextStyle(
-                    fontSize: 9,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.primaryDark),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 10),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(20),
+            onTap: AppLocaleController.instance.toggle,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+              decoration: BoxDecoration(
+                color: AppColors.surfaceLight,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: Colors.grey.shade300),
               ),
-            ],
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.language,
+                      color: AppColors.primaryDark, size: 14),
+                  const SizedBox(width: 4),
+                  Text(
+                    isArabic ? 'English' : 'العربية',
+                    style: const TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primaryDark),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
         if (showProfileButton)
@@ -168,39 +183,98 @@ class FinanceBottomNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return BottomNavigationBar(
-      backgroundColor: Colors.white,
-      type: BottomNavigationBarType.fixed,
-      selectedItemColor: AppColors.primaryDark,
-      unselectedItemColor: AppColors.textSecondary,
-      selectedLabelStyle:
-          const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
-      unselectedLabelStyle: const TextStyle(fontSize: 10),
-      elevation: 16,
-      currentIndex: currentIndex,
-      onTap: onTap ??
-          (index) => FinanceNavigation.openTab(
-                context,
-                index,
-                currentIndex: currentIndex,
-              ),
-      items: [
-        BottomNavigationBarItem(
-            icon: const Icon(Icons.history_edu, size: 24),
-            label: l10n.navAudit),
-        BottomNavigationBarItem(
-            icon: const Icon(Icons.percent, size: 24),
-            label: l10n.navCommissions),
-        BottomNavigationBarItem(
-            icon: const Icon(Icons.sync_alt, size: 24),
-            label: l10n.navSettlements),
-        BottomNavigationBarItem(
-            icon: const Icon(Icons.fact_check_outlined, size: 24),
-            label: l10n.navReconciliation),
-        BottomNavigationBarItem(
-            icon: const Icon(Icons.account_balance, size: 24),
-            label: l10n.navHome),
-      ],
+
+    final navItems = [
+      (icon: Icons.history_edu, label: l10n.navAudit),
+      (icon: Icons.percent, label: l10n.navCommissions),
+      (icon: Icons.sync_alt, label: l10n.navSettlements),
+      (icon: Icons.fact_check_outlined, label: l10n.navReconciliation),
+      (icon: Icons.account_balance, label: l10n.navHome),
+    ];
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.07),
+            blurRadius: 14,
+            offset: const Offset(0, -3),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: List.generate(navItems.length, (index) {
+              final isSelected = currentIndex == index;
+              final item = navItems[index];
+
+              return Expanded(
+                child: InkWell(
+                  onTap: () {
+                    if (onTap != null) {
+                      onTap!(index);
+                    } else {
+                      FinanceNavigation.openTab(
+                        context,
+                        index,
+                        currentIndex: currentIndex,
+                      );
+                    }
+                  },
+                  borderRadius: BorderRadius.circular(14),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: isSelected ? 4 : 2,
+                      vertical: 5,
+                    ),
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? AppColors.primaryDark.withValues(alpha: 0.08)
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          item.icon,
+                          size: 20,
+                          color: isSelected
+                              ? AppColors.primaryDark
+                              : AppColors.textSecondary,
+                        ),
+                        const SizedBox(height: 3),
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            item.label,
+                            maxLines: 1,
+                            style: TextStyle(
+                              fontSize: 9,
+                              fontWeight:
+                                  isSelected ? FontWeight.bold : FontWeight.w500,
+                              color: isSelected
+                                  ? AppColors.primaryDark
+                                  : AppColors.textSecondary,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }),
+          ),
+        ),
+      ),
     );
   }
 }

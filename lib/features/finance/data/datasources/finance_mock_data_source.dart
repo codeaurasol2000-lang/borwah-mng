@@ -8,7 +8,7 @@ import 'finance_remote_data_source.dart';
 class FinanceMockDataSource implements FinanceRemoteDataSource {
   // القائمة المركزية الموحدة للحسابات البنكية والقنوات الرسمية
   final List<BankAccountModel> _mockBankAccounts = [
-    BankAccountModel(
+    const BankAccountModel(
       id: 'acc_01',
       bankName: 'مصرف الراجحي',
       accountRole: 'الحساب التشغيلي الرئيسي للرواتب والموردين',
@@ -17,7 +17,7 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
       balance: 3120400.00,
       isVerified: true,
     ),
-    BankAccountModel(
+    const BankAccountModel(
       id: 'acc_02',
       bankName: 'البنك الأهلي السعودي (SNB)',
       accountRole: 'حساب الضمان المستقل لعربون «وصلني» والتجار',
@@ -26,7 +26,7 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
       balance: 1450000.00,
       isVerified: true,
     ),
-    BankAccountModel(
+    const BankAccountModel(
       id: 'acc_03',
       bankName: 'بنك الرياض',
       accountRole: 'حساب عمليات الصيانة والتشغيل السريع',
@@ -35,7 +35,7 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
       balance: 424800.00,
       isVerified: true,
     ),
-    BankAccountModel(
+    const BankAccountModel(
       id: 'acc_04',
       bankName: 'بوابة سداد و مدى (Mada Gateway)',
       accountRole: 'الرصيد المعلق بانتظار التسوية البنكية اليومية',
@@ -44,7 +44,7 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
       balance: 290000.00,
       isVerified: true,
     ),
-    BankAccountModel(
+    const BankAccountModel(
       id: 'acc_05',
       bankName: 'محفظة STC Pay المركزية',
       accountRole: 'تحويلات الكاش باك والسحب السريع للفنيين',

@@ -9,9 +9,9 @@ abstract class Failure extends Equatable {
 }
 
 class ServerFailure extends Failure {
-  const ServerFailure([String message = 'حدث خطأ في الاتصال بالخادم']) : super(message);
+  const ServerFailure([super.message = 'حدث خطأ في الاتصال بالخادم']);
 }
 
 class NetworkFailure extends Failure {
-  const NetworkFailure([String message = 'يرجى التحقق من اتصال الإنترنت']) : super(message);
+  const NetworkFailure([super.message = 'يرجى التحقق من اتصال الإنترنت']);
 }

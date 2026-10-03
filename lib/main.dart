@@ -42,8 +42,7 @@ class BarwahApp extends StatelessWidget {
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             theme: AppTheme.lightTheme,
             builder: (context, child) {
-              final isArabic =
-                  Localizations.localeOf(context).languageCode == 'ar';
+              final isArabic = AppLocaleController.instance.isArabic;
 
               return Directionality(
                 textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,

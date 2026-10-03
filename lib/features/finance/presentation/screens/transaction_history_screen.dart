@@ -57,7 +57,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                         boxShadow: [
                           BoxShadow(
                               color:
-                                  AppColors.primaryExtraDark.withOpacity(0.2),
+                                  AppColors.primaryExtraDark.withValues(alpha: 0.2),
                               blurRadius: 10,
                               offset: const Offset(0, 4)),
                         ],
@@ -70,7 +70,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                               Container(
                                 padding: const EdgeInsets.all(8),
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.1),
+                                  color: Colors.white.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: const Icon(Icons.business,
@@ -98,7 +98,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                               Container(
                                 padding: const EdgeInsets.all(8),
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.1),
+                                  color: Colors.white.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: const Icon(Icons.picture_as_pdf_outlined,
@@ -111,39 +111,50 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                             width: double.infinity,
                             padding: const EdgeInsets.symmetric(vertical: 6),
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.05),
+                              color: Colors.white.withValues(alpha: 0.05),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(l10n.transactionSupervisedBy,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     color: Colors.white70, fontSize: 10),
                                 textAlign: TextAlign.center),
                           ),
                           const SizedBox(height: 20),
                           Text(l10n.transactionAvailableBalance,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   color: Colors.white60, fontSize: 11)),
                           const SizedBox(height: 8),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              Text(
-                                CurrencyFormatter.format(
-                                    widget.availableBalance,
-                                    includeCurrency: false),
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 32,
-                                    fontWeight: FontWeight.bold,
-                                    height: 1),
+                              Flexible(
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        CurrencyFormatter.format(
+                                            widget.availableBalance,
+                                            includeCurrency: false),
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 32,
+                                            fontWeight: FontWeight.bold,
+                                            height: 1),
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text(l10n.currencySar,
+                                          style: const TextStyle(
+                                              color: Colors.white70,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold)),
+                                    ],
+                                  ),
+                                ),
                               ),
-                              const SizedBox(width: 4),
-                              Text(l10n.currencySar,
-                                  style: const TextStyle(
-                                      color: Colors.white70,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold)),
                             ],
                           ),
                           const SizedBox(height: 20),
@@ -153,7 +164,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                 child: Container(
                                   padding: const EdgeInsets.all(12),
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.05),
+                                    color: Colors.white.withValues(alpha: 0.05),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Column(
@@ -164,34 +175,41 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
-                                          Text(l10n.transactionTotalWithdrawals,
-                                              style: TextStyle(
-                                                  color: Colors.white70,
-                                                  fontSize: 10)),
-                                          SizedBox(width: 4),
-                                          Icon(Icons.arrow_upward,
+                                          Flexible(
+                                        child: Text(l10n.transactionTotalWithdrawals,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                                color: Colors.white70,
+                                                fontSize: 10)),
+                                      ),
+                                          const SizedBox(width: 4),
+                                          const Icon(Icons.arrow_upward,
                                               color: AppColors.dangerLight,
                                               size: 12),
                                         ],
                                       ),
                                       const SizedBox(height: 8),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          const Text('-147,500',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold)),
-                                          const SizedBox(width: 2),
-                                          Text(l10n.currencySar,
-                                              style: const TextStyle(
-                                                  color: Colors.white70,
-                                                  fontSize: 9)),
-                                        ],
+                                      FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          children: [
+                                            const Text('-147,500',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold)),
+                                            const SizedBox(width: 2),
+                                            Text(l10n.currencySar,
+                                                style: const TextStyle(
+                                                    color: Colors.white70,
+                                                    fontSize: 9)),
+                                          ],
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -202,7 +220,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                 child: Container(
                                   padding: const EdgeInsets.all(12),
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.05),
+                                    color: Colors.white.withValues(alpha: 0.05),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Column(
@@ -213,34 +231,41 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
-                                          Text(l10n.transactionTotalDeposits,
-                                              style: TextStyle(
-                                                  color: Colors.white70,
-                                                  fontSize: 10)),
-                                          SizedBox(width: 4),
-                                          Icon(Icons.arrow_downward,
+                                          Flexible(
+                                        child: Text(l10n.transactionTotalDeposits,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                                color: Colors.white70,
+                                                fontSize: 10)),
+                                      ),
+                                          const SizedBox(width: 4),
+                                          const Icon(Icons.arrow_downward,
                                               color: Colors.greenAccent,
                                               size: 12),
                                         ],
                                       ),
                                       const SizedBox(height: 8),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          const Text('+560,300',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold)),
-                                          const SizedBox(width: 2),
-                                          Text(l10n.currencySar,
-                                              style: const TextStyle(
-                                                  color: Colors.white70,
-                                                  fontSize: 9)),
-                                        ],
+                                      FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          children: [
+                                            const Text('+560,300',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold)),
+                                            const SizedBox(width: 2),
+                                            Text(l10n.currencySar,
+                                                style: const TextStyle(
+                                                    color: Colors.white70,
+                                                    fontSize: 9)),
+                                          ],
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -257,11 +282,16 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(l10n.transactionApprovedHistory,
-                            style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.textPrimary)),
+                        Expanded(
+                          child: Text(l10n.transactionApprovedHistory,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.textPrimary)),
+                        ),
+                        const SizedBox(width: 8),
                         Container(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 10, vertical: 6),
@@ -271,12 +301,12 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                           child: Row(
                             children: [
                               Text(l10n.transactionThisMonth,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontSize: 10,
                                       color: AppColors.primaryDark,
                                       fontWeight: FontWeight.bold)),
-                              SizedBox(width: 4),
-                              Icon(Icons.calendar_today_outlined,
+                              const SizedBox(width: 4),
+                              const Icon(Icons.calendar_today_outlined,
                                   size: 12, color: AppColors.primaryDark),
                             ],
                           ),
@@ -397,7 +427,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
+                      color: Colors.black.withValues(alpha: 0.05),
                       blurRadius: 10,
                       offset: const Offset(0, -5)),
                 ],
@@ -427,7 +457,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                       icon: const Icon(Icons.picture_as_pdf_outlined, size: 18),
                       onPressed: () {},
                       label: Text(l10n.transactionDownloadStatement,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 12, fontWeight: FontWeight.bold)),
                     ),
                   ),
@@ -482,17 +512,24 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          children: [
-            const Icon(Icons.circle, size: 6, color: AppColors.textSecondary),
-            const SizedBox(width: 6),
-            Text(date,
-                style: const TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textSecondary)),
-          ],
+        Expanded(
+          child: Row(
+            children: [
+              const Icon(Icons.circle, size: 6, color: AppColors.textSecondary),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text(date,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textSecondary)),
+              ),
+            ],
+          ),
         ),
+        const SizedBox(width: 8),
         Text(count,
             style:
                 const TextStyle(fontSize: 10, color: AppColors.textSecondary)),
@@ -525,7 +562,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
         border: Border.all(color: AppColors.cardBorder),
         boxShadow: [
           BoxShadow(
-              color: Colors.black.withOpacity(0.01),
+              color: Colors.black.withValues(alpha: 0.01),
               blurRadius: 4,
               offset: const Offset(0, 2)),
         ],
@@ -599,31 +636,50 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  Text(ref,
-                      style: const TextStyle(
-                          fontSize: 9, color: AppColors.textSecondary),
-                      textDirection: TextDirection.ltr),
-                  const SizedBox(width: 4),
-                  const Icon(Icons.circle,
-                      size: 4, color: AppColors.cardBorder),
-                  const SizedBox(width: 4),
-                  Text(time,
-                      style: const TextStyle(
-                          fontSize: 9, color: AppColors.textSecondary)),
-                ],
+              Expanded(
+                child: Row(
+                  children: [
+                    Text(ref,
+                        style: const TextStyle(
+                            fontSize: 9, color: AppColors.textSecondary),
+                        textDirection: TextDirection.ltr),
+                    const SizedBox(width: 4),
+                    const Icon(Icons.circle,
+                        size: 4, color: AppColors.cardBorder),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: Text(time,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                              fontSize: 9, color: AppColors.textSecondary)),
+                    ),
+                  ],
+                ),
               ),
-              Row(
-                children: [
-                  Text(balanceLabel ?? l10n.transactionBalanceAfter,
-                      style: const TextStyle(
-                          fontSize: 9, color: AppColors.textSecondary)),
-                  const SizedBox(width: 4),
-                  Text(balanceAfter,
-                      style: const TextStyle(
-                          fontSize: 10, color: AppColors.textPrimary)),
-                ],
+              const SizedBox(width: 8),
+              Flexible(
+                child: Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: '${balanceLabel ?? l10n.transactionBalanceAfter} ',
+                        style: const TextStyle(
+                            fontSize: 9, color: AppColors.textSecondary),
+                      ),
+                      TextSpan(
+                        text: balanceAfter,
+                        style: const TextStyle(
+                            fontSize: 10,
+                            color: AppColors.textPrimary,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ],
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.end,
+                ),
               ),
             ],
           ),

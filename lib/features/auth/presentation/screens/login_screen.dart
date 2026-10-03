@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/utils/app_locale_controller.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../finance/presentation/widgets/finance_navigation.dart';
 import '../../../finance/presentation/widgets/finance_tabs_shell.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../domain/entities/user_role.dart';
@@ -60,22 +60,44 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       },
       builder: (context, state) {
+        final isArabic = l10n.localeName.startsWith('ar');
+
         return Directionality(
-          textDirection:
-              l10n.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
+          textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
           child: Scaffold(
             backgroundColor: const Color(0xFFF1F5F9),
-            appBar: FinancePageAppBar(
-              title: l10n.appName,
-              subtitle: l10n.appSubtitle,
-            ),
             body: SafeArea(
               child: Center(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      // زر تبديل اللغة أعلى الصفحة بدون AppBar
+                      Align(
+                        alignment: AlignmentDirectional.topEnd,
+                        child: OutlinedButton.icon(
+                          onPressed: AppLocaleController.instance.toggle,
+                          style: OutlinedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            side: BorderSide(color: Colors.grey.shade300),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20)),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 6),
+                          ),
+                          icon: const Icon(Icons.language,
+                              size: 16, color: AppColors.primaryDark),
+                          label: Text(
+                            isArabic ? 'English' : 'العربية',
+                            style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.primaryDark),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
                       // الشعار في بطاقة بيضاء دائرية
                       Container(
                         padding: const EdgeInsets.all(20),
@@ -84,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           borderRadius: BorderRadius.circular(24),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.04),
+                              color: Colors.black.withValues(alpha: 0.04),
                               blurRadius: 15,
                               offset: const Offset(0, 6),
                             ),
@@ -105,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       // عنوان النظام
                       Text(
                         l10n.appName,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
                             color: AppColors.textPrimary),
@@ -113,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(height: 6),
                       Text(
                         l10n.appSubtitle,
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontSize: 15, color: AppColors.textSecondary),
                       ),
                       const SizedBox(height: 12),
@@ -129,12 +151,16 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.verified_user_rounded,
+                            const Icon(Icons.verified_user_rounded,
                                 size: 16, color: AppColors.info),
-                            SizedBox(width: 6),
-                            Text(l10n.secureLoginPortal,
-                                style: const TextStyle(
-                                    fontSize: 12, fontWeight: FontWeight.w600)),
+                            const SizedBox(width: 6),
+                            Flexible(
+                              child: Text(l10n.secureLoginPortal,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                      fontSize: 12, fontWeight: FontWeight.w600)),
+                            ),
                           ],
                         ),
                       ),
@@ -148,7 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           borderRadius: BorderRadius.circular(24),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.03),
+                              color: Colors.black.withValues(alpha: 0.03),
                               blurRadius: 20,
                               offset: const Offset(0, 8),
                             ),
@@ -236,9 +262,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               child: Row(
                                 children: [
-                                  Icon(Icons.hub_outlined,
+                                  const Icon(Icons.hub_outlined,
                                       color: AppColors.info, size: 22),
-                                  SizedBox(width: 8),
+                                  const SizedBox(width: 8),
                                   Expanded(
                                     child: Text(
                                       l10n.roleAccessNotice,
@@ -295,7 +321,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               child: Text(
                                 '${l10n.forgotPassword}\n${l10n.requestAccessReset}',
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontSize: 12,
                                     color: AppColors.info,
                                     height: 1.4),
@@ -310,10 +336,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(l10n.restrictedAccessFooter,
-                              style: const TextStyle(
-                                  fontSize: 11,
-                                  color: AppColors.textSecondary)),
+                          Flexible(
+                            child: Text(l10n.restrictedAccessFooter,
+                                textAlign: TextAlign.center,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                    fontSize: 11,
+                                    color: AppColors.textSecondary)),
+                          ),
                           const SizedBox(width: 4),
                           const Icon(Icons.lock_person_outlined,
                               size: 14, color: AppColors.textSecondary),

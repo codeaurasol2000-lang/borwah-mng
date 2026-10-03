@@ -5,6 +5,7 @@ import '../../../../core/utils/currency_formatter.dart';
 import '../../domain/entities/subscription_request_entity.dart';
 import '../../domain/usecases/get_subscriptions_usecase.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../core/widgets/finance_dialogs.dart';
 import '../widgets/finance_navigation.dart';
 
 class SubscriptionsScreen extends StatefulWidget {
@@ -20,48 +21,58 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
   String _selectedFilter = 'الكل';
 
   List<SubscriptionRequestEntity> get _filteredSubscriptions {
-    if (_selectedFilter == 'المتاجر والتجار')
+    if (_selectedFilter == 'المتاجر والتجار') {
       return _subscriptions
           .where((s) => s.type == SubscriptionType.merchant)
           .toList();
-    if (_selectedFilter == 'مزودوا الخدمات')
+    }
+    if (_selectedFilter == 'مزودوا الخدمات') {
       return _subscriptions
           .where((s) => s.type == SubscriptionType.serviceProvider)
           .toList();
-    if (_selectedFilter == 'مستخدمين')
+    }
+    if (_selectedFilter == 'مستخدمين') {
       return _subscriptions
           .where((s) => s.type == SubscriptionType.user)
           .toList();
-    if (_selectedFilter == 'مناديب')
+    }
+    if (_selectedFilter == 'مناديب') {
       return _subscriptions
           .where((s) => s.type == SubscriptionType.courier)
           .toList();
-    if (_selectedFilter == 'اعلانات')
+    }
+    if (_selectedFilter == 'اعلانات') {
       return _subscriptions
           .where((s) => s.type == SubscriptionType.ad)
           .toList();
+    }
     return _subscriptions;
   }
 
   int _countFor(String filter) {
-    if (filter == 'المتاجر والتجار')
+    if (filter == 'المتاجر والتجار') {
       return _subscriptions
           .where((s) => s.type == SubscriptionType.merchant)
           .length;
-    if (filter == 'مزودوا الخدمات')
+    }
+    if (filter == 'مزودوا الخدمات') {
       return _subscriptions
           .where((s) => s.type == SubscriptionType.serviceProvider)
           .length;
-    if (filter == 'مستخدمين')
+    }
+    if (filter == 'مستخدمين') {
       return _subscriptions
           .where((s) => s.type == SubscriptionType.user)
           .length;
-    if (filter == 'مناديب')
+    }
+    if (filter == 'مناديب') {
       return _subscriptions
           .where((s) => s.type == SubscriptionType.courier)
           .length;
-    if (filter == 'اعلانات')
+    }
+    if (filter == 'اعلانات') {
       return _subscriptions.where((s) => s.type == SubscriptionType.ad).length;
+    }
     return _subscriptions.length;
   }
 
@@ -123,11 +134,15 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                                 const Icon(Icons.verified,
                                     color: Colors.blueAccent, size: 14),
                                 const SizedBox(width: 4),
-                                Text(l10n.financialAuditAndLicenses,
-                                    style: TextStyle(
-                                        color: Colors.blue.shade700,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.bold)),
+                                Expanded(
+                                  child: Text(l10n.financialAuditAndLicenses,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          color: Colors.blue.shade700,
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.bold)),
+                                ),
                               ],
                             ),
                             const SizedBox(height: 4),
@@ -286,7 +301,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                                                 maxLines: 1,
                                                 overflow:
                                                     TextOverflow.ellipsis)),
-                                        Icon(Icons.trending_up,
+                                        const Icon(Icons.trending_up,
                                             color: Colors.lightBlueAccent,
                                             size: 12),
                                       ],
@@ -349,7 +364,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                                                 maxLines: 1,
                                                 overflow:
                                                     TextOverflow.ellipsis)),
-                                        Icon(Icons.pause_circle_outline,
+                                        const Icon(Icons.pause_circle_outline,
                                             color: Colors.orangeAccent,
                                             size: 12),
                                       ],
@@ -411,7 +426,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                                                 maxLines: 1,
                                                 overflow:
                                                     TextOverflow.ellipsis)),
-                                        Icon(Icons.access_time,
+                                        const Icon(Icons.access_time,
                                             color: Colors.redAccent, size: 12),
                                       ],
                                     ),
@@ -420,7 +435,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.end,
                                       children: [
-                                        Expanded(
+                                        const Expanded(
                                             child: Text('9',
                                                 style: TextStyle(
                                                     color: Colors.white,
@@ -430,7 +445,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                                                 maxLines: 1,
                                                 overflow:
                                                     TextOverflow.ellipsis)),
-                                        SizedBox(width: 4),
+                                        const SizedBox(width: 4),
                                         Text(l10n.ordersUnit,
                                             style: const TextStyle(
                                                 color: Colors.white70,
@@ -942,12 +957,12 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                 flex: 2,
                 child: Container(
                   padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFAFAFA),
-                    borderRadius: const BorderRadius.only(
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFFAFAFA),
+                    borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(12),
                         bottomLeft: Radius.circular(12)),
-                    border: const Border(
+                    border: Border(
                         top: BorderSide(color: Color(0xFFEEEEEE)),
                         bottom: BorderSide(color: Color(0xFFEEEEEE)),
                         left: BorderSide(color: Color(0xFFEEEEEE))),
@@ -1058,10 +1073,11 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
 
           const SizedBox(height: 16),
 
-          // Action Buttons
+          // Action Buttons (3 إجراءات ثابتة: اعتماد وإرسال للإدارة، تجميد مؤقتاً، معاينة الإيصال والبيانات)
           Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              // 1. اعتماد وإرسال للإدارة
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primaryDark,
@@ -1072,7 +1088,32 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                   elevation: 0,
                 ),
                 icon: const Icon(Icons.check_circle_outline, size: 16),
-                onPressed: () {},
+                onPressed: () async {
+                  final isArabic = l10n.localeName.startsWith('ar');
+                  final messenger = ScaffoldMessenger.of(context);
+                  final confirmed = await FinanceDialogs.showApprovalDialog(
+                    context,
+                    title: isArabic
+                        ? 'اعتماد طلب الاشتراك'
+                        : 'Approve Subscription',
+                    description: isArabic
+                        ? 'هل تريد اعتماد طلب ${sub.providerName} لباقة ${sub.targetPackageName} بقيمة ${CurrencyFormatter.format(sub.totalAmount)} وإرساله للإدارة للموافقة؟'
+                        : 'Do you want to approve ${sub.providerName} for ${sub.targetPackageName} (${CurrencyFormatter.format(sub.totalAmount)}) and send it to management?',
+                  );
+                  if (confirmed && mounted) {
+                    setState(() {
+                      _subscriptions.removeWhere((s) => s.id == sub.id);
+                    });
+                    messenger.showSnackBar(
+                      SnackBar(
+                        content: Text(isArabic
+                            ? 'تم اعتماد طلب الاشتراك بنجاح وإرساله للإدارة'
+                            : 'Subscription request approved and sent to Admin'),
+                        backgroundColor: AppColors.success,
+                      ),
+                    );
+                  }
+                },
                 label: Text(l10n.approveAndSendToAdmin,
                     style: const TextStyle(
                         fontSize: 12, fontWeight: FontWeight.bold)),
@@ -1080,71 +1121,253 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
               const SizedBox(height: 8),
               Row(
                 children: [
-                  if (isAutoReady) ...[
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: AppColors.danger,
-                          backgroundColor:
-                              AppColors.dangerLight.withValues(alpha: 0.3),
-                          side: const BorderSide(color: AppColors.dangerLight),
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                        ),
-                        icon: const Icon(Icons.cancel_outlined, size: 16),
-                        onPressed: () {},
-                        label: Text(l10n.rejectWithReason,
-                            style: const TextStyle(
-                                fontSize: 11, fontWeight: FontWeight.bold)),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                  ],
+                  // 2. تجميد الطلب مؤقتاً
                   Expanded(
                     child: OutlinedButton.icon(
                       style: OutlinedButton.styleFrom(
                         foregroundColor: Colors.orange.shade800,
                         backgroundColor: Colors.orange.shade50,
                         side: BorderSide(color: Colors.orange.shade200),
-                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        padding: const EdgeInsets.symmetric(vertical: 11),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),
                       ),
                       icon: const Icon(Icons.pause_circle_outline, size: 16),
-                      onPressed: () {},
+                      onPressed: () async {
+                        final isArabic = l10n.localeName.startsWith('ar');
+                        final messenger = ScaffoldMessenger.of(context);
+                        final confirmed = await FinanceDialogs.showFreezeDialog(
+                          context,
+                          requestTitle: sub.providerName,
+                        );
+                        if (confirmed && mounted) {
+                          setState(() {
+                            _subscriptions.removeWhere((s) => s.id == sub.id);
+                          });
+                          messenger.showSnackBar(
+                            SnackBar(
+                              content: Text(isArabic
+                                  ? 'تم تجميد طلب الاشتراك ونقله إلى قائمة التدقيق الرقابي'
+                                  : 'Subscription request frozen and moved to audit inspection'),
+                              backgroundColor: AppColors.warning,
+                            ),
+                          );
+                        }
+                      },
                       label: Text(l10n.freezeRequestTemporarily,
+                          style: const TextStyle(
+                              fontSize: 11, fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  // رفض الطلب مع ذكر السبب لرئيس المشرفين
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: AppColors.danger,
+                        backgroundColor:
+                            AppColors.dangerLight.withValues(alpha: 0.3),
+                        side: const BorderSide(color: AppColors.dangerLight),
+                        padding: const EdgeInsets.symmetric(vertical: 11),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                      ),
+                      icon: const Icon(Icons.cancel_outlined, size: 16),
+                      onPressed: () async {
+                        final isArabic = l10n.localeName.startsWith('ar');
+                        final messenger = ScaffoldMessenger.of(context);
+                        final reason = await FinanceDialogs.showRejectionDialog(
+                          context,
+                          title: isArabic
+                              ? 'رفض طلب الاشتراك / الترقية'
+                              : 'Reject Subscription Request',
+                        );
+                        if (reason != null && mounted) {
+                          setState(() {
+                            _subscriptions.removeWhere((s) => s.id == sub.id);
+                          });
+                          messenger.showSnackBar(
+                            SnackBar(
+                              content: Text(isArabic
+                                  ? 'تم رفض الطلب وإرسال السبب لرئيس المشرفين للمراجعة'
+                                  : 'Request rejected and reason submitted to Head Supervisor'),
+                              backgroundColor: AppColors.danger,
+                            ),
+                          );
+                        }
+                      },
+                      label: Text(l10n.rejectWithReason,
                           style: const TextStyle(
                               fontSize: 11, fontWeight: FontWeight.bold)),
                     ),
                   ),
                 ],
               ),
+              const SizedBox(height: 8),
+              // 3. معاينة إيصال وبيانات التحويل
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.blue.shade700,
+                    side: BorderSide(color: Colors.blue.shade200),
+                    backgroundColor: Colors.blue.shade50.withValues(alpha: 0.5),
+                    padding: const EdgeInsets.symmetric(vertical: 11),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
+                  icon: const Icon(Icons.receipt_long, size: 16),
+                  onPressed: () => _showReceiptPreviewDialog(context, sub),
+                  label: Text(l10n.previewReceiptAndTransferData,
+                      style: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.bold)),
+                ),
+              ),
             ],
           ),
-
-          if (!isAutoReady) ...[
-            const SizedBox(height: 8),
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton.icon(
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: Colors.blue.shade700,
-                  side: BorderSide(color: Colors.blue.shade100),
-                  backgroundColor: Colors.blue.shade50.withValues(alpha: 0.5),
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-                icon: const Icon(Icons.attachment, size: 16),
-                onPressed: () {},
-                label: Text(l10n.previewReceiptAndTransferData,
-                    style: const TextStyle(
-                        fontSize: 12, fontWeight: FontWeight.bold)),
-              ),
-            ),
-          ]
         ],
+      ),
+    );
+  }
+
+  // نافذة معاينة إيصال وبيانات التحويل
+  void _showReceiptPreviewDialog(
+      BuildContext context, SubscriptionRequestEntity sub) {
+    final l10n = AppLocalizations.of(context)!;
+    final isArabic = l10n.localeName.startsWith('ar');
+
+    showDialog(
+      context: context,
+      builder: (ctx) => Directionality(
+        textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+        child: AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+          title: Row(
+            children: [
+              const Icon(Icons.receipt, color: AppColors.primaryDark),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  isArabic
+                      ? 'إيصال وبيانات التحويل البنكي'
+                      : 'Bank Transfer Receipt & Details',
+                  style: const TextStyle(
+                      fontSize: 15, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppColors.surfaceLight,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(isArabic ? 'المشترك:' : 'Subscriber:',
+                              style: const TextStyle(
+                                  fontSize: 11, color: Colors.grey)),
+                          Text(sub.providerName,
+                              style: const TextStyle(
+                                  fontSize: 12, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(isArabic ? 'الباقة المستهدفة:' : 'Target Package:',
+                              style: const TextStyle(
+                                  fontSize: 11, color: Colors.grey)),
+                          Text(sub.targetPackageName,
+                              style: const TextStyle(
+                                  fontSize: 12, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(isArabic ? 'طريقة الدفع:' : 'Payment Method:',
+                              style: const TextStyle(
+                                  fontSize: 11, color: Colors.grey)),
+                          Text(sub.paymentMethod,
+                              style: const TextStyle(
+                                  fontSize: 11, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(isArabic ? 'المبلغ المحول:' : 'Transferred Amount:',
+                              style: const TextStyle(
+                                  fontSize: 11, color: Colors.grey)),
+                          Text(
+                            CurrencyFormatter.format(sub.totalAmount),
+                            style: const TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.primaryDark),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 14),
+                // صورة إيصال التحويل التوضيحية
+                Container(
+                  height: 150,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade100,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.grey.shade300),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.image_outlined,
+                          size: 40, color: Colors.grey.shade600),
+                      const SizedBox(height: 8),
+                      Text(
+                        isArabic
+                            ? 'صورة إيصال التحويل المصرفي المرفقة'
+                            : 'Attached Bank Transfer Receipt',
+                        style: TextStyle(
+                            fontSize: 11, color: Colors.grey.shade700),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'RECEIPT-${sub.id}-BANK.JPG',
+                        style: const TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.info),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(isArabic ? 'إغلاق' : 'Close'),
+            ),
+          ],
+        ),
       ),
     );
   }

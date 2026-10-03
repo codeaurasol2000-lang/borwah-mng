@@ -29,6 +29,34 @@ class SubscriptionRequestEntity extends Equatable {
     this.availableBalance,
   });
 
+  SubscriptionRequestEntity copyWith({
+    String? id,
+    String? providerName,
+    String? registrationNumber,
+    String? categoryName,
+    String? targetPackageName,
+    String? durationText,
+    double? totalAmount,
+    String? paymentMethod,
+    String? status,
+    SubscriptionType? type,
+    String? availableBalance,
+  }) {
+    return SubscriptionRequestEntity(
+      id: id ?? this.id,
+      providerName: providerName ?? this.providerName,
+      registrationNumber: registrationNumber ?? this.registrationNumber,
+      categoryName: categoryName ?? this.categoryName,
+      targetPackageName: targetPackageName ?? this.targetPackageName,
+      durationText: durationText ?? this.durationText,
+      totalAmount: totalAmount ?? this.totalAmount,
+      paymentMethod: paymentMethod ?? this.paymentMethod,
+      status: status ?? this.status,
+      type: type ?? this.type,
+      availableBalance: availableBalance ?? this.availableBalance,
+    );
+  }
+
   @override
   List<Object?> get props => [id, providerName, totalAmount, status];
 }

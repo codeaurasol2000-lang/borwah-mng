@@ -226,10 +226,10 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Flexible(
+              const Flexible(
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
-                  child: const Text('52,000.00',
+                  child: Text('52,000.00',
                       style: TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.bold,

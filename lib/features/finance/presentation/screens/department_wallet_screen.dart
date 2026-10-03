@@ -3,9 +3,9 @@ import '../../../../core/di/injection_container.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../core/widgets/finance_dialogs.dart';
 import '../../domain/entities/department_wallet_entity.dart';
 import '../../domain/usecases/get_department_wallet_usecase.dart';
-import 'transaction_history_screen.dart';
 import '../widgets/finance_navigation.dart';
 
 class DepartmentWalletScreen extends StatefulWidget {
@@ -88,16 +88,15 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
         return {
           l10n.departmentActiveCouriers: '${wallet.primaryMetricCount}',
           l10n.departmentPendingEntitlements: pending,
-          l10n.departmentShipmentFee:
-              '${wallet.feeValue} ${l10n.currencySar}',
+          l10n.departmentShipmentFee: '${wallet.feeValue} ${l10n.currencySar}',
           'icon1': 'local_shipping',
         };
     }
   }
 
-  List<Map<String, dynamic>> _listItemsFor(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    switch (widget.type) {
+  List<Map<String, dynamic>> _listItemsFor(
+      DepartmentWalletEntity wallet, AppLocalizations l10n) {
+    switch (wallet.type) {
       case DepartmentType.merchants:
         return [
           {
@@ -229,338 +228,440 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
           onBackPressed: () => Navigator.pop(context),
         ),
         body: _isLoading
-          ? const Center(
-            child: CircularProgressIndicator(
-              color: AppColors.primaryDark))
-          : _errorMessage != null
-            ? Center(child: Text(_errorMessage!))
-            : _wallet == null
-              ? const SizedBox.shrink()
-              : Builder(builder: (context) {
-                final wallet = _wallet!;
-                final stats = _statsFor(wallet, l10n);
-                final listItems = _listItemsFor(wallet, l10n);
-                return SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: AppColors.primaryExtraDark,
-                  borderRadius: BorderRadius.circular(16),
+            ? const Center(
+                child: CircularProgressIndicator(
+                  color: AppColors.primaryDark,
                 ),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(Icons.account_balance_wallet,
-                            color: Colors.white, size: 18),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(_screenTitleFor(context),
-                              style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis),
-                        ),
-                        const SizedBox(width: 8),
-                        Flexible(
-                          child: Container(
+              )
+            : _errorMessage != null
+                ? Center(child: Text(_errorMessage!))
+                : _wallet == null
+                    ? const SizedBox.shrink()
+                    : Builder(
+                        builder: (context) {
+                          final wallet = _wallet!;
+                          final stats = _statsFor(wallet, l10n);
+                          final listItems = _listItemsFor(wallet, l10n);
+                          return SingleChildScrollView(
+                            physics: const BouncingScrollPhysics(),
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
+                                horizontal: 16, vertical: 10),
+                            child: Column(
                               children: [
-                                Flexible(
-                                  child: Text(l10n.departmentAuditedBadge,
-                                      style: const TextStyle(
-                                          color: Colors.white, fontSize: 9),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis),
+                                Container(
+                                  padding: const EdgeInsets.all(20),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.primaryExtraDark,
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          const Icon(
+                                              Icons.account_balance_wallet,
+                                              color: Colors.white,
+                                              size: 18),
+                                          const SizedBox(width: 8),
+                                          Expanded(
+                                            child: Text(
+                                                _screenTitleFor(context),
+                                                style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 12,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                                maxLines: 1,
+                                                overflow:
+                                                    TextOverflow.ellipsis),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Flexible(
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 8,
+                                                      vertical: 4),
+                                              decoration: BoxDecoration(
+                                                color: Colors.white
+                                                    .withValues(alpha: 0.1),
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                              ),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Flexible(
+                                                    child: Text(
+                                                        l10n
+                                                            .departmentAuditedBadge,
+                                                        style: const TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 9),
+                                                        maxLines: 1,
+                                                        overflow: TextOverflow
+                                                            .ellipsis),
+                                                  ),
+                                                  const SizedBox(width: 4),
+                                                  const Icon(Icons.verified,
+                                                      color: Colors.blueAccent,
+                                                      size: 12),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Text(l10n.departmentTotalBalance,
+                                          style: const TextStyle(
+                                              color: Colors.white60,
+                                              fontSize: 11)),
+                                      const SizedBox(height: 8),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          Flexible(
+                                            child: Text(
+                                              CurrencyFormatter.format(
+                                                  wallet.totalBalance,
+                                                  includeCurrency: false),
+                                              style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 32,
+                                                  fontWeight: FontWeight.bold,
+                                                  height: 1),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 6),
+                                          Text(l10n.currencySar,
+                                              style: const TextStyle(
+                                                  color: Colors.white70,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold)),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 20),
+                                      Container(
+                                          height: 1,
+                                          color: Colors.white
+                                              .withValues(alpha: 0.1)),
+                                      const SizedBox(height: 16),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(stats.keys.elementAt(0),
+                                                    maxLines: 2,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: const TextStyle(
+                                                        color: Colors.white60,
+                                                        fontSize: 10)),
+                                                const SizedBox(height: 4),
+                                                Row(
+                                                  children: [
+                                                    Flexible(
+                                                      child: FittedBox(
+                                                        fit: BoxFit.scaleDown,
+                                                        child: Text(
+                                                            stats.values
+                                                                .elementAt(0),
+                                                            style: const TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 4),
+                                                    Icon(
+                                                        _getIconData(
+                                                            stats['icon1']!),
+                                                        color: Colors.white60,
+                                                        size: 14),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(stats.keys.elementAt(1),
+                                                    maxLines: 2,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: const TextStyle(
+                                                        color: Colors.white60,
+                                                        fontSize: 10)),
+                                                const SizedBox(height: 4),
+                                                Row(
+                                                  children: [
+                                                    Flexible(
+                                                      child: FittedBox(
+                                                        fit: BoxFit.scaleDown,
+                                                        child: Text(
+                                                            stats.values
+                                                                .elementAt(1)
+                                                                .split(' ')[0],
+                                                            style: const TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 4),
+                                                    const Icon(
+                                                        Icons
+                                                            .assignment_late_outlined,
+                                                        color: Colors.white60,
+                                                        size: 14),
+                                                  ],
+                                                ),
+                                                if (stats.values
+                                                    .elementAt(1)
+                                                    .contains('('))
+                                                  Text(
+                                                      stats.values
+                                                          .elementAt(1)
+                                                          .substring(stats
+                                                              .values
+                                                              .elementAt(1)
+                                                              .indexOf('(')),
+                                                      style: const TextStyle(
+                                                          color: Colors.white54,
+                                                          fontSize: 9)),
+                                              ],
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.end,
+                                              children: [
+                                                Text(stats.keys.elementAt(2),
+                                                    maxLines: 2,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: const TextStyle(
+                                                        color: Colors.white60,
+                                                        fontSize: 10)),
+                                                const SizedBox(height: 4),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    Flexible(
+                                                      child: FittedBox(
+                                                        fit: BoxFit.scaleDown,
+                                                        child: Text(
+                                                            stats.values
+                                                                .elementAt(2),
+                                                            style: const TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 14,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 4),
+                                                    const Icon(
+                                                        Icons.pie_chart_outline,
+                                                        color: Colors.white60,
+                                                        size: 14),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                const SizedBox(width: 4),
-                                const Icon(Icons.verified,
-                                    color: Colors.blueAccent, size: 12),
+                                const SizedBox(height: 24),
+
+                                // 2. Section Title
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: Row(
+                                        children: [
+                                          const Icon(Icons.tune,
+                                              color: AppColors.primaryDark,
+                                              size: 18),
+                                          const SizedBox(width: 8),
+                                          Expanded(
+                                            child: Text(
+                                                l10n.departmentWalletSectionTitle,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: const TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.bold,
+                                                    color:
+                                                        AppColors.textPrimary)),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8, vertical: 4),
+                                      decoration: BoxDecoration(
+                                          color: AppColors.surfaceLight,
+                                          borderRadius:
+                                              BorderRadius.circular(6)),
+                                      child: Text(l10n.departmentSyncStatus,
+                                          style: const TextStyle(
+                                              fontSize: 9,
+                                              color: AppColors.textSecondary)),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 16),
+
+                                // 3. Filters
+                                SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    children: [
+                                      _buildFilterChip(
+                                          '${l10n.departmentAllFilter} 142',
+                                          true),
+                                      const SizedBox(width: 8),
+                                      _buildFilterChip(
+                                          l10n.departmentHighestBalanceFilter,
+                                          false,
+                                          icon: Icons.trending_up),
+                                      const SizedBox(width: 8),
+                                      _buildFilterChip(
+                                          l10n.departmentWithdrawalFilter,
+                                          false,
+                                          icon: Icons.hourglass_empty),
+                                      const SizedBox(width: 8),
+                                      _buildFilterChip('', false,
+                                          icon: Icons.lock_outline,
+                                          isIconOnly: true),
+                                      const SizedBox(width: 8),
+                                      _buildFilterChip('', false,
+                                          icon: Icons.warning_amber_rounded,
+                                          isIconOnly: true,
+                                          iconColor: AppColors.danger),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+
+                                // 4. List Items
+                                ...listItems.map((item) => Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 16),
+                                      child: _buildListItemCard(context, item),
+                                    )),
+
+                                // 5. Bottom Info
+                                Container(
+                                  padding: const EdgeInsets.all(16),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFE2E8F0),
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Flexible(
+                                            child: Text(l10n.departmentGovernanceTitle,
+                                                maxLines: 2,
+                                                textAlign: TextAlign.center,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: const TextStyle(
+                                                    fontSize: 13,
+                                                    fontWeight: FontWeight.bold,
+                                                    color:
+                                                        AppColors.primaryDark)),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Icon(Icons.verified_user_outlined,
+                                              color: Colors.blue.shade700,
+                                              size: 18),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 12),
+                                      Text(
+                                        l10n.departmentGovernanceNotice,
+                                        style: TextStyle(
+                                            fontSize: 10,
+                                            color: Colors.grey.shade700,
+                                            height: 1.5),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      const SizedBox(height: 16),
+                                      Wrap(
+                                        alignment: WrapAlignment.spaceBetween,
+                                        runSpacing: 4,
+                                        children: [
+                                          const Text('ISO-20022 COMPLIANT',
+                                              style: TextStyle(
+                                                  fontSize: 9,
+                                                  fontWeight: FontWeight.bold,
+                                                  color:
+                                                      AppColors.textSecondary),
+                                              textDirection: TextDirection.ltr),
+                                          FittedBox(
+                                            fit: BoxFit.scaleDown,
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Text(
+                                                    l10n
+                                                        .departmentLastReconciliation,
+                                                    style: const TextStyle(
+                                                        fontSize: 9,
+                                                        color: AppColors
+                                                            .textSecondary)),
+                                                const SizedBox(width: 4),
+                                                Icon(Icons.circle,
+                                                    size: 6,
+                                                    color: Colors.blue.shade400),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: 20),
                               ],
                             ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    Text(l10n.departmentTotalBalance,
-                        style: const TextStyle(
-                            color: Colors.white60, fontSize: 11)),
-                    const SizedBox(height: 8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Flexible(
-                          child: Text(
-                            CurrencyFormatter.format(wallet.totalBalance,
-                                includeCurrency: false),
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 32,
-                                fontWeight: FontWeight.bold,
-                                height: 1),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        const SizedBox(width: 6),
-                        Text(l10n.currencySar,
-                            style: const TextStyle(
-                                color: Colors.white70,
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    Container(
-                        height: 1, color: Colors.white.withValues(alpha: 0.1)),
-                    const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                                Text(stats.keys.elementAt(0),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                      color: Colors.white60, fontSize: 10)),
-                              const SizedBox(height: 4),
-                              Row(
-                                children: [
-                                  Flexible(
-                                    child: FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: Text(stats.values.elementAt(0),
-                                          style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.bold)),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Icon(_getIconData(stats['icon1']!),
-                                      color: Colors.white60, size: 14),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                                Text(stats.keys.elementAt(1),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                      color: Colors.white60, fontSize: 10)),
-                              const SizedBox(height: 4),
-                              Row(
-                                children: [
-                                  Flexible(
-                                    child: FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: Text(
-                                          stats.values.elementAt(1).split(' ')[0],
-                                          style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.bold)),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 4),
-                                  const Icon(Icons.assignment_late_outlined,
-                                      color: Colors.white60, size: 14),
-                                ],
-                              ),
-                              if (stats.values.elementAt(1).contains('('))
-                                Text(
-                                    stats.values.elementAt(1).substring(
-                                        stats.values.elementAt(1).indexOf('(')),
-                                    style: const TextStyle(
-                                        color: Colors.white54, fontSize: 9)),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                                Text(stats.keys.elementAt(2),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                      color: Colors.white60, fontSize: 10)),
-                              const SizedBox(height: 4),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Flexible(
-                                    child: FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: Text(stats.values.elementAt(2),
-                                          style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.bold)),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 4),
-                                  const Icon(Icons.pie_chart_outline,
-                                      color: Colors.white60, size: 14),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
-
-              // 2. Section Title
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      const Icon(Icons.tune, color: AppColors.primaryDark, size: 18),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(l10n.departmentWalletSectionTitle,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.textPrimary)),
+                          );
+                        },
                       ),
-                    ],
-                  ),
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                        color: AppColors.surfaceLight,
-                        borderRadius: BorderRadius.circular(6)),
-                    child: Text(l10n.departmentSyncStatus,
-                        style: TextStyle(
-                            fontSize: 9, color: AppColors.textSecondary)),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-
-              // 3. Filters
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    _buildFilterChip('${l10n.departmentAllFilter} 142', true),
-                    const SizedBox(width: 8),
-                    _buildFilterChip(l10n.departmentHighestBalanceFilter, false,
-                        icon: Icons.trending_up),
-                    const SizedBox(width: 8),
-                    _buildFilterChip(l10n.departmentWithdrawalFilter, false,
-                        icon: Icons.hourglass_empty),
-                    const SizedBox(width: 8),
-                    _buildFilterChip('', false,
-                        icon: Icons.lock_outline, isIconOnly: true),
-                    const SizedBox(width: 8),
-                    _buildFilterChip('', false,
-                        icon: Icons.warning_amber_rounded,
-                        isIconOnly: true,
-                        iconColor: AppColors.danger),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // 4. List Items
-              ...listItems.map((item) => Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: _buildListItemCard(context, item),
-                  )),
-
-              // 5. Bottom Info
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFE2E8F0),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(l10n.departmentGovernanceTitle,
-                            style: const TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.primaryDark)),
-                        const SizedBox(width: 8),
-                        Icon(Icons.verified_user_outlined,
-                            color: Colors.blue.shade700, size: 18),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      l10n.departmentGovernanceNotice,
-                      style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.grey.shade700,
-                          height: 1.5),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text('ISO-20022 COMPLIANT',
-                            style: TextStyle(
-                                fontSize: 9,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.textSecondary),
-                            textDirection: TextDirection.ltr),
-                        Row(
-                          children: [
-                            Text(l10n.departmentLastReconciliation,
-                                style: const TextStyle(
-                                    fontSize: 9,
-                                    color: AppColors.textSecondary)),
-                            const SizedBox(width: 4),
-                            Icon(Icons.circle,
-                                size: 6, color: Colors.blue.shade400),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-            ],
-          ),
-        ),
       ),
     );
   }
@@ -642,7 +743,7 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                        Text(item['title'],
+                      Text(item['title'],
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
@@ -708,9 +809,9 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(l10n.departmentAvailableBalance,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
                                 fontSize: 10, color: AppColors.textSecondary)),
                         const SizedBox(height: 4),
                         Row(
@@ -746,9 +847,9 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(l10n.departmentUnderReview,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
                                 fontSize: 10, color: AppColors.textSecondary)),
                         const SizedBox(height: 4),
                         Row(
@@ -767,12 +868,12 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                             const SizedBox(width: 2),
                             Flexible(
                               child: Text(
-                                '${AppLocalizations.of(context)!.currencySar} ${isArabic ? l10n.departmentPendingSuffix : 'pending'}',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  fontSize: 9,
-                                  color: AppColors.textSecondary)),
+                                  '${AppLocalizations.of(context)!.currencySar} ${isArabic ? l10n.departmentPendingSuffix : 'pending'}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                      fontSize: 9,
+                                      color: AppColors.textSecondary)),
                             ),
                           ],
                         ),
@@ -848,20 +949,17 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                 ),
                 icon: const Icon(Icons.receipt_long, size: 16),
                 onPressed: () {
-                  Navigator.push(
+                  FinanceDialogs.showDepartmentTransactionsDialog(
                     context,
-                    MaterialPageRoute(
-                      builder: (_) => TransactionHistoryScreen(
-                        title: item['title'],
-                        id: item['id'],
-                        availableBalance: item['available'],
-                      ),
-                    ),
+                    title: item['title'],
+                    subtitle: item['id'],
+                    availableBalance: item['available'] as double,
+                    pendingBalance: item['pending'] as double,
                   );
                 },
                 label: Text(l10n.departmentViewHistory,
-                  style: const TextStyle(
-                    fontSize: 11, fontWeight: FontWeight.bold)),
+                    style: const TextStyle(
+                        fontSize: 11, fontWeight: FontWeight.bold)),
               ),
             ),
           ),

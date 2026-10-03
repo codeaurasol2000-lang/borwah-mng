@@ -5,6 +5,7 @@ import '../../../../core/utils/currency_formatter.dart';
 import '../../domain/entities/withdrawal_request_entity.dart';
 import '../../domain/usecases/get_supervisor_withdrawals_usecase.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../core/widgets/finance_dialogs.dart';
 import '../widgets/finance_navigation.dart';
 
 class SupervisorWithdrawalsScreen extends StatefulWidget {
@@ -48,14 +49,16 @@ class _SupervisorWithdrawalsScreenState
   }
 
   int _countFor(String type) {
-    if (type == 'المشرفين')
+    if (type == 'المشرفين') {
       return _requests
           .where((r) => r.beneficiaryType == BeneficiaryType.supervisor)
           .length;
-    if (type == 'مقدمي الخدمة')
+    }
+    if (type == 'مقدمي الخدمة') {
       return _requests
           .where((r) => r.beneficiaryType == BeneficiaryType.serviceProvider)
           .length;
+    }
     return _requests.length;
   }
 
@@ -113,11 +116,15 @@ class _SupervisorWithdrawalsScreenState
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(l10n.supervisorWithdrawalsHeaderSubtitle,
-                                  style: const TextStyle(
-                                      color: AppColors.primaryDark,
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.bold)),
+                              Flexible(
+                                child: Text(l10n.supervisorWithdrawalsHeaderSubtitle,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                        color: AppColors.primaryDark,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold)),
+                              ),
                               const SizedBox(width: 4),
                               Icon(Icons.shield,
                                   color: Colors.blue.shade700, size: 14),
@@ -384,13 +391,18 @@ class _SupervisorWithdrawalsScreenState
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Icon(icon, color: color, size: 20),
-              Text(title,
-                  style: TextStyle(
-                      fontSize: 11,
-                      color: color == AppColors.danger
-                          ? AppColors.danger
-                          : Colors.blue.shade700,
-                      fontWeight: FontWeight.bold)),
+              const SizedBox(width: 4),
+              Flexible(
+                child: Text(title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        fontSize: 11,
+                        color: color == AppColors.danger
+                            ? AppColors.danger
+                            : Colors.blue.shade700,
+                        fontWeight: FontWeight.bold)),
+              ),
             ],
           ),
           const SizedBox(height: 12),
@@ -431,26 +443,30 @@ class _SupervisorWithdrawalsScreenState
 
     // Icon based on type
     IconData headerIcon = Icons.verified_user;
-    if (isDanger)
+    if (isDanger) {
       headerIcon = Icons.gavel;
-    else if (isReady)
+    } else if (isReady) {
       headerIcon = Icons.build_circle;
-    else
+    } else {
       headerIcon = Icons.admin_panel_settings;
+    }
 
     // Gross Amount Title
     String grossTitle = l10n.totalFeesAndCommissions;
-    if (isDanger)
+    if (isDanger) {
       grossTitle = l10n.grossClaimedAmount;
-    else if (isReady) grossTitle = l10n.grossAmount;
+    } else if (isReady) {
+      grossTitle = l10n.grossAmount;
+    }
 
     // Fee Title
     String feeTitle = '';
     if (req.platformFeePercentage > 0) {
       feeTitle = '${l10n.platformFee} (${req.platformFeePercentage}%):';
-      if (isDanger)
+      if (isDanger) {
         feeTitle =
             '${l10n.deductedPlatformFee} (${req.platformFeePercentage}%):';
+      }
     }
 
     // Net Title
@@ -545,47 +561,53 @@ class _SupervisorWithdrawalsScreenState
                   ],
                 ),
               ),
-              Container(
-                margin: const EdgeInsets.only(right: 8),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: isDanger
-                      ? AppColors.dangerLight
-                      : (isReady
-                          ? Colors.blue.shade50
-                          : const Color(0xFFF1F5F9)),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (isReady)
-                      const Icon(Icons.flash_on,
-                          color: AppColors.primaryDark, size: 12),
-                    if (isDanger)
-                      const Icon(Icons.warning_amber,
-                          color: AppColors.danger, size: 12),
-                    if (!isReady && !isDanger)
-                      const Icon(Icons.circle,
-                          color: AppColors.primaryDark, size: 8),
-                    const SizedBox(width: 4),
-                    Text(
-                      isDanger
-                          ? l10n.temporarilySuspendedBadge
-                          : (isReady
-                              ? l10n.readyForInstantDisbursement
-                              : l10n.awaitingDisbursementBadge),
-                      style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                          color: isDanger
-                              ? AppColors.danger
+              Flexible(
+                child: Container(
+                  margin: const EdgeInsets.only(right: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: isDanger
+                        ? AppColors.dangerLight
+                        : (isReady
+                            ? Colors.blue.shade50
+                            : const Color(0xFFF1F5F9)),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (isReady)
+                        const Icon(Icons.flash_on,
+                            color: AppColors.primaryDark, size: 12),
+                      if (isDanger)
+                        const Icon(Icons.warning_amber,
+                            color: AppColors.danger, size: 12),
+                      if (!isReady && !isDanger)
+                        const Icon(Icons.circle,
+                            color: AppColors.primaryDark, size: 8),
+                      const SizedBox(width: 4),
+                      Flexible(
+                        child: Text(
+                          isDanger
+                              ? l10n.temporarilySuspendedBadge
                               : (isReady
-                                  ? AppColors.primaryDark
-                                  : Colors.black87)),
-                    ),
-                  ],
+                                  ? l10n.readyForInstantDisbursement
+                                  : l10n.awaitingDisbursementBadge),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              color: isDanger
+                                  ? AppColors.danger
+                                  : (isReady
+                                      ? AppColors.primaryDark
+                                      : Colors.black87)),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -676,7 +698,7 @@ class _SupervisorWithdrawalsScreenState
                             child: Text(
                                 CurrencyFormatter.format(req.netAmount,
                                     includeCurrency: false),
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w900,
                                     color: Colors.black87))),
@@ -902,43 +924,136 @@ class _SupervisorWithdrawalsScreenState
                       borderRadius: BorderRadius.circular(12)),
                   elevation: 0,
                 ),
-                icon: Icon(
-                    isDanger
-                        ? Icons.folder_off_outlined
-                        : Icons.check_circle_outline,
-                    size: 18),
-                onPressed: () {},
+                icon: const Icon(Icons.check_circle_outline, size: 18),
+                onPressed: () async {
+                  final isArabic = l10n.localeName.startsWith('ar');
+                  final messenger = ScaffoldMessenger.of(context);
+                  final confirmed = await FinanceDialogs.showApprovalDialog(
+                    context,
+                    title: isArabic
+                        ? 'اعتماد طلب السحب'
+                        : 'Approve Withdrawal Request',
+                    description: isArabic
+                        ? 'هل تريد اعتماد طلب سحب ${req.beneficiaryName} بقيمة ${CurrencyFormatter.format(req.netAmount)} وإرساله للإدارة للموافقة؟'
+                        : 'Do you want to approve the withdrawal request for ${req.beneficiaryName} (${CurrencyFormatter.format(req.netAmount)}) and send it to management?',
+                  );
+                  if (confirmed && mounted) {
+                    setState(() {
+                      _requests.removeWhere((r) => r.id == req.id);
+                    });
+                    messenger.showSnackBar(
+                      SnackBar(
+                        content: Text(isArabic
+                            ? 'تم اعتماد طلب السحب بنجاح وإرساله للإدارة للموافقة عليه'
+                            : 'Withdrawal request approved and sent to management'),
+                        backgroundColor: AppColors.success,
+                      ),
+                    );
+                  }
+                },
                 label: Text(
-                  isDanger
-                      ? l10n.rejectAndNotifyCustomer
-                      : (isReady
-                          ? l10n.approveAndIssueBankOrder
-                          : l10n.approveAndSendToAdmin),
+                  isReady
+                      ? l10n.approveAndIssueBankOrder
+                      : l10n.approveAndSendToAdmin,
                   style: const TextStyle(
                       fontSize: 13, fontWeight: FontWeight.bold),
                 ),
               ),
               const SizedBox(height: 8),
-              OutlinedButton.icon(
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: AppColors.danger,
-                  side: BorderSide(
-                      color:
-                          isDanger ? AppColors.danger : AppColors.dangerLight),
-                  backgroundColor: AppColors.dangerLight.withValues(alpha: 0.3),
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                ),
-                icon: Icon(
-                    isDanger ? Icons.cancel_outlined : Icons.lock_outline,
-                    size: 18),
-                onPressed: () {},
-                label: Text(
-                  isDanger ? l10n.freezeRequest : l10n.freezeRequestTemporarily,
-                  style: const TextStyle(
-                      fontSize: 13, fontWeight: FontWeight.bold),
-                ),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: AppColors.danger,
+                        side: const BorderSide(color: AppColors.danger),
+                        padding: const EdgeInsets.symmetric(vertical: 11),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                      ),
+                      icon: const Icon(Icons.cancel_outlined, size: 16),
+                      onPressed: () async {
+                        final isArabic = l10n.localeName.startsWith('ar');
+                        final messenger = ScaffoldMessenger.of(context);
+                        final reason = await FinanceDialogs.showRejectionDialog(
+                          context,
+                          title: isArabic
+                              ? 'رفض طلب السحب'
+                              : 'Reject Withdrawal',
+                        );
+                        if (reason != null && mounted) {
+                          setState(() {
+                            _requests.removeWhere((r) => r.id == req.id);
+                          });
+                          messenger.showSnackBar(
+                            SnackBar(
+                              content: Text(isArabic
+                                  ? 'تم رفض الطلب وإرسال سبب الرفض لرئيس المشرفين للمراجعة'
+                                  : 'Request rejected and submitted to Head Supervisor'),
+                              backgroundColor: AppColors.danger,
+                            ),
+                          );
+                        }
+                      },
+                      label: Text(
+                        l10n.localeName.startsWith('ar')
+                            ? 'رفض الطلب'
+                            : 'Reject',
+                        style: const TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.orange.shade800,
+                        backgroundColor: Colors.orange.shade50,
+                        side: BorderSide(color: Colors.orange.shade200),
+                        padding: const EdgeInsets.symmetric(vertical: 11),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                      ),
+                      icon: const Icon(Icons.pause_circle_outline, size: 16),
+                      onPressed: () async {
+                        final isArabic = l10n.localeName.startsWith('ar');
+                        final messenger = ScaffoldMessenger.of(context);
+                        final confirmed = await FinanceDialogs.showFreezeDialog(
+                          context,
+                          requestTitle: req.beneficiaryName,
+                        );
+                        if (confirmed && mounted) {
+                          setState(() {
+                            final idx =
+                                _requests.indexWhere((r) => r.id == req.id);
+                            if (idx != -1) {
+                              _requests[idx] = req.copyWith(
+                                status: RequestStatus.underInvestigation,
+                                alertNotice: isArabic
+                                    ? 'تم تجميد الطلب احترازياً بقرار المشرف المالي'
+                                    : 'Precautionarily frozen by finance supervisor',
+                              );
+                            }
+                          });
+                          messenger.showSnackBar(
+                            SnackBar(
+                              content: Text(isArabic
+                                  ? 'تم تجميد الطلب ونقله إلى قائمة التدقيق الرقابي'
+                                  : 'Request frozen and moved to audit inspection'),
+                              backgroundColor: AppColors.warning,
+                            ),
+                          );
+                        }
+                      },
+                      label: Text(
+                        l10n.freezeRequestTemporarily,
+                        style: const TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

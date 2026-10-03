@@ -133,8 +133,8 @@ class ProfileScreen extends StatelessWidget {
                                         color: AppColors.primaryExtraDark,
                                         borderRadius: BorderRadius.circular(12),
                                       ),
-                                      child: Text('#CFO-01',
-                                          style: const TextStyle(
+                                      child: const Text('#CFO-01',
+                                          style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 10,
                                               fontWeight: FontWeight.bold),
@@ -285,22 +285,34 @@ class ProfileScreen extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
-                            children: [
-                              const Icon(Icons.fingerprint,
-                                  color: AppColors.info, size: 16),
-                              const SizedBox(width: 4),
-                              Text(l10n.enabledNafath,
-                                  style: TextStyle(
-                                      fontSize: 10,
-                                      color: Colors.blue.shade700,
-                                      fontWeight: FontWeight.bold)),
-                            ],
+                          Flexible(
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.fingerprint,
+                                    color: AppColors.info, size: 16),
+                                const SizedBox(width: 4),
+                                Flexible(
+                                  child: Text(l10n.enabledNafath,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          fontSize: 10,
+                                          color: Colors.blue.shade700,
+                                          fontWeight: FontWeight.bold)),
+                                ),
+                              ],
+                            ),
                           ),
-                          Text(l10n.authorizationEffectiveFrom,
-                              style: const TextStyle(
-                                  fontSize: 10,
-                                  color: AppColors.textSecondary)),
+                          const SizedBox(width: 8),
+                          Flexible(
+                            child: Text(l10n.authorizationEffectiveFrom,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                    fontSize: 10,
+                                    color: AppColors.textSecondary)),
+                          ),
                         ],
                       ),
                     ),
@@ -316,7 +328,7 @@ class ProfileScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                        color: AppColors.primaryExtraDark.withOpacity(0.2),
+                        color: AppColors.primaryExtraDark.withValues(alpha: 0.2),
                         blurRadius: 10,
                         offset: const Offset(0, 4)),
                   ],
@@ -328,47 +340,60 @@ class ProfileScreen extends StatelessWidget {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: Colors.blue.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(Icons.circle,
-                                    size: 6, color: Colors.white),
-                                const SizedBox(width: 4),
-                                Text(l10n.activeAndReconciled,
-                                    style: const TextStyle(
-                                        color: Colors.white, fontSize: 10)),
-                              ],
+                          Flexible(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: Colors.blue.withValues(alpha: 0.2),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(Icons.circle,
+                                      size: 6, color: Colors.white),
+                                  const SizedBox(width: 4),
+                                  Flexible(
+                                    child: Text(l10n.activeAndReconciled,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                            color: Colors.white, fontSize: 10)),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                          const Spacer(),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(l10n.duesWalletTitle,
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      height: 1.2),
-                                  textAlign: TextAlign.end),
-                              const SizedBox(height: 4),
-                              Text(l10n.executiveWalletDescription,
-                                  style: const TextStyle(
-                                      color: Colors.white60, fontSize: 10)),
-                            ],
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(l10n.duesWalletTitle,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        height: 1.2),
+                                    textAlign: TextAlign.end),
+                                const SizedBox(height: 4),
+                                Text(l10n.executiveWalletDescription,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                        color: Colors.white60, fontSize: 10),
+                                    textAlign: TextAlign.end),
+                              ],
+                            ),
                           ),
                           const SizedBox(width: 12),
                           Container(
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.1),
+                              color: Colors.white.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: const Icon(
@@ -384,23 +409,26 @@ class ProfileScreen extends StatelessWidget {
                         style: const TextStyle(
                             color: Colors.white70, fontSize: 11)),
                     const SizedBox(height: 4),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text('68,500.00',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 36,
-                                fontWeight: FontWeight.bold,
-                                height: 1)),
-                        SizedBox(width: 4),
-                        Text(l10n.currencySar,
-                            style: const TextStyle(
-                                color: Colors.white70,
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold)),
-                      ],
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          const Text('68,500.00',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 36,
+                                  fontWeight: FontWeight.bold,
+                                  height: 1)),
+                          const SizedBox(width: 4),
+                          Text(l10n.currencySar,
+                              style: const TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold)),
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 20),
                     Padding(
@@ -411,7 +439,7 @@ class ProfileScreen extends StatelessWidget {
                             child: Container(
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.05),
+                                color: Colors.white.withValues(alpha: 0.05),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Column(
@@ -420,10 +448,14 @@ class ProfileScreen extends StatelessWidget {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      Text(l10n.pendingRegulatoryBalance,
-                                          style: const TextStyle(
-                                              color: Colors.white70,
-                                              fontSize: 10)),
+                                      Flexible(
+                                        child: Text(l10n.pendingRegulatoryBalance,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                                color: Colors.white70,
+                                                fontSize: 10)),
+                                      ),
                                       const SizedBox(width: 4),
                                       Icon(Icons.circle,
                                           size: 6,
@@ -435,12 +467,15 @@ class ProfileScreen extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
-                                      Text('16,500.00',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold)),
-                                      SizedBox(width: 2),
+                                      const Flexible(
+                                        child: Text('16,500.00',
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold)),
+                                      ),
+                                      const SizedBox(width: 2),
                                       Text(l10n.currencySar,
                                           style: const TextStyle(
                                               color: Colors.white70,
@@ -460,7 +495,7 @@ class ProfileScreen extends StatelessWidget {
                             child: Container(
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.05),
+                                color: Colors.white.withValues(alpha: 0.05),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Column(
@@ -469,10 +504,14 @@ class ProfileScreen extends StatelessWidget {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      Text(l10n.readyForInstantDisbursement,
-                                          style: const TextStyle(
-                                              color: Colors.white70,
-                                              fontSize: 10)),
+                                      Flexible(
+                                        child: Text(l10n.readyForInstantDisbursement,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                                color: Colors.white70,
+                                                fontSize: 10)),
+                                      ),
                                       const SizedBox(width: 4),
                                       Icon(Icons.circle,
                                           size: 6, color: Colors.blue.shade200),
@@ -483,12 +522,15 @@ class ProfileScreen extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
-                                      Text('52,000.00',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold)),
-                                      SizedBox(width: 2),
+                                      const Flexible(
+                                        child: Text('52,000.00',
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold)),
+                                      ),
+                                      const SizedBox(width: 2),
                                       Text(l10n.currencySar,
                                           style: const TextStyle(
                                               color: Colors.white70,
@@ -511,29 +553,32 @@ class ProfileScreen extends StatelessWidget {
                       margin: const EdgeInsets.symmetric(horizontal: 16),
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.1),
+                        color: Colors.white.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
                         children: [
                           const Icon(Icons.remove_red_eye_outlined,
                               color: Colors.white70, size: 20),
-                          const Spacer(),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(l10n.approvedPayoutAccount,
-                                  style: const TextStyle(
-                                      color: Colors.white60, fontSize: 9)),
-                              Text('SA44 8000 0001 **** 3456',
-                                  style: const TextStyle(
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(l10n.approvedPayoutAccount,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                        color: Colors.white60, fontSize: 9)),
+                                const Text('SA44 8000 0001 **** 3456',
+                                  style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 12,
                                       fontWeight: FontWeight.bold,
                                       letterSpacing: 1.2),
                                   textDirection: TextDirection.ltr),
                             ],
-                          ),
+                          ),),
                           const SizedBox(width: 12),
                           Container(
                             padding: const EdgeInsets.symmetric(
@@ -548,7 +593,8 @@ class ProfileScreen extends StatelessWidget {
                                     fontSize: 10,
                                     fontWeight: FontWeight.bold)),
                           ),
-                        ],
+                      
+                      ],
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -560,7 +606,7 @@ class ProfileScreen extends StatelessWidget {
                             width: double.infinity,
                             child: ElevatedButton.icon(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white.withOpacity(0.15),
+                                backgroundColor: Colors.white.withValues(alpha: 0.15),
                                 foregroundColor: Colors.white,
                                 elevation: 0,
                                 shape: RoundedRectangleBorder(
@@ -584,7 +630,7 @@ class ProfileScreen extends StatelessWidget {
                             width: double.infinity,
                             child: ElevatedButton.icon(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white.withOpacity(0.15),
+                                backgroundColor: Colors.white.withValues(alpha: 0.15),
                                 foregroundColor: Colors.white,
                                 elevation: 0,
                                 shape: RoundedRectangleBorder(
@@ -618,20 +664,32 @@ class ProfileScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(l10n.cfoExclusive,
-                      style: const TextStyle(
-                          fontSize: 10, color: AppColors.textSecondary)),
-                  Row(
-                    children: [
-                      Text(l10n.sovereignControls,
-                          style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.textPrimary)),
-                      const SizedBox(width: 8),
-                      const Icon(Icons.tune,
-                          color: AppColors.primaryDark, size: 18),
-                    ],
+                  Flexible(
+                    child: Text(l10n.cfoExclusive,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                            fontSize: 10, color: AppColors.textSecondary)),
+                  ),
+                  const SizedBox(width: 8),
+                  Flexible(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Flexible(
+                          child: Text(l10n.sovereignControls,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.textPrimary)),
+                        ),
+                        const SizedBox(width: 8),
+                        const Icon(Icons.tune,
+                            color: AppColors.primaryDark, size: 18),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -782,17 +840,25 @@ class ProfileScreen extends StatelessWidget {
                         style: const TextStyle(
                             fontSize: 9, color: AppColors.textSecondary)),
                   ),
-                  Row(
-                    children: [
-                      Text(l10n.auditActivityLog,
-                          style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.textPrimary)),
-                      const SizedBox(width: 8),
-                      const Icon(Icons.history,
-                          color: AppColors.primaryDark, size: 18),
-                    ],
+                  const SizedBox(width: 8),
+                  Flexible(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Flexible(
+                          child: Text(l10n.auditActivityLog,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.textPrimary)),
+                        ),
+                        const SizedBox(width: 8),
+                        const Icon(Icons.history,
+                            color: AppColors.primaryDark, size: 18),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -810,27 +876,37 @@ class ProfileScreen extends StatelessWidget {
                 bottomWidget: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text('${l10n.referenceCode} #SIG-9082',
+                    Flexible(
+                      child: Text('${l10n.referenceCode} #SIG-9082',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                            fontSize: 9, color: AppColors.textSecondary)),
+                            fontSize: 9, color: AppColors.textSecondary)),),
                     const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 6, vertical: 4),
-                      decoration: BoxDecoration(
-                          color: AppColors.surfaceLight,
-                          borderRadius: BorderRadius.circular(4)),
-                      child: Row(
-                        children: [
-                          Text(l10n.validDigitalSignature,
-                              style: TextStyle(
-                                  fontSize: 9,
-                                  color: Colors.blue.shade700,
-                                  fontWeight: FontWeight.bold)),
-                          const SizedBox(width: 4),
-                          Icon(Icons.key,
-                              size: 10, color: Colors.blue.shade700),
-                        ],
+                    Flexible(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 4),
+                        decoration: BoxDecoration(
+                            color: AppColors.surfaceLight,
+                            borderRadius: BorderRadius.circular(4)),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Flexible(
+                              child: Text(l10n.validDigitalSignature,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: 9,
+                                      color: Colors.blue.shade700,
+                                      fontWeight: FontWeight.bold)),
+                            ),
+                            const SizedBox(width: 4),
+                            Icon(Icons.key,
+                                size: 10, color: Colors.blue.shade700),
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -847,26 +923,36 @@ class ProfileScreen extends StatelessWidget {
                 bottomWidget: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text(l10n.alRajhiBank,
+                    Flexible(
+                      child: Text(l10n.alRajhiBank,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                            fontSize: 9, color: AppColors.textSecondary)),
+                            fontSize: 9, color: AppColors.textSecondary)),),
                     const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 6, vertical: 4),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(color: Colors.grey.shade300),
-                          borderRadius: BorderRadius.circular(4)),
-                      child: Row(
-                        children: [
-                          Text(l10n.executedAndPosted,
-                              style: const TextStyle(
-                                  fontSize: 9, color: AppColors.textPrimary)),
-                          const SizedBox(width: 4),
-                          const Icon(Icons.check_circle_outline,
-                              size: 10, color: AppColors.success),
-                        ],
+                    Flexible(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 4),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(color: Colors.grey.shade300),
+                            borderRadius: BorderRadius.circular(4)),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Flexible(
+                              child: Text(l10n.executedAndPosted,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                      fontSize: 9, color: AppColors.textPrimary)),
+                            ),
+                            const SizedBox(width: 4),
+                            const Icon(Icons.check_circle_outline,
+                                size: 10, color: AppColors.success),
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -883,28 +969,38 @@ class ProfileScreen extends StatelessWidget {
                 bottomWidget: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text(l10n.auditNoticeReference,
+                    Flexible(
+                      child: Text(l10n.auditNoticeReference,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                            fontSize: 9, color: AppColors.textSecondary)),
+                            fontSize: 9, color: AppColors.textSecondary)),),
                     const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 6, vertical: 4),
-                      decoration: BoxDecoration(
-                          color: AppColors.dangerLight,
-                          border: Border.all(color: AppColors.dangerBorder),
-                          borderRadius: BorderRadius.circular(4)),
-                      child: Row(
-                        children: [
-                          Text(l10n.underInvestigation,
-                              style: const TextStyle(
-                                  fontSize: 9,
-                                  color: AppColors.danger,
-                                  fontWeight: FontWeight.bold)),
-                          const SizedBox(width: 4),
-                          const Icon(Icons.gavel,
-                              size: 10, color: AppColors.danger),
-                        ],
+                    Flexible(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 4),
+                        decoration: BoxDecoration(
+                            color: AppColors.dangerLight,
+                            border: Border.all(color: AppColors.dangerBorder),
+                            borderRadius: BorderRadius.circular(4)),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Flexible(
+                              child: Text(l10n.underInvestigation,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                      fontSize: 9,
+                                      color: AppColors.danger,
+                                      fontWeight: FontWeight.bold)),
+                            ),
+                            const SizedBox(width: 4),
+                            const Icon(Icons.gavel,
+                                size: 10, color: AppColors.danger),
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -922,21 +1018,28 @@ class ProfileScreen extends StatelessWidget {
                 bottomWidget: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 6, vertical: 4),
-                      decoration: BoxDecoration(
-                          color: AppColors.surfaceLight,
-                          borderRadius: BorderRadius.circular(4)),
-                      child: Row(
-                        children: [
-                          Text(l10n.activeSystemUpdate,
-                              style: const TextStyle(
-                                  fontSize: 9, color: AppColors.textPrimary)),
-                          const SizedBox(width: 4),
-                          const Icon(Icons.check_box_outlined,
-                              size: 10, color: AppColors.textPrimary),
-                        ],
+                    Flexible(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 4),
+                        decoration: BoxDecoration(
+                            color: AppColors.surfaceLight,
+                            borderRadius: BorderRadius.circular(4)),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Flexible(
+                              child: Text(l10n.activeSystemUpdate,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                      fontSize: 9, color: AppColors.textPrimary)),
+                            ),
+                            const SizedBox(width: 4),
+                            const Icon(Icons.check_box_outlined,
+                                size: 10, color: AppColors.textPrimary),
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -1032,7 +1135,7 @@ class ProfileScreen extends StatelessWidget {
         border: Border.all(color: AppColors.cardBorder),
         boxShadow: [
           BoxShadow(
-              color: Colors.black.withOpacity(0.02),
+              color: Colors.black.withValues(alpha: 0.02),
               blurRadius: 4,
               offset: const Offset(0, 2)),
         ],

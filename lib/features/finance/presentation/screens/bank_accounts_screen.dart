@@ -190,11 +190,15 @@ class _BankAccountsScreenContentState
         children: [
           Row(
             children: [
-              Icon(Icons.account_balance, color: Colors.white70, size: 18),
-              SizedBox(width: 8),
-              Text(
-                l10n.totalAggregatedLiquidity,
-                style: const TextStyle(color: Colors.white70, fontSize: 12),
+              const Icon(Icons.account_balance, color: Colors.white70, size: 18),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  l10n.totalAggregatedLiquidity,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(color: Colors.white70, fontSize: 12),
+                ),
               ),
             ],
           ),
@@ -221,11 +225,15 @@ class _BankAccountsScreenContentState
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.sync, size: 14, color: Colors.greenAccent),
-                SizedBox(width: 6),
-                Text(
-                  l10n.instantBankSyncNote,
-                  style: const TextStyle(color: Colors.white, fontSize: 11),
+                const Icon(Icons.sync, size: 14, color: Colors.greenAccent),
+                const SizedBox(width: 6),
+                Flexible(
+                  child: Text(
+                    l10n.instantBankSyncNote,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(color: Colors.white, fontSize: 11),
+                  ),
                 ),
               ],
             ),
@@ -314,7 +322,7 @@ class _BankAccountsScreenContentState
           border: Border.all(color: Colors.blue.shade100),
           boxShadow: [
             BoxShadow(
-              color: Colors.blue.withOpacity(0.04),
+              color: Colors.blue.withValues(alpha: 0.04),
               blurRadius: 6,
               offset: const Offset(0, 2),
             )
@@ -546,31 +554,227 @@ class _BankAccountsScreenContentState
             ],
           ),
           const SizedBox(height: 8),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color: Colors.green.shade50,
-              borderRadius: BorderRadius.circular(6),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.green.shade50,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.bolt, size: 14, color: Colors.green.shade700),
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: Text(
+                          l10n.connectedReconciledViaSarie,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              color: Colors.green.shade700,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              OutlinedButton.icon(
+                style: OutlinedButton.styleFrom(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  minimumSize: const Size(0, 32),
+                  side: BorderSide(
+                      color: AppColors.primaryDark.withValues(alpha: 0.3)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                ),
+                icon: const Icon(Icons.edit_note,
+                    size: 16, color: AppColors.primaryDark),
+                label: Text(
+                  l10n.localeName.startsWith('ar') ? 'تعديل البيانات' : 'Edit Account',
+                  style: const TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primaryDark),
+                ),
+                onPressed: () => _showEditBankAccountSheet(context, account),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  // نافذة تعديل بيانات الحساب البنكي وإرسالها للأدمن
+  void _showEditBankAccountSheet(
+      BuildContext context, BankAccountEntity account) {
+    final l10n = AppLocalizations.of(context)!;
+    final isArabic = l10n.localeName.startsWith('ar');
+
+    final nameController = TextEditingController(text: account.bankName);
+    final ibanController = TextEditingController(text: account.iban);
+    final typeController = TextEditingController(text: account.accountType);
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (ctx) {
+        return Directionality(
+          textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+          child: Padding(
+            padding: EdgeInsets.only(
+              left: 16,
+              right: 16,
+              top: 20,
+              bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
             ),
-            child: Row(
+            child: Column(
               mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Icon(Icons.bolt, size: 14, color: Colors.green.shade700),
-                const SizedBox(width: 4),
-                Text(
-                  l10n.connectedReconciledViaSarie,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                      color: Colors.green.shade700,
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold),
+                Row(
+                  children: [
+                    const Icon(Icons.edit_calendar,
+                        color: AppColors.primaryDark, size: 20),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        isArabic
+                            ? 'تعديل بيانات الحساب البنكي'
+                            : 'Edit Bank Account Data',
+                        style: const TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.amber.shade50,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.amber.shade200),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.info_outline,
+                          color: Colors.amber, size: 16),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          isArabic
+                              ? 'تنبيه: بعد حفظ التعديلات سيتم إرسال أمر التعديل إلى المستخدم الأدمن للموافقة عليه أو رفضه.'
+                              : 'Notice: After saving, modifications will be submitted to the Admin user for approval or rejection.',
+                          style: TextStyle(
+                              fontSize: 11, color: Colors.amber.shade900),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: nameController,
+                  decoration: InputDecoration(
+                    labelText: l10n.bankNameField,
+                    border: const OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  controller: typeController,
+                  decoration: InputDecoration(
+                    labelText:
+                        isArabic ? 'نوع الحساب / التصنيف' : 'Account Type',
+                    border: const OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  controller: ibanController,
+                  decoration: InputDecoration(
+                    labelText: l10n.ibanField,
+                    border: const OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.pop(ctx);
+                    showDialog(
+                      context: context,
+                      builder: (dialogCtx) => AlertDialog(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16)),
+                        title: Row(
+                          children: [
+                            const Icon(Icons.send_outlined,
+                                color: AppColors.primaryDark),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                isArabic
+                                    ? 'تم إرسال طلب التعديل'
+                                    : 'Modification Request Sent',
+                                style: const TextStyle(
+                                    fontSize: 15, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
+                        content: Text(
+                          isArabic
+                              ? 'تم إرسال أمر تعديل بيانات الحساب (${nameController.text}) بنجاح إلى المستخدم الأدمن للمصادقة عليه.'
+                              : 'Account modification order for (${nameController.text}) was successfully submitted to the Admin user for approval.',
+                          style: const TextStyle(fontSize: 12, height: 1.4),
+                        ),
+                        actions: [
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primaryDark,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8)),
+                            ),
+                            onPressed: () => Navigator.pop(dialogCtx),
+                            child: Text(isArabic ? 'حسناً' : 'OK',
+                                style: const TextStyle(color: Colors.white)),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.check_circle_outline,
+                      size: 18, color: Colors.white),
+                  label: Text(
+                    isArabic
+                        ? 'حفظ وإرسال التعديل للأدمن'
+                        : 'Save & Submit to Admin',
+                    style: const TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primaryDark,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                  ),
                 ),
               ],
             ),
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
