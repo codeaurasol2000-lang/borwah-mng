@@ -4,6 +4,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../core/widgets/finance_dialogs.dart';
 import '../../domain/entities/bank_link_request_entity.dart';
 import '../../domain/entities/withdrawal_request_entity.dart';
@@ -555,18 +556,15 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
         .read<BankReconciliationCubit>()
         .restoreFrozenRequest(request.id);
     if (!mounted || !context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(result.fold(
-          (_) => l10n.reconciliationActionFailed,
-          (_) => l10n.frozenBankLinkRestoreSuccess,
-        )),
-        backgroundColor: result.fold(
-          (_) => AppColors.danger,
-          (_) => AppColors.success,
-        ),
-      ),
+    final message = result.fold(
+      (_) => l10n.reconciliationActionFailed,
+      (_) => l10n.frozenBankLinkRestoreSuccess,
     );
+    if (result.isRight()) {
+      AppSnackBar.showSuccess(context, message);
+    } else {
+      AppSnackBar.showError(context, message);
+    }
   }
 
   Future<void> _rejectFrozenBankLink(
@@ -585,18 +583,15 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
         .read<BankReconciliationCubit>()
         .rejectFrozenRequest(request.id, reason);
     if (!mounted || !context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(result.fold(
-          (_) => l10n.reconciliationActionFailed,
-          (_) => l10n.frozenBankLinkRejectSuccess,
-        )),
-        backgroundColor: result.fold(
-          (_) => AppColors.danger,
-          (_) => AppColors.success,
-        ),
-      ),
+    final message = result.fold(
+      (_) => l10n.reconciliationActionFailed,
+      (_) => l10n.frozenBankLinkRejectSuccess,
     );
+    if (result.isRight()) {
+      AppSnackBar.showSuccess(context, message);
+    } else {
+      AppSnackBar.showError(context, message);
+    }
   }
 
   Widget _buildFilterChip(String title,
@@ -928,18 +923,15 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                                     req['request'] as WithdrawalRequestEntity,
                                   );
                               if (!mounted || !context.mounted) return;
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(result.fold(
-                                    (_) => l10n.frozenActionFailed,
-                                    (_) => l10n.frozenThawSuccess,
-                                  )),
-                                  backgroundColor: result.fold(
-                                    (_) => AppColors.danger,
-                                    (_) => AppColors.success,
-                                  ),
-                                ),
+                              final message = result.fold(
+                                (_) => l10n.frozenActionFailed,
+                                (_) => l10n.frozenThawSuccess,
                               );
+                              if (result.isRight()) {
+                                AppSnackBar.showSuccess(context, message);
+                              } else {
+                                AppSnackBar.showError(context, message);
+                              }
                             }
                           },
                     label: Text(l10n.frozenRestoreAndRelease,
@@ -985,18 +977,15 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                                     reason: reason,
                                   );
                               if (!mounted || !context.mounted) return;
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(result.fold(
-                                    (_) => l10n.frozenActionFailed,
-                                    (_) => l10n.frozenForfeitSuccess,
-                                  )),
-                                  backgroundColor: result.fold(
-                                    (_) => AppColors.danger,
-                                    (_) => AppColors.success,
-                                  ),
-                                ),
+                              final message = result.fold(
+                                (_) => l10n.frozenActionFailed,
+                                (_) => l10n.frozenForfeitSuccess,
                               );
+                              if (result.isRight()) {
+                                AppSnackBar.showSuccess(context, message);
+                              } else {
+                                AppSnackBar.showError(context, message);
+                              }
                             }
                           },
                     label: Text(l10n.frozenRejectAndForfeit,

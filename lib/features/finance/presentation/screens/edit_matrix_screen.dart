@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../core/widgets/app_snack_bar.dart';
 import '../widgets/finance_navigation.dart';
 
 class EditMatrixScreen extends StatefulWidget {
@@ -833,8 +834,7 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                       icon:
                           const Icon(Icons.drive_file_rename_outline, size: 18),
                       onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(l10n.matrixSaveSuccess)));
+                        AppSnackBar.showSuccess(context, l10n.matrixSaveSuccess);
                         Navigator.pop(context);
                       },
                       label: Text(l10n.matrixSaveAndSend,

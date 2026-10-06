@@ -5,6 +5,7 @@ import '../../../../core/utils/currency_formatter.dart';
 import '../../domain/entities/subscription_request_entity.dart';
 import '../../domain/usecases/get_subscriptions_usecase.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../core/widgets/finance_dialogs.dart';
 import '../utils/finance_localizer.dart';
 import '../widgets/finance_navigation.dart';
@@ -634,8 +635,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                   // 7. Bottom Record Button
                   InkWell(
                     onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(l10n.openingSubscriptionsRegister)));
+                      AppSnackBar.showInfo(context, l10n.openingSubscriptionsRegister);
                     },
                     borderRadius: BorderRadius.circular(16),
                     child: Container(
@@ -1086,7 +1086,6 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                 icon: const Icon(Icons.check_circle_outline, size: 16),
                 onPressed: () async {
                   final isArabic = l10n.localeName.startsWith('ar');
-                  final messenger = ScaffoldMessenger.of(context);
                   final confirmed = await FinanceDialogs.showApprovalDialog(
                     context,
                     title: isArabic
@@ -1100,13 +1099,11 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                     setState(() {
                       _subscriptions.removeWhere((s) => s.id == sub.id);
                     });
-                    messenger.showSnackBar(
-                      SnackBar(
-                        content: Text(isArabic
-                            ? 'تم اعتماد طلب الاشتراك بنجاح وإرساله للإدارة'
-                            : 'Subscription request approved and sent to Admin'),
-                        backgroundColor: AppColors.success,
-                      ),
+                    AppSnackBar.showSuccess(
+                      context,
+                      isArabic
+                          ? 'تم اعتماد طلب الاشتراك بنجاح وإرساله للإدارة'
+                          : 'Subscription request approved and sent to Admin',
                     );
                   }
                 },
@@ -1131,7 +1128,6 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                       icon: const Icon(Icons.pause_circle_outline, size: 16),
                       onPressed: () async {
                         final isArabic = l10n.localeName.startsWith('ar');
-                        final messenger = ScaffoldMessenger.of(context);
                         final confirmed = await FinanceDialogs.showFreezeDialog(
                           context,
                           requestTitle: FinanceLocalizer.localizeProviderName(
@@ -1141,13 +1137,11 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                           setState(() {
                             _subscriptions.removeWhere((s) => s.id == sub.id);
                           });
-                          messenger.showSnackBar(
-                            SnackBar(
-                              content: Text(isArabic
-                                  ? 'تم تجميد طلب الاشتراك ونقله إلى قائمة التدقيق الرقابي'
-                                  : 'Subscription request frozen and moved to audit inspection'),
-                              backgroundColor: AppColors.warning,
-                            ),
+                          AppSnackBar.showWarning(
+                            context,
+                            isArabic
+                                ? 'تم تجميد طلب الاشتراك ونقله إلى قائمة التدقيق الرقابي'
+                                : 'Subscription request frozen and moved to audit inspection',
                           );
                         }
                       },
@@ -1172,7 +1166,6 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                       icon: const Icon(Icons.cancel_outlined, size: 16),
                       onPressed: () async {
                         final isArabic = l10n.localeName.startsWith('ar');
-                        final messenger = ScaffoldMessenger.of(context);
                         final reason = await FinanceDialogs.showRejectionDialog(
                           context,
                           title: isArabic
@@ -1183,13 +1176,11 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                           setState(() {
                             _subscriptions.removeWhere((s) => s.id == sub.id);
                           });
-                          messenger.showSnackBar(
-                            SnackBar(
-                              content: Text(isArabic
-                                  ? 'تم رفض الطلب وإرسال السبب لرئيس المشرفين للمراجعة'
-                                  : 'Request rejected and reason submitted to Head Supervisor'),
-                              backgroundColor: AppColors.danger,
-                            ),
+                          AppSnackBar.showError(
+                            context,
+                            isArabic
+                                ? 'تم رفض الطلب وإرسال السبب لرئيس المشرفين للمراجعة'
+                                : 'Request rejected and reason submitted to Head Supervisor',
                           );
                         }
                       },

@@ -67,6 +67,21 @@ class AppTheme {
         thickness: 1,
         space: 20,
       ),
+      snackBarTheme: SnackBarThemeData(
+        backgroundColor: AppColors.primaryDark,
+        actionTextColor: Colors.white,
+        contentTextStyle: const TextStyle(
+          color: Colors.white,
+          fontSize: 13,
+          fontWeight: FontWeight.w600,
+          fontFamily: 'Cairo',
+        ),
+        behavior: SnackBarBehavior.floating,
+        elevation: 6,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
       iconTheme: const IconThemeData(
         color: AppColors.primaryDark,
         size: 20,

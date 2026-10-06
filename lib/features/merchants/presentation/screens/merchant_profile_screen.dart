@@ -229,13 +229,13 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                   icon: Icons.storefront_outlined,
                   value: '18',
                   label: l10n.merchantProfileStores,
-                 onTap: () {
-  Navigator.of(context).push(
-    MaterialPageRoute<void>(
-      builder: (_) => const SupervisedMerchantsScreen(),
-    ),
-  );
-},
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => const SupervisedMerchantsScreen(),
+                      ),
+                    );
+                  },
                 ),
               ),
             ],

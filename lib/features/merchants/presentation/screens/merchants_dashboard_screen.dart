@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../controllers/merchants_cubit.dart';
 import '../controllers/merchants_state.dart';
@@ -31,6 +32,154 @@ class MerchantsDashboardScreen extends StatefulWidget {
 
 class _MerchantsDashboardScreenState extends State<MerchantsDashboardScreen> {
   final TextEditingController _searchController = TextEditingController();
+
+  void _showAddMerchantSheet(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final nameController = TextEditingController();
+    final crController = TextEditingController();
+    final phoneController = TextEditingController();
+
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (sheetContext) {
+        return Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          padding: EdgeInsets.only(
+            left: 20,
+            right: 20,
+            top: 20,
+            bottom: MediaQuery.of(sheetContext).viewInsets.bottom + 24,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Center(
+                child: Container(
+                  width: 44,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryDark.withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Icon(
+                      Icons.storefront_outlined,
+                      color: AppColors.primaryDark,
+                      size: 22,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.addNewMerchantToSupervision,
+                          style: const TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.primaryDark,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          l10n.supervisedAreaLabel,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              TextField(
+                controller: nameController,
+                decoration: InputDecoration(
+                  labelText: l10n.merchantNameField,
+                  hintText: 'مثال: شركة الرواد للتجارة',
+                  prefixIcon: const Icon(Icons.business_outlined, size: 20),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: crController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: l10n.merchantCrField,
+                  hintText: '1010XXXXXX',
+                  prefixIcon: const Icon(Icons.badge_outlined, size: 20),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: phoneController,
+                keyboardType: TextInputType.phone,
+                decoration: InputDecoration(
+                  labelText: l10n.merchantPhoneField,
+                  hintText: '+966 5X XXX XXXX',
+                  prefixIcon: const Icon(Icons.phone_outlined, size: 20),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(sheetContext).pop();
+                  AppSnackBar.showSuccess(
+                    context,
+                    'تم إرسال طلب ضم التاجر لنطاق إشرافك بنجاح',
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primaryDark,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  elevation: 0,
+                ),
+                child: Text(
+                  l10n.addNewMerchantToSupervision,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   @override
   void dispose() {
@@ -126,12 +275,10 @@ class _MerchantsDashboardScreenState extends State<MerchantsDashboardScreen> {
                         // Recently Active sort button
                         InkWell(
                           onTap: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content:
-                                    Text('تم ترتيب القائمة حسب الأحدث نشاطاً'),
-                                duration: Duration(seconds: 1),
-                              ),
+                            AppSnackBar.showInfo(
+                              context,
+                              'تم ترتيب القائمة حسب الأحدث نشاطاً',
+                              duration: const Duration(seconds: 1),
                             );
                           },
                           borderRadius: BorderRadius.circular(8),
@@ -239,12 +386,10 @@ class _MerchantsDashboardScreenState extends State<MerchantsDashboardScreen> {
                             );
                           },
                           onActionTap: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                    'إجراء: ${merchant.actionButtonText} لـ ${merchant.name}'),
-                                duration: const Duration(seconds: 1),
-                              ),
+                            AppSnackBar.showInfo(
+                              context,
+                              'إجراء: ${merchant.actionButtonText} لـ ${merchant.name}',
+                              duration: const Duration(seconds: 1),
                             );
                           },
                         ),
@@ -257,15 +402,7 @@ class _MerchantsDashboardScreenState extends State<MerchantsDashboardScreen> {
                   bottom: 20,
                   left: 20,
                   child: ElevatedButton.icon(
-                    onPressed: widget.onLinkNewMerchant ??
-                        () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('فتح نافذة ربط تاجر جديد'),
-                              duration: Duration(seconds: 1),
-                            ),
-                          );
-                        },
+                    onPressed: () => _showAddMerchantSheet(context),
                     icon: const Icon(Icons.store_mall_directory_outlined,
                         size: 18, color: Colors.white),
                     label: Text(

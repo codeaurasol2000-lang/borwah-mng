@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../widgets/finance_navigation.dart';
 
@@ -367,12 +368,9 @@ class _AuditScreenState extends State<AuditScreen>
                         await Clipboard.setData(
                             const ClipboardData(text: _hash));
                         if (!context.mounted) return;
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(isArabic
-                                ? 'تم نسخ بصمة السجل.'
-                                : 'Audit hash copied.'),
-                          ),
+                        AppSnackBar.showInfo(
+                          context,
+                          isArabic ? 'تم نسخ بصمة السجل.' : 'Audit hash copied.',
                         );
                       },
                       icon: const Icon(Icons.copy_rounded,

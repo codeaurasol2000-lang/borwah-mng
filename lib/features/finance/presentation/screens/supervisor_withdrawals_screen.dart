@@ -5,6 +5,7 @@ import '../../../../core/utils/currency_formatter.dart';
 import '../../domain/entities/withdrawal_request_entity.dart';
 import '../../domain/usecases/get_supervisor_withdrawals_usecase.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../core/widgets/finance_dialogs.dart';
 import '../widgets/finance_navigation.dart';
 import '../widgets/withdrawal_request_details_sheet.dart';
@@ -947,7 +948,6 @@ class _SupervisorWithdrawalsScreenState
                 icon: const Icon(Icons.check_circle_outline, size: 18),
                 onPressed: () async {
                   final isArabic = l10n.localeName.startsWith('ar');
-                  final messenger = ScaffoldMessenger.of(context);
                   final confirmed = await FinanceDialogs.showApprovalDialog(
                     context,
                     title: isArabic
@@ -961,13 +961,11 @@ class _SupervisorWithdrawalsScreenState
                     setState(() {
                       _requests.removeWhere((r) => r.id == req.id);
                     });
-                    messenger.showSnackBar(
-                      SnackBar(
-                        content: Text(isArabic
-                            ? 'تم اعتماد طلب السحب بنجاح وإرساله للإدارة للموافقة عليه'
-                            : 'Withdrawal request approved and sent to management'),
-                        backgroundColor: AppColors.success,
-                      ),
+                    AppSnackBar.showSuccess(
+                      context,
+                      isArabic
+                          ? 'تم اعتماد طلب السحب بنجاح وإرساله للإدارة للموافقة عليه'
+                          : 'Withdrawal request approved and sent to management',
                     );
                   }
                 },
@@ -994,7 +992,6 @@ class _SupervisorWithdrawalsScreenState
                       icon: const Icon(Icons.cancel_outlined, size: 16),
                       onPressed: () async {
                         final isArabic = l10n.localeName.startsWith('ar');
-                        final messenger = ScaffoldMessenger.of(context);
                         final reason = await FinanceDialogs.showRejectionDialog(
                           context,
                           title:
@@ -1004,13 +1001,11 @@ class _SupervisorWithdrawalsScreenState
                           setState(() {
                             _requests.removeWhere((r) => r.id == req.id);
                           });
-                          messenger.showSnackBar(
-                            SnackBar(
-                              content: Text(isArabic
-                                  ? 'تم رفض الطلب وإرسال سبب الرفض لرئيس المشرفين للمراجعة'
-                                  : 'Request rejected and submitted to Head Supervisor'),
-                              backgroundColor: AppColors.danger,
-                            ),
+                          AppSnackBar.showError(
+                            context,
+                            isArabic
+                                ? 'تم رفض الطلب وإرسال سبب الرفض لرئيس المشرفين للمراجعة'
+                                : 'Request rejected and submitted to Head Supervisor',
                           );
                         }
                       },
@@ -1037,7 +1032,6 @@ class _SupervisorWithdrawalsScreenState
                       icon: const Icon(Icons.pause_circle_outline, size: 16),
                       onPressed: () async {
                         final isArabic = l10n.localeName.startsWith('ar');
-                        final messenger = ScaffoldMessenger.of(context);
                         final confirmed = await FinanceDialogs.showFreezeDialog(
                           context,
                           requestTitle: FinanceLocalizer.localizeWithdrawalText(
@@ -1056,13 +1050,11 @@ class _SupervisorWithdrawalsScreenState
                               );
                             }
                           });
-                          messenger.showSnackBar(
-                            SnackBar(
-                              content: Text(isArabic
-                                  ? 'تم تجميد الطلب ونقله إلى قائمة التدقيق الرقابي'
-                                  : 'Request frozen and moved to audit inspection'),
-                              backgroundColor: AppColors.warning,
-                            ),
+                          AppSnackBar.showWarning(
+                            context,
+                            isArabic
+                                ? 'تم تجميد الطلب ونقله إلى قائمة التدقيق الرقابي'
+                                : 'Request frozen and moved to audit inspection',
                           );
                         }
                       },

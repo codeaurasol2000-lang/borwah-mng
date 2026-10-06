@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/utils/app_locale_controller.dart';
+import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../core/widgets/finance_dialogs.dart';
 import '../../domain/entities/bank_link_request_entity.dart';
 import '../controllers/bank_reconciliation/bank_reconciliation_cubit.dart';
@@ -50,9 +51,7 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
   }
 
   void _showActionMessage(String message) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text(message)));
+    AppSnackBar.showInfo(context, message);
   }
 
   void _advanceToNextRequest() {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/merchant_entity.dart';
 import 'merchant_conversation_screen.dart';
@@ -823,9 +824,7 @@ class _MerchantDetailsScreenState extends State<MerchantDetailsScreen> {
   }
 
   void _showMessage(String message) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text(message)));
+    AppSnackBar.showInfo(context, message);
   }
 }
 
@@ -1337,10 +1336,6 @@ class _MerchantSuspensionSheetState extends State<_MerchantSuspensionSheet> {
   }
 
   void _showUnavailable(AppLocalizations l10n) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(content: Text(l10n.merchantInfoActionUnavailable)),
-      );
+    AppSnackBar.showInfo(context, l10n.merchantInfoActionUnavailable);
   }
 }

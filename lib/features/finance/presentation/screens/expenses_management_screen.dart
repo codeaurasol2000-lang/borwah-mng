@@ -9,6 +9,7 @@ import '../controllers/expenses/expense_requests_cubit.dart';
 import '../controllers/expenses/expense_requests_state.dart';
 import '../../domain/entities/expense_request_entity.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../core/widgets/finance_dialogs.dart';
 import '../utils/finance_localizer.dart';
 import '../widgets/finance_navigation.dart';
@@ -219,13 +220,11 @@ class _ExpensesManagementScreenState
                               ? 'invoice_receipt.pdf'
                               : null;
                         });
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(_attachmentName == null
-                                ? l10n.expenseDocumentRemoved
-                                : '${l10n.expenseDocumentAttached}: $_attachmentName'),
-                            duration: const Duration(seconds: 2),
-                          ),
+                        AppSnackBar.showInfo(
+                          context,
+                          _attachmentName == null
+                              ? l10n.expenseDocumentRemoved
+                              : '${l10n.expenseDocumentAttached}: $_attachmentName',
                         );
                       },
                       borderRadius: BorderRadius.circular(12),
@@ -474,11 +473,15 @@ class _ExpensesManagementScreenState
   }
 
   void _showExpenseMessage(String message, Color backgroundColor) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: backgroundColor),
-      );
+    if (backgroundColor == AppColors.success) {
+      AppSnackBar.showSuccess(context, message);
+      return;
+    }
+    if (backgroundColor == AppColors.danger) {
+      AppSnackBar.showError(context, message);
+      return;
+    }
+    AppSnackBar.showInfo(context, message);
   }
 
   Widget _buildExpenseRequestCard(

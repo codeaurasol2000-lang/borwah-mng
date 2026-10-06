@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../core/di/injection_container.dart';
+import '../../../../core/widgets/app_snack_bar.dart';
 import '../../domain/entities/bank_account_edit_request_entity.dart';
 import '../../domain/entities/bank_account_entity.dart';
 import '../controllers/bank_accounts/bank_accounts_cubit.dart';
@@ -101,9 +102,7 @@ class _BankAccountEditFormState extends State<_BankAccountEditForm> {
   }
 
   void _showMessage(String message) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text(message)));
+    AppSnackBar.showInfo(context, message);
   }
 
   @override
@@ -1048,8 +1047,7 @@ class _BankAccountsScreenContentState
                 ElevatedButton(
                   onPressed: () {
                     Navigator.pop(ctx);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(l10n.bankLinkRequestSent)));
+                    AppSnackBar.showSuccess(context, l10n.bankLinkRequestSent);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryDark,
@@ -1100,9 +1098,7 @@ class _BankAccountsScreenContentState
                   backgroundColor: AppColors.primaryDark),
               onPressed: () {
                 Navigator.pop(ctx);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(l10n.accountsExportSuccess)),
-                );
+                AppSnackBar.showSuccess(context, l10n.accountsExportSuccess);
               },
               child: Text(l10n.download,
                   style: const TextStyle(color: Colors.white)),

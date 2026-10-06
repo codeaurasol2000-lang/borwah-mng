@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../l10n/app_localizations.dart';
 import 'advertisement_review_details_screen.dart';
 
@@ -1464,8 +1465,6 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
           ];
 
   void _showMessage(AppLocalizations l10n, String message) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text(message)));
+    AppSnackBar.showInfo(context, message);
   }
 }

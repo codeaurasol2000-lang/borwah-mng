@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../l10n/app_localizations.dart';
 
 enum _WalletTransferMethod { instapay, wallet, bank }
@@ -684,10 +685,6 @@ class _MerchantWalletScreenState extends State<MerchantWalletScreen> {
   }
 
   void _showUnavailable(AppLocalizations l10n) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(content: Text(l10n.merchantWalletActionUnavailable)),
-      );
+    AppSnackBar.showInfo(context, l10n.merchantWalletActionUnavailable);
   }
 }

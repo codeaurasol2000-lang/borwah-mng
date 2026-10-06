@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/utils/app_locale_controller.dart';
+import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../core/widgets/finance_dialogs.dart';
 import '../../../../l10n/app_localizations.dart';
 
@@ -53,9 +54,7 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
   }
 
   void _showFeedback(String message) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text(message)));
+    AppSnackBar.showInfo(context, message);
   }
 
   Future<void> _handleApprove() async {

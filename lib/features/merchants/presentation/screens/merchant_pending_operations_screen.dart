@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/merchant_entity.dart';
 
@@ -104,11 +105,7 @@ class _MerchantPendingOperationsScreenState
 
   void _resolve(String reference, AppLocalizations l10n) {
     setState(() => _resolvedReferences.add(reference));
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(content: Text(l10n.merchantPendingOperationHandled)),
-      );
+    AppSnackBar.showSuccess(context, l10n.merchantPendingOperationHandled);
   }
 }
 

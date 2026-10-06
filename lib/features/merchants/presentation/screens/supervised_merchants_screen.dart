@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/di/injection_container.dart';
+import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/merchant_entity.dart';
 import '../../domain/entities/supervisor_stats_entity.dart';
@@ -179,26 +180,9 @@ class _SupervisedMerchantsContentState
               ElevatedButton(
                 onPressed: () {
                   Navigator.of(sheetContext).pop();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Row(
-                        children: [
-                          Icon(Icons.check_circle_outline, color: Colors.white),
-                          SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              'تم إرسال طلب ضم التاجر لنطاق إشرافك بنجاح',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ],
-                      ),
-                      backgroundColor: AppColors.primaryDark,
-                      behavior: SnackBarBehavior.floating,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
+                  AppSnackBar.showSuccess(
+                    context,
+                    'تم إرسال طلب ضم التاجر لنطاق إشرافك بنجاح',
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -249,13 +233,9 @@ class _SupervisedMerchantsContentState
           ElevatedButton(
             onPressed: () {
               Navigator.of(dialogCtx).pop();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'تم إرسال إشعار الاستدعاء الرسمي للتاجر ${merchant.getName(true)}',
-                  ),
-                  backgroundColor: AppColors.primaryDark,
-                ),
+              AppSnackBar.showInfo(
+                context,
+                'تم إرسال إشعار الاستدعاء الرسمي للتاجر ${merchant.getName(true)}',
               );
             },
             style: ElevatedButton.styleFrom(
@@ -294,13 +274,9 @@ class _SupervisedMerchantsContentState
           ElevatedButton(
             onPressed: () {
               Navigator.of(dialogCtx).pop();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'تم فتح محضر مراجعة المخالفة للمتجر ${merchant.getName(true)}',
-                  ),
-                  backgroundColor: AppColors.infoDark,
-                ),
+              AppSnackBar.showInfo(
+                context,
+                'تم فتح محضر مراجعة المخالفة للمتجر ${merchant.getName(true)}',
               );
             },
             style: ElevatedButton.styleFrom(
@@ -370,76 +346,83 @@ class _SupervisedMerchantsContentState
                   ? merchants.sublist(0, 5)
                   : merchants;
 
-          return Column(
+          return Stack(
             children: [
-              Expanded(
+              // 1. القائمة القابلة للتمرير تأخذ المساحة الكاملة
+              Positioned.fill(
                 child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
                   padding: const EdgeInsets.only(
                     left: 16,
                     right: 16,
                     top: 12,
-                    bottom: 24,
+                    bottom:
+                        90, // مسافة سفليّة كافية لتجنب اختفاء المحتوى خلف الزر
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                    // 1. Top Supervision Scope Strip
-                    _buildSupervisionScopeStrip(context, stats, l10n),
-                    const SizedBox(height: 14),
+                      // Top Supervision Scope Strip
+                      _buildSupervisionScopeStrip(context, stats, l10n),
+                      const SizedBox(height: 14),
 
-                    // 2. Field Accounts Overview Card
-                    _buildFieldAccountsOverviewCard(context, stats, l10n),
-                    const SizedBox(height: 16),
+                      // Field Accounts Overview Card
+                      _buildFieldAccountsOverviewCard(context, stats, l10n),
+                      const SizedBox(height: 16),
 
-                    // 3. Search Bar
-                    _buildSearchBar(context, cubit, l10n),
-                    const SizedBox(height: 12),
+                      // Search Bar
+                      _buildSearchBar(context, cubit, l10n),
+                      const SizedBox(height: 12),
 
-                    // 4. Filter Chips Row
-                    _buildFilterChipsRow(context, stats, cubit, l10n),
-                    const SizedBox(height: 14),
+                      // Filter Chips Row
+                      _buildFilterChipsRow(context, stats, cubit, l10n),
+                      const SizedBox(height: 14),
 
-                    // 5. Sort & Result Count Header
-                    _buildSortHeader(context, merchants.length, l10n),
-                    const SizedBox(height: 10),
+                      // Sort & Result Count Header
+                      _buildSortHeader(context, merchants.length, l10n),
+                      const SizedBox(height: 10),
 
-                    // 6. Merchants List
-                    if (merchants.isEmpty)
-                      _buildEmptyState(context, l10n)
-                    else ...[
-                      for (final merchant in displayedMerchants)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 14),
-                          child: _buildMerchantCard(context, merchant, l10n),
-                        ),
-
-                      // 7. Remaining 13 stores summary
-                      if (isAllFilterActive && !_showAllRemaining)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 14),
-                          child: _buildRemainingStoresCard(
-                            context,
-                            remainingCount: 13,
-                            l10n: l10n,
-                            onToggle: () {
-                              setState(() {
-                                _showAllRemaining = true;
-                              });
-                            },
+                      // Merchants List
+                      if (merchants.isEmpty)
+                        _buildEmptyState(context, l10n)
+                      else ...[
+                        for (final merchant in displayedMerchants)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 14),
+                            child: _buildMerchantCard(context, merchant, l10n),
                           ),
-                        ),
-                    ],
+                        if (isAllFilterActive && !_showAllRemaining)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 14),
+                            child: _buildRemainingStoresCard(
+                              context,
+                              remainingCount: 13,
+                              l10n: l10n,
+                              onToggle: () {
+                                setState(() {
+                                  _showAllRemaining = true;
+                                });
+                              },
+                            ),
+                          ),
+                      ],
 
-                    // 8. Field Governance Policy Card
-                    _buildFieldGovernanceCard(context, l10n),
-                    const SizedBox(height: 80),
-                  ],
+                      // Field Governance Policy Card
+                      _buildFieldGovernanceCard(context, l10n),
+                    ],
+                  ),
                 ),
               ),
-            ),
 
-              // 9. Sticky Bottom Action Button
-              _buildStickyBottomButton(context, l10n),
+              // 2. الزر العائم تثبيته في أسفل الشاشة بدون خلفية
+              Positioned(
+                left: 16,
+                right: 16,
+                bottom: 16,
+                child: SafeArea(
+                  child: _buildStickyBottomButton(context, l10n),
+                ),
+              ),
             ],
           );
         },
@@ -450,11 +433,13 @@ class _SupervisedMerchantsContentState
   PreferredSizeWidget _buildCustomAppBar(
       BuildContext context, AppLocalizations l10n) {
     return AppBar(
-      backgroundColor: AppColors.primaryDark,
+      backgroundColor: Colors.white,
+      foregroundColor: AppColors.primaryDark,
       elevation: 0,
       centerTitle: false,
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.white),
+        icon: const Icon(Icons.arrow_back,
+            color: AppColors.primaryDark, size: 22),
         onPressed: () => Navigator.of(context).maybePop(),
       ),
       title: Column(
@@ -464,11 +449,6 @@ class _SupervisedMerchantsContentState
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(
-                Icons.shield_outlined,
-                size: 13,
-                color: Color(0xFF60A5FA),
-              ),
               const SizedBox(width: 4),
               Flexible(
                 child: Text(
@@ -478,7 +458,7 @@ class _SupervisedMerchantsContentState
                   style: const TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w500,
-                    color: Color(0xFF93C5FD),
+                    color: AppColors.primaryDark,
                     letterSpacing: 0.3,
                   ),
                 ),
@@ -491,45 +471,23 @@ class _SupervisedMerchantsContentState
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: AppColors.primaryDark,
             ),
           ),
         ],
       ),
       actions: [
         IconButton(
-          icon: const Icon(Icons.search, color: Colors.white70, size: 22),
+          icon:
+              const Icon(Icons.search, color: AppColors.primaryDark, size: 22),
           onPressed: () {},
-        ),
-        IconButton(
-          icon: const Icon(Icons.tune, color: Colors.white70, size: 22),
-          onPressed: () {},
-        ),
-        const Padding(
-          padding: EdgeInsetsDirectional.only(end: 14, start: 4),
-          child: CircleAvatar(
-            radius: 17,
-            backgroundColor: Color(0xFF1E293B),
-            child: CircleAvatar(
-              radius: 15,
-              backgroundColor: Color(0xFF0F172A),
-              child: Text(
-                'أخ',
-                style: TextStyle(
-                  color: Color(0xFF38BDF8),
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
         ),
       ],
     );
   }
 
-  Widget _buildSupervisionScopeStrip(
-      BuildContext context, SupervisorStatsEntity stats, AppLocalizations l10n) {
+  Widget _buildSupervisionScopeStrip(BuildContext context,
+      SupervisorStatsEntity stats, AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
@@ -590,8 +548,8 @@ class _SupervisedMerchantsContentState
     );
   }
 
-  Widget _buildFieldAccountsOverviewCard(
-      BuildContext context, SupervisorStatsEntity stats, AppLocalizations l10n) {
+  Widget _buildFieldAccountsOverviewCard(BuildContext context,
+      SupervisorStatsEntity stats, AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
@@ -609,7 +567,6 @@ class _SupervisedMerchantsContentState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Header Row
           Row(
             children: [
               const Icon(
@@ -633,8 +590,6 @@ class _SupervisedMerchantsContentState
             ],
           ),
           const SizedBox(height: 16),
-
-          // Main Stat Row
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -663,7 +618,6 @@ class _SupervisedMerchantsContentState
                   ],
                 ),
               ),
-              // Compliance Gauge
               Column(
                 children: [
                   SizedBox(
@@ -705,8 +659,6 @@ class _SupervisedMerchantsContentState
           const SizedBox(height: 18),
           Divider(color: Colors.white.withValues(alpha: 0.08), height: 1),
           const SizedBox(height: 14),
-
-          // 3 Stat Mini-blocks
           Row(
             children: [
               Expanded(
@@ -897,9 +849,8 @@ class _SupervisedMerchantsContentState
             color: isSelected ? AppColors.primaryDark : Colors.white,
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: isSelected
-                  ? AppColors.primaryDark
-                  : const Color(0xFFCBD5E1),
+              color:
+                  isSelected ? AppColors.primaryDark : const Color(0xFFCBD5E1),
             ),
             boxShadow: isSelected
                 ? [
@@ -1016,17 +967,15 @@ class _SupervisedMerchantsContentState
     final isSuspended = merchant.isSuspended ||
         merchant.status == MerchantStatus.temporarilySuspended;
     final hasFinancialAlert = merchant.financialWithdrawalAlert != null;
-    final hasSupervisoryNote =
-        merchant.violationNotice != null && !isSuspended;
+    final hasSupervisoryNote = merchant.violationNotice != null && !isSuspended;
 
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isSuspended
-              ? const Color(0xFFFCA5A5)
-              : const Color(0xFFE2E8F0),
+          color:
+              isSuspended ? const Color(0xFFFCA5A5) : const Color(0xFFE2E8F0),
         ),
         boxShadow: [
           BoxShadow(
@@ -1040,7 +989,6 @@ class _SupervisedMerchantsContentState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // 1. Code & Status Tag Header
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -1061,14 +1009,12 @@ class _SupervisedMerchantsContentState
               ),
               const SizedBox(width: 8),
               Flexible(
-                child: _buildStatusPill(merchant, isSuspended, hasFinancialAlert,
-                    hasSupervisoryNote, l10n),
+                child: _buildStatusPill(merchant, isSuspended,
+                    hasFinancialAlert, hasSupervisoryNote, l10n),
               ),
             ],
           ),
           const SizedBox(height: 10),
-
-          // 2. Name & Location / Delegate
           Text(
             merchant.getName(isArabic),
             style: const TextStyle(
@@ -1085,8 +1031,6 @@ class _SupervisedMerchantsContentState
               fontSize: 12,
             ),
           ),
-
-          // 3. Special Alert Banners (if any)
           if (hasFinancialAlert) ...[
             const SizedBox(height: 12),
             Container(
@@ -1118,7 +1062,6 @@ class _SupervisedMerchantsContentState
               ),
             ),
           ],
-
           if (hasSupervisoryNote) ...[
             const SizedBox(height: 12),
             Container(
@@ -1150,7 +1093,6 @@ class _SupervisedMerchantsContentState
               ),
             ),
           ],
-
           if (isSuspended && merchant.violationNotice != null) ...[
             const SizedBox(height: 12),
             Container(
@@ -1196,10 +1138,7 @@ class _SupervisedMerchantsContentState
               ),
             ),
           ],
-
           const SizedBox(height: 14),
-
-          // 4. 3-Column Metrics Grid
           Row(
             children: [
               Expanded(
@@ -1240,8 +1179,6 @@ class _SupervisedMerchantsContentState
             ],
           ),
           const SizedBox(height: 16),
-
-          // 5. Actions Row
           if (isSuspended) ...[
             Row(
               children: [
@@ -1291,19 +1228,14 @@ class _SupervisedMerchantsContentState
             ),
             const SizedBox(height: 8),
           ],
-
           Row(
             children: [
               _buildIconButton(
                 icon: Icons.phone_outlined,
                 onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        'الاتصال بالتاجر: ${merchant.contactPhone ?? "+966 50 123 4567"}',
-                      ),
-                      backgroundColor: AppColors.primaryDark,
-                    ),
+                  AppSnackBar.showInfo(
+                    context,
+                    'الاتصال بالتاجر: ${merchant.contactPhone ?? "+966 50 123 4567"}',
                   );
                 },
               ),
@@ -1355,12 +1287,8 @@ class _SupervisedMerchantsContentState
     );
   }
 
-  Widget _buildStatusPill(
-      MerchantEntity merchant,
-      bool isSuspended,
-      bool hasFinancialAlert,
-      bool hasSupervisoryNote,
-      AppLocalizations l10n) {
+  Widget _buildStatusPill(MerchantEntity merchant, bool isSuspended,
+      bool hasFinancialAlert, bool hasSupervisoryNote, AppLocalizations l10n) {
     Color bg;
     Color border;
     Color text;
@@ -1475,11 +1403,11 @@ class _SupervisedMerchantsContentState
   }
 
   Widget _buildRemainingStoresCard(
-      BuildContext context, {
-      required int remainingCount,
-      required AppLocalizations l10n,
-      required VoidCallback onToggle,
-    }) {
+    BuildContext context, {
+    required int remainingCount,
+    required AppLocalizations l10n,
+    required VoidCallback onToggle,
+  }) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -1498,7 +1426,6 @@ class _SupervisedMerchantsContentState
         children: [
           Row(
             children: [
-              // Stacked Avatar Bubbles
               SizedBox(
                 width: 76,
                 height: 36,
@@ -1531,7 +1458,7 @@ class _SupervisedMerchantsContentState
                       left: 40,
                       child: CircleAvatar(
                         radius: 16,
-                        backgroundColor: Color(0xFF10B981),
+                        backgroundColor: AppColors.primaryDark,
                         child:
                             Icon(Icons.verified, size: 16, color: Colors.white),
                       ),
@@ -1658,19 +1585,13 @@ class _SupervisedMerchantsContentState
 
   Widget _buildStickyBottomButton(BuildContext context, AppLocalizations l10n) {
     return Container(
-      padding: EdgeInsets.only(
-        left: 16,
-        right: 16,
-        top: 12,
-        bottom: MediaQuery.of(context).padding.bottom + 12,
-      ),
       decoration: BoxDecoration(
-        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
-            blurRadius: 10,
-            offset: const Offset(0, -4),
+            color: Colors.black.withValues(alpha: 0.15),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
           ),
         ],
       ),

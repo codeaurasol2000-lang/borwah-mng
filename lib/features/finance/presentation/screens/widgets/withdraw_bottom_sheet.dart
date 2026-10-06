@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/widgets/app_snack_bar.dart';
 import '../../../../../l10n/app_localizations.dart';
 
 void showWithdrawBottomSheet(BuildContext context) {
@@ -85,9 +86,9 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
                     child: ElevatedButton.icon(
                       onPressed: () {
                         Navigator.pop(context);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content: Text(l10n.withdrawSheetSubmitSuccess)),
+                        AppSnackBar.showSuccess(
+                          context,
+                          l10n.withdrawSheetSubmitSuccess,
                         );
                       },
                       icon: const Icon(Icons.flash_on, size: 18),

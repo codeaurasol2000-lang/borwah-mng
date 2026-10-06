@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../l10n/app_localizations.dart';
 
 class NewSettlementBottomSheet extends StatefulWidget {
@@ -202,11 +203,7 @@ class _NewSettlementBottomSheetState extends State<NewSettlementBottomSheet> {
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(l10n.settlementSubmitSuccess),
-                      ),
-                    );
+                    AppSnackBar.showSuccess(context, l10n.settlementSubmitSuccess);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryDark,

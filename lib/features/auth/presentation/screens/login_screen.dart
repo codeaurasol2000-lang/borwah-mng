@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/utils/app_locale_controller.dart';
+import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../domain/entities/user_role.dart';
@@ -51,18 +52,13 @@ class _LoginScreenState extends State<LoginScreen> {
               widget.onMerchantLogin != null) {
             widget.onMerchantLogin!();
           } else {
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(
-                SnackBar(content: Text(_workspacePendingMessage(state.user))),
-              );
+            AppSnackBar.showInfo(
+              context,
+              _workspacePendingMessage(state.user),
+            );
           }
         } else if (state is AuthError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content: Text(state.message),
-                backgroundColor: AppColors.danger),
-          );
+          AppSnackBar.showError(context, state.message);
         }
       },
       builder: (context, state) {
