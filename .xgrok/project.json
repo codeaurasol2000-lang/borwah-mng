@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "setup": "template",
+  "templateId": "kotlin",
+  "language": "Kotlin",
+  "createdAt": "2026-10-04T04:27:35.551Z",
+  "tool": "xgrok"
+}

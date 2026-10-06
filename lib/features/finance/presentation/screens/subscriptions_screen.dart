@@ -106,8 +106,9 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     return Directionality(
-      textDirection:
-          l10n.localeName.startsWith('ar') ? TextDirection.rtl : TextDirection.ltr,
+      textDirection: l10n.localeName.startsWith('ar')
+          ? TextDirection.rtl
+          : TextDirection.ltr,
       child: Scaffold(
         backgroundColor: const Color(0xFFF9FAFB),
         appBar: FinancePageAppBar(
@@ -267,7 +268,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis)),
                                   const SizedBox(width: 4),
-                                  Text(l10n.currencySar,
+                                  Text(l10n.currencyEgy,
                                       style: const TextStyle(
                                           color: Colors.white70,
                                           fontSize: 14,
@@ -325,7 +326,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                                                 overflow:
                                                     TextOverflow.ellipsis)),
                                         const SizedBox(width: 2),
-                                        Text(l10n.currencySar,
+                                        Text(l10n.currencyEgy,
                                             style: const TextStyle(
                                                 color: Colors.white70,
                                                 fontSize: 9)),
@@ -907,126 +908,107 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
 
           const SizedBox(height: 16),
 
-          // Amount & Package Box
-          Row(
-            children: [
-              Expanded(
-                flex: 3,
-                child: Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFAFAFA),
-                    borderRadius: const BorderRadius.only(
-                        topRight: Radius.circular(12),
-                        bottomRight: Radius.circular(12)),
-                    border: Border.all(color: Colors.grey.shade200),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(l10n.targetedPackageType,
-                          style: const TextStyle(
-                              fontSize: 10, color: Colors.grey)),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          if (sub.type == SubscriptionType.merchant)
-                            const Icon(Icons.stars,
-                                color: Colors.blue, size: 14),
-                          if (sub.type == SubscriptionType.merchant)
-                            const SizedBox(width: 4),
-                          Flexible(
-                            child: Text(
-                              FinanceLocalizer.localizePackageName(
-                                  context, sub.targetPackageName),
-                              style: const TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black87,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        sub.type == SubscriptionType.serviceProvider
-                            ? l10n.semiAnnualDuration
-                            : l10n.taxInclusive15,
-                        style: TextStyle(
-                            fontSize: 10, color: Colors.blue.shade700),
-                      ),
-                    ],
-                  ),
+          // Package and amount are kept in one full-width card for narrow layouts.
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFAFAFA),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.grey.shade200),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.targetedPackageType,
+                  style: const TextStyle(fontSize: 10, color: Colors.grey),
                 ),
-              ),
-              Expanded(
-                flex: 2,
-                child: Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFFAFAFA),
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(12),
-                        bottomLeft: Radius.circular(12)),
-                    border: Border(
-                        top: BorderSide(color: Color(0xFFEEEEEE)),
-                        bottom: BorderSide(color: Color(0xFFEEEEEE)),
-                        left: BorderSide(color: Color(0xFFEEEEEE))),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l10n.totalRequiredAmount,
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    if (sub.type == SubscriptionType.merchant)
+                      const Icon(Icons.stars, color: Colors.blue, size: 14),
+                    if (sub.type == SubscriptionType.merchant)
+                      const SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        FinanceLocalizer.localizePackageName(
+                            context, sub.targetPackageName),
                         style: const TextStyle(
-                            fontSize: 10,
-                            color: AppColors.textSecondary,
-                            fontWeight: FontWeight.w600),
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 4),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.baseline,
-                        textBaseline: TextBaseline.alphabetic,
-                        children: [
-                          Flexible(
-                            child: Text(
-                              CurrencyFormatter.format(sub.totalAmount,
-                                  includeCurrency: false),
-                              style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.primaryExtraDark),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          const SizedBox(width: 4),
-                          Text(l10n.currencySar,
-                              style: const TextStyle(
-                                  fontSize: 10,
-                                  color: AppColors.primaryDark,
-                                  fontWeight: FontWeight.bold)),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        isAutoReady
-                            ? l10n.sufficientWalletBalance
-                            : l10n.taxInclusive15,
-                        style: TextStyle(
-                            fontSize: 9,
-                            color: isAutoReady
-                                ? AppColors.success
-                                : Colors.grey.shade600),
-                      ),
-                    ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  sub.type == SubscriptionType.serviceProvider
+                      ? l10n.semiAnnualDuration
+                      : l10n.taxInclusive15,
+                  style: TextStyle(fontSize: 10, color: Colors.blue.shade700),
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  child: Divider(height: 1),
+                ),
+                Text(
+                  l10n.totalRequiredAmount,
+                  style: const TextStyle(
+                    fontSize: 10,
+                    color: AppColors.textSecondary,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 4),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        CurrencyFormatter.format(
+                          sub.totalAmount,
+                          includeCurrency: false,
+                        ),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.primaryExtraDark,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      l10n.currencyEgy,
+                      style: const TextStyle(
+                        fontSize: 10,
+                        color: AppColors.primaryDark,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  isAutoReady
+                      ? l10n.sufficientWalletBalance
+                      : l10n.taxInclusive15,
+                  style: TextStyle(
+                    fontSize: 9,
+                    color:
+                        isAutoReady ? AppColors.success : Colors.grey.shade600,
+                  ),
+                ),
+              ],
+            ),
           ),
 
           const SizedBox(height: 12),
@@ -1112,7 +1094,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                         : 'Approve Subscription',
                     description: isArabic
                         ? 'هل تريد اعتماد طلب ${sub.providerName} لباقة ${sub.targetPackageName} بقيمة ${CurrencyFormatter.format(sub.totalAmount)} وإرساله للإدارة للموافقة؟'
-                        : 'Do you want to approve ${sub.providerName} for ${sub.targetPackageName} (${CurrencyFormatter.format(sub.totalAmount)}) and send it to management?',
+                        : 'Do you want to approve ${FinanceLocalizer.localizeProviderName(context, sub.providerName)} for ${FinanceLocalizer.localizePackageName(context, sub.targetPackageName)} (${CurrencyFormatter.format(sub.totalAmount)}) and send it to management?',
                   );
                   if (confirmed && mounted) {
                     setState(() {
@@ -1152,7 +1134,8 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                         final messenger = ScaffoldMessenger.of(context);
                         final confirmed = await FinanceDialogs.showFreezeDialog(
                           context,
-                          requestTitle: sub.providerName,
+                          requestTitle: FinanceLocalizer.localizeProviderName(
+                              context, sub.providerName),
                         );
                         if (confirmed && mounted) {
                           setState(() {
@@ -1291,7 +1274,9 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                           Text(isArabic ? 'المشترك:' : 'Subscriber:',
                               style: const TextStyle(
                                   fontSize: 11, color: Colors.grey)),
-                          Text(sub.providerName,
+                          Text(
+                              FinanceLocalizer.localizeProviderName(
+                                  context, sub.providerName),
                               style: const TextStyle(
                                   fontSize: 12, fontWeight: FontWeight.bold)),
                         ],
@@ -1300,10 +1285,15 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(isArabic ? 'الباقة المستهدفة:' : 'Target Package:',
+                          Text(
+                              isArabic
+                                  ? 'الباقة المستهدفة:'
+                                  : 'Target Package:',
                               style: const TextStyle(
                                   fontSize: 11, color: Colors.grey)),
-                          Text(sub.targetPackageName,
+                          Text(
+                              FinanceLocalizer.localizePackageName(
+                                  context, sub.targetPackageName),
                               style: const TextStyle(
                                   fontSize: 12, fontWeight: FontWeight.bold)),
                         ],
@@ -1315,7 +1305,9 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                           Text(isArabic ? 'طريقة الدفع:' : 'Payment Method:',
                               style: const TextStyle(
                                   fontSize: 11, color: Colors.grey)),
-                          Text(sub.paymentMethod,
+                          Text(
+                              FinanceLocalizer.localizePaymentMethod(
+                                  context, sub.paymentMethod),
                               style: const TextStyle(
                                   fontSize: 11, fontWeight: FontWeight.bold)),
                         ],
@@ -1324,7 +1316,10 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(isArabic ? 'المبلغ المحول:' : 'Transferred Amount:',
+                          Text(
+                              isArabic
+                                  ? 'المبلغ المحول:'
+                                  : 'Transferred Amount:',
                               style: const TextStyle(
                                   fontSize: 11, color: Colors.grey)),
                           Text(

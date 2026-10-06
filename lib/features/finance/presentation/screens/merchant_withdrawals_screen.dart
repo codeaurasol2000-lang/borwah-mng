@@ -7,6 +7,8 @@ import '../../domain/usecases/get_merchant_withdrawals_usecase.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/widgets/finance_dialogs.dart';
 import '../widgets/finance_navigation.dart';
+import '../widgets/withdrawal_request_details_sheet.dart';
+import '../utils/finance_localizer.dart';
 
 class MerchantWithdrawalsScreen extends StatefulWidget {
   const MerchantWithdrawalsScreen({super.key});
@@ -84,8 +86,9 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     return Directionality(
-      textDirection:
-          l10n.localeName.startsWith('ar') ? TextDirection.rtl : TextDirection.ltr,
+      textDirection: l10n.localeName.startsWith('ar')
+          ? TextDirection.rtl
+          : TextDirection.ltr,
       child: Scaffold(
         backgroundColor: const Color(0xFFF9FAFB),
         appBar: FinancePageAppBar(
@@ -117,7 +120,8 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Flexible(
-                                child: Text(l10n.bankingAndCashSurveillanceGateway,
+                                child: Text(
+                                    l10n.bankingAndCashSurveillanceGateway,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
@@ -159,7 +163,7 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                               title: l10n.pendingRequests,
                               count: '$_pendingCount',
                               sub:
-                                  '${CurrencyFormatter.format(_totalPendingAmount, includeCurrency: false)} ${l10n.currencySar}',
+                                  '${CurrencyFormatter.format(_totalPendingAmount, includeCurrency: false)} ${l10n.currencyEgy}',
                               icon: Icons.pending_actions,
                               color: AppColors.primaryDark,
                             ),
@@ -235,7 +239,7 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                                     style: const TextStyle(
                                         color: Colors.white70, fontSize: 10)),
                                 Text(
-                                    '${CurrencyFormatter.format(_totalPendingAmount, includeCurrency: false)} ${l10n.currencySar}',
+                                    '${CurrencyFormatter.format(_totalPendingAmount, includeCurrency: false)} ${l10n.currencyEgy}',
                                     style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 18,
@@ -432,7 +436,8 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                       children: [
                         Expanded(
                           child: Text(
-                            req.beneficiaryName,
+                            FinanceLocalizer.localizeWithdrawalText(
+                                context, req.beneficiaryName),
                             style: const TextStyle(
                                 fontWeight: FontWeight.w900,
                                 fontSize: 14,
@@ -476,7 +481,8 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                         if (!isDanger && !isReady) const SizedBox(width: 4),
                         Expanded(
                           child: Text(
-                            req.beneficiaryRole,
+                            FinanceLocalizer.localizeWithdrawalText(
+                                context, req.beneficiaryRole),
                             style: TextStyle(
                                 fontSize: 11,
                                 color: isDanger
@@ -549,7 +555,7 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                     FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
-                            '${CurrencyFormatter.format(req.grossAmount, includeCurrency: false)} ${l10n.currencySar}',
+                            '${CurrencyFormatter.format(req.grossAmount, includeCurrency: false)} ${l10n.currencyEgy}',
                             style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,
@@ -575,7 +581,7 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                     FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
-                            '- ${CurrencyFormatter.format(req.platformFeeAmount, includeCurrency: false)} ${l10n.currencySar}',
+                            '- ${CurrencyFormatter.format(req.platformFeeAmount, includeCurrency: false)} ${l10n.currencyEgy}',
                             style: const TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,
@@ -621,7 +627,7 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                                 Expanded(
                                     child: Text(
                                         isReady
-                                            ? '${l10n.receivingBank}\n${req.bankName}'
+                                            ? '${l10n.receivingBank}\n${FinanceLocalizer.localizeWithdrawalText(context, req.bankName)}'
                                             : '${l10n.disbursementSource}\n${l10n.readyForInstantBankingTransfer}',
                                         style: const TextStyle(
                                             fontSize: 9, color: Colors.grey),
@@ -648,7 +654,7 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                                         ? AppColors.danger
                                         : AppColors.primaryDark))),
                         const SizedBox(width: 4),
-                        Text(l10n.currencySar,
+                        Text(l10n.currencyEgy,
                             style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,
@@ -690,7 +696,9 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                                     fontSize: 11, color: Colors.grey)),
                             const SizedBox(width: 6),
                             Expanded(
-                                child: Text(req.bankName,
+                                child: Text(
+                                    FinanceLocalizer.localizeWithdrawalText(
+                                        context, req.bankName),
                                     style: const TextStyle(
                                         fontSize: 11,
                                         fontWeight: FontWeight.bold),
@@ -712,7 +720,9 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                                     height: 1.2)),
                             const SizedBox(width: 6),
                             Expanded(
-                              child: Text(req.iban,
+                              child: Text(
+                                  FinanceLocalizer.localizeWithdrawalText(
+                                      context, req.iban),
                                   style: const TextStyle(
                                       fontSize: 10,
                                       fontWeight: FontWeight.bold),
@@ -722,7 +732,8 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                           ],
                         ),
                         const SizedBox(height: 8),
-                        Text('${l10n.submissionDate} ${req.dateText}',
+                        Text(
+                            '${l10n.submissionDate} ${FinanceLocalizer.localizeWithdrawalText(context, req.dateText)}',
                             style: const TextStyle(
                                 fontSize: 10, color: Colors.grey)),
                       ],
@@ -761,7 +772,9 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                     ],
                   ),
                   const SizedBox(height: 6),
-                  Text(req.auditCheckResult!,
+                  Text(
+                      FinanceLocalizer.localizeWithdrawalText(
+                          context, req.auditCheckResult!),
                       style: TextStyle(
                           fontSize: 10,
                           color: Colors.blue.shade800,
@@ -800,7 +813,8 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                                   color: AppColors.danger)),
                         if (isDanger) const SizedBox(height: 4),
                         Text(
-                          req.alertNotice!,
+                          FinanceLocalizer.localizeWithdrawalText(
+                              context, req.alertNotice!),
                           style: TextStyle(
                               fontSize: 10,
                               color: isDanger
@@ -816,6 +830,12 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
             ),
           ],
 
+          const SizedBox(height: 12),
+          OutlinedButton.icon(
+            onPressed: () => showWithdrawalRequestDetailsSheet(context, req),
+            icon: const Icon(Icons.receipt_long_outlined, size: 18),
+            label: Text(l10n.withdrawalRequestDetails),
+          ),
           const SizedBox(height: 16),
 
           // Action Buttons
@@ -842,7 +862,7 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                         : 'Approve Withdrawal Request',
                     description: isArabic
                         ? 'هل تريد اعتماد طلب سحب ${req.beneficiaryName} بقيمة ${CurrencyFormatter.format(req.netAmount)} وإرساله للإدارة للموافقة؟'
-                        : 'Do you want to approve the withdrawal request for ${req.beneficiaryName} (${CurrencyFormatter.format(req.netAmount)}) and send it to management?',
+                        : 'Do you want to approve the withdrawal request for ${FinanceLocalizer.localizeWithdrawalText(context, req.beneficiaryName)} (${CurrencyFormatter.format(req.netAmount)}) and send it to management?',
                   );
                   if (confirmed && mounted) {
                     setState(() {
@@ -884,9 +904,8 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                         final messenger = ScaffoldMessenger.of(context);
                         final reason = await FinanceDialogs.showRejectionDialog(
                           context,
-                          title: isArabic
-                              ? 'رفض طلب السحب'
-                              : 'Reject Withdrawal',
+                          title:
+                              isArabic ? 'رفض طلب السحب' : 'Reject Withdrawal',
                         );
                         if (reason != null && mounted) {
                           setState(() {
@@ -928,7 +947,8 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                         final messenger = ScaffoldMessenger.of(context);
                         final confirmed = await FinanceDialogs.showFreezeDialog(
                           context,
-                          requestTitle: req.beneficiaryName,
+                          requestTitle: FinanceLocalizer.localizeWithdrawalText(
+                              context, req.beneficiaryName),
                         );
                         if (confirmed && mounted) {
                           setState(() {

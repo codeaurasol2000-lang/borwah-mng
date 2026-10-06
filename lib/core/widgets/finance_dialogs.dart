@@ -61,6 +61,7 @@ class FinanceDialogs {
     BuildContext context, {
     String? title,
     String? hint,
+    String? description,
   }) async {
     final isArabic = AppLocaleController.instance.isArabic;
     final controller = TextEditingController();
@@ -86,9 +87,10 @@ class FinanceDialogs {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              isArabic
-                  ? 'سيتم إرسال هذا السبب إلى رئيس المشرفين لمراجعة وتدقيق الطلب المرفوض.'
-                  : 'This reason will be submitted to the Head of Supervisors for audit and review.',
+              description ??
+                  (isArabic
+                      ? 'سيتم إرسال هذا السبب إلى رئيس المشرفين لمراجعة وتدقيق الطلب المرفوض.'
+                      : 'This reason will be submitted to the Head of Supervisors for audit and review.'),
               style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
             ),
             const SizedBox(height: 12),
@@ -135,6 +137,7 @@ class FinanceDialogs {
   static Future<bool> showFreezeDialog(
     BuildContext context, {
     required String requestTitle,
+    String? description,
   }) async {
     final isArabic = AppLocaleController.instance.isArabic;
     final result = await showDialog<bool>(
@@ -154,9 +157,10 @@ class FinanceDialogs {
           ],
         ),
         content: Text(
-          isArabic
-              ? 'هل تريد تجميد "$requestTitle" مؤقتاً ونقله إلى قائمة الأرصدة المعلقة تحت التدقيق الرقابي؟'
-              : 'Do you want to temporarily freeze "$requestTitle" and move it to the audit inspection list?',
+          description ??
+              (isArabic
+                  ? 'هل تريد تجميد "$requestTitle" مؤقتاً ونقله إلى قائمة الأرصدة المعلقة تحت التدقيق الرقابي؟'
+                  : 'Do you want to temporarily freeze "$requestTitle" and move it to the audit inspection list?'),
           style: const TextStyle(fontSize: 13, color: AppColors.textSecondary, height: 1.4),
         ),
         actions: [

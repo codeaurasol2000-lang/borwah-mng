@@ -144,7 +144,7 @@ class _NewSettlementBottomSheetState extends State<NewSettlementBottomSheet> {
               _LabeledInput(
                 label: l10n.settlementAmountLabel,
                 controller: _amountController,
-                prefix: l10n.currencySar,
+                prefix: l10n.currencyEgy,
                 keyboardType: TextInputType.number,
                 isArabic: isArabic,
               ),

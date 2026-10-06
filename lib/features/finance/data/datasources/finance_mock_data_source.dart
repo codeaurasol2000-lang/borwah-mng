@@ -1,11 +1,84 @@
 import '../../domain/entities/subscription_request_entity.dart';
 import '../../domain/entities/department_wallet_entity.dart';
+import '../../domain/entities/expense_request_entity.dart';
+import '../../domain/entities/bank_account_edit_request_entity.dart';
+import '../../domain/entities/bank_link_request_entity.dart';
 import '../../domain/entities/withdrawal_request_entity.dart';
 import '../models/bank_account_model.dart';
 import '../models/finance_summary_model.dart';
 import 'finance_remote_data_source.dart';
 
 class FinanceMockDataSource implements FinanceRemoteDataSource {
+  final List<BankAccountEditRequestEntity> _bankAccountEditRequests = [];
+  final List<ExpenseRequestEntity> _expenseRequests = [];
+  List<WithdrawalRequestEntity>? _merchantWithdrawalRequests;
+  List<WithdrawalRequestEntity>? _supervisorWithdrawalRequests;
+  final List<BankLinkRequestEntity> _bankLinkRequests = [
+    const BankLinkRequestEntity(
+      id: '#TRD-5501',
+      commercialName: 'مؤسسة التجارة المتقدمة المحدودة',
+      beneficiaryName: 'مؤسسة التجارة المتقدمة للخدمات والتوكيلات',
+      iban: 'SA44 8000 0123 6080 1012 3456',
+      bankName: 'مصرف الراجحي',
+      crNumber: '1010892341',
+      crExpiry: '1448/04/15هـ',
+      documentName: 'doc-iban-5501.pdf',
+      amlScore: '100%',
+      requestType: 'طلب ربط وتوثيق حساب تجاري جديد',
+      matchDescription: 'تطابق الاسم التجاري والبنكي موثق بنسبة 100%',
+      commercialNameEn: 'Advanced Trading Establishment Ltd.',
+      beneficiaryNameEn: 'Advanced Trading Est. for Services & Agencies',
+      bankNameEn: 'Al Rajhi Bank',
+      crExpiryEn: '1448/04/15 AH',
+      requestTypeEn: 'New Commercial Account Link & Verification Request',
+      matchDescriptionEn: '100% Verified match between commercial and bank name',
+    ),
+    const BankLinkRequestEntity(
+      id: '#TRD-6022',
+      commercialName: 'شركة مدار الرواد للمقاولات العامة',
+      beneficiaryName: 'شركة مدار الرواد للتجارة والمقاولات ش.ش.و',
+      iban: 'SA03 8000 0456 9910 2233 4455',
+      bankName: 'البنك الأهلي السعودي (SNB)',
+      crNumber: '1010994523',
+      crExpiry: '1447/11/20هـ',
+      documentName: 'doc-iban-6022.pdf',
+      amlScore: '96%',
+      requestType: 'طلب ربط حساب مورد معتمد',
+      matchDescription: 'اختلاف طفيف في اللواحق القانونية للاسم التجاري',
+      warningNote: 'تم رصد اختلاف بين لاحقة السجل والحساب البنكي',
+      commercialNameEn: 'Madar Al-Ruwad General Contracting Co.',
+      beneficiaryNameEn: 'Madar Al-Ruwad Trading & Contracting LLC',
+      bankNameEn: 'Saudi National Bank (SNB)',
+      crExpiryEn: '1447/11/20 AH',
+      requestTypeEn: 'Approved Supplier Account Link Request',
+      matchDescriptionEn: 'Minor variance in legal suffixes of the commercial name',
+      warningNoteEn: 'Variance detected between CR suffix and bank account name',
+    ),
+    const BankLinkRequestEntity(
+      id: '#TRD-7108',
+      commercialName: 'مؤسسة القمة الرقمية لتقنية المعلومات',
+      beneficiaryName: 'فهد سليمان عبد الله العتيبي',
+      iban: 'SA12 1000 0987 5544 3322 1100',
+      bankName: 'بنك الرياض',
+      crNumber: '1010778899',
+      crExpiry: '1448/01/10هـ',
+      documentName: 'doc-iban-7108.pdf',
+      amlScore: '89%',
+      requestType: 'طلب ربط حساب مزود خدمة مستقل',
+      matchDescription: 'مؤسسة فردية تتطلب شهادة آيبان حديثة مختومة',
+      warningNote: 'شهادة الآيبان المرفقة تعود لأكثر من 6 أشهر',
+      commercialNameEn: 'Digital Summit IT Establishment',
+      beneficiaryNameEn: 'Fahad Sulaiman Abdullah Al-Otaibi',
+      bankNameEn: 'Riyad Bank',
+      crExpiryEn: '1448/01/10 AH',
+      requestTypeEn: 'Freelance Service Provider Account Link Request',
+      matchDescriptionEn: 'Sole proprietorship requires a recent stamped IBAN certificate',
+      warningNoteEn: 'Attached IBAN certificate is older than 6 months',
+    ),
+  ];
+  int _nextBankAccountEditRequestId = 0;
+  int _nextExpenseRequestId = 0;
+
   // القائمة المركزية الموحدة للحسابات البنكية والقنوات الرسمية
   final List<BankAccountModel> _mockBankAccounts = [
     const BankAccountModel(
@@ -57,27 +130,24 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
 
   @override
   Future<FinanceSummaryModel> getFinanceSummary() async {
-    // إرجاع فوري بدون أي تأخير اصطناعي (0 ثانية)
-    await Future.delayed(Duration.zero);
-
     // حساب إجمالي السيولة ديناميكياً بجمع كافة أرصدة الحسابات
     final double calculatedTotalLiquidity = _mockBankAccounts.fold(
       0.0,
-          (sum, account) => sum + account.balance,
+      (sum, account) => sum + account.balance,
     );
 
     final double rajhiBalance = _mockBankAccounts
         .firstWhere(
           (a) => a.bankName.contains('الراجحي'),
-      orElse: () => _mockBankAccounts.first,
-    )
+          orElse: () => _mockBankAccounts.first,
+        )
         .balance;
 
     final double snbBalance = _mockBankAccounts
         .firstWhere(
           (a) => a.bankName.contains('الأهلي'),
-      orElse: () => _mockBankAccounts.first,
-    )
+          orElse: () => _mockBankAccounts.first,
+        )
         .balance;
 
     // استدعاء الطلبات الحقيقية من الموك لحساب الأرقام الديناميكية
@@ -85,17 +155,31 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
     final supervisorRequests = await getSupervisorWithdrawals();
     final subscriptions = await getSubscriptions();
 
-    final pendingAndFrozenMerchants = merchantRequests.where((req) => req.status == RequestStatus.pending || req.status == RequestStatus.underInvestigation).toList();
+    final pendingAndFrozenMerchants = merchantRequests
+        .where((req) =>
+            req.status == RequestStatus.pending ||
+            req.status == RequestStatus.underInvestigation)
+        .toList();
     final int merchantCount = pendingAndFrozenMerchants.length;
-    final double merchantAmount = pendingAndFrozenMerchants.fold(0.0, (sum, req) => sum + req.netAmount);
+    final double merchantAmount =
+        pendingAndFrozenMerchants.fold(0.0, (sum, req) => sum + req.netAmount);
 
-    final pendingAndFrozenSupervisors = supervisorRequests.where((req) => req.status == RequestStatus.pending || req.status == RequestStatus.underInvestigation).toList();
+    final pendingAndFrozenSupervisors = supervisorRequests
+        .where((req) =>
+            req.status == RequestStatus.pending ||
+            req.status == RequestStatus.underInvestigation)
+        .toList();
     final int supervisorCount = pendingAndFrozenSupervisors.length;
-    final double supervisorAmount = pendingAndFrozenSupervisors.fold(0.0, (sum, req) => sum + req.netAmount);
+    final double supervisorAmount = pendingAndFrozenSupervisors.fold(
+        0.0, (sum, req) => sum + req.netAmount);
 
-    final pendingSubscriptions = subscriptions.where((req) => req.status == 'قيد المطابقة' || req.status.contains('جاهز')).toList();
+    final pendingSubscriptions = subscriptions
+        .where((req) =>
+            req.status == 'قيد المطابقة' || req.status.contains('جاهز'))
+        .toList();
     final int subsCount = pendingSubscriptions.length;
-    final double subsAmount = pendingSubscriptions.fold(0.0, (sum, req) => sum + req.totalAmount);
+    final double subsAmount =
+        pendingSubscriptions.fold(0.0, (sum, req) => sum + req.totalAmount);
 
     return FinanceSummaryModel(
       totalLiquidity: calculatedTotalLiquidity,
@@ -114,15 +198,115 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
 
   @override
   Future<List<BankAccountModel>> getBankAccounts() async {
-    // إرجاع الحسابات البنكية فورياً
-    await Future.delayed(Duration.zero);
     return _mockBankAccounts;
+  }
+
+  @override
+  Future<List<BankAccountEditRequestEntity>>
+      getBankAccountEditRequests() async {
+    return List.unmodifiable(_bankAccountEditRequests);
+  }
+
+  @override
+  Future<BankAccountEditRequestEntity> submitBankAccountEditRequest({
+    required String accountId,
+    required String proposedBankName,
+    required String proposedAccountType,
+    required String proposedIban,
+  }) async {
+    final accountIndex =
+        _mockBankAccounts.indexWhere((account) => account.id == accountId);
+    if (accountIndex == -1) {
+      throw ArgumentError.value(
+          accountId, 'accountId', 'Bank account not found');
+    }
+
+    if (_bankAccountEditRequests.any(
+      (request) =>
+          request.accountId == accountId &&
+          request.status == BankAccountEditRequestStatus.pending,
+    )) {
+      throw StateError('An edit request is already pending for this account.');
+    }
+
+    final currentAccount = _mockBankAccounts[accountIndex];
+    final bankName = proposedBankName.trim();
+    final accountType = proposedAccountType.trim();
+    final iban = proposedIban.trim();
+    if (bankName.isEmpty || accountType.isEmpty || iban.isEmpty) {
+      throw ArgumentError('Bank name, account type, and IBAN are required.');
+    }
+    if (bankName == currentAccount.bankName &&
+        accountType == currentAccount.accountType &&
+        iban == currentAccount.iban) {
+      throw ArgumentError('At least one bank account field must be changed.');
+    }
+
+    final request = BankAccountEditRequestEntity(
+      id: 'bank-edit-${++_nextBankAccountEditRequestId}',
+      accountId: currentAccount.id,
+      bankName: currentAccount.bankName,
+      accountType: currentAccount.accountType,
+      iban: currentAccount.iban,
+      proposedBankName: bankName,
+      proposedAccountType: accountType,
+      proposedIban: iban,
+      submittedAt: DateTime.now(),
+    );
+    _bankAccountEditRequests.add(request);
+    return request;
+  }
+
+  @override
+  Future<List<ExpenseRequestEntity>> getExpenseRequests() async {
+    return List.unmodifiable(_expenseRequests);
+  }
+
+  @override
+  Future<ExpenseRequestEntity> submitExpenseRequest({
+    required double amount,
+    required String bankAccountId,
+    required String reason,
+    String? attachmentName,
+  }) async {
+    if (!amount.isFinite || amount <= 0) {
+      throw ArgumentError.value(
+          amount, 'amount', 'Amount must be greater than zero.');
+    }
+    final normalizedReason = reason.trim();
+    if (normalizedReason.isEmpty) {
+      throw ArgumentError.value(
+          reason, 'reason', 'Expense reason is required.');
+    }
+
+    final accountIndex =
+        _mockBankAccounts.indexWhere((account) => account.id == bankAccountId);
+    if (accountIndex == -1) {
+      throw ArgumentError.value(
+          bankAccountId, 'bankAccountId', 'Bank account not found.');
+    }
+    final account = _mockBankAccounts[accountIndex];
+
+    final normalizedAttachment = attachmentName?.trim();
+    final request = ExpenseRequestEntity(
+      id: 'expense-${++_nextExpenseRequestId}',
+      amount: amount,
+      bankAccountId: account.id,
+      bankName: account.bankName,
+      reason: normalizedReason,
+      attachmentName:
+          normalizedAttachment == null || normalizedAttachment.isEmpty
+              ? null
+              : normalizedAttachment,
+      submittedAt: DateTime.now(),
+    );
+    _expenseRequests.add(request);
+    return request;
   }
 
   @override
   Future<DepartmentWalletEntity> getDepartmentWallet(
       DepartmentType type) async {
-    await Future.delayed(Duration.zero);
     return switch (type) {
       DepartmentType.merchants => const DepartmentWalletEntity(
           type: DepartmentType.merchants,
@@ -259,8 +443,7 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
 
   @override
   Future<List<WithdrawalRequestEntity>> getMerchantWithdrawals() async {
-    await Future.delayed(Duration.zero);
-    return const [
+    _merchantWithdrawalRequests ??= List.of(const [
       WithdrawalRequestEntity(
         id: '1',
         requestNumber: 'TRD-8821',
@@ -275,7 +458,8 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
         iban: 'SA42 8000 0412 **** **** 4910',
         dateText: 'اليوم، 10:45 ص (منذ ساعتين)',
         status: RequestStatus.pending,
-        auditCheckResult: 'مطابقة الفواتير: 100% | لا توجد بلاغات نزاع أو شكاوى نشطة | رصيد المحفظة مغطى بالكامل ومطابق لصافي التحصيلات التشغيلية.',
+        auditCheckResult:
+            'مطابقة الفواتير: 100% | لا توجد بلاغات نزاع أو شكاوى نشطة | رصيد المحفظة مغطى بالكامل ومطابق لصافي التحصيلات التشغيلية.',
         alertNotice: null,
         isInstantTransferReady: false,
       ),
@@ -292,9 +476,11 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
         bankName: 'البنك الأهلي السعودي (SNB)',
         iban: '',
         dateText: '',
-        status: RequestStatus.approved, // assuming "جاهز للصرف" maps to a state we can display differently, or we can use isInstantTransferReady
+        status: RequestStatus
+            .approved, // assuming "جاهز للصرف" maps to a state we can display differently, or we can use isInstantTransferReady
         auditCheckResult: null,
-        alertNotice: 'معتمد من النظام - جاهز للإرسال البنكي الفوري عبر شبكة سريع',
+        alertNotice:
+            'معتمد من النظام - جاهز للإرسال البنكي الفوري عبر شبكة سريع',
         isInstantTransferReady: true,
       ),
       WithdrawalRequestEntity(
@@ -312,16 +498,36 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
         dateText: '',
         status: RequestStatus.underInvestigation,
         auditCheckResult: null,
-        alertNotice: 'طلب تجميد سحب صادر من مشرف التجار (Finance Action Request #FAR-102) لوجود شبهة تلاعب في عروض ترويجية #CMP-1042 مع عملاء النهائيين بشأن استرداد مبالغ مشتريات ملغاة.',
+        alertNotice:
+            'طلب تجميد سحب صادر من مشرف التجار (Finance Action Request #FAR-102) لوجود شبهة تلاعب في عروض ترويجية #CMP-1042 مع عملاء النهائيين بشأن استرداد مبالغ مشتريات ملغاة.',
         isInstantTransferReady: false,
       ),
-    ];
+      WithdrawalRequestEntity(
+        id: '4',
+        requestNumber: 'TRD-0199',
+        beneficiaryName: 'مؤسسة الأفق للتجارة',
+        beneficiaryRole: 'حوالة بنكية سريعة معلقة',
+        beneficiaryType: BeneficiaryType.merchant,
+        grossAmount: 20310.00,
+        platformFeePercentage: 5.0,
+        platformFeeAmount: 1015.50,
+        netAmount: 19294.50,
+        bankName: '',
+        iban: 'SA44*************0199',
+        dateText: '25 يناير 2025',
+        status: RequestStatus.frozen,
+        auditCheckResult: null,
+        alertNotice:
+            'فشل التحقق الآلي من تطابق اسم المستفيد مع السجل التجاري لدى البنك.',
+        isInstantTransferReady: false,
+      ),
+    ]);
+    return List.unmodifiable(_merchantWithdrawalRequests!);
   }
 
   @override
   Future<List<WithdrawalRequestEntity>> getSupervisorWithdrawals() async {
-    await Future.delayed(Duration.zero);
-    return const [
+    _supervisorWithdrawalRequests ??= List.of(const [
       WithdrawalRequestEntity(
         id: '1',
         requestNumber: '#409-SUP',
@@ -337,7 +543,8 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
         dateText: '',
         status: RequestStatus.pending,
         sourceOfFunds: 'عمولات إشراف واعتماد عقود التجار المنجزة (شهر أكتوبر)',
-        auditCheckResult: 'نسبة الامتثال 98.4% | لا توجد بلاغات تظلم معلقة | رصيد المحفظة مغطى بالكامل',
+        auditCheckResult:
+            'نسبة الامتثال 98.4% | لا توجد بلاغات تظلم معلقة | رصيد المحفظة مغطى بالكامل',
         transferMethod: 'تحويل سريع عبر IBAN بنك الراجحي',
         isInstantTransferReady: false,
       ),
@@ -355,7 +562,8 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
         iban: 'آيبان موثق',
         dateText: '',
         status: RequestStatus.approved,
-        sourceOfFunds: 'أجور إنجاز 14 طلب صيانة وتبريد ميدانية معتمدة من العميل والمشرف',
+        sourceOfFunds:
+            'أجور إنجاز 14 طلب صيانة وتبريد ميدانية معتمدة من العميل والمشرف',
         auditCheckResult: null,
         isInstantTransferReady: true,
       ),
@@ -375,15 +583,195 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
         status: RequestStatus.underInvestigation,
         sourceOfFunds: null,
         auditCheckResult: null,
-        alertNotice: 'وجود شكوى مفتوحة من عميل (#CMP-1042) لعدم اكتمال أعمال الصيانة بانتظار فحص المشرف وإعادة تقييم الخدمة الميدانية.',
+        alertNotice:
+            'وجود شكوى مفتوحة من عميل (#CMP-1042) لعدم اكتمال أعمال الصيانة بانتظار فحص المشرف وإعادة تقييم الخدمة الميدانية.',
         isInstantTransferReady: false,
       ),
-    ];
+    ]);
+    return List.unmodifiable(_supervisorWithdrawalRequests!);
+  }
+
+  @override
+  Future<List<WithdrawalRequestEntity>> getFrozenWithdrawals() async {
+    final merchantRequests = await getMerchantWithdrawals();
+    final supervisorRequests = await getSupervisorWithdrawals();
+    return List.unmodifiable(
+      [...merchantRequests, ...supervisorRequests].where(
+        (request) =>
+            request.status == RequestStatus.frozen ||
+            request.status == RequestStatus.underInvestigation,
+      ),
+    );
+  }
+
+  @override
+  Future<void> restoreFrozenWithdrawal(
+    String requestId,
+    BeneficiaryType beneficiaryType,
+  ) async {
+    final requests = await _withdrawalListFor(beneficiaryType);
+    final requestIndex = requests.indexWhere(
+      (request) =>
+          request.id == requestId && request.beneficiaryType == beneficiaryType,
+    );
+    if (requestIndex == -1) {
+      throw ArgumentError.value(requestId, 'requestId', 'Withdrawal not found.');
+    }
+
+    final request = requests[requestIndex];
+    if (request.status != RequestStatus.frozen &&
+        request.status != RequestStatus.underInvestigation) {
+      throw StateError('Withdrawal is no longer frozen.');
+    }
+    requests[requestIndex] = request.copyWith(status: RequestStatus.pending);
+  }
+
+  @override
+  Future<void> rejectAndForfeitWithdrawal(
+    String requestId,
+    BeneficiaryType beneficiaryType,
+    String reason,
+  ) async {
+    final normalizedReason = reason.trim();
+    if (normalizedReason.isEmpty) {
+      throw ArgumentError.value(reason, 'reason', 'Rejection reason is required.');
+    }
+
+    final requests = await _withdrawalListFor(beneficiaryType);
+    final requestIndex = requests.indexWhere(
+      (request) =>
+          request.id == requestId && request.beneficiaryType == beneficiaryType,
+    );
+    if (requestIndex == -1) {
+      throw ArgumentError.value(requestId, 'requestId', 'Withdrawal not found.');
+    }
+
+    final request = requests[requestIndex];
+    if (request.status != RequestStatus.frozen &&
+        request.status != RequestStatus.underInvestigation) {
+      throw StateError('Withdrawal is no longer frozen.');
+    }
+    requests[requestIndex] = request.copyWith(
+      status: RequestStatus.rejected,
+      alertNotice: normalizedReason,
+    );
+  }
+
+  @override
+  Future<List<BankLinkRequestEntity>> getBankLinkRequests() async {
+    return List.unmodifiable(_bankLinkRequests);
+  }
+
+  @override
+  Future<void> approveBankLinkRequest(String requestId) async {
+    final index = _pendingBankLinkRequestIndex(requestId);
+    _bankLinkRequests[index] = _bankLinkRequests[index].copyWith(
+      status: BankLinkRequestStatus.pendingManagementApproval,
+    );
+  }
+
+  @override
+  Future<void> requestIbanCertificate(String requestId) async {
+    final index = _pendingBankLinkRequestIndex(requestId);
+    _bankLinkRequests[index] = _bankLinkRequests[index].copyWith(
+      status: BankLinkRequestStatus.ibanCertificateRequested,
+    );
+  }
+
+  @override
+  Future<void> freezeBankLinkRequest(String requestId, String reason) async {
+    final normalizedReason = reason.trim();
+    if (normalizedReason.isEmpty) {
+      throw ArgumentError.value(reason, 'reason', 'A freeze reason is required.');
+    }
+
+    final index = _pendingBankLinkRequestIndex(requestId);
+    _bankLinkRequests[index] = _bankLinkRequests[index].copyWith(
+      status: BankLinkRequestStatus.frozen,
+      decisionReason: normalizedReason,
+    );
+  }
+
+  @override
+  Future<void> rejectBankLinkRequest(String requestId, String reason) async {
+    final normalizedReason = reason.trim();
+    if (normalizedReason.isEmpty) {
+      throw ArgumentError.value(
+          reason, 'reason', 'A rejection reason is required.');
+    }
+
+    final index = _pendingBankLinkRequestIndex(requestId);
+    _bankLinkRequests[index] = _bankLinkRequests[index].copyWith(
+      status: BankLinkRequestStatus.rejected,
+      decisionReason: normalizedReason,
+    );
+  }
+
+  @override
+  Future<void> restoreFrozenBankLinkRequest(String requestId) async {
+    final index = _bankLinkRequestIndex(
+      requestId,
+      BankLinkRequestStatus.frozen,
+    );
+    _bankLinkRequests[index] = _bankLinkRequests[index].copyWith(
+      status: BankLinkRequestStatus.pending,
+      clearDecisionReason: true,
+    );
+  }
+
+  @override
+  Future<void> rejectFrozenBankLinkRequest(
+    String requestId,
+    String reason,
+  ) async {
+    final normalizedReason = reason.trim();
+    if (normalizedReason.isEmpty) {
+      throw ArgumentError.value(
+          reason, 'reason', 'A rejection reason is required.');
+    }
+    final index = _bankLinkRequestIndex(
+      requestId,
+      BankLinkRequestStatus.frozen,
+    );
+    _bankLinkRequests[index] = _bankLinkRequests[index].copyWith(
+      status: BankLinkRequestStatus.rejected,
+      decisionReason: normalizedReason,
+    );
+  }
+
+  int _pendingBankLinkRequestIndex(String requestId) {
+    return _bankLinkRequestIndex(requestId, BankLinkRequestStatus.pending);
+  }
+
+  int _bankLinkRequestIndex(
+    String requestId,
+    BankLinkRequestStatus expectedStatus,
+  ) {
+    final index = _bankLinkRequests.indexWhere((request) =>
+        request.id == requestId && request.status == expectedStatus);
+    if (index == -1) {
+      throw StateError(
+          'Bank link request is missing or no longer $expectedStatus.');
+    }
+    return index;
+  }
+
+  Future<List<WithdrawalRequestEntity>> _withdrawalListFor(
+      BeneficiaryType beneficiaryType) async {
+    switch (beneficiaryType) {
+      case BeneficiaryType.merchant:
+      case BeneficiaryType.user:
+        await getMerchantWithdrawals();
+        return _merchantWithdrawalRequests!;
+      case BeneficiaryType.supervisor:
+      case BeneficiaryType.serviceProvider:
+        await getSupervisorWithdrawals();
+        return _supervisorWithdrawalRequests!;
+    }
   }
 
   @override
   Future<List<SubscriptionRequestEntity>> getSubscriptions() async {
-    await Future.delayed(Duration.zero);
     return const [
       SubscriptionRequestEntity(
         id: '1',
@@ -391,7 +779,8 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
         registrationNumber: '101099234',
         categoryName: 'اشتراك تاجر مميز',
         targetPackageName: 'الباقة الذهبية السنوية',
-        durationText: 'شامل الضريبة 15%', // Use this field for the bottom text under amount
+        durationText:
+            'شامل الضريبة 15%', // Use this field for the bottom text under amount
         totalAmount: 4800.00,
         paymentMethod: 'تحويل بنكي مباشر (سداد / الراجحي)',
         status: 'قيد المطابقة',
@@ -408,7 +797,7 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
         paymentMethod: 'خصم مباشر من رصيد المحفظة الضامنة (Escrow)',
         status: 'جاهز للاعتماد التلقائي',
         type: SubscriptionType.serviceProvider,
-        availableBalance: 'رصيد متاح 6,400 ر.س',
+        availableBalance: 'رصيد متاح 6,400 ج.م',
       ),
       SubscriptionRequestEntity(
         id: '3',
@@ -433,7 +822,7 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
         paymentMethod: 'خصم من المحفظة',
         status: 'جاهز للاعتماد التلقائي',
         type: SubscriptionType.courier,
-        availableBalance: 'رصيد متاح 800 ر.س',
+        availableBalance: 'رصيد متاح 800 ج.م',
       ),
       SubscriptionRequestEntity(
         id: '5',

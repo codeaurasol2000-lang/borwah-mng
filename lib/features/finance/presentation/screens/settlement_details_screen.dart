@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/utils/app_locale_controller.dart';
 import '../../../../core/widgets/finance_dialogs.dart';
+import '../../../../l10n/app_localizations.dart';
 
 class SettlementDetailsScreen extends StatefulWidget {
   final String id;
@@ -38,7 +39,8 @@ class SettlementDetailsScreen extends StatefulWidget {
   });
 
   @override
-  State<SettlementDetailsScreen> createState() => _SettlementDetailsScreenState();
+  State<SettlementDetailsScreen> createState() =>
+      _SettlementDetailsScreenState();
 }
 
 class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
@@ -58,18 +60,21 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
 
   Future<void> _handleApprove() async {
     final isArabic = AppLocaleController.instance.isArabic;
+    final currency = AppLocalizations.of(context)!.currencyEgy;
     final confirmed = await FinanceDialogs.showApprovalDialog(
       context,
       title: isArabic ? 'اعتماد طلب التسوية' : 'Approve Settlement Request',
       description: isArabic
-          ? 'هل ترغب في اعتماد طلب التسوية بقيمة ${widget.amount} ر.س وإرسال أمر التحويل إلى مستخدم الإدارة للمصادقة النهائية؟'
-          : 'Do you want to approve this settlement of ${widget.amount} SAR and submit it to Admin for final approval?',
-      confirmText: isArabic ? 'اعتماد وإرسال للإدارة' : 'Approve & Send to Admin',
+          ? 'هل ترغب في اعتماد طلب التسوية بقيمة ${widget.amount} $currency وإرسال أمر التحويل إلى مستخدم الإدارة للمصادقة النهائية؟'
+          : 'Do you want to approve this settlement of ${widget.amount} $currency and submit it to Admin for final approval?',
+      confirmText:
+          isArabic ? 'اعتماد وإرسال للإدارة' : 'Approve & Send to Admin',
     );
 
     if (confirmed && mounted) {
       setState(() {
-        _currentStatus = isArabic ? 'بانتظار مصادقة الإدارة' : 'Pending Admin Approval';
+        _currentStatus =
+            isArabic ? 'بانتظار مصادقة الإدارة' : 'Pending Admin Approval';
       });
       _showFeedback(isArabic
           ? 'تم اعتماد التسوية وإرسالها بنجاح إلى الإدارة للمصادقة.'
@@ -99,7 +104,8 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
     final reason = await FinanceDialogs.showRejectionDialog(
       context,
       title: isArabic ? 'رفض طلب التسوية' : 'Reject Settlement',
-      hint: isArabic ? 'اكتب سبب الرفض بالتفصيل...' : 'Enter rejection reason...',
+      hint:
+          isArabic ? 'اكتب سبب الرفض بالتفصيل...' : 'Enter rejection reason...',
     );
 
     if (reason != null && mounted) {
@@ -143,8 +149,10 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
           centerTitle: true,
           actions: [
             IconButton(
-              icon: const Icon(Icons.share_outlined, color: AppColors.primaryDark, size: 20),
-              onPressed: () => _showFeedback(isArabic ? 'تم نسخ رابط تفاصيل التسوية' : 'Link copied'),
+              icon: const Icon(Icons.share_outlined,
+                  color: AppColors.primaryDark, size: 20),
+              onPressed: () => _showFeedback(
+                  isArabic ? 'تم نسخ رابط تفاصيل التسوية' : 'Link copied'),
             ),
           ],
         ),
@@ -182,7 +190,8 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   color: widget.badgeColor,
                   borderRadius: BorderRadius.circular(16),
@@ -282,6 +291,7 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
   }
 
   Widget _buildFinancialOverview(bool isArabic) {
+    final currency = AppLocalizations.of(context)!.currencyEgy;
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -294,18 +304,24 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
         children: [
           Row(
             children: [
-              const Icon(Icons.account_balance_wallet_outlined, color: AppColors.info, size: 18),
+              const Icon(Icons.account_balance_wallet_outlined,
+                  color: AppColors.info, size: 18),
               const SizedBox(width: 8),
               Text(
-                isArabic ? 'المعلومات المالية والخصم من الضمان' : 'Financial Details & Escrow',
-                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.primaryDark),
+                isArabic
+                    ? 'المعلومات المالية والخصم من الضمان'
+                    : 'Financial Details & Escrow',
+                style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryDark),
               ),
             ],
           ),
           const Divider(height: 20),
           _buildInfoRow(
             title: isArabic ? 'مبلغ التسوية المطلوب' : 'Settlement Amount',
-            value: '${widget.amount} ${isArabic ? 'ر.س' : 'SAR'}',
+            value: '${widget.amount} $currency',
             isBold: true,
             valueColor: AppColors.primaryDark,
           ),
@@ -348,8 +364,13 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
               const Icon(Icons.person_outline, color: AppColors.info, size: 18),
               const SizedBox(width: 8),
               Text(
-                isArabic ? 'بيانات المستفيد والحساب' : 'Beneficiary & Account Data',
-                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.primaryDark),
+                isArabic
+                    ? 'بيانات المستفيد والحساب'
+                    : 'Beneficiary & Account Data',
+                style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryDark),
               ),
             ],
           ),
@@ -395,11 +416,17 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
         children: [
           Row(
             children: [
-              const Icon(Icons.balance_outlined, color: AppColors.warning, size: 18),
+              const Icon(Icons.balance_outlined,
+                  color: AppColors.warning, size: 18),
               const SizedBox(width: 8),
               Text(
-                isArabic ? 'سند النزاع ومبرر التسوية' : 'Dispute Reference & Justification',
-                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.primaryDark),
+                isArabic
+                    ? 'سند النزاع ومبرر التسوية'
+                    : 'Dispute Reference & Justification',
+                style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryDark),
               ),
             ],
           ),
@@ -411,8 +438,11 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
           ),
           const SizedBox(height: 8),
           _buildInfoRow(
-            title: isArabic ? 'توصية قسم خدمة العملاء' : 'Customer Service Rec.',
-            value: isArabic ? 'تم الاتفاق بالتراضي على استرجاع المبلغ لمحفظة المستفيد' : 'Mutual agreement on full refund',
+            title:
+                isArabic ? 'توصية قسم خدمة العملاء' : 'Customer Service Rec.',
+            value: isArabic
+                ? 'تم الاتفاق بالتراضي على استرجاع المبلغ لمحفظة المستفيد'
+                : 'Mutual agreement on full refund',
             isBold: false,
           ),
         ],
@@ -433,11 +463,17 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
         children: [
           Row(
             children: [
-              const Icon(Icons.admin_panel_settings_outlined, color: AppColors.primaryDark, size: 18),
+              const Icon(Icons.admin_panel_settings_outlined,
+                  color: AppColors.primaryDark, size: 18),
               const SizedBox(width: 8),
               Text(
-                isArabic ? 'موقف مصادقة مستخدم الإدارة (Admin)' : 'Admin Approval Status',
-                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.primaryDark),
+                isArabic
+                    ? 'موقف مصادقة مستخدم الإدارة (Admin)'
+                    : 'Admin Approval Status',
+                style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryDark),
               ),
             ],
           ),
@@ -446,7 +482,8 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
             isArabic
                 ? 'أي اعتماد لتسوية مالية يتطلب مصادقة نهائية من حساب الإدارة قبل تفعيل حركة الصرف البنكية.'
                 : 'Any settlement authorization requires final approval from the Admin before fund clearance.',
-            style: const TextStyle(fontSize: 10, color: AppColors.textSecondary, height: 1.4),
+            style: const TextStyle(
+                fontSize: 10, color: AppColors.textSecondary, height: 1.4),
           ),
           const SizedBox(height: 10),
           Container(
@@ -460,8 +497,13 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
                 const Icon(Icons.check_circle, size: 14, color: AppColors.info),
                 const SizedBox(width: 6),
                 Text(
-                  isArabic ? 'الحالة الحالية: $_currentStatus' : 'Current State: $_currentStatus',
-                  style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.primaryDark),
+                  isArabic
+                      ? 'الحالة الحالية: $_currentStatus'
+                      : 'Current State: $_currentStatus',
+                  style: const TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.primaryDark),
                 ),
               ],
             ),
@@ -481,12 +523,15 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primaryDark,
               foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
             ),
             onPressed: _handleApprove,
             icon: const Icon(Icons.verified_outlined, size: 18),
             label: Text(
-              isArabic ? 'اعتماد وإرسال للإدارة للموافقة' : 'Approve & Send to Admin',
+              isArabic
+                  ? 'اعتماد وإرسال للإدارة للموافقة'
+                  : 'Approve & Send to Admin',
               style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
             ),
           ),
@@ -501,13 +546,15 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppColors.warning,
                     side: const BorderSide(color: AppColors.warning),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
                   ),
                   onPressed: _handleFreeze,
                   icon: const Icon(Icons.pause_circle_outline, size: 16),
                   label: Text(
                     isArabic ? 'تجميد احترازي' : 'Freeze Request',
-                    style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 11, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -520,13 +567,15 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
                   style: TextButton.styleFrom(
                     foregroundColor: AppColors.danger,
                     backgroundColor: const Color(0xFFFFECEB),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
                   ),
                   onPressed: _handleReject,
                   icon: const Icon(Icons.cancel_outlined, size: 16),
                   label: Text(
                     isArabic ? 'رفض الطلب مع السبب' : 'Reject with Reason',
-                    style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 11, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),

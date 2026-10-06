@@ -5,8 +5,12 @@ import '../../../../core/di/injection_container.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/widgets/finance_dialogs.dart';
-import '../controllers/dashboard/finance_dashboard_cubit.dart';
-import '../controllers/dashboard/finance_dashboard_state.dart';
+import '../../domain/entities/bank_link_request_entity.dart';
+import '../../domain/entities/withdrawal_request_entity.dart';
+import '../controllers/bank_reconciliation/bank_reconciliation_cubit.dart';
+import '../controllers/bank_reconciliation/bank_reconciliation_state.dart';
+import '../controllers/frozen_requests/frozen_requests_cubit.dart';
+import '../controllers/frozen_requests/frozen_requests_state.dart';
 import '../widgets/finance_navigation.dart';
 
 class FrozenRequestsScreen extends StatefulWidget {
@@ -17,20 +21,33 @@ class FrozenRequestsScreen extends StatefulWidget {
 }
 
 class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
-  String _selectedFilter = 'الكل'; // Filters: الكل, تجار ومتاجر, مقدمو خدمات
-  late FinanceDashboardCubit _cubit;
-  List<Map<String, dynamic>>? _frozenRequests;
+  String _selectedFilter = 'all';
+  late FrozenRequestsCubit _cubit;
+  late BankReconciliationCubit _bankLinkCubit;
 
   @override
   void initState() {
     super.initState();
-    _cubit = FinanceDashboardCubit(getFinanceSummaryUseCase: sl())
-      ..loadDashboardData();
+    _cubit = FrozenRequestsCubit(
+      getFrozenWithdrawalsUseCase: sl(),
+      restoreFrozenWithdrawalUseCase: sl(),
+      rejectAndForfeitWithdrawalUseCase: sl(),
+    )..loadRequests();
+    _bankLinkCubit = BankReconciliationCubit(
+      getRequestsUseCase: sl(),
+      approveRequestUseCase: sl(),
+      requestIbanCertificateUseCase: sl(),
+      freezeRequestUseCase: sl(),
+      rejectRequestUseCase: sl(),
+      restoreFrozenRequestUseCase: sl(),
+      rejectFrozenRequestUseCase: sl(),
+    )..loadRequests();
   }
 
   @override
   void dispose() {
     _cubit.close();
+    _bankLinkCubit.close();
     super.dispose();
   }
 
@@ -39,8 +56,11 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
     final l10n = AppLocalizations.of(context)!;
     final isArabic = l10n.localeName.startsWith('ar');
 
-    return BlocProvider.value(
-      value: _cubit,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider.value(value: _cubit),
+        BlocProvider.value(value: _bankLinkCubit),
+      ],
       child: Directionality(
         textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
         child: Scaffold(
@@ -51,83 +71,40 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
             showBackButton: true,
             onBackPressed: () => Navigator.pop(context),
           ),
-          body: BlocBuilder<FinanceDashboardCubit, FinanceDashboardState>(
-            builder: (context, state) {
-              if (state is FinanceDashboardLoading) {
+          body: BlocBuilder<BankReconciliationCubit,
+              BankReconciliationState>(
+            builder: (context, bankLinkState) =>
+                BlocBuilder<FrozenRequestsCubit, FrozenRequestsState>(
+              builder: (context, state) {
+              if (state.isLoading) {
                 return const Center(
                     child: CircularProgressIndicator(
                         color: AppColors.primaryDark));
-              } else if (state is FinanceDashboardLoaded) {
-                // Here we simulate fetching the frozen requests from the data we loaded or direct call.
-                // For demonstration, we'll construct them statically matching the UI,
-                // but realistically they should come from the cubit or usecase.
-                // The prompt mentions "الاعلانات الي هتكون ظاهره في هذه الشاشه هي نفس الاعلانات الي ظاهره في شاشة طلبات السحب... ولكن ستكون فقط الاعلانات الي حالتها معلق او مجمد"
-                // Let's create the mock ones according to the screenshot for visual pixel-perfection,
-                // but structured to be filtered.
-
-                _frozenRequests ??= [
-                  {
-                    'id': '1',
-                    'title': l10n.frozenRequestOneName,
-                    'subtitle': l10n.frozenRequestOneSubtitle,
-                    'icon': Icons.storefront,
-                    'type': 'تجار ومتاجر',
-                    'status': l10n.frozenPrecautionaryStatus,
-                    'amount': 17955.00,
-                    'grossAmount': 18900.00,
-                    'feeAmount': 945.00,
-                    'reason': l10n.frozenRequestOneReason,
-                    'supervisor': l10n.frozenSupervisorSaad,
-                    'timeText': l10n.frozenTodayFourHours,
-                    'actionButton': l10n.frozenRestoreAndRelease,
-                    'cancelButton': l10n.frozenRejectAndForfeit,
-                  },
-                  {
-                    'id': '2',
-                    'title': l10n.frozenRequestTwoName,
-                    'subtitle': l10n.frozenAnnualMaintenance,
-                    'icon': Icons.build,
-                    'type': 'مقدمو خدمات',
-                    'status': l10n.frozenPrecautionaryStatus,
-                    'amount': 6200.00,
-                    'grossAmount': 7000.00,
-                    'feeAmount': 800.00,
-                    'reason': l10n.frozenRequestTwoReason,
-                    'supervisor': l10n.frozenSupervisorAhmed,
-                    'timeText': l10n.frozenYesterdayJanuary,
-                    'actionButton': l10n.frozenPartialFullRelease,
-                    'cancelButton': l10n.frozenCustomerRefund,
-                    'cancelIcon': Icons.assignment_return_outlined,
-                  },
-                  {
-                    'id': '3',
-                    'title': l10n.frozenRequestThreeName,
-                    'subtitle': l10n.frozenFastTransferPending,
-                    'icon': Icons.account_balance,
-                    'type': 'تجار ومتاجر',
-                    'status': l10n.frozenIbanMismatch,
-                    'amount': 19295.00,
-                    'grossAmount': null,
-                    'feeAmount': null,
-                    'ibanError': 'SA44*************0199',
-                    'reason': l10n.frozenRequestThreeReason,
-                    'supervisor': '',
-                    'timeText': l10n.frozenJanuary25,
-                    'actionButton': l10n.frozenRecheckTransfer,
-                    'actionIcon': Icons.sync,
-                    'cancelButton': l10n.frozenRequestIbanCertificate,
-                    'cancelIcon': Icons.contact_page_outlined,
-                  },
-                ];
-
-                final filteredRequests = _frozenRequests!.where((req) {
-                  if (_selectedFilter == 'الكل') return true;
-                  return req['type'] == _selectedFilter;
-                }).toList();
+              } else if (state.errorMessage != null) {
+                return Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(l10n.frozenLoadFailed),
+                      const SizedBox(height: 12),
+                      ElevatedButton(
+                        onPressed: _cubit.loadRequests,
+                        child: Text(l10n.frozenRefresh),
+                      ),
+                    ],
+                  ),
+                );
+              } else {
+                final frozenRequests = _mapFrozenRequests(state.requests, l10n);
+                final filteredRequests = frozenRequests.where((req) {
+                  return _selectedFilter == 'all' ||
+                      req['type'] == _selectedFilter;
+                }).toList(growable: false);
 
                 final double totalAmount = filteredRequests.fold(
                     0.0, (sum, req) => sum + (req['amount'] as double));
-                final int totalCount = filteredRequests.length;
+                final int totalCount =
+                    filteredRequests.length + bankLinkState.frozenRequests.length;
 
                 return Column(
                   children: [
@@ -163,10 +140,12 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                                           fit: BoxFit.scaleDown,
                                           child: Row(
                                             mainAxisSize: MainAxisSize.min,
-                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
                                             children: [
                                               Text(
-                                                CurrencyFormatter.format(totalAmount),
+                                                CurrencyFormatter.format(
+                                                    totalAmount),
                                                 style: const TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 32,
@@ -176,11 +155,12 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                                               const SizedBox(width: 4),
                                               Text(
                                                 AppLocalizations.of(context)!
-                                                    .currencySar,
+                                                    .currencyEgy,
                                                 style: const TextStyle(
                                                     color: Colors.white70,
                                                     fontSize: 14,
-                                                    fontWeight: FontWeight.bold),
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
                                             ],
                                           ),
@@ -193,7 +173,8 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 16, vertical: 10),
                                     decoration: BoxDecoration(
-                                      color: Colors.white.withValues(alpha: 0.05),
+                                      color:
+                                          Colors.white.withValues(alpha: 0.05),
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     child: Row(
@@ -201,8 +182,8 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                                         Container(
                                           padding: const EdgeInsets.all(6),
                                           decoration: BoxDecoration(
-                                            color:
-                                                Colors.white.withValues(alpha: 0.1),
+                                            color: Colors.white
+                                                .withValues(alpha: 0.1),
                                             shape: BoxShape.circle,
                                           ),
                                           child: const Icon(Icons.lock_outline,
@@ -219,7 +200,8 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                                                 style: const TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 12,
-                                                    fontWeight: FontWeight.bold),
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
                                               const SizedBox(height: 2),
                                               Text(
@@ -245,30 +227,30 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                               child: Row(
                                 children: [
                                   _buildFilterChip(l10n.frozenAllFilter,
-                                      filterValue: 'الكل', count: totalCount),
+                                      filterValue: 'all', count: totalCount),
                                   const SizedBox(width: 8),
                                   _buildFilterChip(l10n.frozenMerchantsFilter,
-                                      filterValue: 'تجار ومتاجر',
+                                      filterValue: l10n.frozenMerchantsFilter,
                                       icon: Icons.storefront),
                                   const SizedBox(width: 8),
                                   _buildFilterChip(l10n.frozenProvidersFilter,
-                                      filterValue: 'مقدموا خدمات',
+                                      filterValue: l10n.frozenProvidersFilter,
                                       icon: Icons.handyman_outlined),
                                   const SizedBox(width: 8),
                                   _buildFilterChip(l10n.frozenSupervisorsFilter,
-                                      filterValue: 'المشرفين',
+                                      filterValue: l10n.frozenSupervisorsFilter,
                                       icon: Icons.supervisor_account_outlined),
                                   const SizedBox(width: 8),
                                   _buildFilterChip(l10n.frozenCouriersFilter,
-                                      filterValue: 'المناديب',
+                                      filterValue: l10n.frozenCouriersFilter,
                                       icon: Icons.local_shipping_outlined),
                                   const SizedBox(width: 8),
                                   _buildFilterChip(l10n.frozenUsersFilter,
-                                      filterValue: 'مستخدمين',
+                                      filterValue: l10n.frozenUsersFilter,
                                       icon: Icons.person_outline),
                                   const SizedBox(width: 8),
                                   _buildFilterChip(l10n.frozenAdsFilter,
-                                      filterValue: 'اعلانات',
+                                      filterValue: l10n.frozenAdsFilter,
                                       icon: Icons.campaign_outlined),
                                 ],
                               ),
@@ -276,10 +258,27 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                             const SizedBox(height: 16),
 
                             // 3. Requests List
-                            ...filteredRequests.map((req) => Padding(
-                                  padding: const EdgeInsets.only(bottom: 16),
-                                  child: _buildRequestCard(req),
-                                )),
+                            if (filteredRequests.isEmpty &&
+                                bankLinkState.frozenRequests.isEmpty)
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 32),
+                                child: Center(
+                                  child: Text(l10n.frozenNoRequests),
+                                ),
+                              )
+                            else
+                              ...filteredRequests.map((req) => Padding(
+                                    padding: const EdgeInsets.only(bottom: 16),
+                                    child: _buildRequestCard(req, context),
+                                  )),
+                            if (bankLinkState.frozenRequests.isNotEmpty) ...[
+                              const SizedBox(height: 8),
+                              _buildFrozenBankLinksSection(
+                                context,
+                                bankLinkState.frozenRequests,
+                              ),
+                            ],
                           ],
                         ),
                       ),
@@ -336,7 +335,8 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                               ),
                               icon: const Icon(Icons.sync, size: 18),
                               onPressed: () {
-                                _cubit.loadDashboardData();
+                                _cubit.loadRequests();
+                                _bankLinkCubit.loadRequests();
                               },
                               label: Text(l10n.frozenRefresh,
                                   style: const TextStyle(
@@ -350,9 +350,250 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                   ],
                 );
               }
-              return const SizedBox();
-            },
+              },
+            ),
           ),
+        ),
+      ),
+    );
+  }
+
+  List<Map<String, dynamic>> _mapFrozenRequests(
+    List<WithdrawalRequestEntity> requests,
+    AppLocalizations l10n,
+  ) {
+    return requests.map((request) {
+      final isIbanMismatch = request.status == RequestStatus.frozen;
+      final (title, subtitle, reason) = switch (request.requestNumber) {
+        'TRD-304' => (
+            l10n.frozenRequestOneName,
+            l10n.frozenRequestOneSubtitle,
+            l10n.frozenRequestOneReason,
+          ),
+        '#188-SRV' => (
+            l10n.frozenRequestTwoName,
+            l10n.frozenAnnualMaintenance,
+            l10n.frozenRequestTwoReason,
+          ),
+        _ => (
+            l10n.frozenRequestThreeName,
+            l10n.frozenFastTransferPending,
+            l10n.frozenRequestThreeReason,
+          ),
+      };
+      final typeLabel = switch (request.beneficiaryType) {
+        BeneficiaryType.merchant => l10n.frozenMerchantsFilter,
+        BeneficiaryType.serviceProvider => l10n.frozenProvidersFilter,
+        BeneficiaryType.supervisor => l10n.frozenSupervisorsFilter,
+        BeneficiaryType.user => l10n.frozenUsersFilter,
+      };
+      final icon = switch (request.beneficiaryType) {
+        BeneficiaryType.merchant => Icons.storefront,
+        BeneficiaryType.serviceProvider => Icons.handyman_outlined,
+        BeneficiaryType.supervisor => Icons.supervisor_account_outlined,
+        BeneficiaryType.user => Icons.person_outline,
+      };
+
+      return <String, dynamic>{
+        'id': '${request.beneficiaryType.name}-${request.id}',
+        'request': request,
+        'title': title,
+        'subtitle': subtitle,
+        'icon': icon,
+        'type': typeLabel,
+        'status': isIbanMismatch
+            ? l10n.frozenIbanMismatch
+            : l10n.frozenPrecautionaryStatus,
+        'amount': request.netAmount,
+        'grossAmount': request.grossAmount,
+        'feeAmount': request.platformFeeAmount,
+        'ibanError': isIbanMismatch ? request.iban : null,
+        'reason': reason,
+        'supervisor': '',
+        'timeText': request.dateText,
+      };
+    }).toList(growable: false);
+  }
+
+  Widget _buildFrozenBankLinksSection(
+    BuildContext context,
+    List<BankLinkRequestEntity> requests,
+  ) {
+    final l10n = AppLocalizations.of(context)!;
+    final isArabic = l10n.localeName.startsWith('ar');
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: Text(
+            l10n.frozenBankLinksTitle,
+            style: const TextStyle(
+              color: AppColors.primaryDark,
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        ...requests.map(
+          (request) => Card(
+            key: ValueKey('frozen-bank-link-${request.id}'),
+            margin: const EdgeInsets.only(bottom: 12),
+            color: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+              side: BorderSide(color: AppColors.warning.withValues(alpha: 0.5)),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    '${request.id} · ${request.getCommercialName(isArabic)}',
+                    style: const TextStyle(
+                      color: AppColors.textPrimary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    '${request.getBankName(isArabic)} · ${request.iban}',
+                    textDirection: TextDirection.ltr,
+                    textAlign: TextAlign.start,
+                    style: const TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 12,
+                    ),
+                  ),
+                  if (request.decisionReason != null) ...[
+                    const SizedBox(height: 8),
+                    Text(
+                      '${l10n.frozenBankLinkReason} ${request.decisionReason}',
+                      style: const TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          key: ValueKey('restore-bank-link-${request.id}'),
+                          onPressed: context
+                                      .read<BankReconciliationCubit>()
+                                      .state
+                                      .processingRequestId !=
+                                  null
+                              ? null
+                              : () => _restoreFrozenBankLink(
+                                    context,
+                                    request,
+                                  ),
+                          icon: const Icon(Icons.lock_open, size: 16),
+                          label: Text(
+                            l10n.frozenBankLinkRestore,
+                            maxLines: 2,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: TextButton.icon(
+                          key: ValueKey('reject-bank-link-${request.id}'),
+                          onPressed: context
+                                      .read<BankReconciliationCubit>()
+                                      .state
+                                      .processingRequestId !=
+                                  null
+                              ? null
+                              : () => _rejectFrozenBankLink(
+                                    context,
+                                    request,
+                                  ),
+                          style: TextButton.styleFrom(
+                            foregroundColor: AppColors.dangerDark,
+                            backgroundColor: const Color(0xFFFFE0DE),
+                          ),
+                          icon: const Icon(Icons.block, size: 16),
+                          label: Text(
+                            l10n.frozenBankLinkReject,
+                            maxLines: 2,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _restoreFrozenBankLink(
+    BuildContext context,
+    BankLinkRequestEntity request,
+  ) async {
+    final l10n = AppLocalizations.of(context)!;
+    final confirmed = await FinanceDialogs.showApprovalDialog(
+      context,
+      title: l10n.frozenBankLinkRestoreDialogTitle,
+      description: l10n.frozenBankLinkRestoreDialogDescription,
+      confirmText: l10n.frozenBankLinkRestoreConfirm,
+    );
+    if (!confirmed || !mounted || !context.mounted) return;
+
+    final result = await context
+        .read<BankReconciliationCubit>()
+        .restoreFrozenRequest(request.id);
+    if (!mounted || !context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(result.fold(
+          (_) => l10n.reconciliationActionFailed,
+          (_) => l10n.frozenBankLinkRestoreSuccess,
+        )),
+        backgroundColor: result.fold(
+          (_) => AppColors.danger,
+          (_) => AppColors.success,
+        ),
+      ),
+    );
+  }
+
+  Future<void> _rejectFrozenBankLink(
+    BuildContext context,
+    BankLinkRequestEntity request,
+  ) async {
+    final l10n = AppLocalizations.of(context)!;
+    final reason = await FinanceDialogs.showRejectionDialog(
+      context,
+      title: l10n.frozenBankLinkRejectDialogTitle,
+      hint: l10n.frozenBankLinkRejectReasonHint,
+    );
+    if (reason == null || !mounted || !context.mounted) return;
+
+    final result = await context
+        .read<BankReconciliationCubit>()
+        .rejectFrozenRequest(request.id, reason);
+    if (!mounted || !context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(result.fold(
+          (_) => l10n.reconciliationActionFailed,
+          (_) => l10n.frozenBankLinkRejectSuccess,
+        )),
+        backgroundColor: result.fold(
+          (_) => AppColors.danger,
+          (_) => AppColors.success,
         ),
       ),
     );
@@ -400,7 +641,10 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
     );
   }
 
-  Widget _buildRequestCard(Map<String, dynamic> req) {
+  Widget _buildRequestCard(
+    Map<String, dynamic> req,
+    BuildContext context,
+  ) {
     final l10n = AppLocalizations.of(context)!;
     return Container(
       decoration: BoxDecoration(
@@ -419,18 +663,18 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: req['type'] == 'تجار ومتاجر'
+                    color: req['type'] == l10n.frozenMerchantsFilter
                         ? Colors.red.shade50
-                        : (req['type'] == 'مقدمو خدمات'
+                        : (req['type'] == l10n.frozenProvidersFilter
                             ? Colors.blue.shade50
                             : AppColors.surfaceLight),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Icon(req['icon'],
                       size: 20,
-                      color: req['type'] == 'تجار ومتاجر'
+                      color: req['type'] == l10n.frozenMerchantsFilter
                           ? Colors.red.shade700
-                          : (req['type'] == 'مقدمو خدمات'
+                          : (req['type'] == l10n.frozenProvidersFilter
                               ? Colors.blue.shade700
                               : AppColors.primaryDark)),
                 ),
@@ -525,7 +769,7 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 1)),
                           const SizedBox(width: 4),
-                          Text(AppLocalizations.of(context)!.currencySar,
+                          Text(AppLocalizations.of(context)!.currencyEgy,
                               style: const TextStyle(
                                   fontSize: 12,
                                   color: AppColors.textPrimary,
@@ -664,28 +908,41 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                           borderRadius: BorderRadius.circular(10)),
                     ),
                     icon: Icon(req['actionIcon'] ?? Icons.lock_open, size: 16),
-                    onPressed: () async {
-                      final confirmed = await FinanceDialogs.showUnfreezeDialog(
-                        context,
-                        title: req['title'],
-                        amount: req['amount'] as double,
-                      );
-                      if (confirmed && mounted) {
-                        setState(() {
-                          _frozenRequests!
-                              .removeWhere((item) => item['id'] == req['id']);
-                        });
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(l10n.localeName.startsWith('ar')
-                                ? 'تم فك التجميد بنجاح وإرسال أمر الصرف للإدارة للموافقة'
-                                : 'Unfrozen successfully and disbursement order sent to Admin'),
-                            backgroundColor: AppColors.success,
-                          ),
-                        );
-                      }
-                    },
-                    label: Text(req['actionButton'],
+                    onPressed: context
+                                .read<FrozenRequestsCubit>()
+                                .state
+                                .processingRequestId !=
+                            null
+                        ? null
+                        : () async {
+                            final confirmed =
+                                await FinanceDialogs.showUnfreezeDialog(
+                              context,
+                              title: req['title'],
+                              amount: req['amount'] as double,
+                            );
+                            if (confirmed && mounted && context.mounted) {
+                              final result = await context
+                                  .read<FrozenRequestsCubit>()
+                                  .restoreRequest(
+                                    req['request'] as WithdrawalRequestEntity,
+                                  );
+                              if (!mounted || !context.mounted) return;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(result.fold(
+                                    (_) => l10n.frozenActionFailed,
+                                    (_) => l10n.frozenThawSuccess,
+                                  )),
+                                  backgroundColor: result.fold(
+                                    (_) => AppColors.danger,
+                                    (_) => AppColors.success,
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                    label: Text(l10n.frozenRestoreAndRelease,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
@@ -697,44 +954,52 @@ class _FrozenRequestsScreenState extends State<FrozenRequestsScreen> {
                   width: double.infinity,
                   child: OutlinedButton.icon(
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: req['cancelIcon'] != null
-                          ? AppColors.textSecondary
-                          : AppColors.danger,
+                      foregroundColor: AppColors.danger,
                       backgroundColor: AppColors.surfaceLight,
                       side: const BorderSide(color: Colors.transparent),
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
                     ),
-                    icon: Icon(req['cancelIcon'] ?? Icons.highlight_off,
-                        size: 16),
-                    onPressed: () async {
-                      final isArabic = l10n.localeName.startsWith('ar');
-                      final reason = await FinanceDialogs.showRejectionDialog(
-                        context,
-                        title: isArabic
-                            ? 'تأكيد رفض الطلب والمصادرة'
-                            : 'Confirm Rejection & Confiscation',
-                        hint: isArabic
-                            ? 'اكتب سبب الرفض والمصادرة الرقابية بالتفصيل...'
-                            : 'Enter confiscation/rejection reason...',
-                      );
-                      if (reason != null && mounted) {
-                        setState(() {
-                          _frozenRequests!
-                              .removeWhere((item) => item['id'] == req['id']);
-                        });
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(isArabic
-                                ? 'تم تأكيد رفض الطلب والمصادرة وتوثيق السبب'
-                                : 'Request confirmed rejected and confiscated'),
-                            backgroundColor: AppColors.danger,
-                          ),
-                        );
-                      }
-                    },
-                    label: Text(req['cancelButton'],
+                    icon: const Icon(Icons.highlight_off, size: 16),
+                    onPressed: context
+                                .read<FrozenRequestsCubit>()
+                                .state
+                                .processingRequestId !=
+                            null
+                        ? null
+                        : () async {
+                            final reason =
+                                await FinanceDialogs.showRejectionDialog(
+                              context,
+                              title: l10n.frozenRejectAndForfeit,
+                              hint: l10n.frozenForfeitReasonHint,
+                              description: l10n.frozenForfeitReasonNotice,
+                            );
+                            if (reason != null && mounted && context.mounted) {
+                              final result = await context
+                                  .read<FrozenRequestsCubit>()
+                                  .rejectAndForfeitRequest(
+                                    request: req['request']
+                                        as WithdrawalRequestEntity,
+                                    reason: reason,
+                                  );
+                              if (!mounted || !context.mounted) return;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(result.fold(
+                                    (_) => l10n.frozenActionFailed,
+                                    (_) => l10n.frozenForfeitSuccess,
+                                  )),
+                                  backgroundColor: result.fold(
+                                    (_) => AppColors.danger,
+                                    (_) => AppColors.success,
+                                  ),
+                                ),
+                              );
+                            }
+                          },
+                    label: Text(l10n.frozenRejectAndForfeit,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(

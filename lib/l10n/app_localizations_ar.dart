@@ -107,7 +107,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get cfoBadgeCode => '#CF0-01';
 
   @override
-  String get currencySar => 'ج.م';
+  String get currencyEgy => 'ج.م';
 
   @override
   String get totalAggregatedLiquidity =>
@@ -175,6 +175,51 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get attachDocumentOptional => 'إرفاق صورة المستند إن وجدت';
+
+  @override
+  String get expenseReasonRequired => 'يرجى كتابة سبب المصروف أولاً';
+
+  @override
+  String get expenseAmountInvalid => 'أدخل مبلغاً صحيحاً أكبر من صفر';
+
+  @override
+  String get expenseRequestPendingStatus => 'بانتظار موافقة الإدارة';
+
+  @override
+  String get expenseRequestNumber => 'رقم الطلب';
+
+  @override
+  String get expenseRequestAmount => 'المبلغ';
+
+  @override
+  String get expenseRequestSent =>
+      'تم إرسال طلب المصروف للإدارة للموافقة. لم يتغير رصيد الحساب.';
+
+  @override
+  String get expenseRequestSendFailed =>
+      'تعذر إرسال طلب المصروف. حاول مرة أخرى.';
+
+  @override
+  String get expenseRequestSubmitting => 'جارٍ إرسال الطلب...';
+
+  @override
+  String get expenseConfirmTitle => 'إرسال طلب المصروف';
+
+  @override
+  String get expenseConfirmDescription =>
+      'سيتم إرسال طلب المصروف إلى الإدارة للمراجعة والموافقة، دون خصم المبلغ الآن.';
+
+  @override
+  String get expenseAttachedPrefix => 'مرفق';
+
+  @override
+  String get expenseRemoveDocumentAction => 'انقر للإزالة';
+
+  @override
+  String get expenseDocumentAttached => 'تم إرفاق المستند';
+
+  @override
+  String get expenseDocumentRemoved => 'تمت إزالة المستند المرفق';
 
   @override
   String get strictFinancialDisbursementGovernance =>
@@ -375,7 +420,45 @@ class AppLocalizationsAr extends AppLocalizations {
   String get bankNameField => 'اسم البنك';
 
   @override
+  String get accountTypeField => 'نوع الحساب / التصنيف';
+
+  @override
   String get ibanField => 'رقم الآيبان (IBAN)';
+
+  @override
+  String get editBankAccountAction => 'تعديل بيانات الحساب';
+
+  @override
+  String get bankEditNotice =>
+      'لن تتغير بيانات الحساب المعتمدة الآن. سيُرسل طلب التعديل للأدمن للموافقة أو الرفض.';
+
+  @override
+  String get bankEditSubmitAction => 'حفظ وإرسال للأدمن';
+
+  @override
+  String get bankEditPendingStatus => 'طلب تعديل بانتظار قرار الأدمن';
+
+  @override
+  String get bankEditPendingDetails => 'البيانات المقترحة';
+
+  @override
+  String get bankEditRequestNumber => 'رقم الطلب';
+
+  @override
+  String get bankEditSubmitting => 'جارٍ إرسال الطلب...';
+
+  @override
+  String get bankEditRequestSent =>
+      'تم إرسال طلب التعديل للأدمن. ستظل بيانات الحساب الحالية معتمدة حتى صدور القرار.';
+
+  @override
+  String get bankEditRequestFailed => 'تعذر إرسال طلب التعديل. حاول مرة أخرى.';
+
+  @override
+  String get bankEditRequired => 'هذا الحقل مطلوب';
+
+  @override
+  String get bankEditNoChanges => 'لم يتم تغيير أي بيانات';
 
   @override
   String get bankLinkRequestSent => 'تم إرسال طلب الربط';
@@ -1043,6 +1126,31 @@ class AppLocalizationsAr extends AppLocalizations {
       'تم اعتماد الحساب البنكي وإرساله للإدارة.';
 
   @override
+  String get reconciliationLoadFailed =>
+      'تعذر تحميل طلبات ربط الحسابات البنكية.';
+
+  @override
+  String get reconciliationNoPendingRequests =>
+      'لا توجد طلبات ربط حسابات بنكية بانتظار المراجعة.';
+
+  @override
+  String get reconciliationFreezeSuccess => 'تم تجميد الطلب للمراجعة الرقابية.';
+
+  @override
+  String get reconciliationFrozenRequestsTitle => 'طلبات ربط الحسابات المجمدة';
+
+  @override
+  String get reconciliationFreezeReasonLabel => 'سبب التجميد:';
+
+  @override
+  String get reconciliationFreezeDialogDescription =>
+      'سيتم تعليق طلب ربط الحساب وتسجيله للمراجعة المالية، وإزالته من قائمة المراجعة النشطة.';
+
+  @override
+  String get reconciliationActionFailed =>
+      'تعذر تنفيذ الإجراء. يرجى المحاولة مرة أخرى.';
+
+  @override
   String get reconciliationRequestIban => 'طلب شهادة آيبان حديثة ومختومة';
 
   @override
@@ -1634,7 +1742,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String get settlementAge35Minutes => 'منذ 35 دقيقة';
 
   @override
+  String get settlementBeneficiaryTariq => 'د. طارق العمري';
+
+  @override
+  String get settlementInitialTariq => 'ط';
+
+  @override
   String get settlementApprovedPartner => 'شريك معتمد - سجل تجاري';
+
+  @override
+  String get settlementBeneficiaryRealEstate => 'مؤسسة الضمان العقارية';
+
+  @override
+  String get settlementInitialRealEstate => 'ض';
 
   @override
   String get settlementCommissionCorrection => 'تصحيح عمولة';
@@ -1647,6 +1767,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get settlementIndependentProvider => 'مزود خدمة مستقل';
+
+  @override
+  String get settlementBeneficiaryKhalid => 'خالد المهيوب';
+
+  @override
+  String get settlementInitialKhalid => 'خ';
 
   @override
   String get settlementMediationDelivery => 'تسليم وساطة';
@@ -1677,6 +1803,13 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get settlementYesterday0915 => 'أمس 09:15 م';
+
+  @override
+  String get settlementsLinkedRajhiEscrow =>
+      'مصرف الراجحي - حساب الضمان المركزي';
+
+  @override
+  String get settlementRecentOperationsCount => '142 عملية';
 
   @override
   String get viewLabel => 'عرض';
@@ -1824,7 +1957,66 @@ class AppLocalizationsAr extends AppLocalizations {
   String get frozenSupervisorLabel => 'مشرف:';
 
   @override
-  String get frozenThawSuccess => 'تم فك التجميد ونقل الطلب لقائمة المراجعة';
+  String get frozenThawSuccess =>
+      'تم فك التجميد وإرسال طلب الصرف للإدارة للموافقة';
+
+  @override
+  String get frozenForfeitSuccess => 'تم رفض الطلب ومصادرته وحفظ سبب الرفض';
+
+  @override
+  String get frozenForfeitReasonHint =>
+      'اكتب سبب الرفض والمصادرة الرقابية بالتفصيل...';
+
+  @override
+  String get frozenBankLinksTitle => 'طلبات ربط الحسابات البنكية المجمدة';
+
+  @override
+  String get frozenBankLinkReason => 'سبب التجميد:';
+
+  @override
+  String get frozenBankLinkRestore => 'فك التجميد وإعادته للمراجعة';
+
+  @override
+  String get frozenBankLinkReject => 'رفض مع تسجيل السبب';
+
+  @override
+  String get frozenBankLinkRestoreDialogTitle =>
+      'إعادة طلب ربط الحساب للمراجعة';
+
+  @override
+  String get frozenBankLinkRestoreDialogDescription =>
+      'هل تريد فك تجميد طلب ربط الحساب وإعادته إلى قائمة المطابقة النشطة؟';
+
+  @override
+  String get frozenBankLinkRestoreConfirm => 'فك التجميد والإعادة';
+
+  @override
+  String get frozenBankLinkRestoreSuccess =>
+      'تم فك تجميد الطلب وإعادته إلى قائمة المطابقة البنكية.';
+
+  @override
+  String get frozenBankLinkRejectDialogTitle => 'رفض طلب ربط الحساب المجمد';
+
+  @override
+  String get frozenBankLinkRejectReasonHint => 'اكتب سبب رفض طلب ربط الحساب...';
+
+  @override
+  String get frozenBankLinkRejectSuccess =>
+      'تم رفض طلب ربط الحساب المجمد وحفظ السبب.';
+
+  @override
+  String get frozenForfeitReasonNotice =>
+      'سيتم حفظ السبب مع قرار الرفض والمصادرة وإرساله للإدارة للمراجعة.';
+
+  @override
+  String get frozenActionFailed =>
+      'تعذر تنفيذ الإجراء. حدّث الطلب وحاول مرة أخرى.';
+
+  @override
+  String get frozenLoadFailed => 'تعذر تحميل الطلبات المعلقة والمجمدة.';
+
+  @override
+  String get frozenNoRequests => 'لا توجد طلبات معلقة أو مجمدة حالياً.';
 
   @override
   String get transactionHistoryTitle => 'سجل العمليات';
@@ -2104,4 +2296,1334 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get reconciliationFreezeRequest => 'تجميد الطلب';
+
+  @override
+  String get merchantsSupervisorTitle => 'Merchants';
+
+  @override
+  String get merchantSupervisorRoleBadge => 'مشرف تجار';
+
+  @override
+  String get merchantSupervisorAdminSubtitle => 'برواح المازوري - الإدارة';
+
+  @override
+  String get welcomeSupervisorAhmed => 'مرحباً، المشرف أحمد';
+
+  @override
+  String get fieldSupervisorTag => 'ميداني';
+
+  @override
+  String get merchantsPortfolioSubtitle =>
+      'محفظة التجار الموكلة إليك - منطقة الرياض';
+
+  @override
+  String get approvedMerchantsMetric => 'تاجر معتمد';
+
+  @override
+  String get pendingReviewMetric => 'بانتظار المراجعة';
+
+  @override
+  String get searchMerchantsHint => 'ابحث بالاسم، السجل التجاري، أو التصنيف';
+
+  @override
+  String get filterActiveVerified => 'نشط وموثق';
+
+  @override
+  String get filterUnderAudit => 'قيد التدقيق';
+
+  @override
+  String get filterUpdateRequired => 'تحديث بيانات مطلوب';
+
+  @override
+  String get filterSuspended => 'معلق مؤقتاً';
+
+  @override
+  String get registeredStoresSection => 'المتاجر المسجلة تحت إشرافك';
+
+  @override
+  String storesRatio(Object current, Object total) {
+    return '$current من أصل $total';
+  }
+
+  @override
+  String get recentlyActiveSort => 'الأحدث نشاطاً';
+
+  @override
+  String get crShortLabel => 'س.ت';
+
+  @override
+  String get linkNewMerchant => 'ربط تاجر جديد';
+
+  @override
+  String get navMerchants => 'التجار';
+
+  @override
+  String get navAds => 'الإعلانات';
+
+  @override
+  String get navFinancialRequests => 'الطلبات المالية';
+
+  @override
+  String get navAccount => 'الحساب';
+
+  @override
+  String merchantSectionComingSoon(Object section) {
+    return 'قسم $section قيد التجهيز';
+  }
+
+  @override
+  String get adsManagementTitle => 'إدارة الإعلانات قبل النشر';
+
+  @override
+  String get adsReviewGateway => 'بوابة التدقيق الإشرافي المباشر';
+
+  @override
+  String get adsUrgentDecision => 'يتطلب قراراً فورياً';
+
+  @override
+  String get adsHiddenToday => 'المخفية';
+
+  @override
+  String get adsPendingToday => 'المعتمدة اليوم';
+
+  @override
+  String get adsUnderReviewCount => 'قيد المراجعة';
+
+  @override
+  String get adsAllFilter => 'الكل';
+
+  @override
+  String get adsVehiclesFilter => 'سيارات ومركبات';
+
+  @override
+  String get adsElectronicsFilter => 'إلكترونيات';
+
+  @override
+  String get adsRealEstateFilter => 'عقارات';
+
+  @override
+  String get adsSearchHint => 'ابحث بالعنوان أو التاجر أو الكود...';
+
+  @override
+  String get adsClearSearch => 'مسح البحث';
+
+  @override
+  String get adsPendingHeading => 'الإعلانات المعلقة للتدقيق';
+
+  @override
+  String get adsRecentSort => 'الأحدث وصولاً';
+
+  @override
+  String get adsOldestSort => 'الأقدم وصولاً';
+
+  @override
+  String adsImageCount(Object count) {
+    return '$count صور';
+  }
+
+  @override
+  String get adsCarMerchant => 'مؤسسة الأفق لتجارة السيارات';
+
+  @override
+  String get adsCarCategory => 'معرض سيارات • الرياض';
+
+  @override
+  String get adsCarTitle => 'مرسيدس E300 موديل 2023 فل كامل AMG';
+
+  @override
+  String get adsCarDetails => 'عداد: 15,000 كم';
+
+  @override
+  String get adsCarPrice => '245,000 ر.س';
+
+  @override
+  String get adsPhoneMerchant => 'متجر الصفوة للإلكترونيات';
+
+  @override
+  String get adsPhoneCategory => 'موثق في معروف • الرياض';
+
+  @override
+  String get adsPhoneTitle => 'آيفون 16 برو ماكس 256GB تيتانيوم طبيعي جديد';
+
+  @override
+  String get adsPhoneDetails => 'الكفالة المحلية: 5 سنوات';
+
+  @override
+  String get adsPhonePrice => '4,699 ر.س';
+
+  @override
+  String get adsVillaMerchant => 'شركة اليمامة للمقاولات والعقارات';
+
+  @override
+  String get adsVillaCategory => 'وسيط عقاري معتمد • الرياض';
+
+  @override
+  String get adsVillaTitle => 'فيلا مودرن فاخرة درج صالة - حي النرجس';
+
+  @override
+  String get adsVillaDetails => 'مساحة الأرض 375 م²';
+
+  @override
+  String get adsVillaPrice => '2,850,000 ر.س';
+
+  @override
+  String get adsLicenseVerified => 'الترخيص التجاري موثق';
+
+  @override
+  String get adsMarketPriceMatched => 'سعر متوافق مع متوسط السوق';
+
+  @override
+  String get adsReviewHidden => 'مخفي بانتظار المراجعة';
+
+  @override
+  String adsMinutesAgo(Object count) {
+    return 'منذ $count دقيقة';
+  }
+
+  @override
+  String get adsHoursAgo => 'منذ ساعتين';
+
+  @override
+  String get adsReviewAndApprove => 'مراجعة وتدقيق الإعلان';
+
+  @override
+  String get adsHideAction => 'إخفاء الإعلان';
+
+  @override
+  String get adsApproveAction => 'قبول واعتماد النشر';
+
+  @override
+  String get adsRejectAction => 'رفض مع ذكر السبب';
+
+  @override
+  String get adsRejectReasonTitle => 'سبب رفض الإعلان';
+
+  @override
+  String get adsRejectReasonHint => 'اكتب سبب الرفض ليظهر للتاجر';
+
+  @override
+  String get adsRejectReasonInstructions =>
+      'يرجى اختيار سبب واضح ليتم إبلاغ التاجر به وتوثيقه في سجل التدقيق الإداري.';
+
+  @override
+  String get adsRejectReasonPrice => 'سعر غير منطقي أو وهمي';
+
+  @override
+  String get adsRejectReasonMisleading => 'وصف مضلل أو بيانات غير دقيقة';
+
+  @override
+  String get adsRejectReasonPhotos =>
+      'صور غير مطابقة للمواصفات أو ذات جودة رديئة';
+
+  @override
+  String get adsRejectReasonPolicy => 'مخالفة سياسة النشر وشروط المنصة';
+
+  @override
+  String get adsRejectGuidanceOptional => 'توجيه مخصص للتاجر (اختياري)';
+
+  @override
+  String get adsRejectGuidanceDirectLabel => 'يظهر في إشعار التاجر المباشر';
+
+  @override
+  String get adsRejectGuidanceHint =>
+      'أدخل نص التوجيه لتعديل الإعلان وإعادة رفعه...';
+
+  @override
+  String get adsConfirmRejectAndNotify => 'تأكيد الرفض وإشعار التاجر';
+
+  @override
+  String get adsCancelAction => 'إلغاء';
+
+  @override
+  String get adsConfirmReject => 'تأكيد الرفض';
+
+  @override
+  String get adsApprovedStatus => 'تم اعتماد الإعلان';
+
+  @override
+  String get adsHiddenStatus => 'الإعلان مخفي';
+
+  @override
+  String get adsRejectedStatus => 'تم رفض الإعلان';
+
+  @override
+  String get adsNoResults => 'لا توجد إعلانات مطابقة';
+
+  @override
+  String get adsDetailsTitle => 'تفاصيل الإعلان';
+
+  @override
+  String get adsInImageReviewStatus => 'إعلان معلق قيد المراجعة';
+
+  @override
+  String get adsNotPublishedYet => 'غير منشور حالياً';
+
+  @override
+  String adsMerchantRegistrationNumber(Object number) {
+    return 'سجل تجاري: $number';
+  }
+
+  @override
+  String get adsMerchantVerified => 'موثق';
+
+  @override
+  String adsPhotoPosition(Object current, Object total) {
+    return '$current من $total صور';
+  }
+
+  @override
+  String get adsAdPhotoVerified => 'فحص الصورة';
+
+  @override
+  String adsIdentifier(Object number) {
+    return 'معرف الإعلان: #$number';
+  }
+
+  @override
+  String get adsAskingPrice => 'السعر المطلوب من التاجر';
+
+  @override
+  String get adsAdDescription => 'نص إعلان التاجر';
+
+  @override
+  String get adsLicenseChecklist => 'قائمة التحقق النظامية للترخيص';
+
+  @override
+  String adsChecklistCount(int passed, int total) {
+    return '$passed / $total بنود';
+  }
+
+  @override
+  String get adsAutoHideReportsTitle => 'إخفاء تلقائي عند ورود بلاغات';
+
+  @override
+  String get adsAutoHideReportsDescription =>
+      'إخفاء الإعلان مؤقتاً لحين إعادة التدقيق';
+
+  @override
+  String get adsDeliveryTitle => 'مصاريف التوصيل والشحن الخاصة بالمنتج';
+
+  @override
+  String get adsDeliveryActive => 'خدمة مفعلة';
+
+  @override
+  String get adsDeliveryDescription =>
+      'خدمة التوصيل مطلوبة مع هذا الإعلان. يحق للمشرف تعديل رسوم التوصيل قبل الاعتماد أو الإخفاء.';
+
+  @override
+  String get adsDeliveryFee => 'مبلغ ثابت (ر.س)';
+
+  @override
+  String get adsUpdateDeliveryFee => 'تحديث الرسوم';
+
+  @override
+  String get adsDeliveryFeeNote => 'تم تدقيق وتعديل التوصيل وفق اللائحة';
+
+  @override
+  String get adsSupervisorDecision => 'قرار المشرف الإداري';
+
+  @override
+  String get adsSupervisorLevel => 'صلاحية الاعتماد: المستوى 1';
+
+  @override
+  String get adsRequestEdit => 'طلب تعديل بيانات';
+
+  @override
+  String get adsEditRequestTitle => 'طلب تعديل بيانات الإعلان';
+
+  @override
+  String get adsEditRequestSubtitle =>
+      'اكتب الملاحظات والتوجيهات المطلوبة من التاجر لتعديل الإعلان قبل النشر';
+
+  @override
+  String adsEditRequestAdTitle(Object title) {
+    return 'الإعلان: $title';
+  }
+
+  @override
+  String get adsEditRequestGuidanceTitle =>
+      'ملاحظات وتوجيهات المشرف للتاجر (إلزامي)';
+
+  @override
+  String get adsEditRequestInstructions =>
+      'يرجى توضيح جميع التفاصيل والبنود المطلوب تعديلها بوضوح لتوجيه التاجر مباشرة إلى ما يحتاج لتصحيحه قبل إعادة مراجعة الإعلان.';
+
+  @override
+  String get adsEditRequestHint => 'اكتب التعديلات المطلوبة من التاجر...';
+
+  @override
+  String get adsEditRequestRequired => 'هذا الحقل مطلوب لإرسال طلب التعديل';
+
+  @override
+  String get adsEditRequestSend => 'إرسال طلب التعديل للتاجر';
+
+  @override
+  String get adsEditRequestCancel => 'إلغاء وتراجع';
+
+  @override
+  String get adsFeeUpdated => 'تم تحديث رسوم التوصيل';
+
+  @override
+  String get adsFeeInvalid => 'أدخل مبلغاً صحيحاً غير سالب';
+
+  @override
+  String get adsRequestEditUnavailable => 'طلب تعديل البيانات غير متاح حالياً';
+
+  @override
+  String get adsMileage => 'العداد الحالي';
+
+  @override
+  String get adsExteriorColor => 'اللون الخارجي';
+
+  @override
+  String get adsAccidentRecord => 'تقرير الحوادث';
+
+  @override
+  String get adsTransmission => 'ناقل الحركة';
+
+  @override
+  String get adsMileageValue => '15,000 كم';
+
+  @override
+  String get adsWhiteColorValue => 'أبيض لؤلؤي';
+
+  @override
+  String get adsNoAccidentsValue => 'خالٍ من الحوادث';
+
+  @override
+  String get adsAutomaticValue => 'أوتوماتيك';
+
+  @override
+  String get adsPhoneWarranty => 'الكفالة المحلية';
+
+  @override
+  String get adsPhoneCondition => 'حالة المنتج';
+
+  @override
+  String get adsPhoneColor => 'اللون';
+
+  @override
+  String get adsPhoneStorage => 'سعة التخزين';
+
+  @override
+  String get adsWarrantyValue => '5 سنوات';
+
+  @override
+  String get adsNewConditionValue => 'جديد';
+
+  @override
+  String get adsNaturalTitaniumValue => 'تيتانيوم طبيعي';
+
+  @override
+  String get adsStorageValue => '256 جيجابايت';
+
+  @override
+  String get adsVillaArea => 'مساحة الأرض';
+
+  @override
+  String get adsVillaRooms => 'عدد الغرف';
+
+  @override
+  String get adsVillaLicense => 'الترخيص العقاري';
+
+  @override
+  String get adsVillaLocation => 'الموقع';
+
+  @override
+  String get adsVillaAreaValue => '375 م²';
+
+  @override
+  String get adsVillaRoomsValue => '5 غرف نوم';
+
+  @override
+  String get adsVillaLicensedValue => 'ساري وموثق';
+
+  @override
+  String get adsVillaLocationValue => 'حي النرجس، الرياض';
+
+  @override
+  String get adsVehicleDescription =>
+      'السيارة بحالة الوكالة، شبه جديدة، صيانة كاملة لدى الوكيل. جميع الصيانات الدورية تمت في مراكز مرسيدس المعتمدة. لا يوجد رش أو تعديل نهائياً.';
+
+  @override
+  String get adsPhoneDescription =>
+      'جهاز جديد غير مستخدم، بضمان محلي ساري، مع كامل الملحقات والفاتورة. تمت مطابقة الرقم التسلسلي والمواصفات مع المستندات المرفقة.';
+
+  @override
+  String get adsVillaDescription =>
+      'فيلا مودرن فاخرة بتصميم حديث وتشطيبات عالية الجودة، في موقع مميز قريب من الخدمات. رخصة البناء والوثائق العقارية متوفرة للمراجعة.';
+
+  @override
+  String get adsCheckPrice => 'السعر والشروط المالية متوافقة';
+
+  @override
+  String get adsCheckPhotos => 'الصور واقعية ومطابقة';
+
+  @override
+  String get adsCheckSpecifications => 'تطابق المواصفات مع فحص السلامة';
+
+  @override
+  String get adsCheckMerchantLicense => 'سريان رخصة المعرض التجاري والمفوضين';
+
+  @override
+  String get adsCheckExpiryReminder => 'تنتهي بعد 90 يوماً - تذكير آلي مفعل';
+
+  @override
+  String get adsCheckReminder => 'تنبيه';
+
+  @override
+  String get adsCheckReviewRecommended => 'تنبيه';
+
+  @override
+  String get adsCheckPassed => 'مفحوص';
+
+  @override
+  String get finRequestReadOnlyNotice =>
+      'الإجراءات المالية من صلاحية المدير المالي فقط';
+
+  @override
+  String get finRequestMerchantProceeds => 'مستحقات التجار المعلقة';
+
+  @override
+  String get finRequestTotalProceeds => '142,500';
+
+  @override
+  String get finRequestProceedsNote => 'ضمن نطاق إشرافك';
+
+  @override
+  String get finRequestReviewQueue => 'لدى الإدارة المالية';
+
+  @override
+  String get finRequestUnderReview => 'قيد التدقيق المالي';
+
+  @override
+  String get finRequestHistoryTitle => 'سجل العمليات والمطالبات';
+
+  @override
+  String get finRequestUpdatedJustNow => 'تحديث فوري';
+
+  @override
+  String get finRequestAllFilter => 'الكل (3)';
+
+  @override
+  String get finRequestSalesFilter => 'أرباح مبيعات';
+
+  @override
+  String get finRequestWithdrawalFilter => 'سحب أرصدة';
+
+  @override
+  String get finRequestPackageFilter => 'رسوم باقات';
+
+  @override
+  String get finRequestNoResults => 'لا توجد طلبات مطابقة لهذا التصنيف';
+
+  @override
+  String get finRequestCarMerchant => 'مؤسسة الأفق لتجارة السيارات';
+
+  @override
+  String get finRequestCarTitle => 'طلب تحويل أرباح مبيعات';
+
+  @override
+  String get finRequestCarAmount => '48,000';
+
+  @override
+  String get finRequestTodayTime => 'اليوم، 10:45 ص';
+
+  @override
+  String get finRequestBankVerified => 'حساب الآيبان مدقق ومعتمد ميدانياً';
+
+  @override
+  String get finRequestPackageMerchant => 'متجر الصفوة للإلكترونيات';
+
+  @override
+  String get finRequestPackageTitle => 'سداد رسوم اشتراك باقة ذهبية - سنوي';
+
+  @override
+  String get finRequestPackageAmount => '3,500';
+
+  @override
+  String get finRequestYesterdayTime => 'أمس، 04:15 م';
+
+  @override
+  String get finRequestCompleted => 'مكتمل ومعتمد من المالية';
+
+  @override
+  String get finRequestApprovedByFinance =>
+      'تم الاعتماد بواسطة: إدارة الحسابات العامة';
+
+  @override
+  String get finRequestJewelryMerchant => 'مجوهرات البريق';
+
+  @override
+  String get finRequestWithdrawalTitle => 'طلب سحب رصيد محفظة';
+
+  @override
+  String get finRequestWithdrawalAmount => '22,000';
+
+  @override
+  String get finRequestOlderTime => '20 أكتوبر، 02:20 م';
+
+  @override
+  String get finRequestAwaitingManager => 'بانتظار موافقة المدير المالي';
+
+  @override
+  String get finRequestSalesMatched => 'مطابقة كشوفات المبيعات مكتملة';
+
+  @override
+  String get finRequestCurrency => 'ر.س';
+
+  @override
+  String get finRequestRestrictedStatus => 'جاهز للمطابقة';
+
+  @override
+  String get finRequestSendToFinance => 'إرسال للمشرف المالي';
+
+  @override
+  String get finRequestViewDetails => 'عرض تفاصيل الطلب';
+
+  @override
+  String get finRequestPolicyTitle => 'سياسة التدقيق المزدوج';
+
+  @override
+  String get finRequestPolicyMessage =>
+      'أي طلب مالي يتطلب اعتماداً نهائياً من الإدارة المالية. صلاحيات مشرف التجار للعرض والمتابعة فقط.';
+
+  @override
+  String get finRequestNumber => 'رقم الطلب';
+
+  @override
+  String get finRequestClose => 'إغلاق';
+
+  @override
+  String get merchantProfileName => 'أحمد بن عبد العزيز الشهري';
+
+  @override
+  String get merchantProfileRegion => 'مشرف تجار ميداني - منطقة الرياض';
+
+  @override
+  String get merchantProfileSupervisorId => 'SUP-4092';
+
+  @override
+  String get merchantProfileActive => 'نشط وموثق';
+
+  @override
+  String get merchantProfileMonthlyAds => 'إعلان هذا الشهر';
+
+  @override
+  String get merchantProfileStores => 'تاجر نشط تحت إشرافك';
+
+  @override
+  String get withdrawalRequestDetails => 'عرض تفاصيل الطلب';
+
+  @override
+  String get withdrawalDetailsTitle => 'تفاصيل طلب السحب';
+
+  @override
+  String get withdrawalDetailsRequestNumber => 'رقم الطلب';
+
+  @override
+  String get withdrawalDetailsBeneficiary => 'المستفيد';
+
+  @override
+  String get withdrawalDetailsBeneficiaryRole => 'صفة المستفيد';
+
+  @override
+  String get withdrawalDetailsGrossAmount => 'إجمالي المبلغ';
+
+  @override
+  String get withdrawalDetailsFeePercentage => 'نسبة العمولة';
+
+  @override
+  String get withdrawalDetailsFeeAmount => 'قيمة العمولة';
+
+  @override
+  String get withdrawalDetailsNetAmount => 'صافي المبلغ المستحق';
+
+  @override
+  String get withdrawalDetailsBankName => 'البنك';
+
+  @override
+  String get withdrawalDetailsIban => 'رقم الآيبان';
+
+  @override
+  String get withdrawalDetailsDate => 'تاريخ الطلب';
+
+  @override
+  String get withdrawalDetailsAuditResult => 'نتيجة الفحص';
+
+  @override
+  String get withdrawalDetailsAlert => 'ملاحظة رقابية';
+
+  @override
+  String get withdrawalDetailsSource => 'مصدر المستحقات';
+
+  @override
+  String get withdrawalDetailsTransferMethod => 'طريقة التحويل';
+
+  @override
+  String get withdrawalDetailsInstantReady => 'متاح للتحويل الفوري';
+
+  @override
+  String get withdrawalDetailsStatusPending => 'قيد المراجعة';
+
+  @override
+  String get withdrawalDetailsStatusInvestigation => 'قيد التحقيق والتدقيق';
+
+  @override
+  String get withdrawalDetailsStatusApproved => 'معتمد';
+
+  @override
+  String get withdrawalDetailsStatusFrozen => 'مجمّد';
+
+  @override
+  String get withdrawalDetailsStatusRejected => 'مرفوض';
+
+  @override
+  String get withdrawalDetailsNoValue => 'غير متوفر';
+
+  @override
+  String get merchantProfileDocumentsTitle =>
+      'الملفات والمستندات الرقابية المعتمدة';
+
+  @override
+  String get merchantProfileAuthorizationCard =>
+      'بطاقة التفويض الإشرافي الميداني';
+
+  @override
+  String get merchantProfileValidUntil => 'صلاحية حتى 31 ديسمبر 2025';
+
+  @override
+  String get merchantProfileOpenDocument => 'استعراض البطاقة';
+
+  @override
+  String get merchantProfileGovernanceGuide => 'دليل معايير اعتماد الإعلانات';
+
+  @override
+  String get merchantProfileGuideSubtitle =>
+      'اللوائح الإعلانية والضوابط التنظيمية';
+
+  @override
+  String get merchantProfileDelegationDocument =>
+      'وثيقة تفويض الصلاحيات للإدارة';
+
+  @override
+  String get merchantProfileDelegationSubtitle =>
+      'الامتثال القانوني ومصفوفة القرارات';
+
+  @override
+  String get merchantProfileFieldPermissions =>
+      'إدارة الاتصال والصلاحيات الميدانية';
+
+  @override
+  String get merchantProfileUpdatedAutomatically => 'محدث تلقائياً';
+
+  @override
+  String get merchantProfileAvailability => 'التوفر الميداني والجاهزية';
+
+  @override
+  String get merchantProfileAvailabilitySubtitle =>
+      'تلقي طلبات المراجعة الميدانية';
+
+  @override
+  String get merchantProfileDirectNotifications =>
+      'التنبيهات المباشرة للإعلانات';
+
+  @override
+  String get merchantProfileNotificationsSubtitle =>
+      'إشعار فوري عند رفع إعلان أو تأهيله';
+
+  @override
+  String get merchantProfileSecurityAudit => 'الأمان والتدقيق الإداري';
+
+  @override
+  String get merchantProfileViewAll => 'السجل الشامل';
+
+  @override
+  String get merchantProfileLatestActivities => 'آخر العمليات الرقابية المنفذة';
+
+  @override
+  String get merchantProfileToday => 'اليوم';
+
+  @override
+  String get merchantProfileActivityApproved =>
+      'اعتماد حملة إعلانية: متجر أفق العطور';
+
+  @override
+  String get merchantProfileLicenseNumber => 'رقم الترخيص: LIC-9902';
+
+  @override
+  String get merchantProfileActivityEdit =>
+      'طلب تعديل إعلان: معرض مطابخ النخبة';
+
+  @override
+  String get merchantProfileActivityEditDetails => 'مخالفة لمعيار وضوح الأسعار';
+
+  @override
+  String get merchantProfileActivityLocation =>
+      'معاينة ميدانية وتثبيت موقع: أسواق المدى';
+
+  @override
+  String get merchantProfileActivityLocationDetails => 'فرع حي الصحافة';
+
+  @override
+  String get merchantProfileFinancialWallet => 'محفظتي والبيانات المالية';
+
+  @override
+  String get merchantWalletTitle => 'محفظتك';
+
+  @override
+  String get merchantWalletSupervisorStatus =>
+      'مشرف معتمد • قطاع المستقل وصالني';
+
+  @override
+  String get merchantWalletReady => 'نشط وجاهز';
+
+  @override
+  String get merchantWalletAvailableBalance => 'الرصيد المتاح للسحب الفوري';
+
+  @override
+  String get merchantWalletAvailableAmount => '8,450';
+
+  @override
+  String get merchantWalletBalanceDescription =>
+      'يشمل مستحقات الإشراف الميداني المعتمدة وبدلات التحقق الميدانية وجاهزة للتحويل الفوري.';
+
+  @override
+  String get merchantWalletPendingDues => 'قيد التدقيق المالي';
+
+  @override
+  String get merchantWalletPendingAmount => '4,050';
+
+  @override
+  String get merchantWalletTotalDues => 'إجمالي المستحقات';
+
+  @override
+  String get merchantWalletTotalAmount => '12,500';
+
+  @override
+  String get merchantWalletSettlementCycle => 'دورة تسوية أسبوعية منتظمة';
+
+  @override
+  String get merchantWalletReadiness => 'معدل جاهزية الصرف: 68%';
+
+  @override
+  String get merchantWalletWithdrawTitle => 'طلب سحب المستحقات المالية';
+
+  @override
+  String get merchantWalletNoTransferFees => 'بدون رسوم تحويل';
+
+  @override
+  String get merchantWalletRequestedAmount => 'مبلغ السحب المطلوب';
+
+  @override
+  String get merchantWalletFullBalance => 'سحب كامل الرصيد (8,450 ر.س)';
+
+  @override
+  String get merchantWalletTransferLimit =>
+      'الحد الأدنى لعملية السحب 100 ر.س، الحد الأقصى اليومي 20,000 ر.س';
+
+  @override
+  String get merchantWalletChooseMethod => 'اختر وجهة التحويل';
+
+  @override
+  String get merchantWalletBankTransfer => 'تحويل بنكي';
+
+  @override
+  String get merchantWalletIban => 'آيبان (IBAN)';
+
+  @override
+  String get merchantWalletDigitalWallet => 'محفظة رقمية';
+
+  @override
+  String get merchantWalletWalletProvider => 'VFC / E&';
+
+  @override
+  String get merchantWalletInstantTransfer => 'إنستاباي';
+
+  @override
+  String get merchantWalletInstant => 'فوري';
+
+  @override
+  String get merchantWalletTransferAddress =>
+      'عنوان الدفع اللحظي (IPA) أو رقم الهاتف المرتبط';
+
+  @override
+  String get merchantWalletIbanValue => 'SA0380000000608010167519';
+
+  @override
+  String get merchantWalletPhoneValue => '01012345678';
+
+  @override
+  String get merchantWalletInstantAddress => 'supervisor.audit@instapay';
+
+  @override
+  String get merchantWalletAccountName =>
+      'اسم الحساب المسجل: م. عبد الرحمن الشهري (موثق)';
+
+  @override
+  String get merchantWalletProcessingDetails =>
+      'سرعة المعالجة: فوري ومباشر على مدار الساعة\nرسوم المعالجة والتحويل: 0.5 ر.س (محفظة بالكامل للمشرف)';
+
+  @override
+  String get merchantWalletConfirmWithdrawal => 'تأكيد وطلب السحب المالي';
+
+  @override
+  String get merchantWalletBonusTitle => 'حافز الإنجاز الأسبوعي متاح!  +500';
+
+  @override
+  String get merchantWalletBonusDescription =>
+      'أنجزت 5 مهام ميدانية بنجاح بتفوق المعايير المحددة.';
+
+  @override
+  String get merchantWalletTransactionHistory =>
+      'سجل العمليات والتحويلات الأخيرة';
+
+  @override
+  String get merchantWalletTransactionBank => 'سحب بنكي - مصرف الراجحي';
+
+  @override
+  String get merchantWalletTransactionDateOne => 'أمس، 02:40 م';
+
+  @override
+  String get merchantWalletTransactionAmountOne => '-5,000';
+
+  @override
+  String get merchantWalletTransactionInstant => 'تحويل فوري - InstaPay';
+
+  @override
+  String get merchantWalletTransactionDateTwo => '21 أكتوبر';
+
+  @override
+  String get merchantWalletTransactionAmountTwo => '-2,200';
+
+  @override
+  String get merchantWalletCompleted => 'مكتمل';
+
+  @override
+  String get merchantWalletAuditNotice =>
+      'العمليات المالية مشفرة وتخضع لآلية الرقابة المحاسبية لمنصة وصالني';
+
+  @override
+  String get merchantWalletAuditCode => 'رمز التحقق الدوري: AUDIT-SEC-2024-v9';
+
+  @override
+  String get merchantWalletActionUnavailable => 'طلب السحب غير متاح حالياً';
+
+  @override
+  String get merchantProfileJustUpdated => 'محدث لحظياً';
+
+  @override
+  String get merchantProfileBalanceTitle => 'الرصيد المتاح والمستحقات';
+
+  @override
+  String get merchantProfileBalance => '14,850';
+
+  @override
+  String get merchantProfileBalanceDetails =>
+      'بدلات الإشراف الميداني + مستحقات التوثيق';
+
+  @override
+  String get merchantProfileWalletDetails => 'تفاصيل المحفظة';
+
+  @override
+  String get merchantProfileDocumentDetails => 'مستند معتمد للمشرف';
+
+  @override
+  String get merchantProfileDocumentNumber => 'رقم المستند';
+
+  @override
+  String get merchantProfileClose => 'إغلاق';
+
+  @override
+  String get merchantProfileMinutesUnit => 'دقيقة مضت';
+
+  @override
+  String get merchantProfileTwoHoursAgo => 'منذ ساعتين';
+
+  @override
+  String get merchantProfileMorningAbbreviation => 'ص';
+
+  @override
+  String get merchantInfoTitle => 'معلومات التاجر';
+
+  @override
+  String get merchantInfoProfile => 'ملف التاجر';
+
+  @override
+  String get merchantInfoLiveMonitoring => 'مراقبة مباشرة';
+
+  @override
+  String get merchantInfoStatusActive => 'نشط';
+
+  @override
+  String get merchantInfoStatusActiveVerified => 'نشط وموثق';
+
+  @override
+  String get merchantInfoStatusUnderAudit => 'قيد المراجعة';
+
+  @override
+  String get merchantInfoStatusUpdateRequired => 'تحديث البيانات مطلوب';
+
+  @override
+  String get merchantInfoStatusSuspended => 'معلق مؤقتاً';
+
+  @override
+  String merchantInfoAccreditedCategory(Object category) {
+    return 'معتمد لدى $category';
+  }
+
+  @override
+  String get merchantInfoTotalAds => 'إجمالي الإعلانات';
+
+  @override
+  String merchantInfoActiveAds(Object count) {
+    return '$count نشط';
+  }
+
+  @override
+  String merchantInfoAdsUnderReview(Object count) {
+    return '$count قيد المراجعة';
+  }
+
+  @override
+  String get merchantInfoAdsShort => 'إعلان';
+
+  @override
+  String get merchantInfoAdsGroup => 'الإعلانات';
+
+  @override
+  String get merchantInfoPendingOperations => 'العمليات المعلقة';
+
+  @override
+  String get merchantInfoSuspendTemporarily => 'تعليق مؤقت';
+
+  @override
+  String get merchantInfoMessageMerchant => 'مراسلة التاجر';
+
+  @override
+  String get merchantInfoActionUnavailable => 'هذا الإجراء غير متاح حالياً';
+
+  @override
+  String get merchantPendingOperationsEmpty =>
+      'لا توجد عمليات أو إعلانات معلقة لهذا التاجر';
+
+  @override
+  String merchantPendingCount(Object count) {
+    return '$count عملية معلقة';
+  }
+
+  @override
+  String get merchantPendingMoreDetailsUnavailable =>
+      'عدد الإعلانات المعلقة معروف، لكن تفاصيل القائمة الكاملة غير متوفرة حالياً.';
+
+  @override
+  String get merchantPendingReference => 'رقم الإعلان';
+
+  @override
+  String get merchantPendingPrice => 'السعر';
+
+  @override
+  String get merchantPendingApprove => 'اعتماد';
+
+  @override
+  String get merchantPendingReject => 'رفض';
+
+  @override
+  String get merchantPendingOperationHandled => 'تم تحديث حالة الإعلان';
+
+  @override
+  String get merchantConversationEmpty => 'ابدأ محادثة مع هذا التاجر';
+
+  @override
+  String get merchantConversationInputHint => 'اكتب رسالتك...';
+
+  @override
+  String get merchantConversationSend => 'إرسال';
+
+  @override
+  String get merchantInfoFinancialSettings =>
+      'الإعدادات المالية وسياسة التوصيل';
+
+  @override
+  String get merchantInfoMerchantDashboard => 'تحكم المشرف';
+
+  @override
+  String get merchantInfoFinancialSettingsDescription =>
+      'لوحة التحكم الرقابي للعمولات والخدمات اللوجستية وتحديد النمط المالي';
+
+  @override
+  String get merchantInfoCfoPermission =>
+      'الصلاحية حصرية للمشرف المالي المعتمد';
+
+  @override
+  String get merchantInfoSalesCommission => 'عمولة التطبيق من المبيعات';
+
+  @override
+  String get merchantInfoFixedAmount => 'مبلغ ثابت بالأرقام (ر.س)';
+
+  @override
+  String get merchantInfoPercentage => 'نسبة مئوية (%)';
+
+  @override
+  String get merchantInfoAdjustCommission => 'تعديل نسبة العمولة المئوية (%)';
+
+  @override
+  String get merchantInfoSave => 'حفظ';
+
+  @override
+  String get merchantInfoCommissionExample =>
+      'حاسبة تقريبية لعملية بيع بقيمة 100 ر.س:';
+
+  @override
+  String merchantInfoCommissionValue(Object amount, Object currency) {
+    return 'عمولة المنصة: $amount $currency';
+  }
+
+  @override
+  String get merchantInfoInvalidCommission => 'أدخل عمولة من 0 إلى 100';
+
+  @override
+  String get merchantInfoCommissionSaved => 'تم تحديث العمولة';
+
+  @override
+  String get merchantInfoVerification => 'بيانات التوثيق والاعتماد';
+
+  @override
+  String get merchantInfoVerifiedBadge => 'بيانات موثقة';
+
+  @override
+  String get merchantInfoOwner => 'اسم المفوض / المالك';
+
+  @override
+  String get merchantInfoPhone => 'رقم الهاتف المعتمد';
+
+  @override
+  String get merchantInfoEmail => 'البريد الإلكتروني الرسمي';
+
+  @override
+  String get merchantInfoJoinedDate => 'تاريخ الربط الإشرافي';
+
+  @override
+  String get merchantInfoNotProvided => 'غير متوفر';
+
+  @override
+  String get merchantInfoFieldAds => 'إعلانات التاجر الميدانية';
+
+  @override
+  String merchantInfoShowAll(Object count) {
+    return 'عرض الكل ($count)';
+  }
+
+  @override
+  String get merchantInfoNoAds => 'لا توجد إعلانات متاحة';
+
+  @override
+  String get merchantInfoAdApproved => 'معتمد';
+
+  @override
+  String get merchantInfoAdUnderReview => 'تحت الفحص';
+
+  @override
+  String get merchantSuspendBadge => 'إجراء احترازي';
+
+  @override
+  String get merchantSuspendTitle => 'إجراء تعليق متجر';
+
+  @override
+  String get merchantSuspendSubtitle => 'قرار رقابي وإداري عاجل';
+
+  @override
+  String get merchantSuspendImpact =>
+      'تعليق المتجر سيوقف ظهور جميع إعلانات التاجر فوراً في محركات البحث وتطبيق المشترك، مع تجميد استقبال الطلبات الجديدة حتى تصحيح المخالفة واعتمادها.';
+
+  @override
+  String get merchantSuspendDetails => 'تفاصيل المخالفة والملاحظات الميدانية';
+
+  @override
+  String merchantSuspendCharacterCount(Object count) {
+    return '$count / 500';
+  }
+
+  @override
+  String get merchantSuspendDetailsHint =>
+      'اكتب وصفاً مفصلاً للمخالفة يظهر للتاجر في لوحة تحكمه مع توضيح الخطوات المطلوبة للتسوية...';
+
+  @override
+  String get merchantSuspendPrivateNote =>
+      'هذا النص سيظهر كسجل رسمي للتاجر في حسابه الموثق.';
+
+  @override
+  String get merchantSuspendAttachments =>
+      'المستندات التوثيقية ومحاضر المعاينة';
+
+  @override
+  String get merchantSuspendUpload => 'انقر لإرفاق محضر المعاينة أو الصور';
+
+  @override
+  String get merchantSuspendFileTypes =>
+      'صيغ مدعومة: PDF, JPG, PNG (بحد أقصى 10 ميجابايت)';
+
+  @override
+  String get merchantSuspendDuration => 'فترة التعليق المقترحة';
+
+  @override
+  String get merchantSuspendReasonCorrection =>
+      'لحين تصحيح الوضع ومعالجة المخالفة';
+
+  @override
+  String get merchantSuspendReasonCorrectionDescription =>
+      'إجراء موصى به من جهة الرقابة';
+
+  @override
+  String get merchantSuspendReasonDuration => 'تعليق محدد بـ 7 أيام';
+
+  @override
+  String get merchantSuspendReasonDurationDescription =>
+      'رفع تلقائي بعد انقضاء المدة';
+
+  @override
+  String get merchantSuspendReasonLegal => 'إحالة عاجلة للشؤون القانونية';
+
+  @override
+  String get merchantSuspendReasonLegalDescription =>
+      'يتطلب تحقيقاً وتدقيقاً قانونياً';
+
+  @override
+  String get merchantSuspendConfirm => 'تأكيد التعليق المؤقت وإشعار التاجر';
+
+  @override
+  String get merchantSuspendCancel => 'إلغاء والعودة لملف التاجر';
+
+  @override
+  String get noMerchantsFound => 'لا توجد متاجر مطابقة لخيارات البحث';
+
+  @override
+  String get merchantsUnderSupervisionTitle => 'التجار تحت الإشراف';
+
+  @override
+  String get supervisedAreaLabel =>
+      'نطاق الإشراف: منطقة الرياض (وسط وشمال العاصمة)';
+
+  @override
+  String get supervisorFullName => 'المشرف: أحمد بن عبد العزيز الخضيري';
+
+  @override
+  String get totalFieldAccountsTitle => 'إجمالي الحسابات الميدانية';
+
+  @override
+  String get merchantsUnderYourSupervision => 'تاجراً تحت إشرافك';
+
+  @override
+  String get complianceRate => 'الامتثال';
+
+  @override
+  String get activeAndVerifiedMetric => 'نشط وموثق';
+
+  @override
+  String get pendingAlertsMetric => 'تنبيهات معلقة';
+
+  @override
+  String get temporarySuspendedMetric => 'تعليق مؤقت';
+
+  @override
+  String get searchMerchantPlaceholder =>
+      'ابحث باسم المتجر، كود التاجر، أو السجل...';
+
+  @override
+  String filterAllWithCount(Object count) {
+    return 'الكل ($count)';
+  }
+
+  @override
+  String filterActiveWithCount(Object count) {
+    return '$count نشط وموثق';
+  }
+
+  @override
+  String filterPendingWithCount(Object count) {
+    return '$count تنبيهات معلقة';
+  }
+
+  @override
+  String filterSuspendedWithCount(Object count) {
+    return '$count تعليق مؤقت';
+  }
+
+  @override
+  String get sortMostActive => 'الترتيب: الأكثر نشاطاً';
+
+  @override
+  String get activeAdsHeader => 'إعلانات نشطة';
+
+  @override
+  String get pendingReviewHeader => 'معلق للمراجعة';
+
+  @override
+  String get platformCommissionHeader => 'عمولة المنصة';
+
+  @override
+  String get viewProfileAndControl => 'عرض الملف والتحكم';
+
+  @override
+  String get pendingProfitWithdrawalAlert => 'طلب سحب أرباح معلق';
+
+  @override
+  String get supervisoryNoteActive => 'ملاحظة إشرافية نشطة';
+
+  @override
+  String get deliveryStatusFieldInspection => 'فحص الميدان';
+
+  @override
+  String get deliveryStatusHeader => 'حالة التوصيل';
+
+  @override
+  String get descriptionStandardsViolation => 'مخالفة معايير الوصف VR3-858';
+
+  @override
+  String get zeroAdsDisplayedSuspended => '0 إعلان معروض (إيقاف إداري احترازي)';
+
+  @override
+  String get summonAction => 'استدعاء';
+
+  @override
+  String get reviewViolationAndUnfreeze => 'مراجعة المخالفة والفك';
+
+  @override
+  String get suspendedBadge => 'موقوف';
+
+  @override
+  String get remainingMerchantsTitle =>
+      'يوجد 13 تاجر آخر بحالة نشطة وممتثلة تماماً';
+
+  @override
+  String get remainingMerchantsSubtitle =>
+      'تم فحص سجلاتهم الدورية للأسبوع الحالي بنجاح';
+
+  @override
+  String get loadAndShowRemainingList => 'تحميل واستعراض بقية القائمة';
+
+  @override
+  String get fieldGovernanceCardTitle => 'حوكمة وتفويض المشرف الميداني';
+
+  @override
+  String get fieldGovernanceCardBody =>
+      'كافة التجار المسجلين أعلاه مرتبطون مباشرة بنطاق إشرافك الميداني والرقابي بموجب قرار الحوكمة والتفويض الإداري رقم SUP-4092.';
+
+  @override
+  String get addNewMerchantToSupervision => 'إضافة تاجر جديد للإشراف';
+
+  @override
+  String get retryLoadMerchants => 'إعادة المحاولة';
+
+  @override
+  String get merchantNameField => 'اسم التاجر أو المنشأة';
+
+  @override
+  String get merchantCrField => 'رقم السجل التجاري';
+
+  @override
+  String get merchantPhoneField => 'رقم الهاتف المعتمد';
+
+  @override
+  String get supervisedMerchantsBadge => 'مشرف التجار';
 }

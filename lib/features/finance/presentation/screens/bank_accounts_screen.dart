@@ -3,11 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../core/di/injection_container.dart';
+import '../../domain/entities/bank_account_edit_request_entity.dart';
 import '../../domain/entities/bank_account_entity.dart';
 import '../controllers/bank_accounts/bank_accounts_cubit.dart';
 import '../controllers/bank_accounts/bank_accounts_state.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../utils/finance_localizer.dart';
+import 'transaction_history_screen.dart';
 import '../widgets/finance_navigation.dart';
 
 class BankAccountsScreen extends StatelessWidget {
@@ -16,9 +18,216 @@ class BankAccountsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          BankAccountsCubit(getBankAccountsUseCase: sl())..loadBankAccounts(),
+      create: (context) => BankAccountsCubit(
+        getBankAccountsUseCase: sl(),
+        getBankAccountEditRequestsUseCase: sl(),
+        submitBankAccountEditRequestUseCase: sl(),
+      )..loadBankAccounts(),
       child: const _BankAccountsScreenContent(),
+    );
+  }
+}
+
+class _BankAccountEditForm extends StatefulWidget {
+  final BankAccountEntity account;
+  final BankAccountsCubit cubit;
+  final AppLocalizations l10n;
+
+  const _BankAccountEditForm({
+    required this.account,
+    required this.cubit,
+    required this.l10n,
+  });
+
+  @override
+  State<_BankAccountEditForm> createState() => _BankAccountEditFormState();
+}
+
+class _BankAccountEditFormState extends State<_BankAccountEditForm> {
+  final _formKey = GlobalKey<FormState>();
+  late final TextEditingController _nameController;
+  late final TextEditingController _typeController;
+  late final TextEditingController _ibanController;
+  bool _isSubmitting = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: widget.account.bankName);
+    _typeController = TextEditingController(text: widget.account.accountType);
+    _ibanController = TextEditingController(text: widget.account.iban);
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _typeController.dispose();
+    _ibanController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submit() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    final proposedBankName = _nameController.text.trim();
+    final proposedAccountType = _typeController.text.trim();
+    final proposedIban = _ibanController.text.trim();
+    if (proposedBankName == widget.account.bankName &&
+        proposedAccountType == widget.account.accountType &&
+        proposedIban == widget.account.iban) {
+      _showMessage(widget.l10n.bankEditNoChanges);
+      return;
+    }
+
+    setState(() => _isSubmitting = true);
+    final result = await widget.cubit.submitEditRequest(
+          accountId: widget.account.id,
+          proposedBankName: proposedBankName,
+          proposedAccountType: proposedAccountType,
+          proposedIban: proposedIban,
+        );
+    if (!mounted) return;
+
+    result.fold(
+      (_) {
+        setState(() => _isSubmitting = false);
+        _showMessage(widget.l10n.bankEditRequestFailed);
+      },
+      (_) {
+        Navigator.pop(context);
+        _showMessage(widget.l10n.bankEditRequestSent);
+      },
+    );
+  }
+
+  void _showMessage(String message) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = widget.l10n;
+    final isArabic = l10n.localeName.startsWith('ar');
+
+    return Directionality(
+      textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.only(
+            left: 16,
+            right: 16,
+            top: 20,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+          ),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.edit_calendar,
+                        color: AppColors.primaryDark, size: 20),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        l10n.editBankAccountAction,
+                        style: const TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.amber.shade50,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.amber.shade200),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.info_outline,
+                          color: Colors.amber, size: 16),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          l10n.bankEditNotice,
+                          style: TextStyle(
+                              fontSize: 11, color: Colors.amber.shade900),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _nameController,
+                  textInputAction: TextInputAction.next,
+                  decoration: InputDecoration(
+                    labelText: l10n.bankNameField,
+                    border: const OutlineInputBorder(),
+                  ),
+                  validator: (value) => value == null || value.trim().isEmpty
+                      ? l10n.bankEditRequired
+                      : null,
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  controller: _typeController,
+                  textInputAction: TextInputAction.next,
+                  decoration: InputDecoration(
+                    labelText: l10n.accountTypeField,
+                    border: const OutlineInputBorder(),
+                  ),
+                  validator: (value) => value == null || value.trim().isEmpty
+                      ? l10n.bankEditRequired
+                      : null,
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  controller: _ibanController,
+                  textDirection: TextDirection.ltr,
+                  textInputAction: TextInputAction.done,
+                  decoration: InputDecoration(
+                    labelText: l10n.ibanField,
+                    border: const OutlineInputBorder(),
+                  ),
+                  validator: (value) => value == null || value.trim().isEmpty
+                      ? l10n.bankEditRequired
+                      : null,
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton.icon(
+                  onPressed: _isSubmitting ? null : _submit,
+                  icon: _isSubmitting
+                      ? const SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(
+                              strokeWidth: 2, color: Colors.white),
+                        )
+                      : const Icon(Icons.send_outlined,
+                          size: 18, color: Colors.white),
+                  label: Text(
+                    l10n.bankEditSubmitAction,
+                    style: const TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primaryDark,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -57,8 +266,7 @@ class _BankAccountsScreenContentState
     if (_selectedCategoryIndex == 4) {
       return accounts
           .where((a) =>
-              a.accountType.contains("محفظة") ||
-              a.accountType.contains("Pay"))
+              a.accountType.contains("محفظة") || a.accountType.contains("Pay"))
           .toList();
     }
     return accounts;
@@ -123,7 +331,8 @@ class _BankAccountsScreenContentState
                     const SizedBox(height: 12),
 
                     // 3. زر كارت سجل الحركات اليومية
-                    _buildDailyTransactionsButton(context),
+                    _buildDailyTransactionsButton(
+                        context, calculatedTotalLiquidity),
                     const SizedBox(height: 14),
 
                     // 4. شريط اختيار التصنيف
@@ -148,13 +357,23 @@ class _BankAccountsScreenContentState
                         separatorBuilder: (_, __) => const SizedBox(height: 10),
                         itemBuilder: (context, index) {
                           final account = filteredAccounts[index];
+                          final pendingRequests = state.editRequests
+                              .where((request) =>
+                                  request.accountId == account.id &&
+                                  request.status ==
+                                      BankAccountEditRequestStatus.pending)
+                              .toList(growable: false);
                           final bool isEscrow =
                               account.accountType.contains("ضمان") ||
                                   account.accountType.contains("Escrow");
                           return _buildBankAccountCard(
                               context: context,
                               account: account,
-                              isEscrow: isEscrow);
+                              isEscrow: isEscrow,
+                              pendingRequest: pendingRequests.isEmpty
+                                  ? null
+                                  : pendingRequests.first,
+                              isSubmitting: state.submittingAccountId != null);
                         },
                       ),
                     const SizedBox(height: 20),
@@ -191,7 +410,8 @@ class _BankAccountsScreenContentState
         children: [
           Row(
             children: [
-              const Icon(Icons.account_balance, color: Colors.white70, size: 18),
+              const Icon(Icons.account_balance,
+                  color: Colors.white70, size: 18),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
@@ -305,13 +525,21 @@ class _BankAccountsScreenContentState
   }
 
   // كارت سجل الحركات المصرفية
-  Widget _buildDailyTransactionsButton(BuildContext context) {
+  Widget _buildDailyTransactionsButton(
+      BuildContext context, double availableBalance) {
     final l10n = AppLocalizations.of(context)!;
 
     return InkWell(
       onTap: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.openDailyLedger)),
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => TransactionHistoryScreen(
+              title: l10n.officialBankAccountsAndIban,
+              id: 'ALL-ACCOUNTS',
+              availableBalance: availableBalance,
+            ),
+          ),
         );
       },
       borderRadius: BorderRadius.circular(14),
@@ -427,6 +655,8 @@ class _BankAccountsScreenContentState
     required BuildContext context,
     required BankAccountEntity account,
     required bool isEscrow,
+    required BankAccountEditRequestEntity? pendingRequest,
+    required bool isSubmitting,
   }) {
     final l10n = AppLocalizations.of(context)!;
 
@@ -563,7 +793,8 @@ class _BankAccountsScreenContentState
             children: [
               Expanded(
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.green.shade50,
                     borderRadius: BorderRadius.circular(6),
@@ -588,27 +819,138 @@ class _BankAccountsScreenContentState
                   ),
                 ),
               ),
+            ],
+          ),
+          if (pendingRequest != null) ...[
+            const SizedBox(height: 10),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.amber.shade50,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.amber.shade200),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(Icons.hourglass_top_rounded,
+                          size: 16, color: Colors.amber.shade900),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text(
+                          l10n.bankEditPendingStatus,
+                          style: TextStyle(
+                            color: Colors.amber.shade900,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 11,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    l10n.bankEditPendingDetails,
+                    style: const TextStyle(
+                      fontSize: 10,
+                      color: Colors.black54,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  _editRequestValue(
+                      l10n.bankNameField, pendingRequest.proposedBankName),
+                  _editRequestValue(l10n.accountTypeField,
+                      pendingRequest.proposedAccountType),
+                  _editRequestValue(
+                      l10n.ibanField, pendingRequest.proposedIban),
+                  const SizedBox(height: 4),
+                  Text(
+                    '${l10n.bankEditRequestNumber}: ${pendingRequest.id}',
+                    style: const TextStyle(
+                      fontSize: 9,
+                      color: Colors.black45,
+                    ),
+                    textDirection: TextDirection.ltr,
+                  ),
+                ],
+              ),
+            ),
+          ],
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton.icon(
+                  style: OutlinedButton.styleFrom(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    minimumSize: const Size(0, 34),
+                    side: BorderSide(
+                        color: AppColors.info.withValues(alpha: 0.4)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
+                  ),
+                  icon: const Icon(Icons.receipt_long_outlined,
+                      size: 15, color: AppColors.info),
+                  label: Text(
+                    l10n.dailyLogLedger,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.info),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => TransactionHistoryScreen(
+                          title: FinanceLocalizer.localizeBankName(
+                              context, account.bankName),
+                          id: account.iban,
+                          availableBalance: account.balance,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
               const SizedBox(width: 8),
-              OutlinedButton.icon(
-                style: OutlinedButton.styleFrom(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  minimumSize: const Size(0, 32),
-                  side: BorderSide(
-                      color: AppColors.primaryDark.withValues(alpha: 0.3)),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8)),
+              Expanded(
+                child: OutlinedButton.icon(
+                  style: OutlinedButton.styleFrom(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    minimumSize: const Size(0, 34),
+                    side: BorderSide(
+                        color: AppColors.primaryDark.withValues(alpha: 0.3)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
+                  ),
+                  icon: const Icon(Icons.edit_note,
+                      size: 16, color: AppColors.primaryDark),
+                  label: Text(
+                    isSubmitting
+                        ? l10n.bankEditSubmitting
+                        : pendingRequest != null
+                            ? l10n.bankEditPendingStatus
+                            : l10n.editBankAccountAction,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primaryDark),
+                  ),
+                  onPressed: pendingRequest != null || isSubmitting
+                      ? null
+                      : () => _showEditBankAccountSheet(context, account),
                 ),
-                icon: const Icon(Icons.edit_note,
-                    size: 16, color: AppColors.primaryDark),
-                label: Text(
-                  l10n.localeName.startsWith('ar') ? 'تعديل البيانات' : 'Edit Account',
-                  style: const TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.primaryDark),
-                ),
-                onPressed: () => _showEditBankAccountSheet(context, account),
               ),
             ],
           ),
@@ -617,167 +959,46 @@ class _BankAccountsScreenContentState
     );
   }
 
+  Widget _editRequestValue(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 3),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '$label: ',
+            style: const TextStyle(fontSize: 10, color: Colors.black54),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(
+                  fontSize: 10,
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w600),
+              textDirection: TextDirection.ltr,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   // نافذة تعديل بيانات الحساب البنكي وإرسالها للأدمن
-  void _showEditBankAccountSheet(
-      BuildContext context, BankAccountEntity account) {
+  Future<void> _showEditBankAccountSheet(
+      BuildContext context, BankAccountEntity account) async {
     final l10n = AppLocalizations.of(context)!;
-    final isArabic = l10n.localeName.startsWith('ar');
-
-    final nameController = TextEditingController(text: account.bankName);
-    final ibanController = TextEditingController(text: account.iban);
-    final typeController = TextEditingController(text: account.accountType);
-
-    showModalBottomSheet(
+    await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-      builder: (ctx) {
-        return Directionality(
-          textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-          child: Padding(
-            padding: EdgeInsets.only(
-              left: 16,
-              right: 16,
-              top: 20,
-              bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  children: [
-                    const Icon(Icons.edit_calendar,
-                        color: AppColors.primaryDark, size: 20),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        isArabic
-                            ? 'تعديل بيانات الحساب البنكي'
-                            : 'Edit Bank Account Data',
-                        style: const TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.amber.shade50,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.amber.shade200),
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.info_outline,
-                          color: Colors.amber, size: 16),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          isArabic
-                              ? 'تنبيه: بعد حفظ التعديلات سيتم إرسال أمر التعديل إلى المستخدم الأدمن للموافقة عليه أو رفضه.'
-                              : 'Notice: After saving, modifications will be submitted to the Admin user for approval or rejection.',
-                          style: TextStyle(
-                              fontSize: 11, color: Colors.amber.shade900),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: nameController,
-                  decoration: InputDecoration(
-                    labelText: l10n.bankNameField,
-                    border: const OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                TextFormField(
-                  controller: typeController,
-                  decoration: InputDecoration(
-                    labelText:
-                        isArabic ? 'نوع الحساب / التصنيف' : 'Account Type',
-                    border: const OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                TextFormField(
-                  controller: ibanController,
-                  decoration: InputDecoration(
-                    labelText: l10n.ibanField,
-                    border: const OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.pop(ctx);
-                    showDialog(
-                      context: context,
-                      builder: (dialogCtx) => AlertDialog(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16)),
-                        title: Row(
-                          children: [
-                            const Icon(Icons.send_outlined,
-                                color: AppColors.primaryDark),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                isArabic
-                                    ? 'تم إرسال طلب التعديل'
-                                    : 'Modification Request Sent',
-                                style: const TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ],
-                        ),
-                        content: Text(
-                          isArabic
-                              ? 'تم إرسال أمر تعديل بيانات الحساب (${nameController.text}) بنجاح إلى المستخدم الأدمن للمصادقة عليه.'
-                              : 'Account modification order for (${nameController.text}) was successfully submitted to the Admin user for approval.',
-                          style: const TextStyle(fontSize: 12, height: 1.4),
-                        ),
-                        actions: [
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primaryDark,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8)),
-                            ),
-                            onPressed: () => Navigator.pop(dialogCtx),
-                            child: Text(isArabic ? 'حسناً' : 'OK',
-                                style: const TextStyle(color: Colors.white)),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                  icon: const Icon(Icons.check_circle_outline,
-                      size: 18, color: Colors.white),
-                  label: Text(
-                    isArabic
-                        ? 'حفظ وإرسال التعديل للأدمن'
-                        : 'Save & Submit to Admin',
-                    style: const TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryDark,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
+      builder: (_) => _BankAccountEditForm(
+        account: account,
+        cubit: context.read<BankAccountsCubit>(),
+        l10n: l10n,
+      ),
     );
   }
 
@@ -793,8 +1014,9 @@ class _BankAccountsScreenContentState
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (ctx) {
         return Directionality(
-          textDirection:
-              l10n.localeName.startsWith('ar') ? TextDirection.rtl : TextDirection.ltr,
+          textDirection: l10n.localeName.startsWith('ar')
+              ? TextDirection.rtl
+              : TextDirection.ltr,
           child: Padding(
             padding: EdgeInsets.only(
               left: 16,
@@ -851,8 +1073,9 @@ class _BankAccountsScreenContentState
     showDialog(
       context: context,
       builder: (ctx) => Directionality(
-        textDirection:
-            l10n.localeName.startsWith('ar') ? TextDirection.rtl : TextDirection.ltr,
+        textDirection: l10n.localeName.startsWith('ar')
+            ? TextDirection.rtl
+            : TextDirection.ltr,
         child: AlertDialog(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),

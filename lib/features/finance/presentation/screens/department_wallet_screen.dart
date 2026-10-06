@@ -88,7 +88,7 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
         return {
           l10n.departmentActiveCouriers: '${wallet.primaryMetricCount}',
           l10n.departmentPendingEntitlements: pending,
-          l10n.departmentShipmentFee: '${wallet.feeValue} ${l10n.currencySar}',
+          l10n.departmentShipmentFee: '${wallet.feeValue} ${l10n.currencyEgy}',
           'icon1': 'local_shipping',
         };
     }
@@ -339,7 +339,7 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                                             ),
                                           ),
                                           const SizedBox(width: 6),
-                                          Text(l10n.currencySar,
+                                          Text(l10n.currencyEgy,
                                               style: const TextStyle(
                                                   color: Colors.white70,
                                                   fontSize: 14,
@@ -828,7 +828,7 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis)),
                             const SizedBox(width: 2),
-                            Text(AppLocalizations.of(context)!.currencySar,
+                            Text(AppLocalizations.of(context)!.currencyEgy,
                                 style: const TextStyle(
                                     fontSize: 10,
                                     color: AppColors.primaryDark,
@@ -868,7 +868,7 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                             const SizedBox(width: 2),
                             Flexible(
                               child: Text(
-                                  '${AppLocalizations.of(context)!.currencySar} ${isArabic ? l10n.departmentPendingSuffix : 'pending'}',
+                                  '${AppLocalizations.of(context)!.currencyEgy} ${isArabic ? l10n.departmentPendingSuffix : 'pending'}',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(

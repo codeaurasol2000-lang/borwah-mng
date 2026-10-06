@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart' show NumberFormat;
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -82,7 +83,7 @@ class CommissionsScreen extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: ' ر.س',
+                    text: ' ج.م',
                     style: TextStyle(
                       color: Colors.white70,
                       fontSize: 16,
@@ -99,7 +100,7 @@ class CommissionsScreen extends StatelessWidget {
               Expanded(
                 child: _MiniInfo(
                   title: 'العمولات المكتسبة',
-                  value: '38,500 ر.س',
+                  value: '38,500 ج.م',
                   color: Color(0xFF7AE7A8),
                   icon: Icons.savings_rounded,
                 ),
@@ -277,7 +278,7 @@ class CommissionsScreen extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: ' ر.س',
+                    text: ' ج.م',
                     style: TextStyle(
                       color: Colors.white70,
                       fontSize: 16,
@@ -294,7 +295,7 @@ class CommissionsScreen extends StatelessWidget {
               Expanded(
                 child: _MiniInfo(
                   title: 'العمولات المكتسبة',
-                  value: '38,500 ر.س',
+                  value: '38,500 ج.م',
                   color: const Color(0xFF7AE7A8),
                   icon: Icons.savings_rounded,
                 ),
@@ -317,10 +318,10 @@ class CommissionsScreen extends StatelessWidget {
 
   Widget _buildStatsGrid() {
     final cards = [
-      _StatCard(title: 'عائدات نهاية الشهر', value: '78,350 ر.س', icon: Icons.trending_up_rounded, tone: AppColors.infoLight),
-      _StatCard(title: 'عمولات المنصة', value: '142,600 ر.س', icon: Icons.dashboard_rounded, tone: AppColors.surfaceLight),
-      _StatCard(title: 'خصم الخدمة', value: '39,150 ر.س', icon: Icons.receipt_long_rounded, tone: AppColors.successLight),
-      _StatCard(title: 'إيرادات التجزئة', value: '31,900 ر.س', icon: Icons.bar_chart_rounded, tone: AppColors.warningLight),
+      _StatCard(title: 'عائدات نهاية الشهر', value: '78,350 ج.م', icon: Icons.trending_up_rounded, tone: AppColors.infoLight),
+      _StatCard(title: 'عمولات المنصة', value: '142,600 ج.م', icon: Icons.dashboard_rounded, tone: AppColors.surfaceLight),
+      _StatCard(title: 'خصم الخدمة', value: '39,150 ج.م', icon: Icons.receipt_long_rounded, tone: AppColors.successLight),
+      _StatCard(title: 'إيرادات التجزئة', value: '31,900 ج.م', icon: Icons.bar_chart_rounded, tone: AppColors.warningLight),
     ];
 
     return GridView.builder(
@@ -681,6 +682,25 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
   int _periodIndex = 0;
   String _selectedFilter = 'all';
 
+  static const _revenuePeriods = [
+    _RevenuePeriodData(
+      values: [850, 1250, 980, 1760, 1420, 2100, 1150],
+      previousTotal: 8250,
+    ),
+    _RevenuePeriodData(
+      values: [6200, 7400, 5900, 8600, 7200, 9800, 10400],
+      previousTotal: 50000,
+    ),
+    _RevenuePeriodData(
+      values: [35000, 38000, 40000, 42000, 43000, 44000, 42900],
+      previousTotal: 249450,
+    ),
+    _RevenuePeriodData(
+      values: [82000, 91000, 87500, 96400, 102000, 110000, 108600],
+      previousTotal: 612000,
+    ),
+  ];
+
   static const _filters = [
     ('all', 'الكل (3,420)', 'All (3,420)'),
     ('merchants', 'متاجر وتجار (1,840)', 'Merchants (1,840)'),
@@ -698,9 +718,9 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
       title: 'اشتراك الباقة الذهبية - مؤسسة سهم للتجارة',
       titleEn: 'Gold plan subscription - Sahm Trading',
       description:
-          'رسوم تجديد وثيقة الحساب السنوي وحزمة الإعلانات المميزة (350 ر.س رسوم عمولة المنصة)',
+          'رسوم تجديد وثيقة الحساب السنوي وحزمة الإعلانات المميزة (350 ج.م رسوم عمولة المنصة)',
       descriptionEn:
-          'Annual account renewal and featured ads package (SAR 350 platform fee)',
+          'Annual account renewal and featured ads package (350 Egy platform fee)',
       detail: 'موثقة ومعتمدة بنكيًا عبر Apple Pay • اليوم 12:10 م',
       detailEn: 'Verified through Apple Pay • Today 12:10 PM',
       action: 'إشعار التحصيل',
@@ -716,8 +736,8 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
       statusEn: 'Verified store',
       title: 'مؤسسة الأفق للأجهزة الكهربائية',
       titleEn: 'Al-Ofuq Electrical Appliances',
-      description: 'عمولة مبيعات منتجات (2.5% من إجمالي مبيعات 48,000 ر.س)',
-      descriptionEn: 'Product sales commission (2.5% of SAR 48,000 sales)',
+      description: 'عمولة مبيعات منتجات (2.5% من إجمالي مبيعات 48,000 ج.م)',
+      descriptionEn: 'Product sales commission (2.5% of 48,000 Egy sales)',
       detail: 'مستقطعة آليًا عند إتمام الدفع الإلكتروني (مدى) • اليوم 11:42 ص',
       detailEn: 'Automatically deducted via Mada • Today 11:42 AM',
       action: 'عرض سند القيد',
@@ -734,9 +754,9 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
       title: 'مؤسسة التبريد المتقن',
       titleEn: 'Al-Tabreed Al-Mutqan',
       description:
-          'عمولة المنصة على خدمات الصيانة المنزلية (12.5% من فاتورة 1,400 ر.س)',
+          'عمولة المنصة على خدمات الصيانة المنزلية (12.5% من فاتورة 1,400 ج.م)',
       descriptionEn:
-          'Platform commission for home maintenance (12.5% of SAR 1,400 invoice)',
+          'Platform commission for home maintenance (12.5% of 1,400 Egy invoice)',
       detail: 'استقطاع تسوية طلب SRV-3042# معتمد من المشرف • اليوم 10:15 ص',
       detailEn: 'Settlement for request #SRV-3042 • Today 10:15 AM',
       action: 'تفاصيل الفاتورة',
@@ -772,9 +792,9 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
       statusEn: 'Escrow & protection',
       title: 'صفقة مستعملة - كاميرا كانون احترافية',
       titleEn: 'Used item sale - Canon professional camera',
-      description: 'رسوم وساطة وفحص وضمان وصيانة (5% من قيمة الصفقة 4,200 ر.س)',
+      description: 'رسوم وساطة وفحص وضمان وصيانة (5% من قيمة الصفقة 4,200 ج.م)',
       descriptionEn:
-          'Brokerage, inspection, and protection fee (5% of SAR 4,200 sale)',
+          'Brokerage, inspection, and protection fee (5% of 4,200 Egy sale)',
       detail:
           'محررة من حساب الضمان البنكي (Escrow) بعد استلام المشتري • أمس 08:20 م',
       detailEn: 'Released from escrow after buyer receipt • Yesterday 8:20 PM',
@@ -794,6 +814,12 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
 
   String _text(String arabic, String english) =>
       AppLocalizations.of(context)!.localeName == 'ar' ? arabic : english;
+
+  _RevenuePeriodData get _selectedRevenuePeriod =>
+      _revenuePeriods[_periodIndex];
+
+  String _formatRevenue(double value) =>
+      NumberFormat('#,##0', 'en_US').format(value);
 
   @override
   bool get wantKeepAlive => true;
@@ -842,6 +868,8 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
                   ),
                 ),
                 const SizedBox(height: 16),
+                _buildPeriodSelector(isArabic),
+                const SizedBox(height: 10),
                 _buildRevenueCard(isArabic),
                 const SizedBox(height: 24),
                 _buildSectionTitle(
@@ -851,8 +879,6 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
                 const SizedBox(height: 10),
                 _buildSectors(isArabic),
                 const SizedBox(height: 20),
-                _buildPeriodSelector(isArabic),
-                const SizedBox(height: 10),
                 _buildFilters(isArabic),
                 const SizedBox(height: 22),
                 Row(
@@ -974,8 +1000,8 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
           const SizedBox(width: 6),
           Text(
             isArabic
-                ? 'تحديث الإيرادات المباشر - اليوم'
-                : 'Live revenue update - today',
+                ? 'الإيرادات حسب الفترة المختارة'
+                : 'Revenue for selected period',
             style: const TextStyle(fontSize: 10, color: AppColors.primaryDark),
           ),
         ],
@@ -984,6 +1010,11 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
   }
 
   Widget _buildRevenueCard(bool isArabic) {
+    final period = _selectedRevenuePeriod;
+    final percentage = period.changePercentage;
+    final percentageLabel =
+        '${percentage >= 0 ? '+' : ''}${percentage.toStringAsFixed(1)}% ↗';
+
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
@@ -1013,28 +1044,39 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
                           : 'Total net controlled revenue due',
                       style: const TextStyle(
                           color: Colors.white70, fontSize: 11))),
-              _pill(
-                  '+14.2% ↗', const Color(0xFF0E4B4B), const Color(0xFF61E3B0)),
+              _pill(percentageLabel, const Color(0xFF0E4B4B),
+                  const Color(0xFF61E3B0)),
             ],
           ),
           const SizedBox(height: 14),
           Text.rich(
             TextSpan(children: [
-              const TextSpan(
-                  text: '284,900',
-                  style: TextStyle(
+              TextSpan(
+                  text: _formatRevenue(period.total),
+                  style: const TextStyle(
                       color: Colors.white,
                       fontSize: 29,
                       fontWeight: FontWeight.bold)),
               TextSpan(
-                  text: isArabic ? ' ر.س' : ' SAR',
+                  text: isArabic ? ' ج.م' : ' Egy',
                   style: const TextStyle(color: Colors.white70, fontSize: 15)),
             ]),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 3),
-          const SizedBox(
-              height: 40, child: CustomPaint(painter: _TrendPainter())),
+          Text(
+            _text('دخل العمولات خلال الفترة المختارة',
+                'Commission income during selected period'),
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: Color(0xFF91A9C3), fontSize: 9),
+          ),
+          SizedBox(
+            height: 48,
+            child: CustomPaint(
+              painter: _TrendPainter(values: period.values),
+              child: const SizedBox.expand(),
+            ),
+          ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
             decoration: BoxDecoration(
@@ -1053,7 +1095,7 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
                         style: const TextStyle(
                             color: Colors.white, fontSize: 9, height: 1.4))),
                 const SizedBox(width: 8),
-                _pill(isArabic ? '38,500 ر.س' : 'SAR 38,500',
+                _pill(isArabic ? '38,500 ج.م' : '38,500 Egy',
                     const Color(0xFF37516A), const Color(0xFF61E3B0)),
               ],
             ),
@@ -1077,7 +1119,9 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
               const SizedBox(width: 5),
               Flexible(
                 child: Text(
-                  isArabic ? 'السابق: 249,450 ر.س' : 'Previous: SAR 249,450',
+                  isArabic
+                      ? 'السابق: ${_formatRevenue(period.previousTotal)} ج.م'
+                      : 'Previous: ${_formatRevenue(period.previousTotal)} Egy',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.end,
@@ -1107,7 +1151,7 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
   }
 
   Widget _buildSectors(bool isArabic) {
-    final currency = isArabic ? 'ر.س' : 'SAR';
+    final currency = isArabic ? 'ج.م' : 'Egy';
     return Column(
       children: [
         Row(children: [
@@ -1478,7 +1522,7 @@ class _TransactionCard extends StatelessWidget {
                         color: Color(0xFF00865F),
                         fontWeight: FontWeight.bold)),
                 TextSpan(
-                    text: isArabic ? '  ر.س' : '  SAR',
+                    text: isArabic ? '  ج.م' : '  Egy',
                     style: const TextStyle(
                         fontSize: 9, color: AppColors.textSecondary))
               ])),
@@ -1561,29 +1605,92 @@ class _TransactionCard extends StatelessWidget {
   }
 }
 
+class _RevenuePeriodData {
+  final List<double> values;
+  final double previousTotal;
+
+  const _RevenuePeriodData({
+    required this.values,
+    required this.previousTotal,
+  });
+
+  double get total => values.fold(0, (sum, value) => sum + value);
+
+  double get changePercentage =>
+      previousTotal == 0 ? 0 : (total - previousTotal) / previousTotal * 100;
+}
+
 class _TrendPainter extends CustomPainter {
-  const _TrendPainter();
+  final List<double> values;
+
+  const _TrendPainter({required this.values});
 
   @override
   void paint(Canvas canvas, Size size) {
-    final path = Path()
-      ..moveTo(0, size.height * 0.72)
-      ..cubicTo(size.width * 0.18, size.height * 0.64, size.width * 0.19,
-          size.height * 0.3, size.width * 0.39, size.height * 0.53)
-      ..cubicTo(size.width * 0.57, size.height * 0.82, size.width * 0.6,
-          size.height * 0.08, size.width * 0.77, size.height * 0.3)
-      ..cubicTo(size.width * 0.88, size.height * 0.43, size.width * 0.9,
-          size.height * 0.9, size.width, size.height * 0.18);
+    if (values.length < 2 || size.isEmpty) return;
+
+    const horizontalInset = 4.0;
+    const verticalInset = 5.0;
+    final minValue = values.reduce((a, b) => a < b ? a : b);
+    final maxValue = values.reduce((a, b) => a > b ? a : b);
+    final valueRange = maxValue - minValue;
+    final points = List<Offset>.generate(values.length, (index) {
+      final x = horizontalInset +
+          (size.width - horizontalInset * 2) * index / (values.length - 1);
+      final normalized =
+          valueRange == 0 ? 0.5 : (values[index] - minValue) / valueRange;
+      final y =
+          verticalInset + (size.height - verticalInset * 2) * (1 - normalized);
+      return Offset(x, y);
+    });
+
+    final linePath = Path()..moveTo(points.first.dx, points.first.dy);
+    for (var i = 1; i < points.length; i++) {
+      final previous = points[i - 1];
+      final current = points[i];
+      final middleX = (previous.dx + current.dx) / 2;
+      linePath.quadraticBezierTo(
+          middleX, previous.dy, middleX, (previous.dy + current.dy) / 2);
+      linePath.quadraticBezierTo(middleX, current.dy, current.dx, current.dy);
+    }
+
+    final areaPath = Path.from(linePath)
+      ..lineTo(points.last.dx, size.height)
+      ..lineTo(points.first.dx, size.height)
+      ..close();
     canvas.drawPath(
-        path,
-        Paint()
-          ..color = const Color(0xFF55A5FF)
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 2.2);
-    canvas.drawCircle(Offset(size.width, size.height * 0.18), 3.2,
-        Paint()..color = const Color(0xFF2DD4A4));
+      areaPath,
+      Paint()
+        ..shader = const LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Color(0x3355A5FF), Color(0x0055A5FF)],
+        ).createShader(Offset.zero & size),
+    );
+    canvas.drawPath(
+      linePath,
+      Paint()
+        ..color = const Color(0xFF55A5FF)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2.2
+        ..strokeCap = StrokeCap.round
+        ..strokeJoin = StrokeJoin.round,
+    );
+    for (var i = 0; i < points.length - 1; i++) {
+      canvas.drawCircle(
+        points[i],
+        2,
+        Paint()..color = const Color(0xFF9CCBFF),
+      );
+    }
+    canvas.drawCircle(
+      points.last,
+      3.2,
+      Paint()..color = const Color(0xFF2DD4A4),
+    );
   }
 
   @override
-  bool shouldRepaint(covariant _TrendPainter oldDelegate) => false;
+  bool shouldRepaint(covariant _TrendPainter oldDelegate) =>
+      oldDelegate.values != values;
 }

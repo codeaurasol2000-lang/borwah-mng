@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import '../../../../l10n/app_localizations.dart';
+import '../../l10n/app_localizations.dart';
 
-import '../screens/audit_screen.dart';
-import '../screens/bank_reconciliation_screen.dart';
-import '../screens/commissions_screen.dart';
-import '../screens/finance_dashboard_screen.dart';
-import '../screens/profile_screen.dart';
-import '../screens/settlements_screen.dart';
-import 'finance_navigation.dart';
+import '../../features/finance/presentation/screens/audit_screen.dart';
+import '../../features/finance/presentation/screens/bank_reconciliation_screen.dart';
+import '../../features/finance/presentation/screens/commissions_screen.dart';
+import '../../features/finance/presentation/screens/finance_dashboard_screen.dart';
+import '../../features/finance/presentation/screens/profile_screen.dart';
+import '../../features/finance/presentation/screens/settlements_screen.dart';
+import '../../features/finance/presentation/widgets/finance_navigation.dart';
 
 class FinanceTabsShell extends StatefulWidget {
-  const FinanceTabsShell({super.key});
+  final VoidCallback onLogout;
+
+  const FinanceTabsShell({super.key, required this.onLogout});
 
   @override
   State<FinanceTabsShell> createState() => _FinanceTabsShellState();
@@ -22,12 +24,15 @@ class _FinanceTabsShellState extends State<FinanceTabsShell> {
   int _currentIndex = 4;
   bool _isBarsVisible = true;
 
-  static const _pages = <Widget>[
-    AuditScreen(showBottomNavigation: false),
-    CommissionsScreen(showBottomNavigation: false),
-    SettlementsScreen(showBottomNavigation: false),
-    BankReconciliationScreen(showBottomNavigation: false),
-    FinanceDashboardScreen(showBottomNavigation: false),
+  late final _pages = <Widget>[
+    const AuditScreen(showBottomNavigation: false),
+    const CommissionsScreen(showBottomNavigation: false),
+    const SettlementsScreen(showBottomNavigation: false),
+    const BankReconciliationScreen(showBottomNavigation: false),
+    FinanceDashboardScreen(
+      showBottomNavigation: false,
+      onLogout: widget.onLogout,
+    ),
   ];
 
   @override
@@ -78,10 +83,14 @@ class _FinanceTabsShellState extends State<FinanceTabsShell> {
               opacity: _isBarsVisible ? 1.0 : 0.0,
               child: FinancePageAppBar(
                 title: title,
-                subtitle: _currentIndex == 4 ? l10n.cfoRole : l10n.financialDepartment,
+                subtitle: _currentIndex == 4
+                    ? l10n.cfoRole
+                    : l10n.financialDepartment,
                 showProfileButton: _currentIndex == 4,
                 onProfilePressed: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const ProfileScreen()),
+                  MaterialPageRoute(
+                    builder: (_) => ProfileScreen(onLogout: widget.onLogout),
+                  ),
                 ),
               ),
             ),

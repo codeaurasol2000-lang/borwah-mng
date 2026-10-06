@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appName => 'Barwah Elmazoury';
+  String get appName => 'Browah Al-Mazory';
 
   @override
   String get cfoSessionTimestamp => '04/11/1446 AH - 10:45 AM';
@@ -83,7 +83,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get copyrightNotice =>
-      'Version 3.4.0 (Internal) • All rights reserved to Barwah Elmazoury Co.';
+      'Version 3.4.0 (Internal) • All rights reserved to Browah Al-Mazory Co.';
 
   @override
   String get certifiedFinancialAuditor => 'Certified Financial Auditor';
@@ -93,7 +93,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get financialControlTitle =>
-      'Central Financial Control - Barwah Elmazoury';
+      'Central Financial Control - Browah Al-Mazory';
 
   @override
   String get cfoControlPanelSubtitle =>
@@ -109,7 +109,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cfoBadgeCode => '#CF0-01';
 
   @override
-  String get currencySar => 'EGP';
+  String get currencyEgy => 'Egy';
 
   @override
   String get totalAggregatedLiquidity =>
@@ -184,6 +184,51 @@ class AppLocalizationsEn extends AppLocalizations {
   String get attachDocumentOptional => 'Attach a document image (optional)';
 
   @override
+  String get expenseReasonRequired => 'Please enter the expense reason first';
+
+  @override
+  String get expenseAmountInvalid => 'Enter a valid amount greater than zero';
+
+  @override
+  String get expenseRequestPendingStatus => 'Awaiting admin approval';
+
+  @override
+  String get expenseRequestNumber => 'Request ID';
+
+  @override
+  String get expenseRequestAmount => 'Amount';
+
+  @override
+  String get expenseRequestSent =>
+      'The expense request was sent to management for approval. The account balance was not changed.';
+
+  @override
+  String get expenseRequestSendFailed =>
+      'Could not send the expense request. Please try again.';
+
+  @override
+  String get expenseRequestSubmitting => 'Sending request...';
+
+  @override
+  String get expenseConfirmTitle => 'Submit expense request';
+
+  @override
+  String get expenseConfirmDescription =>
+      'The expense request will be sent to management for review and approval. No amount will be deducted yet.';
+
+  @override
+  String get expenseAttachedPrefix => 'Attached';
+
+  @override
+  String get expenseRemoveDocumentAction => 'tap to remove';
+
+  @override
+  String get expenseDocumentAttached => 'Document attached';
+
+  @override
+  String get expenseDocumentRemoved => 'Attached document removed';
+
+  @override
   String get strictFinancialDisbursementGovernance =>
       'Strict financial disbursement governance';
 
@@ -223,7 +268,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get netRegulatoryRevenue => 'Net Regulatory Revenue';
 
   @override
-  String get comparedToLastMonth => 'Compared to last month (EGP 249,450)';
+  String get comparedToLastMonth => 'Compared to last month (Egy 249,450)';
 
   @override
   String get balancesUnderRegulatoryAudit =>
@@ -396,7 +441,46 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bankNameField => 'Bank name';
 
   @override
+  String get accountTypeField => 'Account type';
+
+  @override
   String get ibanField => 'IBAN';
+
+  @override
+  String get editBankAccountAction => 'Edit account details';
+
+  @override
+  String get bankEditNotice =>
+      'Approved account details will not change yet. The edit request will be sent to the admin for approval or rejection.';
+
+  @override
+  String get bankEditSubmitAction => 'Save and send to admin';
+
+  @override
+  String get bankEditPendingStatus => 'Edit request awaiting admin decision';
+
+  @override
+  String get bankEditPendingDetails => 'Proposed details';
+
+  @override
+  String get bankEditRequestNumber => 'Request ID';
+
+  @override
+  String get bankEditSubmitting => 'Sending request...';
+
+  @override
+  String get bankEditRequestSent =>
+      'The edit request was sent to the admin. Current account details remain approved until a decision is made.';
+
+  @override
+  String get bankEditRequestFailed =>
+      'Could not send the edit request. Please try again.';
+
+  @override
+  String get bankEditRequired => 'This field is required';
+
+  @override
+  String get bankEditNoChanges => 'No account details were changed';
 
   @override
   String get bankLinkRequestSent => 'Account-link request sent';
@@ -677,7 +761,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get financialManagementSubtitle =>
-      'Barwah Elmazoury - Financial Administration';
+      'Browah Al-Mazory - Financial Administration';
 
   @override
   String get financialAuditAndLicenses => 'Financial Audit & Licenses';
@@ -688,7 +772,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get subscriptionsAndUpgradesReviewSubtitle =>
-      'Review and activate store and service provider subscriptions • Barwah Elmazoury';
+      'Review and activate store and service provider subscriptions • Browah Al-Mazory';
 
   @override
   String get currentSubscriptionsCycleSummary =>
@@ -778,7 +862,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get semiAnnualDuration => 'Semi-Annual (6 Months)';
 
   @override
-  String get sufficientWalletBalance => 'Sufficient wallet balance';
+  String get sufficientWalletBalance => 'Sufficient Balance in Wallet';
 
   @override
   String get paymentMethod => 'Payment Method:';
@@ -809,7 +893,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get licensesGovernanceDesc =>
-      'Activating packages immediately grants commercial permissions, appearance priority, and regulatory exemptions defined in Barwah Elmazoury\'s financial system. All operations are subject to subsequent documentary and tax audits.';
+      'Activating packages immediately grants commercial permissions, appearance priority, and regulatory exemptions defined in Browah Al-Mazory\'s financial system. All operations are subject to subsequent documentary and tax audits.';
 
   @override
   String get certifiedAndDocumentedRecord => 'Certified & Documented Record';
@@ -862,7 +946,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get certifiedAuditorAuthority =>
-      'Certified financial auditor • Authorized for dual bank signatures and authentication at Barwah Elmazoury';
+      'Certified financial auditor • Authorized for dual bank signatures and authentication at Browah Al-Mazory';
 
   @override
   String get officialPhone => 'Verified phone';
@@ -962,7 +1046,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get approveDisputeSettlement =>
-      'Approved dispute settlement #CMP-1035 for EGP 1,200.00 to Dr. Tareq Al-Omari.';
+      'Approved dispute settlement #CMP-1035 for Egy 1,200.00 to Dr. Tareq Al-Omari.';
 
   @override
   String get referenceCode => 'Reference:';
@@ -979,7 +1063,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get periodicMerchantTransfers =>
-      'Periodic payouts to 12 approved stores through instant payments, totaling EGP 142,500.00.';
+      'Periodic payouts to 12 approved stores through instant payments, totaling Egy 142,500.00.';
 
   @override
   String get alRajhiBank => 'Al Rajhi Bank';
@@ -1082,6 +1166,31 @@ class AppLocalizationsEn extends AppLocalizations {
       'Bank account approved and sent to management.';
 
   @override
+  String get reconciliationLoadFailed => 'Could not load bank-link requests.';
+
+  @override
+  String get reconciliationNoPendingRequests =>
+      'There are no bank-link requests awaiting review.';
+
+  @override
+  String get reconciliationFreezeSuccess =>
+      'Request frozen for financial review.';
+
+  @override
+  String get reconciliationFrozenRequestsTitle => 'Frozen bank-link requests';
+
+  @override
+  String get reconciliationFreezeReasonLabel => 'Freeze reason:';
+
+  @override
+  String get reconciliationFreezeDialogDescription =>
+      'This bank-link request will be held and recorded for financial review. It will be removed from the active review queue.';
+
+  @override
+  String get reconciliationActionFailed =>
+      'Could not complete the action. Please try again.';
+
+  @override
   String get reconciliationRequestIban =>
       'Request a recent stamped IBAN certificate';
 
@@ -1090,7 +1199,8 @@ class AppLocalizationsEn extends AppLocalizations {
       'Request for a recent stamped IBAN certificate sent.';
 
   @override
-  String get reconciliationRejectTransfer => 'Reject and freeze transfers';
+  String get reconciliationRejectTransfer =>
+      'Reject and freeze transfers to this account';
 
   @override
   String get reconciliationRejectSuccess =>
@@ -1182,7 +1292,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get withdrawSheetMinimumNotice =>
-      'Minimum withdrawal: EGP 1,000 • no administrative transfer fees';
+      'Minimum withdrawal: 1,000 Egy • no administrative transfer fees';
 
   @override
   String get withdrawSheetEnterAmount => 'Enter the amount to withdraw';
@@ -1218,16 +1328,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get withdrawSheetCancel => 'Cancel';
 
   @override
-  String get withdrawSheetAllAmount => 'All (EGP 52,000)';
+  String get withdrawSheetAllAmount => 'All (52,000 Egy)';
 
   @override
-  String get withdrawSheetAmount25k => 'EGP 25,000';
+  String get withdrawSheetAmount25k => '25,000 Egy';
 
   @override
-  String get withdrawSheetAmount10k => 'EGP 10,000';
+  String get withdrawSheetAmount10k => '10,000 Egy';
 
   @override
-  String get withdrawSheetAmount5k => 'EGP 5,000';
+  String get withdrawSheetAmount5k => '5,000 Egy';
 
   @override
   String get matrixLive => 'Live';
@@ -1514,7 +1624,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get matrixInstantFixedFeeNote =>
-      'Apply a fixed EGP 5.00 fee to each urgent settlement';
+      'Apply a fixed 5.00 Egy fee to each urgent settlement';
 
   @override
   String get matrixCoverageDetails => 'Cost coverage details:';
@@ -1688,8 +1798,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settlementAge35Minutes => '35 minutes ago';
 
   @override
+  String get settlementBeneficiaryTariq => 'Dr. Tariq Al-Omari';
+
+  @override
+  String get settlementInitialTariq => 'T';
+
+  @override
   String get settlementApprovedPartner =>
       'Approved partner - commercial registration';
+
+  @override
+  String get settlementBeneficiaryRealEstate =>
+      'Al-Daman Real Estate Establishment';
+
+  @override
+  String get settlementInitialRealEstate => 'D';
 
   @override
   String get settlementCommissionCorrection => 'Commission correction';
@@ -1702,6 +1825,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settlementIndependentProvider => 'Independent service provider';
+
+  @override
+  String get settlementBeneficiaryKhalid => 'Khalid Al-Mahyoub';
+
+  @override
+  String get settlementInitialKhalid => 'K';
 
   @override
   String get settlementMediationDelivery => 'Mediation delivery';
@@ -1733,6 +1862,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settlementYesterday0915 => 'Yesterday at 9:15 PM';
+
+  @override
+  String get settlementsLinkedRajhiEscrow =>
+      'Al Rajhi Bank - Central Escrow Account';
+
+  @override
+  String get settlementRecentOperationsCount => '142 operations';
 
   @override
   String get viewLabel => 'View';
@@ -1884,7 +2020,68 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get frozenThawSuccess =>
-      'Request released and moved to the review queue';
+      'The request was unfrozen and sent to management for payout approval';
+
+  @override
+  String get frozenForfeitSuccess =>
+      'The request was rejected and forfeited, and the reason was recorded';
+
+  @override
+  String get frozenForfeitReasonHint =>
+      'Enter the reason for rejection and regulatory forfeiture...';
+
+  @override
+  String get frozenBankLinksTitle => 'Frozen bank-link requests';
+
+  @override
+  String get frozenBankLinkReason => 'Freeze reason:';
+
+  @override
+  String get frozenBankLinkRestore => 'Unfreeze and return to review';
+
+  @override
+  String get frozenBankLinkReject => 'Reject with reason';
+
+  @override
+  String get frozenBankLinkRestoreDialogTitle => 'Restore bank-link request';
+
+  @override
+  String get frozenBankLinkRestoreDialogDescription =>
+      'Unfreeze this bank-link request and return it to the active reconciliation review queue?';
+
+  @override
+  String get frozenBankLinkRestoreConfirm => 'Unfreeze and return';
+
+  @override
+  String get frozenBankLinkRestoreSuccess =>
+      'The request was unfrozen and returned to bank reconciliation.';
+
+  @override
+  String get frozenBankLinkRejectDialogTitle =>
+      'Reject frozen bank-link request';
+
+  @override
+  String get frozenBankLinkRejectReasonHint =>
+      'Enter the reason for rejecting this bank-link request...';
+
+  @override
+  String get frozenBankLinkRejectSuccess =>
+      'The frozen bank-link request was rejected and the reason was recorded.';
+
+  @override
+  String get frozenForfeitReasonNotice =>
+      'The reason will be recorded with the rejection and forfeiture decision and sent to management for review.';
+
+  @override
+  String get frozenActionFailed =>
+      'Could not complete the action. Refresh the request and try again.';
+
+  @override
+  String get frozenLoadFailed => 'Could not load pending and frozen requests.';
+
+  @override
+  String get frozenNoRequests =>
+      'There are no pending or frozen requests right now.';
 
   @override
   String get transactionHistoryTitle => 'Transaction History';
@@ -2029,38 +2226,38 @@ class AppLocalizationsEn extends AppLocalizations {
   String get totalRequiredAmount => 'Total Required Amount';
 
   @override
-  String get goldenAnnualPackage => 'Golden Annual Package';
+  String get goldenAnnualPackage => 'Annual Golden Package';
 
   @override
   String get proServiceProvider => 'Professional Service Provider';
 
   @override
-  String get vipAnnualPackage => 'VIP Annual Package';
+  String get vipAnnualPackage => 'Annual VIP Package';
 
   @override
   String get unlimitedDeliveryPackage => 'Unlimited Delivery Package';
 
   @override
-  String get featuredWeekPackage => 'Featured Listing (1 Week)';
+  String get featuredWeekPackage => 'Featured Listing (One Week)';
 
   @override
   String get directBankTransferSadad =>
       'Direct Bank Transfer (SADAD / Al Rajhi)';
 
   @override
-  String get directDebitEscrow => 'Direct Debit from Escrow Wallet';
+  String get directDebitEscrow => 'Direct Deduction from Escrow Wallet';
 
   @override
   String get creditCardMada => 'Credit Card (Mada)';
 
   @override
-  String get walletDeduction => 'Deduction from Wallet';
+  String get walletDeduction => 'Wallet Deduction';
 
   @override
   String get directBankTransferSnb => 'Direct Bank Transfer (SNB)';
 
   @override
-  String get availableBalanceLabel => 'Available balance';
+  String get availableBalanceLabel => 'Available Balance';
 
   @override
   String get featuredMerchantSubscription => 'Featured Merchant Subscription';
@@ -2072,13 +2269,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deliveryCourier => 'Delivery Courier';
 
   @override
-  String get commercialAds => 'Commercial Ads';
+  String get commercialAds => 'Commercial Advertisements';
 
   @override
   String get eliteElectronicsStore => 'Elite Electronics Store';
 
   @override
-  String get maintenanceWorkshop => 'Comprehensive Maintenance Workshop...';
+  String get maintenanceWorkshop => 'Integrated Maintenance Workshop';
 
   @override
   String get vipUserUpgrade => 'VIP User Upgrade';
@@ -2087,7 +2284,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fastCourierPackage => 'Fast Courier Package';
 
   @override
-  String get mainBannerAd => 'Main Banner Ad';
+  String get mainBannerAd => 'Main Banner Advertisement';
 
   @override
   String get alRajhiBankName => 'Al Rajhi Bank';
@@ -2099,10 +2296,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get riyadBankName => 'Riyad Bank';
 
   @override
-  String get madaGatewayName => 'SADAD & Mada Gateway';
+  String get madaGatewayName => 'SADAD and Mada Payment Gateway';
 
   @override
-  String get stcPayWalletName => 'Central STC Pay Wallet';
+  String get stcPayWalletName => 'STC Pay Central Wallet';
 
   @override
   String get operatingAccountType => 'Operating Account';
@@ -2118,54 +2315,54 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reconciliationNewCommercialAccountRequest =>
-      'New Commercial Account Link & Verification Request';
+      'Request to link and verify new commercial account';
 
   @override
   String get reconciliationSupplierAccountRequest =>
-      'Approved Supplier Account Link Request';
+      'Request to link approved supplier account';
 
   @override
   String get reconciliationFreelanceProviderRequest =>
-      'Freelance Service Provider Account Link Request';
+      'Request to link freelance service provider account';
 
   @override
   String get reconciliationMatchDescription100 =>
-      '100% Verified match between commercial and bank name';
+      'Commercial and bank name match certified 100%';
 
   @override
   String get reconciliationMatchDescription96 =>
-      'Minor variance in legal suffixes of the commercial name';
+      'Minor difference in legal suffixes of the commercial name';
 
   @override
   String get reconciliationMatchDescription89 =>
-      'Sole proprietorship requires a recent stamped IBAN certificate';
+      'Sole proprietorship requiring a certified IBAN certificate';
 
   @override
   String get reconciliationWarning96 =>
-      'Variance detected between CR suffix and bank account name';
+      'Difference detected between commercial registry suffix and bank account';
 
   @override
   String get reconciliationWarning89 =>
-      'Attached IBAN certificate is older than 6 months';
+      'The attached IBAN certificate is older than 6 months';
 
   @override
-  String get reconciliationCommercialName1 =>
-      'Advanced Trading Establishment Ltd.';
+  String get reconciliationCommercialName1 => 'Advanced Trade Ltd. Co.';
 
   @override
   String get reconciliationBeneficiaryName1 =>
-      'Advanced Trading Est. for Services & Agencies';
+      'Advanced Trade for Services and Agencies Est.';
 
   @override
   String get reconciliationCommercialName2 =>
-      'Madar Al-Ruwad General Contracting Co.';
+      'Madar Al-Rowad General Contracting Co.';
 
   @override
   String get reconciliationBeneficiaryName2 =>
-      'Madar Al-Ruwad Trading & Contracting LLC';
+      'Madar Al-Rowad for Trade & Contracting One-Person Co.';
 
   @override
-  String get reconciliationCommercialName3 => 'Digital Summit IT Establishment';
+  String get reconciliationCommercialName3 =>
+      'Digital Summit Information Technology Est.';
 
   @override
   String get reconciliationBeneficiaryName3 =>
@@ -2176,4 +2373,1372 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reconciliationFreezeRequest => 'Freeze Request';
+
+  @override
+  String get merchantsSupervisorTitle => 'Merchants';
+
+  @override
+  String get merchantSupervisorRoleBadge => 'Merchant Supervisor';
+
+  @override
+  String get merchantSupervisorAdminSubtitle =>
+      'Browah Al-Mazory - Administration';
+
+  @override
+  String get welcomeSupervisorAhmed => 'Welcome, Supervisor Ahmed';
+
+  @override
+  String get fieldSupervisorTag => 'Field';
+
+  @override
+  String get merchantsPortfolioSubtitle =>
+      'Your assigned merchants portfolio - Riyadh Region';
+
+  @override
+  String get approvedMerchantsMetric => 'Approved Merchants';
+
+  @override
+  String get pendingReviewMetric => 'Pending Review';
+
+  @override
+  String get searchMerchantsHint => 'Search by name, CR number, or category';
+
+  @override
+  String get filterActiveVerified => 'Active & Verified';
+
+  @override
+  String get filterUnderAudit => 'Under Audit';
+
+  @override
+  String get filterUpdateRequired => 'Update Required';
+
+  @override
+  String get filterSuspended => 'Suspended';
+
+  @override
+  String get registeredStoresSection =>
+      'Registered Stores Under Your Supervision';
+
+  @override
+  String storesRatio(Object current, Object total) {
+    return '$current of $total';
+  }
+
+  @override
+  String get recentlyActiveSort => 'Recently Active';
+
+  @override
+  String get crShortLabel => 'CR';
+
+  @override
+  String get linkNewMerchant => 'Link New Merchant';
+
+  @override
+  String get navMerchants => 'Merchants';
+
+  @override
+  String get navAds => 'Ads';
+
+  @override
+  String get navFinancialRequests => 'Financial Requests';
+
+  @override
+  String get navAccount => 'Account';
+
+  @override
+  String merchantSectionComingSoon(Object section) {
+    return '$section is coming soon';
+  }
+
+  @override
+  String get adsManagementTitle => 'Pre-publication Ad Management';
+
+  @override
+  String get adsReviewGateway => 'Live supervisory review gateway';
+
+  @override
+  String get adsUrgentDecision => 'Needs an immediate decision';
+
+  @override
+  String get adsHiddenToday => 'Hidden';
+
+  @override
+  String get adsPendingToday => 'Approved today';
+
+  @override
+  String get adsUnderReviewCount => 'Under review';
+
+  @override
+  String get adsAllFilter => 'All';
+
+  @override
+  String get adsVehiclesFilter => 'Cars & vehicles';
+
+  @override
+  String get adsElectronicsFilter => 'Electronics';
+
+  @override
+  String get adsRealEstateFilter => 'Real estate';
+
+  @override
+  String get adsSearchHint => 'Search title, merchant, or code...';
+
+  @override
+  String get adsClearSearch => 'Clear search';
+
+  @override
+  String get adsPendingHeading => 'Ads awaiting review';
+
+  @override
+  String get adsRecentSort => 'Recently received';
+
+  @override
+  String get adsOldestSort => 'Oldest received';
+
+  @override
+  String adsImageCount(Object count) {
+    return '$count photos';
+  }
+
+  @override
+  String get adsCarMerchant => 'Al-Ufuq Car Trading Est.';
+
+  @override
+  String get adsCarCategory => 'Car showroom • Riyadh';
+
+  @override
+  String get adsCarTitle => '2023 Mercedes E300 AMG fully loaded';
+
+  @override
+  String get adsCarDetails => 'Mileage: 15,000 km';
+
+  @override
+  String get adsCarPrice => 'SAR 245,000';
+
+  @override
+  String get adsPhoneMerchant => 'Al-Safwa Electronics Store';
+
+  @override
+  String get adsPhoneCategory => 'Verified on Maroof • Riyadh';
+
+  @override
+  String get adsPhoneTitle => 'New iPhone 16 Pro Max 256GB Natural Titanium';
+
+  @override
+  String get adsPhoneDetails => 'Local warranty: 5 years';
+
+  @override
+  String get adsPhonePrice => 'SAR 4,699';
+
+  @override
+  String get adsVillaMerchant => 'Al-Yamama Contracting & Real Estate Co.';
+
+  @override
+  String get adsVillaCategory => 'Licensed real estate broker • Riyadh';
+
+  @override
+  String get adsVillaTitle =>
+      'Luxury modern villa with living-room stairs - Al Narjis';
+
+  @override
+  String get adsVillaDetails => 'Land area: 375 m²';
+
+  @override
+  String get adsVillaPrice => 'SAR 2,850,000';
+
+  @override
+  String get adsLicenseVerified => 'Business license verified';
+
+  @override
+  String get adsMarketPriceMatched => 'Price matches market average';
+
+  @override
+  String get adsReviewHidden => 'Hidden pending review';
+
+  @override
+  String adsMinutesAgo(Object count) {
+    return '$count minutes ago';
+  }
+
+  @override
+  String get adsHoursAgo => '2 hours ago';
+
+  @override
+  String get adsReviewAndApprove => 'Review and verify ad';
+
+  @override
+  String get adsHideAction => 'Hide ad';
+
+  @override
+  String get adsApproveAction => 'Approve and publish';
+
+  @override
+  String get adsRejectAction => 'Reject with reason';
+
+  @override
+  String get adsRejectReasonTitle => 'Reason for rejection';
+
+  @override
+  String get adsRejectReasonHint =>
+      'Enter the reason to share with the merchant';
+
+  @override
+  String get adsRejectReasonInstructions =>
+      'Choose a clear reason to notify the merchant and record it in the administrative audit log.';
+
+  @override
+  String get adsRejectReasonPrice => 'Unrealistic or misleading price';
+
+  @override
+  String get adsRejectReasonMisleading =>
+      'Misleading description or inaccurate information';
+
+  @override
+  String get adsRejectReasonPhotos =>
+      'Photos do not match specifications or are low quality';
+
+  @override
+  String get adsRejectReasonPolicy =>
+      'Violates publishing policy or platform terms';
+
+  @override
+  String get adsRejectGuidanceOptional =>
+      'Custom guidance for the merchant (optional)';
+
+  @override
+  String get adsRejectGuidanceDirectLabel =>
+      'Shown in the merchant\'s notification';
+
+  @override
+  String get adsRejectGuidanceHint =>
+      'Enter guidance for editing and resubmitting the ad...';
+
+  @override
+  String get adsConfirmRejectAndNotify =>
+      'Confirm rejection and notify merchant';
+
+  @override
+  String get adsCancelAction => 'Cancel';
+
+  @override
+  String get adsConfirmReject => 'Confirm rejection';
+
+  @override
+  String get adsApprovedStatus => 'Ad approved';
+
+  @override
+  String get adsHiddenStatus => 'Ad hidden';
+
+  @override
+  String get adsRejectedStatus => 'Ad rejected';
+
+  @override
+  String get adsNoResults => 'No matching ads found';
+
+  @override
+  String get adsDetailsTitle => 'Ad details';
+
+  @override
+  String get adsInImageReviewStatus => 'Ad pending review';
+
+  @override
+  String get adsNotPublishedYet => 'Not published yet';
+
+  @override
+  String adsMerchantRegistrationNumber(Object number) {
+    return 'Registration: $number';
+  }
+
+  @override
+  String get adsMerchantVerified => 'Verified';
+
+  @override
+  String adsPhotoPosition(Object current, Object total) {
+    return '$current of $total photos';
+  }
+
+  @override
+  String get adsAdPhotoVerified => 'Photo checked';
+
+  @override
+  String adsIdentifier(Object number) {
+    return 'Ad ID: #$number';
+  }
+
+  @override
+  String get adsAskingPrice => 'Asking price';
+
+  @override
+  String get adsAdDescription => 'Merchant\'s ad description';
+
+  @override
+  String get adsLicenseChecklist => 'Regulatory license checklist';
+
+  @override
+  String adsChecklistCount(int passed, int total) {
+    return '$passed / $total items';
+  }
+
+  @override
+  String get adsAutoHideReportsTitle => 'Auto-hide after reports';
+
+  @override
+  String get adsAutoHideReportsDescription =>
+      'Temporarily hide the ad until it is reviewed again';
+
+  @override
+  String get adsDeliveryTitle => 'Product delivery and shipping costs';
+
+  @override
+  String get adsDeliveryActive => 'Service active';
+
+  @override
+  String get adsDeliveryDescription =>
+      'Delivery service is requested for this ad. The supervisor may adjust delivery fees before approval or hiding.';
+
+  @override
+  String get adsDeliveryFee => 'Fixed amount (SAR)';
+
+  @override
+  String get adsUpdateDeliveryFee => 'Update fee';
+
+  @override
+  String get adsDeliveryFeeNote =>
+      'Delivery fee checked and adjusted to policy';
+
+  @override
+  String get adsSupervisorDecision => 'Supervisor decision';
+
+  @override
+  String get adsSupervisorLevel => 'Approval authority: Level 1';
+
+  @override
+  String get adsRequestEdit => 'Request data update';
+
+  @override
+  String get adsEditRequestTitle => 'Request ad changes';
+
+  @override
+  String get adsEditRequestSubtitle =>
+      'Enter the merchant\'s required corrections before the ad can be published';
+
+  @override
+  String adsEditRequestAdTitle(Object title) {
+    return 'Ad: $title';
+  }
+
+  @override
+  String get adsEditRequestGuidanceTitle =>
+      'Supervisor notes and guidance for the merchant (required)';
+
+  @override
+  String get adsEditRequestInstructions =>
+      'Clearly describe every detail and item that needs to be changed so the merchant knows what to correct before the ad is reviewed again.';
+
+  @override
+  String get adsEditRequestHint =>
+      'Enter the changes required from the merchant...';
+
+  @override
+  String get adsEditRequestRequired =>
+      'This field is required to submit an edit request';
+
+  @override
+  String get adsEditRequestSend => 'Send edit request to merchant';
+
+  @override
+  String get adsEditRequestCancel => 'Cancel and go back';
+
+  @override
+  String get adsFeeUpdated => 'Delivery fee updated';
+
+  @override
+  String get adsFeeInvalid => 'Enter a valid non-negative amount';
+
+  @override
+  String get adsRequestEditUnavailable =>
+      'Requesting an ad edit is not available yet';
+
+  @override
+  String get adsMileage => 'Current mileage';
+
+  @override
+  String get adsExteriorColor => 'Exterior color';
+
+  @override
+  String get adsAccidentRecord => 'Accident report';
+
+  @override
+  String get adsTransmission => 'Transmission';
+
+  @override
+  String get adsMileageValue => '15,000 km';
+
+  @override
+  String get adsWhiteColorValue => 'Pearl white';
+
+  @override
+  String get adsNoAccidentsValue => 'No accident record';
+
+  @override
+  String get adsAutomaticValue => 'Automatic';
+
+  @override
+  String get adsPhoneWarranty => 'Local warranty';
+
+  @override
+  String get adsPhoneCondition => 'Product condition';
+
+  @override
+  String get adsPhoneColor => 'Color';
+
+  @override
+  String get adsPhoneStorage => 'Storage capacity';
+
+  @override
+  String get adsWarrantyValue => '5 years';
+
+  @override
+  String get adsNewConditionValue => 'New';
+
+  @override
+  String get adsNaturalTitaniumValue => 'Natural titanium';
+
+  @override
+  String get adsStorageValue => '256 GB';
+
+  @override
+  String get adsVillaArea => 'Land area';
+
+  @override
+  String get adsVillaRooms => 'Number of rooms';
+
+  @override
+  String get adsVillaLicense => 'Real estate license';
+
+  @override
+  String get adsVillaLocation => 'Location';
+
+  @override
+  String get adsVillaAreaValue => '375 m²';
+
+  @override
+  String get adsVillaRoomsValue => '5 bedrooms';
+
+  @override
+  String get adsVillaLicensedValue => 'Valid and verified';
+
+  @override
+  String get adsVillaLocationValue => 'Al Narjis, Riyadh';
+
+  @override
+  String get adsVehicleDescription =>
+      'Agency-condition vehicle, nearly new, with complete dealer service history. All scheduled maintenance was completed at authorized Mercedes centers. No repainting or modifications.';
+
+  @override
+  String get adsPhoneDescription =>
+      'Brand-new, unused device with a valid local warranty, complete accessories, and invoice. The serial number and specifications have been matched against the attached documents.';
+
+  @override
+  String get adsVillaDescription =>
+      'Luxury modern villa with contemporary design and high-quality finishes in a prime location close to amenities. Building permit and property documents are available for review.';
+
+  @override
+  String get adsCheckPrice => 'Price and financial terms are compliant';
+
+  @override
+  String get adsCheckPhotos => 'Photos are authentic and match the item';
+
+  @override
+  String get adsCheckSpecifications =>
+      'Specifications match the safety inspection';
+
+  @override
+  String get adsCheckMerchantLicense =>
+      'Trade license and authorized persons are valid';
+
+  @override
+  String get adsCheckExpiryReminder =>
+      'Expires in 90 days - automatic reminder enabled';
+
+  @override
+  String get adsCheckReminder => 'Reminder';
+
+  @override
+  String get adsCheckReviewRecommended => 'Review';
+
+  @override
+  String get adsCheckPassed => 'Checked';
+
+  @override
+  String get finRequestReadOnlyNotice =>
+      'Financial actions are restricted to the CFO';
+
+  @override
+  String get finRequestMerchantProceeds => 'Pending merchant proceeds';
+
+  @override
+  String get finRequestTotalProceeds => '142,500';
+
+  @override
+  String get finRequestProceedsNote => 'Within your supervision scope';
+
+  @override
+  String get finRequestReviewQueue => 'With finance';
+
+  @override
+  String get finRequestUnderReview => 'Under financial review';
+
+  @override
+  String get finRequestHistoryTitle => 'Operations and claims history';
+
+  @override
+  String get finRequestUpdatedJustNow => 'Updated just now';
+
+  @override
+  String get finRequestAllFilter => 'All (3)';
+
+  @override
+  String get finRequestSalesFilter => 'Sales profit';
+
+  @override
+  String get finRequestWithdrawalFilter => 'Balance withdrawals';
+
+  @override
+  String get finRequestPackageFilter => 'Package fees';
+
+  @override
+  String get finRequestNoResults => 'No requests match this category';
+
+  @override
+  String get finRequestCarMerchant => 'Al-Ufuq Car Trading Est.';
+
+  @override
+  String get finRequestCarTitle => 'Sales profit transfer request';
+
+  @override
+  String get finRequestCarAmount => '48,000';
+
+  @override
+  String get finRequestTodayTime => 'Today, 10:45 AM';
+
+  @override
+  String get finRequestBankVerified => 'IBAN verified and field-approved';
+
+  @override
+  String get finRequestPackageMerchant => 'Al-Safwa Electronics Store';
+
+  @override
+  String get finRequestPackageTitle => 'Annual Gold package subscription fee';
+
+  @override
+  String get finRequestPackageAmount => '3,500';
+
+  @override
+  String get finRequestYesterdayTime => 'Yesterday, 4:15 PM';
+
+  @override
+  String get finRequestCompleted => 'Completed and finance-approved';
+
+  @override
+  String get finRequestApprovedByFinance => 'Approved by: General Accounts';
+
+  @override
+  String get finRequestJewelryMerchant => 'Golden Sparkle Jewelry';
+
+  @override
+  String get finRequestWithdrawalTitle => 'Wallet balance withdrawal request';
+
+  @override
+  String get finRequestWithdrawalAmount => '22,000';
+
+  @override
+  String get finRequestOlderTime => 'October 20, 2:20 PM';
+
+  @override
+  String get finRequestAwaitingManager => 'Awaiting CFO approval';
+
+  @override
+  String get finRequestSalesMatched => 'Sales statements fully reconciled';
+
+  @override
+  String get finRequestCurrency => 'SAR';
+
+  @override
+  String get finRequestRestrictedStatus => 'Ready for reconciliation';
+
+  @override
+  String get finRequestSendToFinance => 'Send to finance supervisor';
+
+  @override
+  String get finRequestViewDetails => 'View request details';
+
+  @override
+  String get finRequestPolicyTitle => 'Dual-review policy';
+
+  @override
+  String get finRequestPolicyMessage =>
+      'Every financial request needs final finance approval. Merchant supervisors can view and track requests only.';
+
+  @override
+  String get finRequestNumber => 'Request number';
+
+  @override
+  String get finRequestClose => 'Close';
+
+  @override
+  String get merchantProfileName => 'Ahmed bin Abdulaziz Al-Shehri';
+
+  @override
+  String get merchantProfileRegion =>
+      'Field Merchant Supervisor - Riyadh Region';
+
+  @override
+  String get merchantProfileSupervisorId => 'SUP-4092';
+
+  @override
+  String get merchantProfileActive => 'Active and verified';
+
+  @override
+  String get merchantProfileMonthlyAds => 'Ads this month';
+
+  @override
+  String get merchantProfileStores => 'Active merchants under your supervision';
+
+  @override
+  String get withdrawalRequestDetails => 'View request details';
+
+  @override
+  String get withdrawalDetailsTitle => 'Withdrawal request details';
+
+  @override
+  String get withdrawalDetailsRequestNumber => 'Request number';
+
+  @override
+  String get withdrawalDetailsBeneficiary => 'Beneficiary';
+
+  @override
+  String get withdrawalDetailsBeneficiaryRole => 'Beneficiary role';
+
+  @override
+  String get withdrawalDetailsGrossAmount => 'Gross amount';
+
+  @override
+  String get withdrawalDetailsFeePercentage => 'Fee percentage';
+
+  @override
+  String get withdrawalDetailsFeeAmount => 'Fee amount';
+
+  @override
+  String get withdrawalDetailsNetAmount => 'Net amount';
+
+  @override
+  String get withdrawalDetailsBankName => 'Bank';
+
+  @override
+  String get withdrawalDetailsIban => 'IBAN';
+
+  @override
+  String get withdrawalDetailsDate => 'Request date';
+
+  @override
+  String get withdrawalDetailsAuditResult => 'Audit result';
+
+  @override
+  String get withdrawalDetailsAlert => 'Regulatory note';
+
+  @override
+  String get withdrawalDetailsSource => 'Source of funds';
+
+  @override
+  String get withdrawalDetailsTransferMethod => 'Transfer method';
+
+  @override
+  String get withdrawalDetailsInstantReady => 'Available for instant transfer';
+
+  @override
+  String get withdrawalDetailsStatusPending => 'Pending review';
+
+  @override
+  String get withdrawalDetailsStatusInvestigation =>
+      'Under investigation and audit';
+
+  @override
+  String get withdrawalDetailsStatusApproved => 'Approved';
+
+  @override
+  String get withdrawalDetailsStatusFrozen => 'Frozen';
+
+  @override
+  String get withdrawalDetailsStatusRejected => 'Rejected';
+
+  @override
+  String get withdrawalDetailsNoValue => 'Not available';
+
+  @override
+  String get merchantProfileDocumentsTitle =>
+      'Approved oversight files and documents';
+
+  @override
+  String get merchantProfileAuthorizationCard =>
+      'Field Supervisory Authorization Card';
+
+  @override
+  String get merchantProfileValidUntil => 'Valid through December 31, 2025';
+
+  @override
+  String get merchantProfileOpenDocument => 'View card';
+
+  @override
+  String get merchantProfileGovernanceGuide =>
+      'Advertising Approval Standards Guide';
+
+  @override
+  String get merchantProfileGuideSubtitle =>
+      'Advertising policies and regulations';
+
+  @override
+  String get merchantProfileDelegationDocument =>
+      'Management Authority Delegation Document';
+
+  @override
+  String get merchantProfileDelegationSubtitle =>
+      'Legal compliance and decision matrix';
+
+  @override
+  String get merchantProfileFieldPermissions =>
+      'Field Contact and Permissions Management';
+
+  @override
+  String get merchantProfileUpdatedAutomatically => 'Updated automatically';
+
+  @override
+  String get merchantProfileAvailability => 'Field Availability and Readiness';
+
+  @override
+  String get merchantProfileAvailabilitySubtitle =>
+      'Receive field review requests';
+
+  @override
+  String get merchantProfileDirectNotifications =>
+      'Direct Advertisement Alerts';
+
+  @override
+  String get merchantProfileNotificationsSubtitle =>
+      'Instant alert when an ad is submitted or qualified';
+
+  @override
+  String get merchantProfileSecurityAudit =>
+      'Security and Administrative Audit';
+
+  @override
+  String get merchantProfileViewAll => 'Full history';
+
+  @override
+  String get merchantProfileLatestActivities => 'Latest supervisory activities';
+
+  @override
+  String get merchantProfileToday => 'Today';
+
+  @override
+  String get merchantProfileActivityApproved =>
+      'Approved an ad campaign: Afaq Perfumes Store';
+
+  @override
+  String get merchantProfileLicenseNumber => 'License number: LIC-9902';
+
+  @override
+  String get merchantProfileActivityEdit =>
+      'Ad edit request: Elite Kitchens Showroom';
+
+  @override
+  String get merchantProfileActivityEditDetails =>
+      'Pricing clarity standard violation';
+
+  @override
+  String get merchantProfileActivityLocation =>
+      'Field visit and location verified: Al-Mada Markets';
+
+  @override
+  String get merchantProfileActivityLocationDetails => 'Al-Sahafa branch';
+
+  @override
+  String get merchantProfileFinancialWallet =>
+      'My Wallet and Financial Information';
+
+  @override
+  String get merchantWalletTitle => 'Your wallet';
+
+  @override
+  String get merchantWalletSupervisorStatus =>
+      'Verified supervisor • Independent and Waselni sector';
+
+  @override
+  String get merchantWalletReady => 'Active and ready';
+
+  @override
+  String get merchantWalletAvailableBalance =>
+      'Balance available for instant withdrawal';
+
+  @override
+  String get merchantWalletAvailableAmount => '8,450';
+
+  @override
+  String get merchantWalletBalanceDescription =>
+      'Includes approved field supervision dues and verification allowances, ready for instant transfer.';
+
+  @override
+  String get merchantWalletPendingDues => 'Under financial review';
+
+  @override
+  String get merchantWalletPendingAmount => '4,050';
+
+  @override
+  String get merchantWalletTotalDues => 'Total entitlements';
+
+  @override
+  String get merchantWalletTotalAmount => '12,500';
+
+  @override
+  String get merchantWalletSettlementCycle => 'Regular weekly settlement cycle';
+
+  @override
+  String get merchantWalletReadiness => 'Payout readiness: 68%';
+
+  @override
+  String get merchantWalletWithdrawTitle =>
+      'Request withdrawal of financial dues';
+
+  @override
+  String get merchantWalletNoTransferFees => 'No transfer fees';
+
+  @override
+  String get merchantWalletRequestedAmount => 'Requested withdrawal amount';
+
+  @override
+  String get merchantWalletFullBalance => 'Withdraw full balance (SAR 8,450)';
+
+  @override
+  String get merchantWalletTransferLimit =>
+      'Minimum withdrawal is SAR 100; daily maximum is SAR 20,000';
+
+  @override
+  String get merchantWalletChooseMethod => 'Choose a transfer destination';
+
+  @override
+  String get merchantWalletBankTransfer => 'Bank transfer';
+
+  @override
+  String get merchantWalletIban => 'IBAN';
+
+  @override
+  String get merchantWalletDigitalWallet => 'Digital wallet';
+
+  @override
+  String get merchantWalletWalletProvider => 'VFC / E&';
+
+  @override
+  String get merchantWalletInstantTransfer => 'InstaPay';
+
+  @override
+  String get merchantWalletInstant => 'Instant';
+
+  @override
+  String get merchantWalletTransferAddress =>
+      'Instant payment address (IPA) or linked phone number';
+
+  @override
+  String get merchantWalletIbanValue => 'SA0380000000608010167519';
+
+  @override
+  String get merchantWalletPhoneValue => '01012345678';
+
+  @override
+  String get merchantWalletInstantAddress => 'supervisor.audit@instapay';
+
+  @override
+  String get merchantWalletAccountName =>
+      'Registered account name: Abdulrahman Al-Shehri (verified)';
+
+  @override
+  String get merchantWalletProcessingDetails =>
+      'Processing speed: instant, 24/7\nProcessing and transfer fee: SAR 0.5 (fully covered for the supervisor)';
+
+  @override
+  String get merchantWalletConfirmWithdrawal =>
+      'Confirm and request withdrawal';
+
+  @override
+  String get merchantWalletBonusTitle =>
+      'Weekly achievement bonus available! +500';
+
+  @override
+  String get merchantWalletBonusDescription =>
+      'Completed 5 field tasks successfully, exceeding the defined standards.';
+
+  @override
+  String get merchantWalletTransactionHistory =>
+      'Recent operations and transfers';
+
+  @override
+  String get merchantWalletTransactionBank => 'Bank withdrawal - Al Rajhi Bank';
+
+  @override
+  String get merchantWalletTransactionDateOne => 'Yesterday, 2:40 PM';
+
+  @override
+  String get merchantWalletTransactionAmountOne => '-5,000';
+
+  @override
+  String get merchantWalletTransactionInstant => 'Instant transfer - InstaPay';
+
+  @override
+  String get merchantWalletTransactionDateTwo => 'October 21';
+
+  @override
+  String get merchantWalletTransactionAmountTwo => '-2,200';
+
+  @override
+  String get merchantWalletCompleted => 'Completed';
+
+  @override
+  String get merchantWalletAuditNotice =>
+      'Financial operations are encrypted and subject to Waselni accounting oversight';
+
+  @override
+  String get merchantWalletAuditCode =>
+      'Periodic verification code: AUDIT-SEC-2024-v9';
+
+  @override
+  String get merchantWalletActionUnavailable =>
+      'Withdrawal requests are not available yet';
+
+  @override
+  String get merchantProfileJustUpdated => 'Updated just now';
+
+  @override
+  String get merchantProfileBalanceTitle => 'Available balance and dues';
+
+  @override
+  String get merchantProfileBalance => '14,850';
+
+  @override
+  String get merchantProfileBalanceDetails =>
+      'Field supervision allowance + verification dues';
+
+  @override
+  String get merchantProfileWalletDetails => 'Wallet details';
+
+  @override
+  String get merchantProfileDocumentDetails => 'Approved supervisor document';
+
+  @override
+  String get merchantProfileDocumentNumber => 'Document number';
+
+  @override
+  String get merchantProfileClose => 'Close';
+
+  @override
+  String get merchantProfileMinutesUnit => 'minutes ago';
+
+  @override
+  String get merchantProfileTwoHoursAgo => '2 hours ago';
+
+  @override
+  String get merchantProfileMorningAbbreviation => 'AM';
+
+  @override
+  String get merchantInfoTitle => 'Merchant information';
+
+  @override
+  String get merchantInfoProfile => 'Merchant profile';
+
+  @override
+  String get merchantInfoLiveMonitoring => 'Live monitoring';
+
+  @override
+  String get merchantInfoStatusActive => 'Active';
+
+  @override
+  String get merchantInfoStatusActiveVerified => 'Active & verified';
+
+  @override
+  String get merchantInfoStatusUnderAudit => 'Under review';
+
+  @override
+  String get merchantInfoStatusUpdateRequired => 'Update required';
+
+  @override
+  String get merchantInfoStatusSuspended => 'Temporarily suspended';
+
+  @override
+  String merchantInfoAccreditedCategory(Object category) {
+    return 'Accredited in $category';
+  }
+
+  @override
+  String get merchantInfoTotalAds => 'Total ads';
+
+  @override
+  String merchantInfoActiveAds(Object count) {
+    return '$count active';
+  }
+
+  @override
+  String merchantInfoAdsUnderReview(Object count) {
+    return '$count under review';
+  }
+
+  @override
+  String get merchantInfoAdsShort => 'AD';
+
+  @override
+  String get merchantInfoAdsGroup => 'Ads';
+
+  @override
+  String get merchantInfoPendingOperations => 'Pending operations';
+
+  @override
+  String get merchantInfoSuspendTemporarily => 'Suspend temporarily';
+
+  @override
+  String get merchantInfoMessageMerchant => 'Message merchant';
+
+  @override
+  String get merchantInfoActionUnavailable =>
+      'This action is not connected yet';
+
+  @override
+  String get merchantPendingOperationsEmpty =>
+      'There are no pending operations or ads for this merchant';
+
+  @override
+  String merchantPendingCount(Object count) {
+    return '$count pending operations';
+  }
+
+  @override
+  String get merchantPendingMoreDetailsUnavailable =>
+      'The pending count is known, but the full list details are not currently available.';
+
+  @override
+  String get merchantPendingReference => 'Advertisement reference';
+
+  @override
+  String get merchantPendingPrice => 'Price';
+
+  @override
+  String get merchantPendingApprove => 'Approve';
+
+  @override
+  String get merchantPendingReject => 'Reject';
+
+  @override
+  String get merchantPendingOperationHandled => 'Advertisement status updated';
+
+  @override
+  String get merchantConversationEmpty =>
+      'Start a conversation with this merchant';
+
+  @override
+  String get merchantConversationInputHint => 'Write a message...';
+
+  @override
+  String get merchantConversationSend => 'Send';
+
+  @override
+  String get merchantInfoFinancialSettings =>
+      'Financial and commission settings';
+
+  @override
+  String get merchantInfoMerchantDashboard => 'Merchant dashboard';
+
+  @override
+  String get merchantInfoFinancialSettingsDescription =>
+      'Control the merchant\'s fees and commission';
+
+  @override
+  String get merchantInfoCfoPermission =>
+      'Exclusive permissions for the approved finance supervisor';
+
+  @override
+  String get merchantInfoSalesCommission => 'Sales commission';
+
+  @override
+  String get merchantInfoFixedAmount => 'Fixed amount (SAR)';
+
+  @override
+  String get merchantInfoPercentage => 'Percentage (%)';
+
+  @override
+  String get merchantInfoAdjustCommission => 'Adjust commission percentage (%)';
+
+  @override
+  String get merchantInfoSave => 'Save';
+
+  @override
+  String get merchantInfoCommissionExample =>
+      'Estimated commission for a sale of SAR 100:';
+
+  @override
+  String merchantInfoCommissionValue(Object amount, Object currency) {
+    return 'Commission amount: $amount $currency';
+  }
+
+  @override
+  String get merchantInfoInvalidCommission =>
+      'Enter a commission from 0 to 100';
+
+  @override
+  String get merchantInfoCommissionSaved => 'Commission updated';
+
+  @override
+  String get merchantInfoVerification =>
+      'Verification and accreditation details';
+
+  @override
+  String get merchantInfoVerifiedBadge => 'Verified data';
+
+  @override
+  String get merchantInfoOwner => 'Owner / authorized person';
+
+  @override
+  String get merchantInfoPhone => 'Verified phone number';
+
+  @override
+  String get merchantInfoEmail => 'Primary email';
+
+  @override
+  String get merchantInfoJoinedDate => 'Supervision start date';
+
+  @override
+  String get merchantInfoNotProvided => 'Not provided';
+
+  @override
+  String get merchantInfoFieldAds => 'Field merchant advertisements';
+
+  @override
+  String merchantInfoShowAll(Object count) {
+    return 'Show all ($count)';
+  }
+
+  @override
+  String get merchantInfoNoAds => 'No advertisements are available';
+
+  @override
+  String get merchantInfoAdApproved => 'Approved';
+
+  @override
+  String get merchantInfoAdUnderReview => 'Under review';
+
+  @override
+  String get merchantSuspendBadge => 'High risk';
+
+  @override
+  String get merchantSuspendTitle => 'Suspend merchant';
+
+  @override
+  String get merchantSuspendSubtitle =>
+      'Regulatory and administrative decision';
+
+  @override
+  String get merchantSuspendImpact =>
+      'Suspending this merchant will hide all of its ads immediately, stop related business activity, and prevent it from receiving new orders until the violation is resolved and the account is reactivated.';
+
+  @override
+  String get merchantSuspendDetails => 'Violation and field notes';
+
+  @override
+  String merchantSuspendCharacterCount(Object count) {
+    return '$count / 500';
+  }
+
+  @override
+  String get merchantSuspendDetailsHint =>
+      'Describe the violation clearly for the merchant in the control panel, and explain the steps required to resolve it...';
+
+  @override
+  String get merchantSuspendPrivateNote =>
+      'This note is for the merchant\'s official account';
+
+  @override
+  String get merchantSuspendAttachments =>
+      'Supporting documents and field evidence';
+
+  @override
+  String get merchantSuspendUpload =>
+      'Tap to attach an inspection report or photos';
+
+  @override
+  String get merchantSuspendFileTypes =>
+      'Supported formats: PDF, JPG, PNG (up to 10 MB)';
+
+  @override
+  String get merchantSuspendDuration => 'Proposed suspension period';
+
+  @override
+  String get merchantSuspendReasonCorrection =>
+      'Until the violation is corrected';
+
+  @override
+  String get merchantSuspendReasonCorrectionDescription =>
+      'Recommended, pending a field review';
+
+  @override
+  String get merchantSuspendReasonDuration => 'Suspend for 7 days';
+
+  @override
+  String get merchantSuspendReasonDurationDescription =>
+      'Automatically lift after the period ends';
+
+  @override
+  String get merchantSuspendReasonLegal => 'Refer to Legal Affairs';
+
+  @override
+  String get merchantSuspendReasonLegalDescription =>
+      'Requires a legal investigation and statement';
+
+  @override
+  String get merchantSuspendConfirm =>
+      'Confirm temporary suspension and notify merchant';
+
+  @override
+  String get merchantSuspendCancel => 'Cancel and return to merchant profile';
+
+  @override
+  String get noMerchantsFound => 'No merchants match the search criteria';
+
+  @override
+  String get merchantsUnderSupervisionTitle => 'Supervised Merchants';
+
+  @override
+  String get supervisedAreaLabel =>
+      'Supervision Scope: Riyadh Region (Central & North)';
+
+  @override
+  String get supervisorFullName =>
+      'Supervisor: Ahmed bin Abdulaziz Al-Khudairi';
+
+  @override
+  String get totalFieldAccountsTitle => 'Total Field Accounts';
+
+  @override
+  String get merchantsUnderYourSupervision => 'Stores Under Your Supervision';
+
+  @override
+  String get complianceRate => 'Compliance';
+
+  @override
+  String get activeAndVerifiedMetric => 'Active & Verified';
+
+  @override
+  String get pendingAlertsMetric => 'Pending Alerts';
+
+  @override
+  String get temporarySuspendedMetric => 'Temporary Suspension';
+
+  @override
+  String get searchMerchantPlaceholder =>
+      'Search by merchant name, code, or CR...';
+
+  @override
+  String filterAllWithCount(Object count) {
+    return 'All ($count)';
+  }
+
+  @override
+  String filterActiveWithCount(Object count) {
+    return '$count Active & Verified';
+  }
+
+  @override
+  String filterPendingWithCount(Object count) {
+    return '$count Pending Alerts';
+  }
+
+  @override
+  String filterSuspendedWithCount(Object count) {
+    return '$count Temporarily Suspended';
+  }
+
+  @override
+  String get sortMostActive => 'Sort: Most Active';
+
+  @override
+  String get activeAdsHeader => 'Active Ads';
+
+  @override
+  String get pendingReviewHeader => 'Pending Review';
+
+  @override
+  String get platformCommissionHeader => 'Platform Commission';
+
+  @override
+  String get viewProfileAndControl => 'View Profile & Control';
+
+  @override
+  String get pendingProfitWithdrawalAlert => 'Pending Profit Withdrawal';
+
+  @override
+  String get supervisoryNoteActive => 'Active Supervisory Note';
+
+  @override
+  String get deliveryStatusFieldInspection => 'Field Inspection';
+
+  @override
+  String get deliveryStatusHeader => 'Delivery Status';
+
+  @override
+  String get descriptionStandardsViolation =>
+      'Description Standards Violation VR3-858';
+
+  @override
+  String get zeroAdsDisplayedSuspended =>
+      '0 Displayed Ads (Administrative Precautionary Stop)';
+
+  @override
+  String get summonAction => 'Summon';
+
+  @override
+  String get reviewViolationAndUnfreeze => 'Review Violation & Unfreeze';
+
+  @override
+  String get suspendedBadge => 'Suspended';
+
+  @override
+  String get remainingMerchantsTitle =>
+      'There are 13 other merchants fully active and compliant';
+
+  @override
+  String get remainingMerchantsSubtitle =>
+      'Their routine weekly records were inspected successfully';
+
+  @override
+  String get loadAndShowRemainingList => 'Load & View Remaining List';
+
+  @override
+  String get fieldGovernanceCardTitle =>
+      'Field Supervisor Governance & Delegation';
+
+  @override
+  String get fieldGovernanceCardBody =>
+      'All merchants registered above are directly tied to your field supervision scope under governance and administrative delegation order SUP-4092.';
+
+  @override
+  String get addNewMerchantToSupervision => 'Add New Merchant to Supervision';
+
+  @override
+  String get retryLoadMerchants => 'Retry';
+
+  @override
+  String get merchantNameField => 'Merchant or Store Name';
+
+  @override
+  String get merchantCrField => 'Commercial Registration No.';
+
+  @override
+  String get merchantPhoneField => 'Verified Phone Number';
+
+  @override
+  String get supervisedMerchantsBadge => 'Merchant Supervisor';
 }

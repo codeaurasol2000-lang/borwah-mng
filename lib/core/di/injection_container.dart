@@ -1,32 +1,93 @@
 import 'package:get_it/get_it.dart';
 
+import '../../features/merchants/data/datasources/merchants_data_source.dart';
+import '../../features/merchants/data/datasources/merchants_mock_data_source.dart';
+import '../../features/merchants/data/repositories/merchants_repository_impl.dart';
+import '../../features/merchants/domain/repositories/merchants_repository.dart';
+import '../../features/merchants/domain/usecases/get_merchants_usecase.dart';
+import '../../features/merchants/domain/usecases/get_supervised_merchants_usecase.dart';
+import '../../features/merchants/domain/usecases/get_supervisor_stats_usecase.dart';
+import '../../features/merchants/presentation/controllers/merchants_cubit.dart';
 import '../../features/finance/data/datasources/finance_mock_data_source.dart';
 import '../../features/finance/data/datasources/finance_remote_data_source.dart';
 import '../../features/finance/data/repositories/finance_repository_impl.dart';
 import '../../features/finance/domain/repositories/finance_repository.dart';
+import '../../features/finance/domain/usecases/get_bank_account_edit_requests_usecase.dart';
+import '../../features/finance/domain/usecases/get_bank_link_requests_usecase.dart';
 import '../../features/finance/domain/usecases/get_bank_accounts_usecase.dart';
 import '../../features/finance/domain/usecases/get_department_wallet_usecase.dart';
+import '../../features/finance/domain/usecases/get_expense_requests_usecase.dart';
 import '../../features/finance/domain/usecases/get_finance_summary_usecase.dart';
+import '../../features/finance/domain/usecases/get_frozen_withdrawals_usecase.dart';
 import '../../features/finance/domain/usecases/get_merchant_withdrawals_usecase.dart';
 import '../../features/finance/domain/usecases/get_subscriptions_usecase.dart';
 import '../../features/finance/domain/usecases/get_supervisor_withdrawals_usecase.dart';
+import '../../features/finance/domain/usecases/submit_bank_account_edit_request_usecase.dart';
+import '../../features/finance/domain/usecases/submit_expense_request_usecase.dart';
+import '../../features/finance/domain/usecases/restore_frozen_withdrawal_usecase.dart';
+import '../../features/finance/domain/usecases/reject_and_forfeit_withdrawal_usecase.dart';
+import '../../features/finance/domain/usecases/approve_bank_link_request_usecase.dart';
+import '../../features/finance/domain/usecases/request_iban_certificate_usecase.dart';
+import '../../features/finance/domain/usecases/freeze_bank_link_request_usecase.dart';
+import '../../features/finance/domain/usecases/reject_bank_link_request_usecase.dart';
+import '../../features/finance/domain/usecases/restore_frozen_bank_link_request_usecase.dart';
+import '../../features/finance/domain/usecases/reject_frozen_bank_link_request_usecase.dart';
 
 final sl = GetIt.instance;
 
 Future<void> initDependencies() async {
   // Data Sources (تبديل هذا السطر فقط بالـ Api DataSource عند استلام الـ API)
-  sl.registerLazySingleton<FinanceRemoteDataSource>(() => FinanceMockDataSource());
+  sl.registerLazySingleton<FinanceRemoteDataSource>(
+      () => FinanceMockDataSource());
 
   // Repositories
   sl.registerLazySingleton<FinanceRepository>(
-        () => FinanceRepositoryImpl(remoteDataSource: sl()),
+    () => FinanceRepositoryImpl(remoteDataSource: sl()),
   );
 
   // Use Cases
   sl.registerLazySingleton(() => GetFinanceSummaryUseCase(sl()));
   sl.registerLazySingleton(() => GetBankAccountsUseCase(sl()));
+  sl.registerLazySingleton(() => GetBankAccountEditRequestsUseCase(sl()));
+  sl.registerLazySingleton(() => SubmitBankAccountEditRequestUseCase(sl()));
+  sl.registerLazySingleton(() => GetExpenseRequestsUseCase(sl()));
+  sl.registerLazySingleton(() => SubmitExpenseRequestUseCase(sl()));
   sl.registerLazySingleton(() => GetDepartmentWalletUseCase(sl()));
   sl.registerLazySingleton(() => GetMerchantWithdrawalsUseCase(sl()));
   sl.registerLazySingleton(() => GetSupervisorWithdrawalsUseCase(sl()));
   sl.registerLazySingleton(() => GetSubscriptionsUseCase(sl()));
+  sl.registerLazySingleton(() => GetFrozenWithdrawalsUseCase(sl()));
+  sl.registerLazySingleton(() => RestoreFrozenWithdrawalUseCase(sl()));
+  sl.registerLazySingleton(() => RejectAndForfeitWithdrawalUseCase(sl()));
+  sl.registerLazySingleton(() => GetBankLinkRequestsUseCase(sl()));
+  sl.registerLazySingleton(() => ApproveBankLinkRequestUseCase(sl()));
+  sl.registerLazySingleton(() => RequestIbanCertificateUseCase(sl()));
+  sl.registerLazySingleton(() => FreezeBankLinkRequestUseCase(sl()));
+  sl.registerLazySingleton(() => RejectBankLinkRequestUseCase(sl()));
+  sl.registerLazySingleton(() => RestoreFrozenBankLinkRequestUseCase(sl()));
+  sl.registerLazySingleton(() => RejectFrozenBankLinkRequestUseCase(sl()));
+
+  // Merchants
+  sl.registerLazySingleton<MerchantsDataSource>(
+    () => MerchantsMockDataSource(),
+  );
+  sl.registerLazySingleton<MerchantsRepository>(
+    () => MerchantsRepositoryImpl(dataSource: sl()),
+  );
+  sl.registerLazySingleton(
+    () => GetMerchantsUseCase(repository: sl()),
+  );
+  sl.registerLazySingleton(
+    () => GetSupervisorStatsUseCase(repository: sl()),
+  );
+  sl.registerLazySingleton(
+    () => GetSupervisedMerchantsUseCase(repository: sl()),
+  );
+  sl.registerFactory(
+    () => MerchantsCubit(
+      getMerchantsUseCase: sl(),
+      getSupervisorStatsUseCase: sl(),
+      getSupervisedMerchantsUseCase: sl(),
+    ),
+  );
 }

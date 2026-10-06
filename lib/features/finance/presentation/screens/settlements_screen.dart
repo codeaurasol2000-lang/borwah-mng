@@ -249,16 +249,13 @@ class _SettlementsScreenState extends State<SettlementsScreen>
 
   Widget _buildBalances() {
     final l10n = AppLocalizations.of(context)!;
-    final isArabic = l10n.localeName.startsWith('ar');
     return Row(
       children: [
         Expanded(
           child: _buildBalanceCard(
             title: l10n.settlementsEscrowWallet,
             amount: '148,650.00',
-            subtitle: isArabic
-                ? 'مربوط بـ مصرف الراجحي الرسمي'
-                : 'Linked to Al Rajhi Official Bank',
+            subtitle: l10n.settlementsLinkedRajhiEscrow,
             icon: Icons.account_balance_wallet_outlined,
             color: AppColors.info,
           ),
@@ -284,7 +281,7 @@ class _SettlementsScreenState extends State<SettlementsScreen>
     required IconData icon,
     required Color color,
   }) {
-    final isArabic = AppLocalizations.of(context)!.localeName == 'ar';
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       constraints: const BoxConstraints(minHeight: 92),
       padding: const EdgeInsets.all(10),
@@ -324,7 +321,7 @@ class _SettlementsScreenState extends State<SettlementsScreen>
                     color: AppColors.primaryDark),
               ),
               const SizedBox(width: 4),
-              Text(isArabic ? 'ر.س' : 'SAR',
+              Text(l10n.currencyEgy,
                   style: const TextStyle(
                       fontSize: 9, color: AppColors.textSecondary)),
             ],
@@ -448,9 +445,11 @@ class _SettlementsScreenState extends State<SettlementsScreen>
 
   ({
     String description,
+    String name,
     String referenceTitle,
     String badge,
     String status,
+    String initials,
     String age
   }) _localizedRequestLabels(
     _SettlementRequest request,
@@ -459,30 +458,38 @@ class _SettlementsScreenState extends State<SettlementsScreen>
     return switch (request.id) {
       '#SETTL-2024-098' => (
           description: l10n.settlementVerifiedBank,
+          name: l10n.settlementBeneficiaryTariq,
           referenceTitle: l10n.settlementMaintenanceDispute,
           badge: l10n.settlementFullRefund,
           status: l10n.filterInReview,
+          initials: l10n.settlementInitialTariq,
           age: l10n.settlementAge35Minutes,
         ),
       '#SETTL-2024-102' => (
           description: l10n.settlementApprovedPartner,
+          name: l10n.settlementBeneficiaryRealEstate,
           referenceTitle: l10n.settlementCommissionCorrection,
           badge: l10n.settlementCommissionSettlement,
           status: l10n.filterApproved,
+          initials: l10n.settlementInitialRealEstate,
           age: l10n.settlementAgeTwoHours,
         ),
       '#SETTL-2024-105' => (
           description: l10n.settlementIndependentProvider,
+          name: l10n.settlementBeneficiaryKhalid,
           referenceTitle: l10n.settlementMediationDelivery,
           badge: l10n.settlementPenaltyDeduction,
           status: l10n.filterDisputed,
+          initials: l10n.settlementInitialKhalid,
           age: l10n.settlementAgeToday,
         ),
       _ => (
           description: request.description,
+          name: request.name,
           referenceTitle: request.referenceTitle,
           badge: request.badge,
           status: request.status,
+          initials: request.initials,
           age: request.age,
         ),
     };
@@ -525,17 +532,18 @@ class _SettlementsScreenState extends State<SettlementsScreen>
             MaterialPageRoute(
               builder: (_) => SettlementDetailsScreen(
                 id: request.id,
-                name: request.name,
+                name: labels.name,
                 description: labels.description,
                 amount: request.amount,
                 reference: request.reference,
                 referenceTitle: labels.referenceTitle,
                 badge: labels.badge,
                 status: labels.status,
-                initials: request.initials,
+                initials: labels.initials,
                 age: labels.age,
                 color: request.color,
                 badgeColor: request.badgeColor,
+                linkedBank: l10n.settlementsLinkedRajhiEscrow,
               ),
             ),
           );
@@ -574,7 +582,7 @@ class _SettlementsScreenState extends State<SettlementsScreen>
                     radius: 17,
                     backgroundColor: request.color,
                     child: Text(
-                      request.initials,
+                      labels.initials,
                       style: const TextStyle(
                           color: AppColors.infoDark,
                           fontWeight: FontWeight.bold,
@@ -587,7 +595,7 @@ class _SettlementsScreenState extends State<SettlementsScreen>
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          request.name,
+                          labels.name,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.end,
@@ -621,7 +629,7 @@ class _SettlementsScreenState extends State<SettlementsScreen>
                                 color: AppColors.primaryDark),
                           ),
                           const SizedBox(width: 3),
-                          Text(isArabic ? 'ر.س' : 'SAR',
+                          Text(l10n.currencyEgy,
                               style: const TextStyle(
                                   fontSize: 8, color: AppColors.textSecondary)),
                         ],
@@ -697,7 +705,7 @@ class _SettlementsScreenState extends State<SettlementsScreen>
           ),
         ),
         Text(
-          l10n.localeName.startsWith('ar') ? '142 عملية' : '142 transactions',
+          l10n.settlementRecentOperationsCount,
           style: const TextStyle(fontSize: 9, color: AppColors.info),
         ),
         const SizedBox(width: 6),
@@ -713,7 +721,6 @@ class _SettlementsScreenState extends State<SettlementsScreen>
 
   Widget _buildRecentSettlement(_RecentSettlement settlement) {
     final l10n = AppLocalizations.of(context)!;
-    final isArabic = l10n.localeName.startsWith('ar');
     final labels = _localizedRecentLabels(settlement, l10n);
     return Container(
       margin: const EdgeInsets.only(bottom: 7),
@@ -751,7 +758,7 @@ class _SettlementsScreenState extends State<SettlementsScreen>
                       style: const TextStyle(
                           fontSize: 11, fontWeight: FontWeight.bold)),
                   const SizedBox(width: 3),
-                  Text(isArabic ? 'ر.س' : 'SAR',
+                  Text(l10n.currencyEgy,
                       style: const TextStyle(
                           fontSize: 8, color: AppColors.textSecondary)),
                 ],

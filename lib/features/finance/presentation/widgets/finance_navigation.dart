@@ -170,27 +170,55 @@ class FinanceNavigation {
   }
 }
 
+class FinanceNavigationItem {
+  final IconData icon;
+  final String label;
+
+  const FinanceNavigationItem({
+    required this.icon,
+    required this.label,
+  });
+}
+
 class FinanceBottomNavigationBar extends StatelessWidget {
   final int currentIndex;
   final ValueChanged<int>? onTap;
+  final List<FinanceNavigationItem>? items;
 
   const FinanceBottomNavigationBar({
     super.key,
     required this.currentIndex,
     this.onTap,
+    this.items,
   });
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    final navItems = [
-      (icon: Icons.history_edu, label: l10n.navAudit),
-      (icon: Icons.percent, label: l10n.navCommissions),
-      (icon: Icons.sync_alt, label: l10n.navSettlements),
-      (icon: Icons.fact_check_outlined, label: l10n.navReconciliation),
-      (icon: Icons.account_balance, label: l10n.navHome),
-    ];
+    final navItems = items ??
+        [
+          FinanceNavigationItem(
+            icon: Icons.history_edu,
+            label: l10n.navAudit,
+          ),
+          FinanceNavigationItem(
+            icon: Icons.percent,
+            label: l10n.navCommissions,
+          ),
+          FinanceNavigationItem(
+            icon: Icons.sync_alt,
+            label: l10n.navSettlements,
+          ),
+          FinanceNavigationItem(
+            icon: Icons.fact_check_outlined,
+            label: l10n.navReconciliation,
+          ),
+          FinanceNavigationItem(
+            icon: Icons.account_balance,
+            label: l10n.navHome,
+          ),
+        ];
 
     return Container(
       decoration: BoxDecoration(
@@ -258,8 +286,9 @@ class FinanceBottomNavigationBar extends StatelessWidget {
                             maxLines: 1,
                             style: TextStyle(
                               fontSize: 9,
-                              fontWeight:
-                                  isSelected ? FontWeight.bold : FontWeight.w500,
+                              fontWeight: isSelected
+                                  ? FontWeight.bold
+                                  : FontWeight.w500,
                               color: isSelected
                                   ? AppColors.primaryDark
                                   : AppColors.textSecondary,

@@ -21,10 +21,12 @@ import '../widgets/finance_navigation.dart';
 
 class FinanceDashboardScreen extends StatefulWidget {
   final bool showBottomNavigation;
+  final VoidCallback onLogout;
 
   const FinanceDashboardScreen({
     super.key,
     this.showBottomNavigation = true,
+    required this.onLogout,
   });
 
   @override
@@ -77,8 +79,9 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
       create: (_) => FinanceDashboardCubit(getFinanceSummaryUseCase: sl())
         ..loadDashboardData(),
       child: Directionality(
-        textDirection:
-            l10n.localeName.startsWith('ar') ? TextDirection.rtl : TextDirection.ltr,
+        textDirection: l10n.localeName.startsWith('ar')
+            ? TextDirection.rtl
+            : TextDirection.ltr,
         child: FinanceSwipeNavigation(
           currentIndex: 4,
           enabled: widget.showBottomNavigation,
@@ -98,7 +101,8 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (_) => const ProfileScreen()),
+                                builder: (_) =>
+                                    ProfileScreen(onLogout: widget.onLogout)),
                           );
                         },
                         child: const CircleAvatar(
@@ -574,7 +578,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                                   const SizedBox(width: 4),
                                                   Flexible(
                                                     child: Text(
-                                                      l10n.currencySar,
+                                                      l10n.currencyEgy,
                                                       style: const TextStyle(
                                                         fontSize: 12,
                                                         fontWeight:
@@ -629,8 +633,10 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                                     l10n.expenseManagement,
                                                     style: TextStyle(
                                                       fontSize: 10,
-                                                      fontWeight: FontWeight.bold,
-                                                      color: Colors.blue.shade700,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color:
+                                                          Colors.blue.shade700,
                                                       height: 1.2,
                                                     ),
                                                     textAlign: TextAlign.center,
@@ -746,7 +752,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                   Expanded(
                                     child: _buildMetricTileNew(
                                       title: l10n.monthlyEarnedCommissions,
-                                      currencyText: l10n.currencySar,
+                                      currencyText: l10n.currencyEgy,
                                       value: '284,900',
                                       icon: Icons.auto_graph,
                                       color: Colors.blue.shade700,
@@ -853,7 +859,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                                     ),
                                                     const SizedBox(width: 4),
                                                     Text(
-                                                      l10n.currencySar,
+                                                      l10n.currencyEgy,
                                                       style: const TextStyle(
                                                         fontSize: 10,
                                                         color: Colors.grey,
@@ -1045,8 +1051,10 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                                     l10n.verySafeAndStable,
                                                     style: TextStyle(
                                                       fontSize: 9,
-                                                      color: Colors.blue.shade700,
-                                                      fontWeight: FontWeight.bold,
+                                                      color:
+                                                          Colors.blue.shade700,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                       height: 1.2,
                                                     ),
                                                     textAlign: TextAlign.center,
@@ -1524,8 +1532,10 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                   ),
                 ),
                 const SizedBox(width: 8),
-                const Icon(
-                  Icons.arrow_forward_ios,
+                Icon(
+                  Directionality.of(context) == TextDirection.rtl
+                      ? Icons.arrow_back_ios
+                      : Icons.arrow_forward_ios,
                   size: 12,
                   color: Colors.grey,
                 ),
@@ -1712,7 +1722,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
     IconData icon,
     DepartmentType type,
   ) {
-    final currencyText = AppLocalizations.of(context)!.currencySar;
+    final currencyText = AppLocalizations.of(context)!.currencyEgy;
 
     return GestureDetector(
       onTap: () {
@@ -1732,77 +1742,86 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
         ),
         child: Row(
           children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.blue.shade50,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Icon(
-                icon,
-                size: 20,
-                color: AppColors.primaryDark,
+            Expanded(
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.blue.shade50,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Icon(
+                      icon,
+                      size: 20,
+                      color: AppColors.primaryDark,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          subtitle,
+                          style: const TextStyle(
+                            fontSize: 9,
+                            color: Colors.grey,
+                            height: 1.3,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      balance,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    subtitle,
-                    style: const TextStyle(
-                      fontSize: 9,
-                      color: Colors.grey,
-                      height: 1.3,
+                    Text(
+                      currencyText,
+                      style: const TextStyle(
+                        fontSize: 9,
+                        color: Colors.grey,
+                      ),
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 8),
-            Flexible(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    balance,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Text(
-                    currencyText,
-                    style: const TextStyle(
-                      fontSize: 9,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 8),
-            const Icon(
-              Icons.arrow_forward_ios,
-              size: 12,
-              color: Colors.grey,
+                  ],
+                ),
+                const SizedBox(width: 8),
+                const Icon(
+                  Icons.arrow_forward_ios,
+                  size: 12,
+                  color: Colors.grey,
+                ),
+              ],
             ),
           ],
         ),

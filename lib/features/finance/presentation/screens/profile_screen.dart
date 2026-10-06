@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../auth/presentation/controllers/auth_cubit.dart';
-import '../../../auth/presentation/screens/login_screen.dart';
 import 'widgets/withdraw_bottom_sheet.dart';
 import 'bank_accounts_screen.dart';
 import 'edit_matrix_screen.dart';
 import '../widgets/finance_navigation.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+  final VoidCallback onLogout;
+
+  const ProfileScreen({
+    super.key,
+    required this.onLogout,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -422,7 +424,7 @@ class ProfileScreen extends StatelessWidget {
                                   fontWeight: FontWeight.bold,
                                   height: 1)),
                           const SizedBox(width: 4),
-                          Text(l10n.currencySar,
+                          Text(l10n.currencyEgy,
                               style: const TextStyle(
                                   color: Colors.white70,
                                   fontSize: 14,
@@ -476,7 +478,7 @@ class ProfileScreen extends StatelessWidget {
                                                 fontWeight: FontWeight.bold)),
                                       ),
                                       const SizedBox(width: 2),
-                                      Text(l10n.currencySar,
+                                      Text(l10n.currencyEgy,
                                           style: const TextStyle(
                                               color: Colors.white70,
                                               fontSize: 9)),
@@ -531,7 +533,7 @@ class ProfileScreen extends StatelessWidget {
                                                 fontWeight: FontWeight.bold)),
                                       ),
                                       const SizedBox(width: 2),
-                                      Text(l10n.currencySar,
+                                      Text(l10n.currencyEgy,
                                           style: const TextStyle(
                                               color: Colors.white70,
                                               fontSize: 9)),
@@ -1108,11 +1110,7 @@ class ProfileScreen extends StatelessWidget {
     );
 
     if (confirmed != true || !context.mounted) return;
-    context.read<AuthCubit>().logout();
-    await Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (_) => const LoginScreen()),
-      (_) => false,
-    );
+    onLogout();
   }
 
   Widget _buildContactBox(

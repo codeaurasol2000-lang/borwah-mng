@@ -7,6 +7,8 @@ import '../../domain/usecases/get_supervisor_withdrawals_usecase.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/widgets/finance_dialogs.dart';
 import '../widgets/finance_navigation.dart';
+import '../widgets/withdrawal_request_details_sheet.dart';
+import '../utils/finance_localizer.dart';
 
 class SupervisorWithdrawalsScreen extends StatefulWidget {
   const SupervisorWithdrawalsScreen({super.key});
@@ -84,8 +86,9 @@ class _SupervisorWithdrawalsScreenState
     final l10n = AppLocalizations.of(context)!;
 
     return Directionality(
-      textDirection:
-          l10n.localeName.startsWith('ar') ? TextDirection.rtl : TextDirection.ltr,
+      textDirection: l10n.localeName.startsWith('ar')
+          ? TextDirection.rtl
+          : TextDirection.ltr,
       child: Scaffold(
         backgroundColor: const Color(0xFFF9FAFB),
         appBar: FinancePageAppBar(
@@ -117,7 +120,8 @@ class _SupervisorWithdrawalsScreenState
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Flexible(
-                                child: Text(l10n.supervisorWithdrawalsHeaderSubtitle,
+                                child: Text(
+                                    l10n.supervisorWithdrawalsHeaderSubtitle,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
@@ -159,7 +163,7 @@ class _SupervisorWithdrawalsScreenState
                               title: l10n.awaitingApprovalTab,
                               count: '$_pendingCount',
                               sub:
-                                  '${CurrencyFormatter.format(_totalPendingAmount, includeCurrency: false)} ${l10n.currencySar}',
+                                  '${CurrencyFormatter.format(_totalPendingAmount, includeCurrency: false)} ${l10n.currencyEgy}',
                               icon: Icons.pending_actions,
                               color: AppColors.primaryDark,
                               countColor: Colors.black87,
@@ -243,7 +247,7 @@ class _SupervisorWithdrawalsScreenState
                                             color: Colors.white70,
                                             fontSize: 10)),
                                     Text(
-                                        '${CurrencyFormatter.format(_totalPendingAmount, includeCurrency: false)} ${l10n.currencySar}',
+                                        '${CurrencyFormatter.format(_totalPendingAmount, includeCurrency: false)} ${l10n.currencyEgy}',
                                         style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 18,
@@ -522,7 +526,8 @@ class _SupervisorWithdrawalsScreenState
                             children: [
                               Flexible(
                                 child: Text(
-                                  req.beneficiaryName,
+                                  FinanceLocalizer.localizeWithdrawalText(
+                                      context, req.beneficiaryName),
                                   style: const TextStyle(
                                       fontWeight: FontWeight.w900,
                                       fontSize: 14,
@@ -543,7 +548,8 @@ class _SupervisorWithdrawalsScreenState
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      req.beneficiaryRole,
+                      FinanceLocalizer.localizeWithdrawalText(
+                          context, req.beneficiaryRole),
                       style: TextStyle(
                           fontSize: 10,
                           color: isDanger
@@ -635,7 +641,7 @@ class _SupervisorWithdrawalsScreenState
                     FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
-                            '${CurrencyFormatter.format(req.grossAmount, includeCurrency: false)} ${l10n.currencySar}',
+                            '${CurrencyFormatter.format(req.grossAmount, includeCurrency: false)} ${l10n.currencyEgy}',
                             style: const TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,
@@ -665,7 +671,7 @@ class _SupervisorWithdrawalsScreenState
                       FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Text(
-                              '- ${CurrencyFormatter.format(req.platformFeeAmount, includeCurrency: false)} ${l10n.currencySar}',
+                              '- ${CurrencyFormatter.format(req.platformFeeAmount, includeCurrency: false)} ${l10n.currencyEgy}',
                               style: const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
@@ -703,7 +709,7 @@ class _SupervisorWithdrawalsScreenState
                                     fontWeight: FontWeight.w900,
                                     color: Colors.black87))),
                         const SizedBox(width: 4),
-                        Text(l10n.currencySar,
+                        Text(l10n.currencyEgy,
                             style: const TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.bold,
@@ -725,7 +731,8 @@ class _SupervisorWithdrawalsScreenState
                     const SizedBox(width: 6),
                     Expanded(
                       child: Text(
-                        req.bankName,
+                        FinanceLocalizer.localizeWithdrawalText(
+                            context, req.bankName),
                         style: TextStyle(
                             fontSize: 10,
                             color: isDanger
@@ -746,7 +753,8 @@ class _SupervisorWithdrawalsScreenState
                       const SizedBox(width: 6),
                       Expanded(
                         child: Text(
-                          req.transferMethod!,
+                          FinanceLocalizer.localizeWithdrawalText(
+                              context, req.transferMethod!),
                           style: const TextStyle(
                               fontSize: 10, color: AppColors.primaryDark),
                         ),
@@ -761,7 +769,9 @@ class _SupervisorWithdrawalsScreenState
                       const Icon(Icons.verified,
                           size: 14, color: AppColors.primaryDark),
                       const SizedBox(width: 6),
-                      Text(req.iban,
+                      Text(
+                          FinanceLocalizer.localizeWithdrawalText(
+                              context, req.iban),
                           style: TextStyle(
                               fontSize: 10,
                               color: Colors.grey.shade700,
@@ -810,7 +820,8 @@ class _SupervisorWithdrawalsScreenState
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          req.sourceOfFunds!,
+                          FinanceLocalizer.localizeWithdrawalText(
+                              context, req.sourceOfFunds!),
                           style: TextStyle(
                               fontSize: 10,
                               color: Colors.grey.shade800,
@@ -849,7 +860,9 @@ class _SupervisorWithdrawalsScreenState
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.primaryDark)),
                         const SizedBox(height: 4),
-                        Text(req.auditCheckResult!,
+                        Text(
+                            FinanceLocalizer.localizeWithdrawalText(
+                                context, req.auditCheckResult!),
                             style: TextStyle(
                                 fontSize: 10,
                                 color: Colors.blue.shade800,
@@ -893,7 +906,8 @@ class _SupervisorWithdrawalsScreenState
                                   color: AppColors.danger)),
                         if (isDanger) const SizedBox(height: 4),
                         Text(
-                          req.alertNotice!,
+                          FinanceLocalizer.localizeWithdrawalText(
+                              context, req.alertNotice!),
                           style: TextStyle(
                               fontSize: 10,
                               color: isDanger
@@ -909,6 +923,12 @@ class _SupervisorWithdrawalsScreenState
             ),
           ],
 
+          const SizedBox(height: 12),
+          OutlinedButton.icon(
+            onPressed: () => showWithdrawalRequestDetailsSheet(context, req),
+            icon: const Icon(Icons.receipt_long_outlined, size: 18),
+            label: Text(l10n.withdrawalRequestDetails),
+          ),
           const SizedBox(height: 16),
 
           // Action Buttons
@@ -935,7 +955,7 @@ class _SupervisorWithdrawalsScreenState
                         : 'Approve Withdrawal Request',
                     description: isArabic
                         ? 'هل تريد اعتماد طلب سحب ${req.beneficiaryName} بقيمة ${CurrencyFormatter.format(req.netAmount)} وإرساله للإدارة للموافقة؟'
-                        : 'Do you want to approve the withdrawal request for ${req.beneficiaryName} (${CurrencyFormatter.format(req.netAmount)}) and send it to management?',
+                        : 'Do you want to approve the withdrawal request for ${FinanceLocalizer.localizeWithdrawalText(context, req.beneficiaryName)} (${CurrencyFormatter.format(req.netAmount)}) and send it to management?',
                   );
                   if (confirmed && mounted) {
                     setState(() {
@@ -977,9 +997,8 @@ class _SupervisorWithdrawalsScreenState
                         final messenger = ScaffoldMessenger.of(context);
                         final reason = await FinanceDialogs.showRejectionDialog(
                           context,
-                          title: isArabic
-                              ? 'رفض طلب السحب'
-                              : 'Reject Withdrawal',
+                          title:
+                              isArabic ? 'رفض طلب السحب' : 'Reject Withdrawal',
                         );
                         if (reason != null && mounted) {
                           setState(() {
@@ -1021,7 +1040,8 @@ class _SupervisorWithdrawalsScreenState
                         final messenger = ScaffoldMessenger.of(context);
                         final confirmed = await FinanceDialogs.showFreezeDialog(
                           context,
-                          requestTitle: req.beneficiaryName,
+                          requestTitle: FinanceLocalizer.localizeWithdrawalText(
+                              context, req.beneficiaryName),
                         );
                         if (confirmed && mounted) {
                           setState(() {

@@ -5,6 +5,9 @@ import '../../../../core/di/injection_container.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../controllers/bank_accounts/bank_accounts_cubit.dart';
 import '../controllers/bank_accounts/bank_accounts_state.dart';
+import '../controllers/expenses/expense_requests_cubit.dart';
+import '../controllers/expenses/expense_requests_state.dart';
+import '../../domain/entities/expense_request_entity.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/widgets/finance_dialogs.dart';
 import '../utils/finance_localizer.dart';
@@ -16,9 +19,18 @@ class ExpensesManagementScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          BankAccountsCubit(getBankAccountsUseCase: sl())..loadBankAccounts(),
-      child: const _ExpensesManagementScreenContent(),
+      create: (context) => BankAccountsCubit(
+        getBankAccountsUseCase: sl(),
+        getBankAccountEditRequestsUseCase: sl(),
+        submitBankAccountEditRequestUseCase: sl(),
+      )..loadBankAccounts(),
+      child: BlocProvider(
+        create: (context) => ExpenseRequestsCubit(
+          getExpenseRequestsUseCase: sl(),
+          submitExpenseRequestUseCase: sl(),
+        )..loadRequests(),
+        child: const _ExpensesManagementScreenContent(),
+      ),
     );
   }
 }
@@ -33,11 +45,10 @@ class _ExpensesManagementScreenContent extends StatefulWidget {
 
 class _ExpensesManagementScreenState
     extends State<_ExpensesManagementScreenContent> {
-  final TextEditingController _amountController =
-      TextEditingController(text: '14,500.00');
+  final TextEditingController _amountController = TextEditingController();
   final TextEditingController _reasonController = TextEditingController();
-  String _selectedPaymentMethod = 'rajhi'; // Default selected
-  bool _hasAttachedDocument = false;
+  String _selectedPaymentMethod = '';
+  String? _attachmentName;
 
   @override
   void dispose() {
@@ -51,8 +62,9 @@ class _ExpensesManagementScreenState
     final l10n = AppLocalizations.of(context)!;
 
     return Directionality(
-      textDirection:
-          l10n.localeName.startsWith('ar') ? TextDirection.rtl : TextDirection.ltr,
+      textDirection: l10n.localeName.startsWith('ar')
+          ? TextDirection.rtl
+          : TextDirection.ltr,
       child: Scaffold(
         backgroundColor: AppColors.backgroundLight,
         appBar: FinancePageAppBar(
@@ -88,12 +100,12 @@ class _ExpensesManagementScreenState
                           color: AppColors.cardBorder,
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Text(l10n.currencySar,
+                        child: Text(l10n.currencyEgy,
                             style:
                                 const TextStyle(fontWeight: FontWeight.bold)),
                       ),
                       Expanded(
-                        child: TextField(
+                        child: TextFormField(
                           controller: _amountController,
                           keyboardType: const TextInputType.numberWithOptions(
                               decimal: true),
@@ -147,13 +159,14 @@ class _ExpensesManagementScreenState
                             padding: const EdgeInsets.only(bottom: 10),
                             child: _buildPaymentOption(
                               id: account.id,
-                              title: FinanceLocalizer.localizeBankName(context, account.bankName),
+                              title: FinanceLocalizer.localizeBankName(
+                                  context, account.bankName),
                               subtitle: account.iban,
                               balanceLabel: account.accountType.contains('ضمان')
                                   ? l10n.escrowBalanceLabel
                                   : l10n.currentLedgerBalanceLabel,
                               balanceValue:
-                                  '${CurrencyFormatter.format(account.balance, includeCurrency: false)} ${l10n.currencySar}',
+                                  '${CurrencyFormatter.format(account.balance, includeCurrency: false)} ${l10n.currencyEgy}',
                             ),
                           );
                         }).toList(),
@@ -176,7 +189,8 @@ class _ExpensesManagementScreenState
                         style: const TextStyle(
                             fontSize: 11, color: AppColors.textSecondary)),
                     const SizedBox(height: 8),
-                    TextField(
+                    TextFormField(
+                      key: const ValueKey('expenseReasonField'),
                       controller: _reasonController,
                       maxLines: 2,
                       decoration: InputDecoration(
@@ -201,17 +215,15 @@ class _ExpensesManagementScreenState
                     InkWell(
                       onTap: () {
                         setState(() {
-                          _hasAttachedDocument = !_hasAttachedDocument;
+                          _attachmentName = _attachmentName == null
+                              ? 'invoice_receipt.pdf'
+                              : null;
                         });
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text(_hasAttachedDocument
-                                ? (l10n.localeName.startsWith('ar')
-                                    ? 'تم إرفاق مستند الفاتورة (فاتورة_مصروف.pdf)'
-                                    : 'Invoice document attached (invoice_receipt.pdf)')
-                                : (l10n.localeName.startsWith('ar')
-                                    ? 'تمت إزالة المستند المرفق'
-                                    : 'Attached document removed')),
+                            content: Text(_attachmentName == null
+                                ? l10n.expenseDocumentRemoved
+                                : '${l10n.expenseDocumentAttached}: $_attachmentName'),
                             duration: const Duration(seconds: 2),
                           ),
                         );
@@ -221,12 +233,12 @@ class _ExpensesManagementScreenState
                         width: double.infinity,
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         decoration: BoxDecoration(
-                          color: _hasAttachedDocument
+                          color: _attachmentName != null
                               ? Colors.green.shade50
                               : AppColors.surfaceLight,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: _hasAttachedDocument
+                            color: _attachmentName != null
                                 ? Colors.green.shade300
                                 : Colors.transparent,
                           ),
@@ -235,10 +247,10 @@ class _ExpensesManagementScreenState
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(
-                              _hasAttachedDocument
+                              _attachmentName != null
                                   ? Icons.check_circle
                                   : Icons.attach_file,
-                              color: _hasAttachedDocument
+                              color: _attachmentName != null
                                   ? Colors.green.shade700
                                   : AppColors.info,
                               size: 16,
@@ -246,20 +258,18 @@ class _ExpensesManagementScreenState
                             const SizedBox(width: 8),
                             Flexible(
                               child: Text(
-                              _hasAttachedDocument
-                                  ? (l10n.localeName.startsWith('ar')
-                                      ? 'مرفق: فاتورة_مصروف.pdf (انقر للإلغاء)'
-                                      : 'Attached: invoice_receipt.pdf (tap to remove)')
-                                  : l10n.attachDocumentOptional,
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  color: _hasAttachedDocument
-                                      ? Colors.green.shade800
-                                      : Colors.blue.shade800),
+                                _attachmentName != null
+                                    ? '${l10n.expenseAttachedPrefix}: $_attachmentName (${l10n.expenseRemoveDocumentAction})'
+                                    : l10n.attachDocumentOptional,
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: _attachmentName != null
+                                        ? Colors.green.shade800
+                                        : Colors.blue.shade800),
+                              ),
                             ),
-                        ),
-                        ],
+                          ],
                         ),
                       ),
                     ),
@@ -320,59 +330,63 @@ class _ExpensesManagementScreenState
               const SizedBox(height: 24),
 
               // 5. Actions
-              ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryDark,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  elevation: 0,
-                ),
-                icon: const Icon(Icons.send_outlined, size: 18),
-                onPressed: () async {
-                  final isArabic = l10n.localeName.startsWith('ar');
-                  final reason = _reasonController.text.trim();
-                  if (reason.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(isArabic
-                            ? 'يرجى كتابة سبب المصروف أولاً'
-                            : 'Please enter the expense reason first'),
-                        backgroundColor: AppColors.warning,
-                      ),
-                    );
-                    return;
-                  }
-
-                  final messenger = ScaffoldMessenger.of(context);
-                  final navigator = Navigator.of(context);
-
-                  final confirmed = await FinanceDialogs.showApprovalDialog(
-                    context,
-                    title: isArabic
-                        ? 'إرسال بيان الصرف للأدمن'
-                        : 'Submit Payment Order to Admin',
-                    description: isArabic
-                        ? 'هل تريد تأكيد إرسال بيان الدفع بمبلغ ${_amountController.text} إلى المستخدم الأدمن للموافقة عليه أو رفضه؟'
-                        : 'Do you want to confirm submitting this payout statement for ${_amountController.text} to Admin for approval?',
-                    confirmText: isArabic ? 'تأكيد وإرسال للأدمن' : 'Send to Admin',
-                  );
-
-                  if (confirmed && mounted) {
-                    messenger.showSnackBar(
-                      SnackBar(
-                        content: Text(isArabic
-                            ? 'تم إرسال بيان الصرف بنجاح إلى المستخدم الأدمن للمصادقة عليه'
-                            : 'Payment statement successfully sent to Admin for approval'),
-                        backgroundColor: AppColors.success,
-                      ),
-                    );
-                    navigator.pop();
-                  }
-                },
-                label: Text(l10n.approvePaymentOrder,
+              BlocBuilder<ExpenseRequestsCubit, ExpenseRequestsState>(
+                builder: (context, state) => ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primaryDark,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                    elevation: 0,
+                  ),
+                  icon: state.isSubmitting
+                      ? const SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : const Icon(Icons.send_outlined, size: 18),
+                  onPressed: state.isSubmitting
+                      ? null
+                      : () => _submitExpenseRequest(context, l10n),
+                  label: Text(
+                    state.isSubmitting
+                        ? l10n.expenseRequestSubmitting
+                        : l10n.approvePaymentOrder,
                     style: const TextStyle(
-                        fontSize: 13, fontWeight: FontWeight.bold)),
+                        fontSize: 13, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+              BlocBuilder<ExpenseRequestsCubit, ExpenseRequestsState>(
+                builder: (context, state) {
+                  if (state.errorMessage != null) {
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Text(
+                        l10n.expenseRequestSendFailed,
+                        style: const TextStyle(
+                            color: AppColors.danger, fontSize: 12),
+                      ),
+                    );
+                  }
+                  if (state.requests.isEmpty) return const SizedBox.shrink();
+
+                  return Column(
+                    children: [
+                      const SizedBox(height: 16),
+                      ...state.requests.reversed.map(
+                        (request) => Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: _buildExpenseRequestCard(request, l10n),
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
               const SizedBox(height: 12),
               OutlinedButton(
@@ -393,6 +407,126 @@ class _ExpensesManagementScreenState
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Future<void> _submitExpenseRequest(
+      BuildContext context, AppLocalizations l10n) async {
+    final rawAmount = _amountController.text
+        .trim()
+        .replaceAll(',', '')
+        .replaceAll('٬', '')
+        .replaceAll('٫', '.');
+    final amount = double.tryParse(rawAmount);
+    if (amount == null || !amount.isFinite || amount <= 0) {
+      _showExpenseMessage(l10n.expenseAmountInvalid, AppColors.warning);
+      return;
+    }
+
+    final reason = _reasonController.text.trim();
+    if (reason.isEmpty) {
+      _showExpenseMessage(l10n.expenseReasonRequired, AppColors.warning);
+      return;
+    }
+
+    final bankState = context.read<BankAccountsCubit>().state;
+    if (bankState is! BankAccountsLoaded || bankState.accounts.isEmpty) {
+      _showExpenseMessage(l10n.noAccountsAvailable, AppColors.warning);
+      return;
+    }
+
+    final selectedAccounts = bankState.accounts
+        .where((account) => account.id == _selectedPaymentMethod)
+        .toList(growable: false);
+    if (selectedAccounts.isEmpty) {
+      _showExpenseMessage(l10n.noAccountsAvailable, AppColors.warning);
+      return;
+    }
+    final selectedAccount = selectedAccounts.first;
+
+    final confirmed = await FinanceDialogs.showApprovalDialog(
+      context,
+      title: l10n.expenseConfirmTitle,
+      description: l10n.expenseConfirmDescription,
+      confirmText: l10n.approvePaymentOrder,
+    );
+    if (!confirmed || !mounted || !context.mounted) return;
+
+    final result = await context.read<ExpenseRequestsCubit>().submitRequest(
+          amount: amount,
+          bankAccountId: selectedAccount.id,
+          reason: reason,
+          attachmentName: _attachmentName,
+        );
+    if (!mounted || !context.mounted) return;
+
+    result.fold(
+      (_) =>
+          _showExpenseMessage(l10n.expenseRequestSendFailed, AppColors.danger),
+      (_) {
+        _amountController.clear();
+        _reasonController.clear();
+        setState(() => _attachmentName = null);
+        _showExpenseMessage(l10n.expenseRequestSent, AppColors.success);
+      },
+    );
+  }
+
+  void _showExpenseMessage(String message, Color backgroundColor) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(content: Text(message), backgroundColor: backgroundColor),
+      );
+  }
+
+  Widget _buildExpenseRequestCard(
+      ExpenseRequestEntity request, AppLocalizations l10n) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: AppColors.warningLight,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.warningBorder),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.hourglass_top_rounded,
+                  color: AppColors.warningDark, size: 18),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  l10n.expenseRequestPendingStatus,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.warningDark,
+                  ),
+                ),
+              ),
+              Text(
+                '${l10n.expenseRequestNumber}: ${request.id}',
+                textDirection: TextDirection.ltr,
+                style: const TextStyle(fontSize: 10, color: Colors.black54),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text('${l10n.expenseRequestAmount}: '
+              '${CurrencyFormatter.format(request.amount)}'),
+          const SizedBox(height: 4),
+          Text(FinanceLocalizer.localizeBankName(context, request.bankName)),
+          const SizedBox(height: 4),
+          Text(request.reason),
+          if (request.attachmentName != null) ...[
+            const SizedBox(height: 4),
+            Text('${l10n.expenseAttachedPrefix}: ${request.attachmentName}'),
+          ],
+        ],
       ),
     );
   }

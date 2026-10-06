@@ -1,68 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/di/injection_container.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/utils/app_locale_controller.dart';
 import '../../../../core/widgets/finance_dialogs.dart';
+import '../../domain/entities/bank_link_request_entity.dart';
+import '../controllers/bank_reconciliation/bank_reconciliation_cubit.dart';
+import '../controllers/bank_reconciliation/bank_reconciliation_state.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../widgets/finance_navigation.dart';
-
-class _ReconciliationItem {
-  final String id;
-  final String commercialName;
-  final String beneficiaryName;
-  final String iban;
-  final String bankName;
-  final String crNumber;
-  final String crExpiry;
-  final String documentName;
-  final String amlScore;
-  final String requestType;
-  final String matchDescription;
-  final String warningNote;
-  final String? commercialNameEn;
-  final String? beneficiaryNameEn;
-  final String? bankNameEn;
-  final String? crExpiryEn;
-  final String? requestTypeEn;
-  final String? matchDescriptionEn;
-  final String? warningNoteEn;
-
-  const _ReconciliationItem({
-    required this.id,
-    required this.commercialName,
-    required this.beneficiaryName,
-    required this.iban,
-    required this.bankName,
-    required this.crNumber,
-    required this.crExpiry,
-    required this.documentName,
-    required this.amlScore,
-    required this.requestType,
-    required this.matchDescription,
-    this.warningNote = '',
-    this.commercialNameEn,
-    this.beneficiaryNameEn,
-    this.bankNameEn,
-    this.crExpiryEn,
-    this.requestTypeEn,
-    this.matchDescriptionEn,
-    this.warningNoteEn,
-  });
-
-  String getCommercialName(bool isArabic) =>
-      isArabic ? commercialName : (commercialNameEn ?? commercialName);
-  String getBeneficiaryName(bool isArabic) =>
-      isArabic ? beneficiaryName : (beneficiaryNameEn ?? beneficiaryName);
-  String getBankName(bool isArabic) =>
-      isArabic ? bankName : (bankNameEn ?? bankName);
-  String getCrExpiry(bool isArabic) =>
-      isArabic ? crExpiry : (crExpiryEn ?? crExpiry);
-  String getRequestType(bool isArabic) =>
-      isArabic ? requestType : (requestTypeEn ?? requestType);
-  String getMatchDescription(bool isArabic) =>
-      isArabic ? matchDescription : (matchDescriptionEn ?? matchDescription);
-  String getWarningNote(bool isArabic) =>
-      isArabic ? warningNote : (warningNoteEn ?? warningNote);
-}
 
 class BankReconciliationScreen extends StatefulWidget {
   final int currentIndex;
@@ -75,81 +21,33 @@ class BankReconciliationScreen extends StatefulWidget {
   });
 
   @override
-  State<BankReconciliationScreen> createState() => _BankReconciliationScreenState();
+  State<BankReconciliationScreen> createState() =>
+      _BankReconciliationScreenState();
 }
 
 class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
   int _activeRequestIndex = 0;
+  late final BankReconciliationCubit _cubit = BankReconciliationCubit(
+    getRequestsUseCase: sl(),
+    approveRequestUseCase: sl(),
+    requestIbanCertificateUseCase: sl(),
+    freezeRequestUseCase: sl(),
+    rejectRequestUseCase: sl(),
+    restoreFrozenRequestUseCase: sl(),
+    rejectFrozenRequestUseCase: sl(),
+  )..loadRequests();
 
-  final List<_ReconciliationItem> _requests = const [
-    _ReconciliationItem(
-      id: '#TRD-5501',
-      commercialName: 'مؤسسة التجارة المتقدمة المحدودة',
-      beneficiaryName: 'مؤسسة التجارة المتقدمة للخدمات والتوكيلات',
-      iban: 'SA44 8000 0123 6080 1012 3456',
-      bankName: 'مصرف الراجحي',
-      crNumber: '1010892341',
-      crExpiry: '1448/04/15هـ',
-      documentName: 'doc-iban-5501.pdf',
-      amlScore: '100%',
-      requestType: 'طلب ربط وتوثيق حساب تجاري جديد',
-      matchDescription: 'تطابق الاسم التجاري والبنكي موثق بنسبة 100%',
-      commercialNameEn: 'Advanced Trading Establishment Ltd.',
-      beneficiaryNameEn: 'Advanced Trading Est. for Services & Agencies',
-      bankNameEn: 'Al Rajhi Bank',
-      crExpiryEn: '1448/04/15 AH',
-      requestTypeEn: 'New Commercial Account Link & Verification Request',
-      matchDescriptionEn: '100% Verified match between commercial and bank name',
-    ),
-    _ReconciliationItem(
-      id: '#TRD-6022',
-      commercialName: 'شركة مدار الرواد للمقاولات العامة',
-      beneficiaryName: 'شركة مدار الرواد للتجارة والمقاولات ش.ش.و',
-      iban: 'SA03 8000 0456 9910 2233 4455',
-      bankName: 'البنك الأهلي السعودي (SNB)',
-      crNumber: '1010994523',
-      crExpiry: '1447/11/20هـ',
-      documentName: 'doc-iban-6022.pdf',
-      amlScore: '96%',
-      requestType: 'طلب ربط حساب مورد معتمد',
-      matchDescription: 'اختلاف طفيف في اللواحق القانونية للاسم التجاري',
-      warningNote: 'تم رصد اختلاف بين لاحقة السجل والحساب البنكي',
-      commercialNameEn: 'Madar Al-Ruwad General Contracting Co.',
-      beneficiaryNameEn: 'Madar Al-Ruwad Trading & Contracting LLC',
-      bankNameEn: 'Saudi National Bank (SNB)',
-      crExpiryEn: '1447/11/20 AH',
-      requestTypeEn: 'Approved Supplier Account Link Request',
-      matchDescriptionEn: 'Minor variance in legal suffixes of the commercial name',
-      warningNoteEn: 'Variance detected between CR suffix and bank account name',
-    ),
-    _ReconciliationItem(
-      id: '#TRD-7108',
-      commercialName: 'مؤسسة القمة الرقمية لتقنية المعلومات',
-      beneficiaryName: 'فهد سليمان عبد الله العتيبي',
-      iban: 'SA12 1000 0987 5544 3322 1100',
-      bankName: 'بنك الرياض',
-      crNumber: '1010778899',
-      crExpiry: '1448/01/10هـ',
-      documentName: 'doc-iban-7108.pdf',
-      amlScore: '89%',
-      requestType: 'طلب ربط حساب مزود خدمة مستقل',
-      matchDescription: 'مؤسسة فردية تتطلب شهادة آيبان حديثة مختومة',
-      warningNote: 'شهادة الآيبان المرفقة تعود لأكثر من 6 أشهر',
-      commercialNameEn: 'Digital Summit IT Establishment',
-      beneficiaryNameEn: 'Fahad Sulaiman Abdullah Al-Otaibi',
-      bankNameEn: 'Riyad Bank',
-      crExpiryEn: '1448/01/10 AH',
-      requestTypeEn: 'Freelance Service Provider Account Link Request',
-      matchDescriptionEn: 'Sole proprietorship requires a recent stamped IBAN certificate',
-      warningNoteEn: 'Attached IBAN certificate is older than 6 months',
-    ),
-  ];
-
-  _ReconciliationItem get _currentRequest =>
+  List<BankLinkRequestEntity> get _requests => _cubit.state.requests;
+  BankLinkRequestEntity get _currentRequest =>
       _requests[_activeRequestIndex % _requests.length];
-
-  _ReconciliationItem get _nextRequest =>
+  BankLinkRequestEntity get _nextRequest =>
       _requests[(_activeRequestIndex + 1) % _requests.length];
+
+  @override
+  void dispose() {
+    _cubit.close();
+    super.dispose();
+  }
 
   void _showActionMessage(String message) {
     ScaffoldMessenger.of(context)
@@ -158,6 +56,7 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
   }
 
   void _advanceToNextRequest() {
+    if (_requests.length < 2) return;
     setState(() {
       _activeRequestIndex = (_activeRequestIndex + 1) % _requests.length;
     });
@@ -174,24 +73,30 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
       description: isArabic
           ? 'هل ترغب في اعتماد مطابقة الحساب البنكي لـ "$name" (${item.id}) وإرساله فوراً إلى إدارة النظام للمصادقة عليه؟'
           : 'Approve bank match for "$name" (${item.id}) and submit to Admin for final authorization?',
-      confirmText: isArabic ? 'اعتماد وإرسال للإدارة' : 'Approve & Send to Admin',
+      confirmText:
+          isArabic ? 'اعتماد وإرسال للإدارة' : 'Approve & Send to Admin',
     );
 
     if (confirmed && mounted) {
-      _showActionMessage(isArabic
-          ? 'تم اعتماد الحساب البنكي لـ "$name" وإرساله بنجاح إلى الإدارة للمصادقة.'
-          : 'Bank account approved and sent to Admin for approval.');
-      _advanceToNextRequest();
+      final result = await _cubit.approveRequest(item.id);
+      if (!mounted) return;
+      _showActionMessage(result.fold(
+        (_) => AppLocalizations.of(context)!.reconciliationActionFailed,
+        (_) => AppLocalizations.of(context)!.reconciliationApproveSuccess,
+      ));
+      _activeRequestIndex = 0;
     }
   }
 
-  void _handleRequestIban() {
-    final isArabic = AppLocaleController.instance.isArabic;
+  Future<void> _handleRequestIban() async {
     final item = _currentRequest;
-    final name = item.getCommercialName(isArabic);
-    _showActionMessage(isArabic
-        ? 'تم إرسال إشعار للمستخدم "$name" لطلب شهادة آيبان بنكية حديثة مختومة وموثقة.'
-        : 'Notification sent to "$name" requesting an updated bank IBAN certificate.');
+    final result = await _cubit.requestIbanCertificate(item.id);
+    if (!mounted) return;
+    _showActionMessage(result.fold(
+      (_) => AppLocalizations.of(context)!.reconciliationActionFailed,
+      (_) => AppLocalizations.of(context)!.reconciliationIbanRequestSent,
+    ));
+    _activeRequestIndex = 0;
   }
 
   Future<void> _handleFreeze() async {
@@ -202,36 +107,51 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
     final confirmed = await FinanceDialogs.showFreezeDialog(
       context,
       requestTitle: '$name (${item.id})',
+      description:
+          AppLocalizations.of(context)!.reconciliationFreezeDialogDescription,
     );
 
     if (confirmed && mounted) {
-      _showActionMessage(isArabic
-          ? 'تم تجميد الطلب احترازياً وإدراجه في شاشة الأرصدة المعلقة والمجمدة تحت التدقيق الرقابي.'
-          : 'Request frozen and forwarded to frozen & audit review list.');
-      _advanceToNextRequest();
+      final result = await _cubit.freezeRequest(
+        item.id,
+        isArabic
+            ? 'تجميد احترازي للمراجعة الرقابية'
+            : 'Precautionary freeze for financial review',
+      );
+      if (!mounted) return;
+      _showActionMessage(result.fold(
+        (_) => AppLocalizations.of(context)!.reconciliationActionFailed,
+        (_) => AppLocalizations.of(context)!.reconciliationFreezeSuccess,
+      ));
+      _activeRequestIndex = 0;
     }
   }
 
   Future<void> _handleReject() async {
     final isArabic = AppLocaleController.instance.isArabic;
     final item = _currentRequest;
-    final name = item.getCommercialName(isArabic);
 
     final reason = await FinanceDialogs.showRejectionDialog(
       context,
-      title: isArabic ? 'رفض طلب ربط الحساب البنكي' : 'Reject Bank Link Request',
-      hint: isArabic ? 'أدخل سبب عدم مطابقة الحساب البنكي بالتفصيل...' : 'Enter rejection reason...',
+      title:
+          isArabic ? 'رفض طلب ربط الحساب البنكي' : 'Reject Bank Link Request',
+      hint: isArabic
+          ? 'أدخل سبب عدم مطابقة الحساب البنكي بالتفصيل...'
+          : 'Enter rejection reason...',
     );
 
     if (reason != null && mounted) {
-      _showActionMessage(isArabic
-          ? 'تم رفض طلب "$name" بنجاح وتحويل سبب الرفض ("$reason") إلى رئيس المشرفين لمراجعته.'
-          : 'Request for "$name" rejected and reason forwarded to Head of Supervisors.');
-      _advanceToNextRequest();
+      final result = await _cubit.rejectRequest(item.id, reason);
+      if (!mounted) return;
+      _showActionMessage(result.fold(
+        (_) => AppLocalizations.of(context)!.reconciliationActionFailed,
+        (_) => AppLocalizations.of(context)!.reconciliationRejectSuccess,
+      ));
+      _activeRequestIndex = 0;
     }
   }
 
-  void _previewDocument(_ReconciliationItem item) {
+  void _previewDocument(BankLinkRequestEntity item) {
     final isArabic = AppLocaleController.instance.isArabic;
     showDialog<void>(
       context: context,
@@ -244,7 +164,8 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
             Expanded(
               child: Text(
                 item.documentName,
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
               ),
             ),
           ],
@@ -265,11 +186,15 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
                 children: [
                   Row(
                     children: [
-                      const Icon(Icons.verified, color: AppColors.infoDark, size: 16),
+                      const Icon(Icons.verified,
+                          color: AppColors.infoDark, size: 16),
                       const SizedBox(width: 6),
                       Text(
-                        isArabic ? 'شهادة آيبان بنكية رسمية' : 'Official IBAN Certificate',
-                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                        isArabic
+                            ? 'شهادة آيبان بنكية رسمية'
+                            : 'Official IBAN Certificate',
+                        style: const TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
@@ -286,12 +211,14 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
                   const SizedBox(height: 4),
                   Text(
                     'IBAN: ${item.iban}',
-                    style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 10, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     '${isArabic ? 'السجل التجاري:' : 'CR Number:'} ${item.crNumber}',
-                    style: const TextStyle(fontSize: 10, color: AppColors.textSecondary),
+                    style: const TextStyle(
+                        fontSize: 10, color: AppColors.textSecondary),
                   ),
                 ],
               ),
@@ -302,10 +229,12 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primaryDark,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
             ),
             onPressed: () => Navigator.pop(ctx),
-            child: Text(isArabic ? 'إغلاق' : 'Close', style: const TextStyle(color: Colors.white)),
+            child: Text(isArabic ? 'إغلاق' : 'Close',
+                style: const TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -317,72 +246,164 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
     final l10n = AppLocalizations.of(context)!;
     final isArabic = l10n.localeName.startsWith('ar');
 
-    return Directionality(
-      textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-      child: FinanceSwipeNavigation(
-        currentIndex: widget.currentIndex,
-        enabled: widget.showBottomNavigation,
-        child: Scaffold(
-          backgroundColor: const Color(0xFFF4F6F8),
-          appBar: widget.showBottomNavigation
-              ? AppBar(
-                  backgroundColor: Colors.white,
-                  elevation: 0,
-                  scrolledUnderElevation: 0,
-                  leading: const Padding(
-                    padding: EdgeInsets.all(8),
-                    child: CircleAvatar(
-                      backgroundColor: AppColors.primaryDark,
-                      child: Icon(Icons.shield_outlined,
-                          color: Colors.white, size: 19),
-                    ),
-                  ),
-                  title: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l10n.appName,
-                        style: const TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.bold),
+    return BlocProvider.value(
+      value: _cubit,
+      child: Directionality(
+        textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+        child: FinanceSwipeNavigation(
+          currentIndex: widget.currentIndex,
+          enabled: widget.showBottomNavigation,
+          child: Scaffold(
+            backgroundColor: const Color(0xFFF4F6F8),
+            appBar: widget.showBottomNavigation
+                ? AppBar(
+                    backgroundColor: Colors.white,
+                    elevation: 0,
+                    scrolledUnderElevation: 0,
+                    leading: const Padding(
+                      padding: EdgeInsets.all(8),
+                      child: CircleAvatar(
+                        backgroundColor: AppColors.primaryDark,
+                        child: Icon(Icons.shield_outlined,
+                            color: Colors.white, size: 19),
                       ),
-                      Text(
-                        l10n.reconciliationFinanceSubtitle,
-                        style: const TextStyle(
-                            fontSize: 9, color: AppColors.textSecondary),
+                    ),
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.appName,
+                          style: const TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          l10n.reconciliationFinanceSubtitle,
+                          style: const TextStyle(
+                              fontSize: 9, color: AppColors.textSecondary),
+                        ),
+                      ],
+                    ),
+                    actions: const [
+                      Padding(
+                        padding: EdgeInsets.all(10),
+                        child: CircleAvatar(
+                          radius: 15,
+                          backgroundColor: AppColors.primaryDark,
+                          child: Icon(Icons.person_outline,
+                              color: Colors.white, size: 17),
+                        ),
                       ),
                     ],
-                  ),
-                  actions: const [
-                    Padding(
-                      padding: EdgeInsets.all(10),
-                      child: CircleAvatar(
-                        radius: 15,
-                        backgroundColor: AppColors.primaryDark,
-                        child: Icon(Icons.person_outline,
-                            color: Colors.white, size: 17),
-                      ),
+                  )
+                : null,
+            body: BlocBuilder<BankReconciliationCubit, BankReconciliationState>(
+              builder: (context, state) {
+                if (state.isLoading && state.requests.isEmpty) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (state.errorMessage != null && state.requests.isEmpty) {
+                  return Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(l10n.reconciliationLoadFailed),
+                        const SizedBox(height: 12),
+                        ElevatedButton(
+                          onPressed: _cubit.loadRequests,
+                          child: Text(l10n.frozenRefresh),
+                        ),
+                      ],
                     ),
+                  );
+                }
+                if (state.requests.isEmpty && state.frozenRequests.isEmpty) {
+                  return Center(
+                    child: Text(l10n.reconciliationNoPendingRequests),
+                  );
+                }
+                return ListView(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+                  children: [
+                    _buildScreenHeading(context),
+                    const SizedBox(height: 12),
+                    _buildAuthorityBanner(context),
+                    const SizedBox(height: 12),
+                    _buildGovernmentConnection(context),
+                    const SizedBox(height: 14),
+                    if (state.requests.isEmpty)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        child: Center(
+                          child: Text(l10n.reconciliationNoPendingRequests),
+                        ),
+                      )
+                    else ...[
+                      _buildAccountCard(context),
+                      if (state.requests.length > 1) ...[
+                        const SizedBox(height: 14),
+                        _buildNextAccountCard(context),
+                      ],
+                    ],
+                    if (state.frozenRequests.isNotEmpty) ...[
+                      const SizedBox(height: 14),
+                      _buildFrozenRequests(context, state.frozenRequests),
+                    ],
                   ],
-                )
-              : null,
-          body: ListView(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
-            children: [
-              _buildScreenHeading(context),
-              const SizedBox(height: 12),
-              _buildAuthorityBanner(context),
-              const SizedBox(height: 12),
-              _buildGovernmentConnection(context),
-              const SizedBox(height: 14),
-              _buildAccountCard(context),
-              const SizedBox(height: 14),
-              _buildNextAccountCard(context),
-            ],
+                );
+              },
+            ),
+            bottomNavigationBar: widget.showBottomNavigation
+                ? _buildBottomNavigation(context)
+                : null,
           ),
-          bottomNavigationBar: widget.showBottomNavigation
-              ? _buildBottomNavigation(context)
-              : null,
         ),
+      ),
+    );
+  }
+
+  Widget _buildFrozenRequests(
+    BuildContext context,
+    List<BankLinkRequestEntity> requests,
+  ) {
+    final l10n = AppLocalizations.of(context)!;
+    final isArabic = l10n.localeName.startsWith('ar');
+
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.warning.withValues(alpha: 0.5)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            l10n.reconciliationFrozenRequestsTitle,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: AppColors.primaryDark,
+            ),
+          ),
+          const SizedBox(height: 8),
+          for (final request in requests) ...[
+            if (request != requests.first) const Divider(height: 16),
+            Text(
+              '${request.id} · ${request.getCommercialName(isArabic)}',
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
+            if (request.decisionReason != null) ...[
+              const SizedBox(height: 4),
+              Text(
+                '${l10n.reconciliationFreezeReasonLabel} ${request.decisionReason}',
+                style: const TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 12,
+                ),
+              ),
+            ],
+          ],
+        ],
       ),
     );
   }
@@ -430,7 +451,9 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
         const SizedBox(height: 6),
         Text(
           l10n.reconciliationPageTitle,
-          textAlign: l10n.localeName.startsWith('ar') ? TextAlign.right : TextAlign.left,
+          textAlign: l10n.localeName.startsWith('ar')
+              ? TextAlign.right
+              : TextAlign.left,
           style: const TextStyle(
               fontSize: 19,
               height: 1.35,
@@ -515,11 +538,11 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
                   : CrossAxisAlignment.start,
               children: [
                 Text(l10n.reconciliationGovernmentPortal,
-                    style:
-                        const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+                    style: const TextStyle(
+                        fontSize: 10, fontWeight: FontWeight.bold)),
                 Text(l10n.reconciliationGovernmentSync,
-                    style:
-                        const TextStyle(fontSize: 8, color: AppColors.textSecondary)),
+                    style: const TextStyle(
+                        fontSize: 8, color: AppColors.textSecondary)),
               ],
             ),
           ),
@@ -610,8 +633,8 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
               icon: const Icon(Icons.verified_outlined, size: 18),
               label: Text(
                 l10n.reconciliationApproveAccount,
-                style: const TextStyle(
-                    fontSize: 11, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
               ),
             ),
           ),
@@ -645,14 +668,16 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.warning,
                       backgroundColor: const Color(0xFFFFF9E6),
-                      side: const BorderSide(color: AppColors.warning, width: 0.8),
+                      side: const BorderSide(
+                          color: AppColors.warning, width: 0.8),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
                     ),
                     icon: const Icon(Icons.pause_circle_outline, size: 15),
                     label: Text(
                       isArabic ? 'تجميد الطلب' : 'Freeze Request',
-                      style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 10, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
@@ -672,7 +697,8 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
                     ),
                     icon: const Icon(Icons.block, size: 15),
                     label: Text(l10n.reconciliationRejectTransfer,
-                        style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+                        style: const TextStyle(
+                            fontSize: 10, fontWeight: FontWeight.bold)),
                   ),
                 ),
               ),
@@ -683,7 +709,8 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
     );
   }
 
-  Widget _buildAccountIdentity(BuildContext context, _ReconciliationItem item) {
+  Widget _buildAccountIdentity(
+      BuildContext context, BankLinkRequestEntity item) {
     final l10n = AppLocalizations.of(context)!;
     final isArabic = l10n.localeName.startsWith('ar');
 
@@ -706,12 +733,14 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
               borderRadius: BorderRadius.all(Radius.circular(10))),
           child: Row(
             children: [
-              const Icon(Icons.apartment, color: AppColors.primaryDark, size: 20),
+              const Icon(Icons.apartment,
+                  color: AppColors.primaryDark, size: 20),
               const SizedBox(width: 10),
               Expanded(
                 child: Column(
-                  crossAxisAlignment:
-                      isArabic ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                  crossAxisAlignment: isArabic
+                      ? CrossAxisAlignment.end
+                      : CrossAxisAlignment.start,
                   children: [
                     Text(item.getCommercialName(isArabic),
                         textAlign: isArabic ? TextAlign.right : TextAlign.left,
@@ -734,7 +763,8 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
     );
   }
 
-  Widget _buildComplianceScore(BuildContext context, _ReconciliationItem item) {
+  Widget _buildComplianceScore(
+      BuildContext context, BankLinkRequestEntity item) {
     final l10n = AppLocalizations.of(context)!;
     final isArabic = l10n.localeName.startsWith('ar');
 
@@ -782,13 +812,15 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
           const SizedBox(height: 7),
           Row(
             children: [
-              const Icon(Icons.check_circle_outline, color: AppColors.info, size: 13),
+              const Icon(Icons.check_circle_outline,
+                  color: AppColors.info, size: 13),
               const SizedBox(width: 5),
               Expanded(
                 child: Text(
                   item.getMatchDescription(isArabic),
                   textAlign: isArabic ? TextAlign.right : TextAlign.left,
-                  style: const TextStyle(fontSize: 8, color: AppColors.primaryDark),
+                  style: const TextStyle(
+                      fontSize: 8, color: AppColors.primaryDark),
                 ),
               ),
             ],
@@ -841,7 +873,7 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
     );
   }
 
-  Widget _buildIbanRow(BuildContext context, _ReconciliationItem item) {
+  Widget _buildIbanRow(BuildContext context, BankLinkRequestEntity item) {
     final l10n = AppLocalizations.of(context)!;
     final isArabic = l10n.localeName.startsWith('ar');
     return Container(
@@ -855,8 +887,8 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
           Row(
             children: [
               Flexible(
-                child: _statusPill(item.getBankName(isArabic), AppColors.surfaceLight,
-                    AppColors.primaryDark),
+                child: _statusPill(item.getBankName(isArabic),
+                    AppColors.surfaceLight, AppColors.primaryDark),
               ),
               const SizedBox(width: 8),
               Expanded(
@@ -865,8 +897,8 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
                   textAlign: isArabic ? TextAlign.left : TextAlign.right,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style:
-                      const TextStyle(fontSize: 8, color: AppColors.textSecondary),
+                  style: const TextStyle(
+                      fontSize: 8, color: AppColors.textSecondary),
                 ),
               ),
             ],
@@ -878,15 +910,16 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
                 color: Colors.white, borderRadius: BorderRadius.circular(8)),
             child: Row(
               children: [
-                const Icon(Icons.copy_outlined, color: AppColors.info, size: 16),
+                const Icon(Icons.copy_outlined,
+                    color: AppColors.info, size: 16),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     item.iban,
                     textAlign: TextAlign.end,
                     textDirection: TextDirection.ltr,
-                    style:
-                        const TextStyle(fontSize: 12, color: AppColors.primaryDark),
+                    style: const TextStyle(
+                        fontSize: 12, color: AppColors.primaryDark),
                   ),
                 ),
               ],
@@ -898,7 +931,7 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
   }
 
   Widget _buildCommercialRegistrationRow(
-      BuildContext context, _ReconciliationItem item) {
+      BuildContext context, BankLinkRequestEntity item) {
     final l10n = AppLocalizations.of(context)!;
     final isArabic = l10n.localeName.startsWith('ar');
 
@@ -915,8 +948,8 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
                   isArabic ? CrossAxisAlignment.end : CrossAxisAlignment.start,
               children: [
                 Text(l10n.reconciliationRegistrationLabel,
-                    style:
-                        const TextStyle(fontSize: 8, color: AppColors.textSecondary)),
+                    style: const TextStyle(
+                        fontSize: 8, color: AppColors.textSecondary)),
                 const SizedBox(height: 4),
                 Text(item.crNumber,
                     textDirection: TextDirection.ltr,
@@ -929,15 +962,17 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
           ),
           const SizedBox(width: 8),
           Flexible(
-            child: _statusPill('${l10n.reconciliationValidUntil} ${item.getCrExpiry(isArabic)}',
-                const Color(0xFFE0E4E7), AppColors.textSecondary),
+            child: _statusPill(
+                '${l10n.reconciliationValidUntil} ${item.getCrExpiry(isArabic)}',
+                const Color(0xFFE0E4E7),
+                AppColors.textSecondary),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildDocumentRow(BuildContext context, _ReconciliationItem item) {
+  Widget _buildDocumentRow(BuildContext context, BankLinkRequestEntity item) {
     final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
@@ -1018,8 +1053,8 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
                         fontWeight: FontWeight.bold,
                         color: AppColors.primaryDark)),
               ),
-              _statusPill(item.id, const Color(0xFFE8EAEC),
-                  AppColors.textSecondary),
+              _statusPill(
+                  item.id, const Color(0xFFE8EAEC), AppColors.textSecondary),
             ],
           ),
           const SizedBox(height: 9),
@@ -1034,23 +1069,27 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
                 const SizedBox(width: 7),
                 Expanded(
                   child: Column(
-                    crossAxisAlignment:
-                        isArabic ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                    crossAxisAlignment: isArabic
+                        ? CrossAxisAlignment.end
+                        : CrossAxisAlignment.start,
                     children: [
                       Text(item.getCommercialName(isArabic),
-                          textAlign: isArabic ? TextAlign.right : TextAlign.left,
+                          textAlign:
+                              isArabic ? TextAlign.right : TextAlign.left,
                           style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
                               color: AppColors.primaryDark)),
                       const SizedBox(height: 4),
                       Text('${item.getBankName(isArabic)} - ${item.iban}',
-                          textAlign: isArabic ? TextAlign.right : TextAlign.left,
+                          textAlign:
+                              isArabic ? TextAlign.right : TextAlign.left,
                           style: const TextStyle(
                               fontSize: 8, color: AppColors.textSecondary)),
                       const SizedBox(height: 5),
                       Text(item.getMatchDescription(isArabic),
-                          textAlign: isArabic ? TextAlign.right : TextAlign.left,
+                          textAlign:
+                              isArabic ? TextAlign.right : TextAlign.left,
                           style: const TextStyle(
                               fontSize: 8,
                               color: AppColors.textSecondary,
@@ -1071,7 +1110,8 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
               borderRadius: BorderRadius.circular(9),
               onTap: _advanceToNextRequest,
               child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 10),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 9, horizontal: 10),
                 decoration: BoxDecoration(
                     color: const Color(0xFFE9ECEF),
                     borderRadius: BorderRadius.circular(9)),
@@ -1085,9 +1125,14 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
                     const SizedBox(width: 6),
                     Expanded(
                       child: Text(
-                        isArabic ? 'الانتقال إلى تدقيق هذا الطلب الآن' : 'Switch to this request now',
+                        isArabic
+                            ? 'الانتقال إلى تدقيق هذا الطلب الآن'
+                            : 'Switch to this request now',
                         textAlign: isArabic ? TextAlign.right : TextAlign.left,
-                        style: const TextStyle(fontSize: 9, color: AppColors.primaryDark, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 9,
+                            color: AppColors.primaryDark,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                   ],

@@ -3,14 +3,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/utils/app_locale_controller.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../finance/presentation/widgets/finance_tabs_shell.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../domain/entities/user_role.dart';
 import '../controllers/auth_cubit.dart';
 import '../controllers/auth_state.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  final VoidCallback onFinancialLogin;
+  final VoidCallback? onMerchantLogin;
+
+  const LoginScreen({
+    super.key,
+    required this.onFinancialLogin,
+    this.onMerchantLogin,
+  });
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -40,10 +46,10 @@ class _LoginScreenState extends State<LoginScreen> {
       listener: (context, state) {
         if (state is AuthSuccess) {
           if (state.user.role == UserRole.financialSupervisor) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const FinanceTabsShell()),
-            );
+            widget.onFinancialLogin();
+          } else if (state.user.role == UserRole.merchantSupervisor &&
+              widget.onMerchantLogin != null) {
+            widget.onMerchantLogin!();
           } else {
             ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()

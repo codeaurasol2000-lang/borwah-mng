@@ -14,20 +14,29 @@ import 'package:barwah_app/features/finance/presentation/screens/profile_screen.
 import 'package:barwah_app/features/finance/presentation/screens/subscriptions_screen.dart';
 import 'package:barwah_app/features/finance/presentation/screens/supervisor_withdrawals_screen.dart';
 import 'package:barwah_app/features/finance/presentation/screens/transaction_history_screen.dart';
-import 'package:barwah_app/features/finance/presentation/widgets/finance_tabs_shell.dart';
+import 'package:barwah_app/app/navigation/finance_tabs_shell.dart';
+import 'package:barwah_app/app/navigation/merchants_tabs_shell.dart';
+import 'package:barwah_app/features/finance/presentation/widgets/finance_navigation.dart';
+import 'package:barwah_app/features/merchants/presentation/screens/merchant_financial_requests_screen.dart';
+import 'package:barwah_app/features/merchants/presentation/screens/advertisement_review_details_screen.dart';
+import 'package:barwah_app/features/merchants/presentation/screens/ads_management_screen.dart';
+import 'package:barwah_app/features/merchants/presentation/screens/merchant_wallet_screen.dart';
 import 'package:barwah_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-Widget buildTestScreen(Widget child) {
+Widget buildTestScreen(
+  Widget child, {
+  Locale locale = const Locale('en'),
+}) {
   return MultiBlocProvider(
     providers: [
       BlocProvider(create: (_) => AuthCubit()),
     ],
     child: MaterialApp(
-      locale: const Locale('en'),
+      locale: locale,
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       home: child,
@@ -57,15 +66,581 @@ void main() {
   }
 
   testWidgets('Test LoginScreen in English', (tester) async {
-    await testScreen(tester, const LoginScreen());
+    await testScreen(tester, LoginScreen(onFinancialLogin: () {}));
   });
 
   testWidgets('Test FinanceTabsShell in English', (tester) async {
-    await testScreen(tester, const FinanceTabsShell());
+    await testScreen(tester, FinanceTabsShell(onLogout: () {}));
+  });
+
+  testWidgets('Merchants shell reuses finance app bar and bottom bar',
+      (tester) async {
+    tester.view.physicalSize = const Size(390, 1600);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+    await tester
+        .pumpWidget(buildTestScreen(MerchantsTabsShell(onLogout: () {})));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(FinancePageAppBar), findsOneWidget);
+    expect(find.byType(FinanceBottomNavigationBar), findsOneWidget);
+    expect(find.text('Merchant Supervisor'), findsOneWidget);
+    expect(find.text('Merchants'), findsNWidgets(2));
+    expect(find.text('Ads'), findsOneWidget);
+    expect(find.text('Financial Requests'), findsOneWidget);
+    expect(find.text('Account'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+
+    await tester.tap(
+      find.descendant(
+        of: find.byType(FinanceBottomNavigationBar),
+        matching: find.text('Ads'),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byType(FinancePageAppBar), findsOneWidget);
+    expect(find.text('Ads'), findsNWidgets(2));
+    expect(find.text('Ads awaiting review'), findsOneWidget);
+    expect(find.text('2023 Mercedes E300 AMG fully loaded'), findsOneWidget);
+    expect(find.text('New iPhone 16 Pro Max 256GB Natural Titanium'),
+        findsOneWidget);
+    await tester.ensureVisible(find.text('Al-Ufuq Car Trading Est.'));
+    final adIconRect = tester.getRect(
+      find.ancestor(
+        of: find.byIcon(Icons.directions_car_outlined),
+        matching: find.byType(CircleAvatar),
+      ),
+    );
+    final adMerchantRect = tester.getRect(
+      find.text('Al-Ufuq Car Trading Est.'),
+    );
+    expect(adMerchantRect.left - adIconRect.right, inInclusiveRange(0, 10));
+    expect(tester.takeException(), isNull);
+
+    await tester.tap(find.text('Cars & vehicles (5)'));
+    await tester.pumpAndSettle();
+    expect(find.text('2023 Mercedes E300 AMG fully loaded'), findsOneWidget);
+    expect(find.text('New iPhone 16 Pro Max 256GB Natural Titanium'),
+        findsNothing);
+
+    await tester.tap(find.text('Approve and publish').first);
+    await tester.pumpAndSettle();
+    expect(find.text('Ad approved'), findsWidgets);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Advertisement management renders without Arabic overflow',
+      (tester) async {
+    tester.view.physicalSize = const Size(390, 1600);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+    await tester.pumpWidget(
+      buildTestScreen(
+        MerchantsTabsShell(onLogout: () {}),
+        locale: const Locale('ar'),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final l10n = await AppLocalizations.delegate.load(const Locale('ar'));
+    await tester.tap(
+      find.descendant(
+        of: find.byType(FinanceBottomNavigationBar),
+        matching: find.text(l10n.navAds),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text(l10n.adsPendingHeading), findsOneWidget);
+    expect(find.text(l10n.adsCarTitle), findsOneWidget);
+    await tester.ensureVisible(find.text(l10n.adsCarMerchant));
+    final adIconRect = tester.getRect(
+      find.ancestor(
+        of: find.byIcon(Icons.directions_car_outlined),
+        matching: find.byType(CircleAvatar),
+      ),
+    );
+    final adMerchantRect = tester.getRect(find.text(l10n.adsCarMerchant));
+    expect(adIconRect.left - adMerchantRect.right, inInclusiveRange(0, 10));
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Arabic ad cards open detailed vehicle review and approve',
+      (tester) async {
+    tester.view.physicalSize = const Size(390, 2200);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+    await tester.pumpWidget(
+      buildTestScreen(
+        MerchantsTabsShell(onLogout: () {}),
+        locale: const Locale('ar'),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final l10n = await AppLocalizations.delegate.load(const Locale('ar'));
+    await tester.tap(
+      find.descendant(
+        of: find.byType(FinanceBottomNavigationBar),
+        matching: find.text(l10n.navAds),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(l10n.adsCarTitle));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(AdvertisementReviewDetailsScreen), findsOneWidget);
+    expect(find.text(l10n.adsDetailsTitle), findsOneWidget);
+    expect(find.text(l10n.adsVehicleDescription), findsOneWidget);
+    expect(find.text(l10n.adsMileageValue), findsOneWidget);
+    expect(find.text(l10n.adsVillaArea), findsNothing);
+    expect(tester.takeException(), isNull);
+
+    await tester.scrollUntilVisible(
+      find.text(l10n.adsRequestEdit),
+      350,
+      scrollable: find
+          .descendant(
+            of: find.byType(AdvertisementReviewDetailsScreen),
+            matching: find.byWidgetPredicate(
+              (widget) =>
+                  widget is Scrollable &&
+                  widget.axisDirection == AxisDirection.down,
+            ),
+          )
+          .first,
+    );
+    await tester.ensureVisible(find.text(l10n.adsRequestEdit));
+    await tester.tap(find.text(l10n.adsRequestEdit));
+    await tester.pumpAndSettle();
+    expect(find.text(l10n.adsEditRequestTitle), findsOneWidget);
+    expect(find.text(l10n.adsEditRequestGuidanceTitle), findsOneWidget);
+    await tester.enterText(
+      find.byKey(const ValueKey('ad-edit-request-note')),
+      'يرجى توضيح بيانات الإعلان',
+    );
+    await tester.ensureVisible(find.text(l10n.adsEditRequestSend));
+    await tester.tap(find.text(l10n.adsEditRequestSend));
+    await tester.pumpAndSettle();
+    expect(find.text(l10n.adsRequestEditUnavailable), findsOneWidget);
+    expect(find.byType(AdvertisementReviewDetailsScreen), findsOneWidget);
+
+    await tester.scrollUntilVisible(
+      find.text(l10n.adsApproveAction),
+      350,
+      scrollable: find
+          .descendant(
+            of: find.byType(AdvertisementReviewDetailsScreen),
+            matching: find.byWidgetPredicate(
+              (widget) =>
+                  widget is Scrollable &&
+                  widget.axisDirection == AxisDirection.down,
+            ),
+          )
+          .first,
+    );
+    await tester.ensureVisible(find.text(l10n.adsApproveAction));
+    await tester.tap(find.text(l10n.adsApproveAction));
+    await tester.pumpAndSettle();
+    expect(find.byType(AdvertisementReviewDetailsScreen), findsNothing);
+    expect(find.text(l10n.adsApprovedStatus), findsWidgets);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('English ad details show category-specific data', (tester) async {
+    tester.view.physicalSize = const Size(390, 3000);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+    await tester.pumpWidget(
+      buildTestScreen(
+        MerchantsTabsShell(onLogout: () {}),
+        locale: const Locale('en'),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final enL10n = await AppLocalizations.delegate.load(const Locale('en'));
+    await tester.tap(
+      find.descendant(
+        of: find.byType(FinanceBottomNavigationBar),
+        matching: find.text('Ads'),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('New iPhone 16 Pro Max 256GB Natural Titanium'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Ad details'), findsOneWidget);
+    expect(find.text('5 years'), findsOneWidget);
+    expect(find.text('256 GB'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.text('Luxury modern villa with living-room stairs - Al Narjis'),
+      350,
+      scrollable: find
+          .descendant(
+            of: find.byType(AdsManagementScreen),
+            matching: find.byType(Scrollable),
+          )
+          .first,
+    );
+    await tester.ensureVisible(
+      find.text('Luxury modern villa with living-room stairs - Al Narjis'),
+    );
+    await tester.tap(
+      find.text('Luxury modern villa with living-room stairs - Al Narjis'),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('375 m²'), findsOneWidget);
+    expect(find.text('Valid and verified'), findsOneWidget);
+
+    await tester.scrollUntilVisible(
+      find.text(enL10n.adsRejectAction),
+      350,
+      scrollable: find
+          .descendant(
+            of: find.byType(AdvertisementReviewDetailsScreen),
+            matching: find.byWidgetPredicate(
+              (widget) =>
+                  widget is Scrollable &&
+                  widget.axisDirection == AxisDirection.down,
+            ),
+          )
+          .first,
+    );
+    await tester.ensureVisible(find.text(enL10n.adsRejectAction));
+    await tester.tap(find.text(enL10n.adsRejectAction));
+    await tester.pumpAndSettle();
+    expect(find.text(enL10n.adsRejectReasonTitle), findsOneWidget);
+    await tester.tap(find.byTooltip(enL10n.adsCancelAction));
+    await tester.pumpAndSettle();
+    expect(find.byType(AdsManagementScreen), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('Luxury modern villa with living-room stairs - Al Narjis'),
+      350,
+      scrollable: find
+          .descendant(
+            of: find.byType(AdsManagementScreen),
+            matching: find.byType(Scrollable),
+          )
+          .first,
+    );
+    await tester.ensureVisible(
+      find.text('Luxury modern villa with living-room stairs - Al Narjis'),
+    );
+    await tester.tap(
+      find.text('Luxury modern villa with living-room stairs - Al Narjis'),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.scrollUntilVisible(
+      find.text(enL10n.adsRequestEdit),
+      350,
+      scrollable: find
+          .descendant(
+            of: find.byType(AdvertisementReviewDetailsScreen),
+            matching: find.byWidgetPredicate(
+              (widget) =>
+                  widget is Scrollable &&
+                  widget.axisDirection == AxisDirection.down,
+            ),
+          )
+          .first,
+    );
+    await tester.ensureVisible(find.text(enL10n.adsRequestEdit));
+    await tester.tap(find.text(enL10n.adsRequestEdit));
+    await tester.pumpAndSettle();
+    expect(find.text(enL10n.adsEditRequestTitle), findsOneWidget);
+    expect(
+        find.text(enL10n.adsEditRequestAdTitle(
+            'Luxury modern villa with living-room stairs - Al Narjis')),
+        findsOneWidget);
+    final sendEditRequest = find.text(enL10n.adsEditRequestSend);
+    await tester.ensureVisible(sendEditRequest);
+    await tester.tap(sendEditRequest);
+    await tester.pumpAndSettle();
+    expect(find.text(enL10n.adsEditRequestRequired), findsOneWidget);
+    await tester.enterText(
+      find.byKey(const ValueKey('ad-edit-request-note')),
+      'Update the property license details',
+    );
+    await tester.tap(sendEditRequest);
+    await tester.pumpAndSettle();
+    expect(find.text(enL10n.adsRequestEditUnavailable), findsOneWidget);
+    expect(find.text(enL10n.adsEditRequestTitle), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Ad rejection requires a reason and notifies in Arabic',
+      (tester) async {
+    tester.view.physicalSize = const Size(390, 1600);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(() {
+      tester.view.physicalSize = const Size(390, 1600);
+      tester.view.resetDevicePixelRatio();
+    });
+    await tester.pumpWidget(
+      buildTestScreen(
+        MerchantsTabsShell(onLogout: () {}),
+        locale: const Locale('ar'),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final l10n = await AppLocalizations.delegate.load(const Locale('ar'));
+    await tester.tap(
+      find.descendant(
+        of: find.byType(FinanceBottomNavigationBar),
+        matching: find.text(l10n.navAds),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final rejectButton = find.text(l10n.adsRejectAction).first;
+    await tester.ensureVisible(rejectButton);
+    await tester.tap(rejectButton);
+    await tester.pumpAndSettle();
+
+    expect(find.text(l10n.adsRejectReasonTitle), findsOneWidget);
+    expect(find.text(l10n.adsRejectReasonPrice), findsOneWidget);
+    expect(find.text(l10n.adsRejectReasonPolicy), findsOneWidget);
+    final confirm = find.text(l10n.adsConfirmRejectAndNotify);
+    expect(
+        tester
+            .widget<ElevatedButton>(
+              find
+                  .ancestor(of: confirm, matching: find.byType(ElevatedButton))
+                  .first,
+            )
+            .onPressed,
+        isNull);
+
+    await tester.tap(find.text(l10n.adsRejectReasonPhotos));
+    await tester.enterText(
+      find.byKey(const ValueKey('ad-rejection-guidance')),
+      'يرجى إضافة صور واضحة للمنتج',
+    );
+    await tester.ensureVisible(confirm);
+    await tester.tap(confirm);
+    await tester.pumpAndSettle();
+
+    expect(find.text(l10n.adsRejectedStatus), findsWidgets);
+    expect(find.text(l10n.adsRejectReasonTitle), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Merchant financial requests are read-only and filterable',
+      (tester) async {
+    tester.view.physicalSize = const Size(390, 1600);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+    await tester.pumpWidget(
+      buildTestScreen(
+        MerchantsTabsShell(onLogout: () {}),
+        locale: const Locale('en'),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.descendant(
+        of: find.byType(FinanceBottomNavigationBar),
+        matching: find.text('Financial Requests'),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byType(MerchantFinancialRequestsScreen), findsOneWidget);
+    expect(find.text('Financial actions are restricted to the CFO'),
+        findsOneWidget);
+    expect(find.text('Sales profit transfer request'), findsOneWidget);
+    await tester.ensureVisible(find.text('Sales profit transfer request'));
+    final requestIconRect =
+        tester.getRect(find.byIcon(Icons.directions_car_outlined));
+    final requestTextRect =
+        tester.getRect(find.text('Sales profit transfer request'));
+    expect(
+      requestTextRect.left - requestIconRect.right,
+      inInclusiveRange(0, 10),
+    );
+    expect(find.text('Annual Gold package subscription fee'), findsOneWidget);
+    expect(find.text('Wallet balance withdrawal request'), findsOneWidget);
+    expect(
+        tester.widgetList<OutlinedButton>(find.byType(OutlinedButton)).every(
+              (button) => button.onPressed == null,
+            ),
+        isTrue);
+    expect(tester.takeException(), isNull);
+
+    await tester.ensureVisible(find.text('Package fees'));
+    await tester.tap(find.text('Package fees'));
+    await tester.pumpAndSettle();
+    expect(find.text('Annual Gold package subscription fee'), findsOneWidget);
+    expect(find.text('Sales profit transfer request'), findsNothing);
+
+    await tester.tap(find.text('View request details'));
+    await tester.pumpAndSettle();
+    expect(find.text('Request number: FIN-3016'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Arabic financial requests fit a phone screen', (tester) async {
+    tester.view.physicalSize = const Size(390, 1600);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+    await tester.pumpWidget(
+      buildTestScreen(
+        MerchantsTabsShell(onLogout: () {}),
+        locale: const Locale('ar'),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final l10n = await AppLocalizations.delegate.load(const Locale('ar'));
+    await tester.tap(
+      find.descendant(
+        of: find.byType(FinanceBottomNavigationBar),
+        matching: find.text(l10n.navFinancialRequests),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text(l10n.finRequestReadOnlyNotice), findsOneWidget);
+    expect(find.text(l10n.finRequestHistoryTitle), findsOneWidget);
+    await tester.ensureVisible(find.text(l10n.finRequestCarTitle));
+    final requestIconRect =
+        tester.getRect(find.byIcon(Icons.directions_car_outlined));
+    final requestTextRect = tester.getRect(find.text(l10n.finRequestCarTitle));
+    expect(
+      requestIconRect.left - requestTextRect.right,
+      inInclusiveRange(0, 10),
+    );
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Merchant account tab is localized and interactive in English',
+      (tester) async {
+    tester.view.physicalSize = const Size(390, 1200);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+    var didLogout = false;
+    await tester.pumpWidget(
+      buildTestScreen(MerchantsTabsShell(onLogout: () => didLogout = true)),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.descendant(
+        of: find.byType(FinanceBottomNavigationBar),
+        matching: find.text('Account'),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Ahmed bin Abdulaziz Al-Shehri'), findsOneWidget);
+    expect(find.text('Approved oversight files and documents'), findsOneWidget);
+    expect(find.byType(Switch), findsNWidgets(2));
+    await tester.ensureVisible(find.text('Field Availability and Readiness'));
+    await tester.tap(find.byType(Switch).first);
+    await tester.pumpAndSettle();
+    expect(tester.widget<Switch>(find.byType(Switch).first).value, isTrue);
+
+    await tester.ensureVisible(find.text('Available balance and dues'));
+    await tester.tap(find.text('Available balance and dues'));
+    await tester.pumpAndSettle();
+    expect(find.byType(MerchantWalletScreen), findsOneWidget);
+    expect(find.text('Your wallet'), findsOneWidget);
+    expect(find.text('12,500'), findsOneWidget);
+    expect(find.text('Choose a transfer destination'), findsOneWidget);
+    await tester.tap(find.text('Bank transfer'));
+    await tester.pumpAndSettle();
+    expect(find.text('SA0380000000608010167519'), findsOneWidget);
+    await tester.ensureVisible(find.text('Confirm and request withdrawal'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Confirm and request withdrawal'));
+    await tester.pumpAndSettle();
+    expect(
+        find.text('Withdrawal requests are not available yet'), findsOneWidget);
+    await tester.pump(const Duration(seconds: 5));
+    await tester.pumpAndSettle();
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+
+    await tester.scrollUntilVisible(
+      find.text('Sign out'),
+      400,
+      scrollable: find
+          .ancestor(
+            of: find.text('Sign out'),
+            matching: find.byType(Scrollable),
+          )
+          .first,
+    );
+    await tester.tap(find.text('Sign out'));
+    expect(didLogout, isTrue);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Merchant account tab renders in Arabic without overflow',
+      (tester) async {
+    tester.view.physicalSize = const Size(390, 2400);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+    await tester.pumpWidget(
+      buildTestScreen(
+        MerchantsTabsShell(onLogout: () {}),
+        locale: const Locale('ar'),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final l10n = await AppLocalizations.delegate.load(const Locale('ar'));
+    await tester.tap(
+      find.descendant(
+        of: find.byType(FinanceBottomNavigationBar),
+        matching: find.text(l10n.navAccount),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text(l10n.merchantProfileName), findsOneWidget);
+    expect(find.text(l10n.merchantProfileDocumentsTitle), findsOneWidget);
+    expect(find.text(l10n.merchantProfileAvailability), findsOneWidget);
+    expect(tester.takeException(), isNull);
+
+    await tester.tap(find.text(l10n.merchantProfileBalanceTitle));
+    await tester.pumpAndSettle();
+    expect(find.byType(MerchantWalletScreen), findsOneWidget);
+    expect(find.text(l10n.merchantWalletTitle), findsOneWidget);
+    expect(find.text(l10n.merchantWalletConfirmWithdrawal), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('Test ProfileScreen in English', (tester) async {
-    await testScreen(tester, const ProfileScreen());
+    await testScreen(tester, const ProfileScreen(onLogout: _noop));
   });
 
   testWidgets('Test BankAccountsScreen in English', (tester) async {
@@ -73,7 +648,8 @@ void main() {
   });
 
   testWidgets('Test DepartmentWalletScreen in English', (tester) async {
-    await testScreen(tester, const DepartmentWalletScreen(type: DepartmentType.couriers));
+    await testScreen(
+        tester, const DepartmentWalletScreen(type: DepartmentType.couriers));
   });
 
   testWidgets('Test ExpensesManagementScreen in English', (tester) async {
@@ -101,14 +677,18 @@ void main() {
   });
 
   testWidgets('Test TransactionHistoryScreen in English', (tester) async {
-    await testScreen(tester, const TransactionHistoryScreen(
-      title: 'Test Wallet',
-      id: 'WAL-123',
-      availableBalance: 50000.0,
-    ));
+    await testScreen(
+        tester,
+        const TransactionHistoryScreen(
+          title: 'Test Wallet',
+          id: 'WAL-123',
+          availableBalance: 50000.0,
+        ));
   });
 
   testWidgets('Test BankReconciliationScreen in English', (tester) async {
     await testScreen(tester, const BankReconciliationScreen());
   });
 }
+
+void _noop() {}

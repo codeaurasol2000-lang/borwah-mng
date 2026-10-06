@@ -509,7 +509,7 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                       child: Text(
                           _deliveryCommissionType == 'percentage'
                               ? '${_deliveryCommissionController.text}%'
-                              : '${_deliveryFixedController.text} ${l10n.currencySar}',
+                              : '${_deliveryFixedController.text} ${l10n.currencyEgy}',
                           style: const TextStyle(
                               fontSize: 28,
                               fontWeight: FontWeight.bold,
@@ -646,7 +646,7 @@ class _EditMatrixScreenState extends State<EditMatrixScreen> {
                                       ),
                                     ),
                                   ),
-                                  Text(l10n.currencySar,
+                                  Text(l10n.currencyEgy,
                                       style: const TextStyle(
                                           fontSize: 11,
                                           color: AppColors.textSecondary)),

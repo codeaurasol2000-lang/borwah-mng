@@ -237,7 +237,7 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
                 ),
               ),
               const SizedBox(width: 4),
-              Text(l10n.currencySar,
+              Text(l10n.currencyEgy,
                   style: const TextStyle(
                       fontSize: 12,
                       color: AppColors.primaryDark,
@@ -303,7 +303,7 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
                 ),
               ),
               const SizedBox(width: 10),
-              Text(l10n.currencySar,
+              Text(l10n.currencyEgy,
                   style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,

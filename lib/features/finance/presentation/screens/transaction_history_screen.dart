@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../utils/finance_localizer.dart';
 import '../widgets/finance_navigation.dart';
 
 class TransactionHistoryScreen extends StatefulWidget {
@@ -28,6 +29,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final isArabic = l10n.localeName.startsWith('ar');
+    final bankName = FinanceLocalizer.localizeBankName(context, widget.title);
 
     return Directionality(
       textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
@@ -56,8 +58,8 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
                           BoxShadow(
-                              color:
-                                  AppColors.primaryExtraDark.withValues(alpha: 0.2),
+                              color: AppColors.primaryExtraDark
+                                  .withValues(alpha: 0.2),
                               blurRadius: 10,
                               offset: const Offset(0, 4)),
                         ],
@@ -81,7 +83,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(widget.title,
+                                    Text(bankName,
                                         style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 16,
@@ -146,7 +148,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                             height: 1),
                                       ),
                                       const SizedBox(width: 4),
-                                      Text(l10n.currencySar,
+                                      Text(l10n.currencyEgy,
                                           style: const TextStyle(
                                               color: Colors.white70,
                                               fontSize: 14,
@@ -176,13 +178,15 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                             MainAxisAlignment.center,
                                         children: [
                                           Flexible(
-                                        child: Text(l10n.transactionTotalWithdrawals,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: const TextStyle(
-                                                color: Colors.white70,
-                                                fontSize: 10)),
-                                      ),
+                                            child: Text(
+                                                l10n
+                                                    .transactionTotalWithdrawals,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: const TextStyle(
+                                                    color: Colors.white70,
+                                                    fontSize: 10)),
+                                          ),
                                           const SizedBox(width: 4),
                                           const Icon(Icons.arrow_upward,
                                               color: AppColors.dangerLight,
@@ -202,9 +206,10 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                                 style: TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 16,
-                                                    fontWeight: FontWeight.bold)),
+                                                    fontWeight:
+                                                        FontWeight.bold)),
                                             const SizedBox(width: 2),
-                                            Text(l10n.currencySar,
+                                            Text(l10n.currencyEgy,
                                                 style: const TextStyle(
                                                     color: Colors.white70,
                                                     fontSize: 9)),
@@ -232,13 +237,14 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                             MainAxisAlignment.center,
                                         children: [
                                           Flexible(
-                                        child: Text(l10n.transactionTotalDeposits,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: const TextStyle(
-                                                color: Colors.white70,
-                                                fontSize: 10)),
-                                      ),
+                                            child: Text(
+                                                l10n.transactionTotalDeposits,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: const TextStyle(
+                                                    color: Colors.white70,
+                                                    fontSize: 10)),
+                                          ),
                                           const SizedBox(width: 4),
                                           const Icon(Icons.arrow_downward,
                                               color: Colors.greenAccent,
@@ -258,9 +264,10 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                                 style: TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 16,
-                                                    fontWeight: FontWeight.bold)),
+                                                    fontWeight:
+                                                        FontWeight.bold)),
                                             const SizedBox(width: 2),
-                                            Text(l10n.currencySar,
+                                            Text(l10n.currencyEgy,
                                                 style: const TextStyle(
                                                     color: Colors.white70,
                                                     fontSize: 9)),
@@ -339,22 +346,22 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                     _buildTransactionItem(
                       title: l10n.transactionDepositSales,
                       subtitle: l10n.transactionNationalGateway,
-                      amount: '+2,500.00 ${l10n.currencySar}',
+                      amount: '+2,500.00 ${l10n.currencyEgy}',
                       isPositive: true,
                       status: l10n.transactionSuccess,
                       ref: '#DEP-99412',
                       time: l10n.transactionTimeTodayDeposit,
-                      balanceAfter: '412,800.00 ${l10n.currencySar}',
+                      balanceAfter: '412,800.00 ${l10n.currencyEgy}',
                     ),
                     _buildTransactionItem(
                       title: l10n.transactionProfitWithdrawal,
                       subtitle: l10n.transactionFastNetwork,
-                      amount: '-50,000.00 ${l10n.currencySar}',
+                      amount: '-50,000.00 ${l10n.currencyEgy}',
                       isPositive: false,
                       status: l10n.transactionApproved,
                       ref: '#WTH-88204',
                       time: l10n.transactionTimeTodayWithdrawal,
-                      balanceAfter: '388,300.00 ${l10n.currencySar}',
+                      balanceAfter: '388,300.00 ${l10n.currencyEgy}',
                     ),
 
                     const SizedBox(height: 24),
@@ -366,22 +373,22 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                     _buildTransactionItem(
                       title: l10n.transactionWaslniDeposit,
                       subtitle: l10n.transactionAutomatedSettlement,
-                      amount: '+8,350.00 ${l10n.currencySar}',
+                      amount: '+8,350.00 ${l10n.currencyEgy}',
                       isPositive: true,
                       status: l10n.transactionCompleted,
                       ref: '#DEP-99120',
                       time: l10n.transactionTimeYesterdayDeposit,
-                      balanceAfter: '438,300.00 ${l10n.currencySar}',
+                      balanceAfter: '438,300.00 ${l10n.currencyEgy}',
                     ),
                     _buildTransactionItem(
                       title: l10n.transactionSnbWithdrawal,
                       subtitle: l10n.transactionCorporateVerification,
-                      amount: '-35,000.00 ${l10n.currencySar}',
+                      amount: '-35,000.00 ${l10n.currencyEgy}',
                       isPositive: false,
                       status: l10n.transactionCertified,
                       ref: '#WTH-87410',
                       time: l10n.transactionTimeYesterdayWithdrawal,
-                      balanceAfter: '429,950.00 ${l10n.currencySar}',
+                      balanceAfter: '429,950.00 ${l10n.currencyEgy}',
                     ),
 
                     const SizedBox(height: 24),
@@ -393,23 +400,23 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                     _buildTransactionItem(
                       title: l10n.transactionMerchantDisputeDeposit,
                       subtitle: l10n.transactionArbitrationDecision,
-                      amount: '+1,200.00 ${l10n.currencySar}',
+                      amount: '+1,200.00 ${l10n.currencyEgy}',
                       isPositive: true,
                       status: l10n.transactionEffectiveSettlement,
                       ref: '#DEP-98765',
                       time: l10n.transactionTimeLastWeekDeposit,
-                      balanceAfter: '464,950.00 ${l10n.currencySar}',
+                      balanceAfter: '464,950.00 ${l10n.currencyEgy}',
                       iconOverride: Icons.gavel,
                     ),
                     _buildTransactionItem(
                       title: l10n.transactionWithdrawalReview,
                       subtitle: l10n.transactionAmlReview,
-                      amount: '-12,500.00 ${l10n.currencySar}',
+                      amount: '-12,500.00 ${l10n.currencyEgy}',
                       isPositive: false,
                       status: l10n.transactionBankAudit,
                       ref: '#WTH-86500',
                       time: l10n.transactionTimeLastWeekWithdrawal,
-                      balanceAfter: '12,500.00 ${l10n.currencySar}',
+                      balanceAfter: '12,500.00 ${l10n.currencyEgy}',
                       balanceLabel: l10n.transactionHeldBalance,
                       statusColor: Colors.blue.shade50,
                       statusTextColor: Colors.blue.shade800,
@@ -663,7 +670,8 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                   TextSpan(
                     children: [
                       TextSpan(
-                        text: '${balanceLabel ?? l10n.transactionBalanceAfter} ',
+                        text:
+                            '${balanceLabel ?? l10n.transactionBalanceAfter} ',
                         style: const TextStyle(
                             fontSize: 9, color: AppColors.textSecondary),
                       ),

@@ -284,11 +284,11 @@ abstract class AppLocalizations {
   /// **'#CF0-01'**
   String get cfoBadgeCode;
 
-  /// No description provided for @currencySar.
+  /// No description provided for @currencyEgy.
   ///
   /// In ar, this message translates to:
   /// **'ج.م'**
-  String get currencySar;
+  String get currencyEgy;
 
   /// No description provided for @totalAggregatedLiquidity.
   ///
@@ -415,6 +415,90 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'إرفاق صورة المستند إن وجدت'**
   String get attachDocumentOptional;
+
+  /// No description provided for @expenseReasonRequired.
+  ///
+  /// In ar, this message translates to:
+  /// **'يرجى كتابة سبب المصروف أولاً'**
+  String get expenseReasonRequired;
+
+  /// No description provided for @expenseAmountInvalid.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل مبلغاً صحيحاً أكبر من صفر'**
+  String get expenseAmountInvalid;
+
+  /// No description provided for @expenseRequestPendingStatus.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار موافقة الإدارة'**
+  String get expenseRequestPendingStatus;
+
+  /// No description provided for @expenseRequestNumber.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم الطلب'**
+  String get expenseRequestNumber;
+
+  /// No description provided for @expenseRequestAmount.
+  ///
+  /// In ar, this message translates to:
+  /// **'المبلغ'**
+  String get expenseRequestAmount;
+
+  /// No description provided for @expenseRequestSent.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إرسال طلب المصروف للإدارة للموافقة. لم يتغير رصيد الحساب.'**
+  String get expenseRequestSent;
+
+  /// No description provided for @expenseRequestSendFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر إرسال طلب المصروف. حاول مرة أخرى.'**
+  String get expenseRequestSendFailed;
+
+  /// No description provided for @expenseRequestSubmitting.
+  ///
+  /// In ar, this message translates to:
+  /// **'جارٍ إرسال الطلب...'**
+  String get expenseRequestSubmitting;
+
+  /// No description provided for @expenseConfirmTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال طلب المصروف'**
+  String get expenseConfirmTitle;
+
+  /// No description provided for @expenseConfirmDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيتم إرسال طلب المصروف إلى الإدارة للمراجعة والموافقة، دون خصم المبلغ الآن.'**
+  String get expenseConfirmDescription;
+
+  /// No description provided for @expenseAttachedPrefix.
+  ///
+  /// In ar, this message translates to:
+  /// **'مرفق'**
+  String get expenseAttachedPrefix;
+
+  /// No description provided for @expenseRemoveDocumentAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'انقر للإزالة'**
+  String get expenseRemoveDocumentAction;
+
+  /// No description provided for @expenseDocumentAttached.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إرفاق المستند'**
+  String get expenseDocumentAttached;
+
+  /// No description provided for @expenseDocumentRemoved.
+  ///
+  /// In ar, this message translates to:
+  /// **'تمت إزالة المستند المرفق'**
+  String get expenseDocumentRemoved;
 
   /// No description provided for @strictFinancialDisbursementGovernance.
   ///
@@ -776,11 +860,83 @@ abstract class AppLocalizations {
   /// **'اسم البنك'**
   String get bankNameField;
 
+  /// No description provided for @accountTypeField.
+  ///
+  /// In ar, this message translates to:
+  /// **'نوع الحساب / التصنيف'**
+  String get accountTypeField;
+
   /// No description provided for @ibanField.
   ///
   /// In ar, this message translates to:
   /// **'رقم الآيبان (IBAN)'**
   String get ibanField;
+
+  /// No description provided for @editBankAccountAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعديل بيانات الحساب'**
+  String get editBankAccountAction;
+
+  /// No description provided for @bankEditNotice.
+  ///
+  /// In ar, this message translates to:
+  /// **'لن تتغير بيانات الحساب المعتمدة الآن. سيُرسل طلب التعديل للأدمن للموافقة أو الرفض.'**
+  String get bankEditNotice;
+
+  /// No description provided for @bankEditSubmitAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'حفظ وإرسال للأدمن'**
+  String get bankEditSubmitAction;
+
+  /// No description provided for @bankEditPendingStatus.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب تعديل بانتظار قرار الأدمن'**
+  String get bankEditPendingStatus;
+
+  /// No description provided for @bankEditPendingDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'البيانات المقترحة'**
+  String get bankEditPendingDetails;
+
+  /// No description provided for @bankEditRequestNumber.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم الطلب'**
+  String get bankEditRequestNumber;
+
+  /// No description provided for @bankEditSubmitting.
+  ///
+  /// In ar, this message translates to:
+  /// **'جارٍ إرسال الطلب...'**
+  String get bankEditSubmitting;
+
+  /// No description provided for @bankEditRequestSent.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إرسال طلب التعديل للأدمن. ستظل بيانات الحساب الحالية معتمدة حتى صدور القرار.'**
+  String get bankEditRequestSent;
+
+  /// No description provided for @bankEditRequestFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر إرسال طلب التعديل. حاول مرة أخرى.'**
+  String get bankEditRequestFailed;
+
+  /// No description provided for @bankEditRequired.
+  ///
+  /// In ar, this message translates to:
+  /// **'هذا الحقل مطلوب'**
+  String get bankEditRequired;
+
+  /// No description provided for @bankEditNoChanges.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم يتم تغيير أي بيانات'**
+  String get bankEditNoChanges;
 
   /// No description provided for @bankLinkRequestSent.
   ///
@@ -2036,6 +2192,48 @@ abstract class AppLocalizations {
   /// **'تم اعتماد الحساب البنكي وإرساله للإدارة.'**
   String get reconciliationApproveSuccess;
 
+  /// No description provided for @reconciliationLoadFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر تحميل طلبات ربط الحسابات البنكية.'**
+  String get reconciliationLoadFailed;
+
+  /// No description provided for @reconciliationNoPendingRequests.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد طلبات ربط حسابات بنكية بانتظار المراجعة.'**
+  String get reconciliationNoPendingRequests;
+
+  /// No description provided for @reconciliationFreezeSuccess.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تجميد الطلب للمراجعة الرقابية.'**
+  String get reconciliationFreezeSuccess;
+
+  /// No description provided for @reconciliationFrozenRequestsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلبات ربط الحسابات المجمدة'**
+  String get reconciliationFrozenRequestsTitle;
+
+  /// No description provided for @reconciliationFreezeReasonLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'سبب التجميد:'**
+  String get reconciliationFreezeReasonLabel;
+
+  /// No description provided for @reconciliationFreezeDialogDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيتم تعليق طلب ربط الحساب وتسجيله للمراجعة المالية، وإزالته من قائمة المراجعة النشطة.'**
+  String get reconciliationFreezeDialogDescription;
+
+  /// No description provided for @reconciliationActionFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر تنفيذ الإجراء. يرجى المحاولة مرة أخرى.'**
+  String get reconciliationActionFailed;
+
   /// No description provided for @reconciliationRequestIban.
   ///
   /// In ar, this message translates to:
@@ -3152,11 +3350,35 @@ abstract class AppLocalizations {
   /// **'منذ 35 دقيقة'**
   String get settlementAge35Minutes;
 
+  /// No description provided for @settlementBeneficiaryTariq.
+  ///
+  /// In ar, this message translates to:
+  /// **'د. طارق العمري'**
+  String get settlementBeneficiaryTariq;
+
+  /// No description provided for @settlementInitialTariq.
+  ///
+  /// In ar, this message translates to:
+  /// **'ط'**
+  String get settlementInitialTariq;
+
   /// No description provided for @settlementApprovedPartner.
   ///
   /// In ar, this message translates to:
   /// **'شريك معتمد - سجل تجاري'**
   String get settlementApprovedPartner;
+
+  /// No description provided for @settlementBeneficiaryRealEstate.
+  ///
+  /// In ar, this message translates to:
+  /// **'مؤسسة الضمان العقارية'**
+  String get settlementBeneficiaryRealEstate;
+
+  /// No description provided for @settlementInitialRealEstate.
+  ///
+  /// In ar, this message translates to:
+  /// **'ض'**
+  String get settlementInitialRealEstate;
 
   /// No description provided for @settlementCommissionCorrection.
   ///
@@ -3181,6 +3403,18 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'مزود خدمة مستقل'**
   String get settlementIndependentProvider;
+
+  /// No description provided for @settlementBeneficiaryKhalid.
+  ///
+  /// In ar, this message translates to:
+  /// **'خالد المهيوب'**
+  String get settlementBeneficiaryKhalid;
+
+  /// No description provided for @settlementInitialKhalid.
+  ///
+  /// In ar, this message translates to:
+  /// **'خ'**
+  String get settlementInitialKhalid;
 
   /// No description provided for @settlementMediationDelivery.
   ///
@@ -3241,6 +3475,18 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'أمس 09:15 م'**
   String get settlementYesterday0915;
+
+  /// No description provided for @settlementsLinkedRajhiEscrow.
+  ///
+  /// In ar, this message translates to:
+  /// **'مصرف الراجحي - حساب الضمان المركزي'**
+  String get settlementsLinkedRajhiEscrow;
+
+  /// No description provided for @settlementRecentOperationsCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'142 عملية'**
+  String get settlementRecentOperationsCount;
 
   /// No description provided for @viewLabel.
   ///
@@ -3527,8 +3773,110 @@ abstract class AppLocalizations {
   /// No description provided for @frozenThawSuccess.
   ///
   /// In ar, this message translates to:
-  /// **'تم فك التجميد ونقل الطلب لقائمة المراجعة'**
+  /// **'تم فك التجميد وإرسال طلب الصرف للإدارة للموافقة'**
   String get frozenThawSuccess;
+
+  /// No description provided for @frozenForfeitSuccess.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم رفض الطلب ومصادرته وحفظ سبب الرفض'**
+  String get frozenForfeitSuccess;
+
+  /// No description provided for @frozenForfeitReasonHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب سبب الرفض والمصادرة الرقابية بالتفصيل...'**
+  String get frozenForfeitReasonHint;
+
+  /// No description provided for @frozenBankLinksTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلبات ربط الحسابات البنكية المجمدة'**
+  String get frozenBankLinksTitle;
+
+  /// No description provided for @frozenBankLinkReason.
+  ///
+  /// In ar, this message translates to:
+  /// **'سبب التجميد:'**
+  String get frozenBankLinkReason;
+
+  /// No description provided for @frozenBankLinkRestore.
+  ///
+  /// In ar, this message translates to:
+  /// **'فك التجميد وإعادته للمراجعة'**
+  String get frozenBankLinkRestore;
+
+  /// No description provided for @frozenBankLinkReject.
+  ///
+  /// In ar, this message translates to:
+  /// **'رفض مع تسجيل السبب'**
+  String get frozenBankLinkReject;
+
+  /// No description provided for @frozenBankLinkRestoreDialogTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعادة طلب ربط الحساب للمراجعة'**
+  String get frozenBankLinkRestoreDialogTitle;
+
+  /// No description provided for @frozenBankLinkRestoreDialogDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'هل تريد فك تجميد طلب ربط الحساب وإعادته إلى قائمة المطابقة النشطة؟'**
+  String get frozenBankLinkRestoreDialogDescription;
+
+  /// No description provided for @frozenBankLinkRestoreConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'فك التجميد والإعادة'**
+  String get frozenBankLinkRestoreConfirm;
+
+  /// No description provided for @frozenBankLinkRestoreSuccess.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم فك تجميد الطلب وإعادته إلى قائمة المطابقة البنكية.'**
+  String get frozenBankLinkRestoreSuccess;
+
+  /// No description provided for @frozenBankLinkRejectDialogTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'رفض طلب ربط الحساب المجمد'**
+  String get frozenBankLinkRejectDialogTitle;
+
+  /// No description provided for @frozenBankLinkRejectReasonHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب سبب رفض طلب ربط الحساب...'**
+  String get frozenBankLinkRejectReasonHint;
+
+  /// No description provided for @frozenBankLinkRejectSuccess.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم رفض طلب ربط الحساب المجمد وحفظ السبب.'**
+  String get frozenBankLinkRejectSuccess;
+
+  /// No description provided for @frozenForfeitReasonNotice.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيتم حفظ السبب مع قرار الرفض والمصادرة وإرساله للإدارة للمراجعة.'**
+  String get frozenForfeitReasonNotice;
+
+  /// No description provided for @frozenActionFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر تنفيذ الإجراء. حدّث الطلب وحاول مرة أخرى.'**
+  String get frozenActionFailed;
+
+  /// No description provided for @frozenLoadFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر تحميل الطلبات المعلقة والمجمدة.'**
+  String get frozenLoadFailed;
+
+  /// No description provided for @frozenNoRequests.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد طلبات معلقة أو مجمدة حالياً.'**
+  String get frozenNoRequests;
 
   /// No description provided for @transactionHistoryTitle.
   ///
@@ -4057,6 +4405,2472 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'تجميد الطلب'**
   String get reconciliationFreezeRequest;
+
+  /// No description provided for @merchantsSupervisorTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'Merchants'**
+  String get merchantsSupervisorTitle;
+
+  /// No description provided for @merchantSupervisorRoleBadge.
+  ///
+  /// In ar, this message translates to:
+  /// **'مشرف تجار'**
+  String get merchantSupervisorRoleBadge;
+
+  /// No description provided for @merchantSupervisorAdminSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'برواح المازوري - الإدارة'**
+  String get merchantSupervisorAdminSubtitle;
+
+  /// No description provided for @welcomeSupervisorAhmed.
+  ///
+  /// In ar, this message translates to:
+  /// **'مرحباً، المشرف أحمد'**
+  String get welcomeSupervisorAhmed;
+
+  /// No description provided for @fieldSupervisorTag.
+  ///
+  /// In ar, this message translates to:
+  /// **'ميداني'**
+  String get fieldSupervisorTag;
+
+  /// No description provided for @merchantsPortfolioSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'محفظة التجار الموكلة إليك - منطقة الرياض'**
+  String get merchantsPortfolioSubtitle;
+
+  /// No description provided for @approvedMerchantsMetric.
+  ///
+  /// In ar, this message translates to:
+  /// **'تاجر معتمد'**
+  String get approvedMerchantsMetric;
+
+  /// No description provided for @pendingReviewMetric.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار المراجعة'**
+  String get pendingReviewMetric;
+
+  /// No description provided for @searchMerchantsHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابحث بالاسم، السجل التجاري، أو التصنيف'**
+  String get searchMerchantsHint;
+
+  /// No description provided for @filterActiveVerified.
+  ///
+  /// In ar, this message translates to:
+  /// **'نشط وموثق'**
+  String get filterActiveVerified;
+
+  /// No description provided for @filterUnderAudit.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيد التدقيق'**
+  String get filterUnderAudit;
+
+  /// No description provided for @filterUpdateRequired.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحديث بيانات مطلوب'**
+  String get filterUpdateRequired;
+
+  /// No description provided for @filterSuspended.
+  ///
+  /// In ar, this message translates to:
+  /// **'معلق مؤقتاً'**
+  String get filterSuspended;
+
+  /// No description provided for @registeredStoresSection.
+  ///
+  /// In ar, this message translates to:
+  /// **'المتاجر المسجلة تحت إشرافك'**
+  String get registeredStoresSection;
+
+  /// No description provided for @storesRatio.
+  ///
+  /// In ar, this message translates to:
+  /// **'{current} من أصل {total}'**
+  String storesRatio(Object current, Object total);
+
+  /// No description provided for @recentlyActiveSort.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأحدث نشاطاً'**
+  String get recentlyActiveSort;
+
+  /// No description provided for @crShortLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'س.ت'**
+  String get crShortLabel;
+
+  /// No description provided for @linkNewMerchant.
+  ///
+  /// In ar, this message translates to:
+  /// **'ربط تاجر جديد'**
+  String get linkNewMerchant;
+
+  /// No description provided for @navMerchants.
+  ///
+  /// In ar, this message translates to:
+  /// **'التجار'**
+  String get navMerchants;
+
+  /// No description provided for @navAds.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإعلانات'**
+  String get navAds;
+
+  /// No description provided for @navFinancialRequests.
+  ///
+  /// In ar, this message translates to:
+  /// **'الطلبات المالية'**
+  String get navFinancialRequests;
+
+  /// No description provided for @navAccount.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحساب'**
+  String get navAccount;
+
+  /// No description provided for @merchantSectionComingSoon.
+  ///
+  /// In ar, this message translates to:
+  /// **'قسم {section} قيد التجهيز'**
+  String merchantSectionComingSoon(Object section);
+
+  /// No description provided for @adsManagementTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إدارة الإعلانات قبل النشر'**
+  String get adsManagementTitle;
+
+  /// No description provided for @adsReviewGateway.
+  ///
+  /// In ar, this message translates to:
+  /// **'بوابة التدقيق الإشرافي المباشر'**
+  String get adsReviewGateway;
+
+  /// No description provided for @adsUrgentDecision.
+  ///
+  /// In ar, this message translates to:
+  /// **'يتطلب قراراً فورياً'**
+  String get adsUrgentDecision;
+
+  /// No description provided for @adsHiddenToday.
+  ///
+  /// In ar, this message translates to:
+  /// **'المخفية'**
+  String get adsHiddenToday;
+
+  /// No description provided for @adsPendingToday.
+  ///
+  /// In ar, this message translates to:
+  /// **'المعتمدة اليوم'**
+  String get adsPendingToday;
+
+  /// No description provided for @adsUnderReviewCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيد المراجعة'**
+  String get adsUnderReviewCount;
+
+  /// No description provided for @adsAllFilter.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكل'**
+  String get adsAllFilter;
+
+  /// No description provided for @adsVehiclesFilter.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيارات ومركبات'**
+  String get adsVehiclesFilter;
+
+  /// No description provided for @adsElectronicsFilter.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلكترونيات'**
+  String get adsElectronicsFilter;
+
+  /// No description provided for @adsRealEstateFilter.
+  ///
+  /// In ar, this message translates to:
+  /// **'عقارات'**
+  String get adsRealEstateFilter;
+
+  /// No description provided for @adsSearchHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابحث بالعنوان أو التاجر أو الكود...'**
+  String get adsSearchHint;
+
+  /// No description provided for @adsClearSearch.
+  ///
+  /// In ar, this message translates to:
+  /// **'مسح البحث'**
+  String get adsClearSearch;
+
+  /// No description provided for @adsPendingHeading.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإعلانات المعلقة للتدقيق'**
+  String get adsPendingHeading;
+
+  /// No description provided for @adsRecentSort.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأحدث وصولاً'**
+  String get adsRecentSort;
+
+  /// No description provided for @adsOldestSort.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأقدم وصولاً'**
+  String get adsOldestSort;
+
+  /// No description provided for @adsImageCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count} صور'**
+  String adsImageCount(Object count);
+
+  /// No description provided for @adsCarMerchant.
+  ///
+  /// In ar, this message translates to:
+  /// **'مؤسسة الأفق لتجارة السيارات'**
+  String get adsCarMerchant;
+
+  /// No description provided for @adsCarCategory.
+  ///
+  /// In ar, this message translates to:
+  /// **'معرض سيارات • الرياض'**
+  String get adsCarCategory;
+
+  /// No description provided for @adsCarTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'مرسيدس E300 موديل 2023 فل كامل AMG'**
+  String get adsCarTitle;
+
+  /// No description provided for @adsCarDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'عداد: 15,000 كم'**
+  String get adsCarDetails;
+
+  /// No description provided for @adsCarPrice.
+  ///
+  /// In ar, this message translates to:
+  /// **'245,000 ر.س'**
+  String get adsCarPrice;
+
+  /// No description provided for @adsPhoneMerchant.
+  ///
+  /// In ar, this message translates to:
+  /// **'متجر الصفوة للإلكترونيات'**
+  String get adsPhoneMerchant;
+
+  /// No description provided for @adsPhoneCategory.
+  ///
+  /// In ar, this message translates to:
+  /// **'موثق في معروف • الرياض'**
+  String get adsPhoneCategory;
+
+  /// No description provided for @adsPhoneTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'آيفون 16 برو ماكس 256GB تيتانيوم طبيعي جديد'**
+  String get adsPhoneTitle;
+
+  /// No description provided for @adsPhoneDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكفالة المحلية: 5 سنوات'**
+  String get adsPhoneDetails;
+
+  /// No description provided for @adsPhonePrice.
+  ///
+  /// In ar, this message translates to:
+  /// **'4,699 ر.س'**
+  String get adsPhonePrice;
+
+  /// No description provided for @adsVillaMerchant.
+  ///
+  /// In ar, this message translates to:
+  /// **'شركة اليمامة للمقاولات والعقارات'**
+  String get adsVillaMerchant;
+
+  /// No description provided for @adsVillaCategory.
+  ///
+  /// In ar, this message translates to:
+  /// **'وسيط عقاري معتمد • الرياض'**
+  String get adsVillaCategory;
+
+  /// No description provided for @adsVillaTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'فيلا مودرن فاخرة درج صالة - حي النرجس'**
+  String get adsVillaTitle;
+
+  /// No description provided for @adsVillaDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'مساحة الأرض 375 م²'**
+  String get adsVillaDetails;
+
+  /// No description provided for @adsVillaPrice.
+  ///
+  /// In ar, this message translates to:
+  /// **'2,850,000 ر.س'**
+  String get adsVillaPrice;
+
+  /// No description provided for @adsLicenseVerified.
+  ///
+  /// In ar, this message translates to:
+  /// **'الترخيص التجاري موثق'**
+  String get adsLicenseVerified;
+
+  /// No description provided for @adsMarketPriceMatched.
+  ///
+  /// In ar, this message translates to:
+  /// **'سعر متوافق مع متوسط السوق'**
+  String get adsMarketPriceMatched;
+
+  /// No description provided for @adsReviewHidden.
+  ///
+  /// In ar, this message translates to:
+  /// **'مخفي بانتظار المراجعة'**
+  String get adsReviewHidden;
+
+  /// No description provided for @adsMinutesAgo.
+  ///
+  /// In ar, this message translates to:
+  /// **'منذ {count} دقيقة'**
+  String adsMinutesAgo(Object count);
+
+  /// No description provided for @adsHoursAgo.
+  ///
+  /// In ar, this message translates to:
+  /// **'منذ ساعتين'**
+  String get adsHoursAgo;
+
+  /// No description provided for @adsReviewAndApprove.
+  ///
+  /// In ar, this message translates to:
+  /// **'مراجعة وتدقيق الإعلان'**
+  String get adsReviewAndApprove;
+
+  /// No description provided for @adsHideAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'إخفاء الإعلان'**
+  String get adsHideAction;
+
+  /// No description provided for @adsApproveAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'قبول واعتماد النشر'**
+  String get adsApproveAction;
+
+  /// No description provided for @adsRejectAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'رفض مع ذكر السبب'**
+  String get adsRejectAction;
+
+  /// No description provided for @adsRejectReasonTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'سبب رفض الإعلان'**
+  String get adsRejectReasonTitle;
+
+  /// No description provided for @adsRejectReasonHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب سبب الرفض ليظهر للتاجر'**
+  String get adsRejectReasonHint;
+
+  /// No description provided for @adsRejectReasonInstructions.
+  ///
+  /// In ar, this message translates to:
+  /// **'يرجى اختيار سبب واضح ليتم إبلاغ التاجر به وتوثيقه في سجل التدقيق الإداري.'**
+  String get adsRejectReasonInstructions;
+
+  /// No description provided for @adsRejectReasonPrice.
+  ///
+  /// In ar, this message translates to:
+  /// **'سعر غير منطقي أو وهمي'**
+  String get adsRejectReasonPrice;
+
+  /// No description provided for @adsRejectReasonMisleading.
+  ///
+  /// In ar, this message translates to:
+  /// **'وصف مضلل أو بيانات غير دقيقة'**
+  String get adsRejectReasonMisleading;
+
+  /// No description provided for @adsRejectReasonPhotos.
+  ///
+  /// In ar, this message translates to:
+  /// **'صور غير مطابقة للمواصفات أو ذات جودة رديئة'**
+  String get adsRejectReasonPhotos;
+
+  /// No description provided for @adsRejectReasonPolicy.
+  ///
+  /// In ar, this message translates to:
+  /// **'مخالفة سياسة النشر وشروط المنصة'**
+  String get adsRejectReasonPolicy;
+
+  /// No description provided for @adsRejectGuidanceOptional.
+  ///
+  /// In ar, this message translates to:
+  /// **'توجيه مخصص للتاجر (اختياري)'**
+  String get adsRejectGuidanceOptional;
+
+  /// No description provided for @adsRejectGuidanceDirectLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'يظهر في إشعار التاجر المباشر'**
+  String get adsRejectGuidanceDirectLabel;
+
+  /// No description provided for @adsRejectGuidanceHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل نص التوجيه لتعديل الإعلان وإعادة رفعه...'**
+  String get adsRejectGuidanceHint;
+
+  /// No description provided for @adsConfirmRejectAndNotify.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد الرفض وإشعار التاجر'**
+  String get adsConfirmRejectAndNotify;
+
+  /// No description provided for @adsCancelAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء'**
+  String get adsCancelAction;
+
+  /// No description provided for @adsConfirmReject.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد الرفض'**
+  String get adsConfirmReject;
+
+  /// No description provided for @adsApprovedStatus.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم اعتماد الإعلان'**
+  String get adsApprovedStatus;
+
+  /// No description provided for @adsHiddenStatus.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإعلان مخفي'**
+  String get adsHiddenStatus;
+
+  /// No description provided for @adsRejectedStatus.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم رفض الإعلان'**
+  String get adsRejectedStatus;
+
+  /// No description provided for @adsNoResults.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد إعلانات مطابقة'**
+  String get adsNoResults;
+
+  /// No description provided for @adsDetailsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تفاصيل الإعلان'**
+  String get adsDetailsTitle;
+
+  /// No description provided for @adsInImageReviewStatus.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعلان معلق قيد المراجعة'**
+  String get adsInImageReviewStatus;
+
+  /// No description provided for @adsNotPublishedYet.
+  ///
+  /// In ar, this message translates to:
+  /// **'غير منشور حالياً'**
+  String get adsNotPublishedYet;
+
+  /// No description provided for @adsMerchantRegistrationNumber.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجل تجاري: {number}'**
+  String adsMerchantRegistrationNumber(Object number);
+
+  /// No description provided for @adsMerchantVerified.
+  ///
+  /// In ar, this message translates to:
+  /// **'موثق'**
+  String get adsMerchantVerified;
+
+  /// No description provided for @adsPhotoPosition.
+  ///
+  /// In ar, this message translates to:
+  /// **'{current} من {total} صور'**
+  String adsPhotoPosition(Object current, Object total);
+
+  /// No description provided for @adsAdPhotoVerified.
+  ///
+  /// In ar, this message translates to:
+  /// **'فحص الصورة'**
+  String get adsAdPhotoVerified;
+
+  /// No description provided for @adsIdentifier.
+  ///
+  /// In ar, this message translates to:
+  /// **'معرف الإعلان: #{number}'**
+  String adsIdentifier(Object number);
+
+  /// No description provided for @adsAskingPrice.
+  ///
+  /// In ar, this message translates to:
+  /// **'السعر المطلوب من التاجر'**
+  String get adsAskingPrice;
+
+  /// No description provided for @adsAdDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'نص إعلان التاجر'**
+  String get adsAdDescription;
+
+  /// No description provided for @adsLicenseChecklist.
+  ///
+  /// In ar, this message translates to:
+  /// **'قائمة التحقق النظامية للترخيص'**
+  String get adsLicenseChecklist;
+
+  /// No description provided for @adsChecklistCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'{passed} / {total} بنود'**
+  String adsChecklistCount(int passed, int total);
+
+  /// No description provided for @adsAutoHideReportsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إخفاء تلقائي عند ورود بلاغات'**
+  String get adsAutoHideReportsTitle;
+
+  /// No description provided for @adsAutoHideReportsDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'إخفاء الإعلان مؤقتاً لحين إعادة التدقيق'**
+  String get adsAutoHideReportsDescription;
+
+  /// No description provided for @adsDeliveryTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'مصاريف التوصيل والشحن الخاصة بالمنتج'**
+  String get adsDeliveryTitle;
+
+  /// No description provided for @adsDeliveryActive.
+  ///
+  /// In ar, this message translates to:
+  /// **'خدمة مفعلة'**
+  String get adsDeliveryActive;
+
+  /// No description provided for @adsDeliveryDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'خدمة التوصيل مطلوبة مع هذا الإعلان. يحق للمشرف تعديل رسوم التوصيل قبل الاعتماد أو الإخفاء.'**
+  String get adsDeliveryDescription;
+
+  /// No description provided for @adsDeliveryFee.
+  ///
+  /// In ar, this message translates to:
+  /// **'مبلغ ثابت (ر.س)'**
+  String get adsDeliveryFee;
+
+  /// No description provided for @adsUpdateDeliveryFee.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحديث الرسوم'**
+  String get adsUpdateDeliveryFee;
+
+  /// No description provided for @adsDeliveryFeeNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تدقيق وتعديل التوصيل وفق اللائحة'**
+  String get adsDeliveryFeeNote;
+
+  /// No description provided for @adsSupervisorDecision.
+  ///
+  /// In ar, this message translates to:
+  /// **'قرار المشرف الإداري'**
+  String get adsSupervisorDecision;
+
+  /// No description provided for @adsSupervisorLevel.
+  ///
+  /// In ar, this message translates to:
+  /// **'صلاحية الاعتماد: المستوى 1'**
+  String get adsSupervisorLevel;
+
+  /// No description provided for @adsRequestEdit.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب تعديل بيانات'**
+  String get adsRequestEdit;
+
+  /// No description provided for @adsEditRequestTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب تعديل بيانات الإعلان'**
+  String get adsEditRequestTitle;
+
+  /// No description provided for @adsEditRequestSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب الملاحظات والتوجيهات المطلوبة من التاجر لتعديل الإعلان قبل النشر'**
+  String get adsEditRequestSubtitle;
+
+  /// No description provided for @adsEditRequestAdTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإعلان: {title}'**
+  String adsEditRequestAdTitle(Object title);
+
+  /// No description provided for @adsEditRequestGuidanceTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملاحظات وتوجيهات المشرف للتاجر (إلزامي)'**
+  String get adsEditRequestGuidanceTitle;
+
+  /// No description provided for @adsEditRequestInstructions.
+  ///
+  /// In ar, this message translates to:
+  /// **'يرجى توضيح جميع التفاصيل والبنود المطلوب تعديلها بوضوح لتوجيه التاجر مباشرة إلى ما يحتاج لتصحيحه قبل إعادة مراجعة الإعلان.'**
+  String get adsEditRequestInstructions;
+
+  /// No description provided for @adsEditRequestHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب التعديلات المطلوبة من التاجر...'**
+  String get adsEditRequestHint;
+
+  /// No description provided for @adsEditRequestRequired.
+  ///
+  /// In ar, this message translates to:
+  /// **'هذا الحقل مطلوب لإرسال طلب التعديل'**
+  String get adsEditRequestRequired;
+
+  /// No description provided for @adsEditRequestSend.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال طلب التعديل للتاجر'**
+  String get adsEditRequestSend;
+
+  /// No description provided for @adsEditRequestCancel.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء وتراجع'**
+  String get adsEditRequestCancel;
+
+  /// No description provided for @adsFeeUpdated.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تحديث رسوم التوصيل'**
+  String get adsFeeUpdated;
+
+  /// No description provided for @adsFeeInvalid.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل مبلغاً صحيحاً غير سالب'**
+  String get adsFeeInvalid;
+
+  /// No description provided for @adsRequestEditUnavailable.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب تعديل البيانات غير متاح حالياً'**
+  String get adsRequestEditUnavailable;
+
+  /// No description provided for @adsMileage.
+  ///
+  /// In ar, this message translates to:
+  /// **'العداد الحالي'**
+  String get adsMileage;
+
+  /// No description provided for @adsExteriorColor.
+  ///
+  /// In ar, this message translates to:
+  /// **'اللون الخارجي'**
+  String get adsExteriorColor;
+
+  /// No description provided for @adsAccidentRecord.
+  ///
+  /// In ar, this message translates to:
+  /// **'تقرير الحوادث'**
+  String get adsAccidentRecord;
+
+  /// No description provided for @adsTransmission.
+  ///
+  /// In ar, this message translates to:
+  /// **'ناقل الحركة'**
+  String get adsTransmission;
+
+  /// No description provided for @adsMileageValue.
+  ///
+  /// In ar, this message translates to:
+  /// **'15,000 كم'**
+  String get adsMileageValue;
+
+  /// No description provided for @adsWhiteColorValue.
+  ///
+  /// In ar, this message translates to:
+  /// **'أبيض لؤلؤي'**
+  String get adsWhiteColorValue;
+
+  /// No description provided for @adsNoAccidentsValue.
+  ///
+  /// In ar, this message translates to:
+  /// **'خالٍ من الحوادث'**
+  String get adsNoAccidentsValue;
+
+  /// No description provided for @adsAutomaticValue.
+  ///
+  /// In ar, this message translates to:
+  /// **'أوتوماتيك'**
+  String get adsAutomaticValue;
+
+  /// No description provided for @adsPhoneWarranty.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكفالة المحلية'**
+  String get adsPhoneWarranty;
+
+  /// No description provided for @adsPhoneCondition.
+  ///
+  /// In ar, this message translates to:
+  /// **'حالة المنتج'**
+  String get adsPhoneCondition;
+
+  /// No description provided for @adsPhoneColor.
+  ///
+  /// In ar, this message translates to:
+  /// **'اللون'**
+  String get adsPhoneColor;
+
+  /// No description provided for @adsPhoneStorage.
+  ///
+  /// In ar, this message translates to:
+  /// **'سعة التخزين'**
+  String get adsPhoneStorage;
+
+  /// No description provided for @adsWarrantyValue.
+  ///
+  /// In ar, this message translates to:
+  /// **'5 سنوات'**
+  String get adsWarrantyValue;
+
+  /// No description provided for @adsNewConditionValue.
+  ///
+  /// In ar, this message translates to:
+  /// **'جديد'**
+  String get adsNewConditionValue;
+
+  /// No description provided for @adsNaturalTitaniumValue.
+  ///
+  /// In ar, this message translates to:
+  /// **'تيتانيوم طبيعي'**
+  String get adsNaturalTitaniumValue;
+
+  /// No description provided for @adsStorageValue.
+  ///
+  /// In ar, this message translates to:
+  /// **'256 جيجابايت'**
+  String get adsStorageValue;
+
+  /// No description provided for @adsVillaArea.
+  ///
+  /// In ar, this message translates to:
+  /// **'مساحة الأرض'**
+  String get adsVillaArea;
+
+  /// No description provided for @adsVillaRooms.
+  ///
+  /// In ar, this message translates to:
+  /// **'عدد الغرف'**
+  String get adsVillaRooms;
+
+  /// No description provided for @adsVillaLicense.
+  ///
+  /// In ar, this message translates to:
+  /// **'الترخيص العقاري'**
+  String get adsVillaLicense;
+
+  /// No description provided for @adsVillaLocation.
+  ///
+  /// In ar, this message translates to:
+  /// **'الموقع'**
+  String get adsVillaLocation;
+
+  /// No description provided for @adsVillaAreaValue.
+  ///
+  /// In ar, this message translates to:
+  /// **'375 م²'**
+  String get adsVillaAreaValue;
+
+  /// No description provided for @adsVillaRoomsValue.
+  ///
+  /// In ar, this message translates to:
+  /// **'5 غرف نوم'**
+  String get adsVillaRoomsValue;
+
+  /// No description provided for @adsVillaLicensedValue.
+  ///
+  /// In ar, this message translates to:
+  /// **'ساري وموثق'**
+  String get adsVillaLicensedValue;
+
+  /// No description provided for @adsVillaLocationValue.
+  ///
+  /// In ar, this message translates to:
+  /// **'حي النرجس، الرياض'**
+  String get adsVillaLocationValue;
+
+  /// No description provided for @adsVehicleDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'السيارة بحالة الوكالة، شبه جديدة، صيانة كاملة لدى الوكيل. جميع الصيانات الدورية تمت في مراكز مرسيدس المعتمدة. لا يوجد رش أو تعديل نهائياً.'**
+  String get adsVehicleDescription;
+
+  /// No description provided for @adsPhoneDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'جهاز جديد غير مستخدم، بضمان محلي ساري، مع كامل الملحقات والفاتورة. تمت مطابقة الرقم التسلسلي والمواصفات مع المستندات المرفقة.'**
+  String get adsPhoneDescription;
+
+  /// No description provided for @adsVillaDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'فيلا مودرن فاخرة بتصميم حديث وتشطيبات عالية الجودة، في موقع مميز قريب من الخدمات. رخصة البناء والوثائق العقارية متوفرة للمراجعة.'**
+  String get adsVillaDescription;
+
+  /// No description provided for @adsCheckPrice.
+  ///
+  /// In ar, this message translates to:
+  /// **'السعر والشروط المالية متوافقة'**
+  String get adsCheckPrice;
+
+  /// No description provided for @adsCheckPhotos.
+  ///
+  /// In ar, this message translates to:
+  /// **'الصور واقعية ومطابقة'**
+  String get adsCheckPhotos;
+
+  /// No description provided for @adsCheckSpecifications.
+  ///
+  /// In ar, this message translates to:
+  /// **'تطابق المواصفات مع فحص السلامة'**
+  String get adsCheckSpecifications;
+
+  /// No description provided for @adsCheckMerchantLicense.
+  ///
+  /// In ar, this message translates to:
+  /// **'سريان رخصة المعرض التجاري والمفوضين'**
+  String get adsCheckMerchantLicense;
+
+  /// No description provided for @adsCheckExpiryReminder.
+  ///
+  /// In ar, this message translates to:
+  /// **'تنتهي بعد 90 يوماً - تذكير آلي مفعل'**
+  String get adsCheckExpiryReminder;
+
+  /// No description provided for @adsCheckReminder.
+  ///
+  /// In ar, this message translates to:
+  /// **'تنبيه'**
+  String get adsCheckReminder;
+
+  /// No description provided for @adsCheckReviewRecommended.
+  ///
+  /// In ar, this message translates to:
+  /// **'تنبيه'**
+  String get adsCheckReviewRecommended;
+
+  /// No description provided for @adsCheckPassed.
+  ///
+  /// In ar, this message translates to:
+  /// **'مفحوص'**
+  String get adsCheckPassed;
+
+  /// No description provided for @finRequestReadOnlyNotice.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإجراءات المالية من صلاحية المدير المالي فقط'**
+  String get finRequestReadOnlyNotice;
+
+  /// No description provided for @finRequestMerchantProceeds.
+  ///
+  /// In ar, this message translates to:
+  /// **'مستحقات التجار المعلقة'**
+  String get finRequestMerchantProceeds;
+
+  /// No description provided for @finRequestTotalProceeds.
+  ///
+  /// In ar, this message translates to:
+  /// **'142,500'**
+  String get finRequestTotalProceeds;
+
+  /// No description provided for @finRequestProceedsNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'ضمن نطاق إشرافك'**
+  String get finRequestProceedsNote;
+
+  /// No description provided for @finRequestReviewQueue.
+  ///
+  /// In ar, this message translates to:
+  /// **'لدى الإدارة المالية'**
+  String get finRequestReviewQueue;
+
+  /// No description provided for @finRequestUnderReview.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيد التدقيق المالي'**
+  String get finRequestUnderReview;
+
+  /// No description provided for @finRequestHistoryTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجل العمليات والمطالبات'**
+  String get finRequestHistoryTitle;
+
+  /// No description provided for @finRequestUpdatedJustNow.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحديث فوري'**
+  String get finRequestUpdatedJustNow;
+
+  /// No description provided for @finRequestAllFilter.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكل (3)'**
+  String get finRequestAllFilter;
+
+  /// No description provided for @finRequestSalesFilter.
+  ///
+  /// In ar, this message translates to:
+  /// **'أرباح مبيعات'**
+  String get finRequestSalesFilter;
+
+  /// No description provided for @finRequestWithdrawalFilter.
+  ///
+  /// In ar, this message translates to:
+  /// **'سحب أرصدة'**
+  String get finRequestWithdrawalFilter;
+
+  /// No description provided for @finRequestPackageFilter.
+  ///
+  /// In ar, this message translates to:
+  /// **'رسوم باقات'**
+  String get finRequestPackageFilter;
+
+  /// No description provided for @finRequestNoResults.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد طلبات مطابقة لهذا التصنيف'**
+  String get finRequestNoResults;
+
+  /// No description provided for @finRequestCarMerchant.
+  ///
+  /// In ar, this message translates to:
+  /// **'مؤسسة الأفق لتجارة السيارات'**
+  String get finRequestCarMerchant;
+
+  /// No description provided for @finRequestCarTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب تحويل أرباح مبيعات'**
+  String get finRequestCarTitle;
+
+  /// No description provided for @finRequestCarAmount.
+  ///
+  /// In ar, this message translates to:
+  /// **'48,000'**
+  String get finRequestCarAmount;
+
+  /// No description provided for @finRequestTodayTime.
+  ///
+  /// In ar, this message translates to:
+  /// **'اليوم، 10:45 ص'**
+  String get finRequestTodayTime;
+
+  /// No description provided for @finRequestBankVerified.
+  ///
+  /// In ar, this message translates to:
+  /// **'حساب الآيبان مدقق ومعتمد ميدانياً'**
+  String get finRequestBankVerified;
+
+  /// No description provided for @finRequestPackageMerchant.
+  ///
+  /// In ar, this message translates to:
+  /// **'متجر الصفوة للإلكترونيات'**
+  String get finRequestPackageMerchant;
+
+  /// No description provided for @finRequestPackageTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'سداد رسوم اشتراك باقة ذهبية - سنوي'**
+  String get finRequestPackageTitle;
+
+  /// No description provided for @finRequestPackageAmount.
+  ///
+  /// In ar, this message translates to:
+  /// **'3,500'**
+  String get finRequestPackageAmount;
+
+  /// No description provided for @finRequestYesterdayTime.
+  ///
+  /// In ar, this message translates to:
+  /// **'أمس، 04:15 م'**
+  String get finRequestYesterdayTime;
+
+  /// No description provided for @finRequestCompleted.
+  ///
+  /// In ar, this message translates to:
+  /// **'مكتمل ومعتمد من المالية'**
+  String get finRequestCompleted;
+
+  /// No description provided for @finRequestApprovedByFinance.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم الاعتماد بواسطة: إدارة الحسابات العامة'**
+  String get finRequestApprovedByFinance;
+
+  /// No description provided for @finRequestJewelryMerchant.
+  ///
+  /// In ar, this message translates to:
+  /// **'مجوهرات البريق'**
+  String get finRequestJewelryMerchant;
+
+  /// No description provided for @finRequestWithdrawalTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب سحب رصيد محفظة'**
+  String get finRequestWithdrawalTitle;
+
+  /// No description provided for @finRequestWithdrawalAmount.
+  ///
+  /// In ar, this message translates to:
+  /// **'22,000'**
+  String get finRequestWithdrawalAmount;
+
+  /// No description provided for @finRequestOlderTime.
+  ///
+  /// In ar, this message translates to:
+  /// **'20 أكتوبر، 02:20 م'**
+  String get finRequestOlderTime;
+
+  /// No description provided for @finRequestAwaitingManager.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار موافقة المدير المالي'**
+  String get finRequestAwaitingManager;
+
+  /// No description provided for @finRequestSalesMatched.
+  ///
+  /// In ar, this message translates to:
+  /// **'مطابقة كشوفات المبيعات مكتملة'**
+  String get finRequestSalesMatched;
+
+  /// No description provided for @finRequestCurrency.
+  ///
+  /// In ar, this message translates to:
+  /// **'ر.س'**
+  String get finRequestCurrency;
+
+  /// No description provided for @finRequestRestrictedStatus.
+  ///
+  /// In ar, this message translates to:
+  /// **'جاهز للمطابقة'**
+  String get finRequestRestrictedStatus;
+
+  /// No description provided for @finRequestSendToFinance.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال للمشرف المالي'**
+  String get finRequestSendToFinance;
+
+  /// No description provided for @finRequestViewDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض تفاصيل الطلب'**
+  String get finRequestViewDetails;
+
+  /// No description provided for @finRequestPolicyTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'سياسة التدقيق المزدوج'**
+  String get finRequestPolicyTitle;
+
+  /// No description provided for @finRequestPolicyMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'أي طلب مالي يتطلب اعتماداً نهائياً من الإدارة المالية. صلاحيات مشرف التجار للعرض والمتابعة فقط.'**
+  String get finRequestPolicyMessage;
+
+  /// No description provided for @finRequestNumber.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم الطلب'**
+  String get finRequestNumber;
+
+  /// No description provided for @finRequestClose.
+  ///
+  /// In ar, this message translates to:
+  /// **'إغلاق'**
+  String get finRequestClose;
+
+  /// No description provided for @merchantProfileName.
+  ///
+  /// In ar, this message translates to:
+  /// **'أحمد بن عبد العزيز الشهري'**
+  String get merchantProfileName;
+
+  /// No description provided for @merchantProfileRegion.
+  ///
+  /// In ar, this message translates to:
+  /// **'مشرف تجار ميداني - منطقة الرياض'**
+  String get merchantProfileRegion;
+
+  /// No description provided for @merchantProfileSupervisorId.
+  ///
+  /// In ar, this message translates to:
+  /// **'SUP-4092'**
+  String get merchantProfileSupervisorId;
+
+  /// No description provided for @merchantProfileActive.
+  ///
+  /// In ar, this message translates to:
+  /// **'نشط وموثق'**
+  String get merchantProfileActive;
+
+  /// No description provided for @merchantProfileMonthlyAds.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعلان هذا الشهر'**
+  String get merchantProfileMonthlyAds;
+
+  /// No description provided for @merchantProfileStores.
+  ///
+  /// In ar, this message translates to:
+  /// **'تاجر نشط تحت إشرافك'**
+  String get merchantProfileStores;
+
+  /// No description provided for @withdrawalRequestDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض تفاصيل الطلب'**
+  String get withdrawalRequestDetails;
+
+  /// No description provided for @withdrawalDetailsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تفاصيل طلب السحب'**
+  String get withdrawalDetailsTitle;
+
+  /// No description provided for @withdrawalDetailsRequestNumber.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم الطلب'**
+  String get withdrawalDetailsRequestNumber;
+
+  /// No description provided for @withdrawalDetailsBeneficiary.
+  ///
+  /// In ar, this message translates to:
+  /// **'المستفيد'**
+  String get withdrawalDetailsBeneficiary;
+
+  /// No description provided for @withdrawalDetailsBeneficiaryRole.
+  ///
+  /// In ar, this message translates to:
+  /// **'صفة المستفيد'**
+  String get withdrawalDetailsBeneficiaryRole;
+
+  /// No description provided for @withdrawalDetailsGrossAmount.
+  ///
+  /// In ar, this message translates to:
+  /// **'إجمالي المبلغ'**
+  String get withdrawalDetailsGrossAmount;
+
+  /// No description provided for @withdrawalDetailsFeePercentage.
+  ///
+  /// In ar, this message translates to:
+  /// **'نسبة العمولة'**
+  String get withdrawalDetailsFeePercentage;
+
+  /// No description provided for @withdrawalDetailsFeeAmount.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيمة العمولة'**
+  String get withdrawalDetailsFeeAmount;
+
+  /// No description provided for @withdrawalDetailsNetAmount.
+  ///
+  /// In ar, this message translates to:
+  /// **'صافي المبلغ المستحق'**
+  String get withdrawalDetailsNetAmount;
+
+  /// No description provided for @withdrawalDetailsBankName.
+  ///
+  /// In ar, this message translates to:
+  /// **'البنك'**
+  String get withdrawalDetailsBankName;
+
+  /// No description provided for @withdrawalDetailsIban.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم الآيبان'**
+  String get withdrawalDetailsIban;
+
+  /// No description provided for @withdrawalDetailsDate.
+  ///
+  /// In ar, this message translates to:
+  /// **'تاريخ الطلب'**
+  String get withdrawalDetailsDate;
+
+  /// No description provided for @withdrawalDetailsAuditResult.
+  ///
+  /// In ar, this message translates to:
+  /// **'نتيجة الفحص'**
+  String get withdrawalDetailsAuditResult;
+
+  /// No description provided for @withdrawalDetailsAlert.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملاحظة رقابية'**
+  String get withdrawalDetailsAlert;
+
+  /// No description provided for @withdrawalDetailsSource.
+  ///
+  /// In ar, this message translates to:
+  /// **'مصدر المستحقات'**
+  String get withdrawalDetailsSource;
+
+  /// No description provided for @withdrawalDetailsTransferMethod.
+  ///
+  /// In ar, this message translates to:
+  /// **'طريقة التحويل'**
+  String get withdrawalDetailsTransferMethod;
+
+  /// No description provided for @withdrawalDetailsInstantReady.
+  ///
+  /// In ar, this message translates to:
+  /// **'متاح للتحويل الفوري'**
+  String get withdrawalDetailsInstantReady;
+
+  /// No description provided for @withdrawalDetailsStatusPending.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيد المراجعة'**
+  String get withdrawalDetailsStatusPending;
+
+  /// No description provided for @withdrawalDetailsStatusInvestigation.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيد التحقيق والتدقيق'**
+  String get withdrawalDetailsStatusInvestigation;
+
+  /// No description provided for @withdrawalDetailsStatusApproved.
+  ///
+  /// In ar, this message translates to:
+  /// **'معتمد'**
+  String get withdrawalDetailsStatusApproved;
+
+  /// No description provided for @withdrawalDetailsStatusFrozen.
+  ///
+  /// In ar, this message translates to:
+  /// **'مجمّد'**
+  String get withdrawalDetailsStatusFrozen;
+
+  /// No description provided for @withdrawalDetailsStatusRejected.
+  ///
+  /// In ar, this message translates to:
+  /// **'مرفوض'**
+  String get withdrawalDetailsStatusRejected;
+
+  /// No description provided for @withdrawalDetailsNoValue.
+  ///
+  /// In ar, this message translates to:
+  /// **'غير متوفر'**
+  String get withdrawalDetailsNoValue;
+
+  /// No description provided for @merchantProfileDocumentsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الملفات والمستندات الرقابية المعتمدة'**
+  String get merchantProfileDocumentsTitle;
+
+  /// No description provided for @merchantProfileAuthorizationCard.
+  ///
+  /// In ar, this message translates to:
+  /// **'بطاقة التفويض الإشرافي الميداني'**
+  String get merchantProfileAuthorizationCard;
+
+  /// No description provided for @merchantProfileValidUntil.
+  ///
+  /// In ar, this message translates to:
+  /// **'صلاحية حتى 31 ديسمبر 2025'**
+  String get merchantProfileValidUntil;
+
+  /// No description provided for @merchantProfileOpenDocument.
+  ///
+  /// In ar, this message translates to:
+  /// **'استعراض البطاقة'**
+  String get merchantProfileOpenDocument;
+
+  /// No description provided for @merchantProfileGovernanceGuide.
+  ///
+  /// In ar, this message translates to:
+  /// **'دليل معايير اعتماد الإعلانات'**
+  String get merchantProfileGovernanceGuide;
+
+  /// No description provided for @merchantProfileGuideSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'اللوائح الإعلانية والضوابط التنظيمية'**
+  String get merchantProfileGuideSubtitle;
+
+  /// No description provided for @merchantProfileDelegationDocument.
+  ///
+  /// In ar, this message translates to:
+  /// **'وثيقة تفويض الصلاحيات للإدارة'**
+  String get merchantProfileDelegationDocument;
+
+  /// No description provided for @merchantProfileDelegationSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الامتثال القانوني ومصفوفة القرارات'**
+  String get merchantProfileDelegationSubtitle;
+
+  /// No description provided for @merchantProfileFieldPermissions.
+  ///
+  /// In ar, this message translates to:
+  /// **'إدارة الاتصال والصلاحيات الميدانية'**
+  String get merchantProfileFieldPermissions;
+
+  /// No description provided for @merchantProfileUpdatedAutomatically.
+  ///
+  /// In ar, this message translates to:
+  /// **'محدث تلقائياً'**
+  String get merchantProfileUpdatedAutomatically;
+
+  /// No description provided for @merchantProfileAvailability.
+  ///
+  /// In ar, this message translates to:
+  /// **'التوفر الميداني والجاهزية'**
+  String get merchantProfileAvailability;
+
+  /// No description provided for @merchantProfileAvailabilitySubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تلقي طلبات المراجعة الميدانية'**
+  String get merchantProfileAvailabilitySubtitle;
+
+  /// No description provided for @merchantProfileDirectNotifications.
+  ///
+  /// In ar, this message translates to:
+  /// **'التنبيهات المباشرة للإعلانات'**
+  String get merchantProfileDirectNotifications;
+
+  /// No description provided for @merchantProfileNotificationsSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إشعار فوري عند رفع إعلان أو تأهيله'**
+  String get merchantProfileNotificationsSubtitle;
+
+  /// No description provided for @merchantProfileSecurityAudit.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأمان والتدقيق الإداري'**
+  String get merchantProfileSecurityAudit;
+
+  /// No description provided for @merchantProfileViewAll.
+  ///
+  /// In ar, this message translates to:
+  /// **'السجل الشامل'**
+  String get merchantProfileViewAll;
+
+  /// No description provided for @merchantProfileLatestActivities.
+  ///
+  /// In ar, this message translates to:
+  /// **'آخر العمليات الرقابية المنفذة'**
+  String get merchantProfileLatestActivities;
+
+  /// No description provided for @merchantProfileToday.
+  ///
+  /// In ar, this message translates to:
+  /// **'اليوم'**
+  String get merchantProfileToday;
+
+  /// No description provided for @merchantProfileActivityApproved.
+  ///
+  /// In ar, this message translates to:
+  /// **'اعتماد حملة إعلانية: متجر أفق العطور'**
+  String get merchantProfileActivityApproved;
+
+  /// No description provided for @merchantProfileLicenseNumber.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم الترخيص: LIC-9902'**
+  String get merchantProfileLicenseNumber;
+
+  /// No description provided for @merchantProfileActivityEdit.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب تعديل إعلان: معرض مطابخ النخبة'**
+  String get merchantProfileActivityEdit;
+
+  /// No description provided for @merchantProfileActivityEditDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'مخالفة لمعيار وضوح الأسعار'**
+  String get merchantProfileActivityEditDetails;
+
+  /// No description provided for @merchantProfileActivityLocation.
+  ///
+  /// In ar, this message translates to:
+  /// **'معاينة ميدانية وتثبيت موقع: أسواق المدى'**
+  String get merchantProfileActivityLocation;
+
+  /// No description provided for @merchantProfileActivityLocationDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'فرع حي الصحافة'**
+  String get merchantProfileActivityLocationDetails;
+
+  /// No description provided for @merchantProfileFinancialWallet.
+  ///
+  /// In ar, this message translates to:
+  /// **'محفظتي والبيانات المالية'**
+  String get merchantProfileFinancialWallet;
+
+  /// No description provided for @merchantWalletTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'محفظتك'**
+  String get merchantWalletTitle;
+
+  /// No description provided for @merchantWalletSupervisorStatus.
+  ///
+  /// In ar, this message translates to:
+  /// **'مشرف معتمد • قطاع المستقل وصالني'**
+  String get merchantWalletSupervisorStatus;
+
+  /// No description provided for @merchantWalletReady.
+  ///
+  /// In ar, this message translates to:
+  /// **'نشط وجاهز'**
+  String get merchantWalletReady;
+
+  /// No description provided for @merchantWalletAvailableBalance.
+  ///
+  /// In ar, this message translates to:
+  /// **'الرصيد المتاح للسحب الفوري'**
+  String get merchantWalletAvailableBalance;
+
+  /// No description provided for @merchantWalletAvailableAmount.
+  ///
+  /// In ar, this message translates to:
+  /// **'8,450'**
+  String get merchantWalletAvailableAmount;
+
+  /// No description provided for @merchantWalletBalanceDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'يشمل مستحقات الإشراف الميداني المعتمدة وبدلات التحقق الميدانية وجاهزة للتحويل الفوري.'**
+  String get merchantWalletBalanceDescription;
+
+  /// No description provided for @merchantWalletPendingDues.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيد التدقيق المالي'**
+  String get merchantWalletPendingDues;
+
+  /// No description provided for @merchantWalletPendingAmount.
+  ///
+  /// In ar, this message translates to:
+  /// **'4,050'**
+  String get merchantWalletPendingAmount;
+
+  /// No description provided for @merchantWalletTotalDues.
+  ///
+  /// In ar, this message translates to:
+  /// **'إجمالي المستحقات'**
+  String get merchantWalletTotalDues;
+
+  /// No description provided for @merchantWalletTotalAmount.
+  ///
+  /// In ar, this message translates to:
+  /// **'12,500'**
+  String get merchantWalletTotalAmount;
+
+  /// No description provided for @merchantWalletSettlementCycle.
+  ///
+  /// In ar, this message translates to:
+  /// **'دورة تسوية أسبوعية منتظمة'**
+  String get merchantWalletSettlementCycle;
+
+  /// No description provided for @merchantWalletReadiness.
+  ///
+  /// In ar, this message translates to:
+  /// **'معدل جاهزية الصرف: 68%'**
+  String get merchantWalletReadiness;
+
+  /// No description provided for @merchantWalletWithdrawTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب سحب المستحقات المالية'**
+  String get merchantWalletWithdrawTitle;
+
+  /// No description provided for @merchantWalletNoTransferFees.
+  ///
+  /// In ar, this message translates to:
+  /// **'بدون رسوم تحويل'**
+  String get merchantWalletNoTransferFees;
+
+  /// No description provided for @merchantWalletRequestedAmount.
+  ///
+  /// In ar, this message translates to:
+  /// **'مبلغ السحب المطلوب'**
+  String get merchantWalletRequestedAmount;
+
+  /// No description provided for @merchantWalletFullBalance.
+  ///
+  /// In ar, this message translates to:
+  /// **'سحب كامل الرصيد (8,450 ر.س)'**
+  String get merchantWalletFullBalance;
+
+  /// No description provided for @merchantWalletTransferLimit.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحد الأدنى لعملية السحب 100 ر.س، الحد الأقصى اليومي 20,000 ر.س'**
+  String get merchantWalletTransferLimit;
+
+  /// No description provided for @merchantWalletChooseMethod.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر وجهة التحويل'**
+  String get merchantWalletChooseMethod;
+
+  /// No description provided for @merchantWalletBankTransfer.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحويل بنكي'**
+  String get merchantWalletBankTransfer;
+
+  /// No description provided for @merchantWalletIban.
+  ///
+  /// In ar, this message translates to:
+  /// **'آيبان (IBAN)'**
+  String get merchantWalletIban;
+
+  /// No description provided for @merchantWalletDigitalWallet.
+  ///
+  /// In ar, this message translates to:
+  /// **'محفظة رقمية'**
+  String get merchantWalletDigitalWallet;
+
+  /// No description provided for @merchantWalletWalletProvider.
+  ///
+  /// In ar, this message translates to:
+  /// **'VFC / E&'**
+  String get merchantWalletWalletProvider;
+
+  /// No description provided for @merchantWalletInstantTransfer.
+  ///
+  /// In ar, this message translates to:
+  /// **'إنستاباي'**
+  String get merchantWalletInstantTransfer;
+
+  /// No description provided for @merchantWalletInstant.
+  ///
+  /// In ar, this message translates to:
+  /// **'فوري'**
+  String get merchantWalletInstant;
+
+  /// No description provided for @merchantWalletTransferAddress.
+  ///
+  /// In ar, this message translates to:
+  /// **'عنوان الدفع اللحظي (IPA) أو رقم الهاتف المرتبط'**
+  String get merchantWalletTransferAddress;
+
+  /// No description provided for @merchantWalletIbanValue.
+  ///
+  /// In ar, this message translates to:
+  /// **'SA0380000000608010167519'**
+  String get merchantWalletIbanValue;
+
+  /// No description provided for @merchantWalletPhoneValue.
+  ///
+  /// In ar, this message translates to:
+  /// **'01012345678'**
+  String get merchantWalletPhoneValue;
+
+  /// No description provided for @merchantWalletInstantAddress.
+  ///
+  /// In ar, this message translates to:
+  /// **'supervisor.audit@instapay'**
+  String get merchantWalletInstantAddress;
+
+  /// No description provided for @merchantWalletAccountName.
+  ///
+  /// In ar, this message translates to:
+  /// **'اسم الحساب المسجل: م. عبد الرحمن الشهري (موثق)'**
+  String get merchantWalletAccountName;
+
+  /// No description provided for @merchantWalletProcessingDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'سرعة المعالجة: فوري ومباشر على مدار الساعة\nرسوم المعالجة والتحويل: 0.5 ر.س (محفظة بالكامل للمشرف)'**
+  String get merchantWalletProcessingDetails;
+
+  /// No description provided for @merchantWalletConfirmWithdrawal.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد وطلب السحب المالي'**
+  String get merchantWalletConfirmWithdrawal;
+
+  /// No description provided for @merchantWalletBonusTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'حافز الإنجاز الأسبوعي متاح!  +500'**
+  String get merchantWalletBonusTitle;
+
+  /// No description provided for @merchantWalletBonusDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'أنجزت 5 مهام ميدانية بنجاح بتفوق المعايير المحددة.'**
+  String get merchantWalletBonusDescription;
+
+  /// No description provided for @merchantWalletTransactionHistory.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجل العمليات والتحويلات الأخيرة'**
+  String get merchantWalletTransactionHistory;
+
+  /// No description provided for @merchantWalletTransactionBank.
+  ///
+  /// In ar, this message translates to:
+  /// **'سحب بنكي - مصرف الراجحي'**
+  String get merchantWalletTransactionBank;
+
+  /// No description provided for @merchantWalletTransactionDateOne.
+  ///
+  /// In ar, this message translates to:
+  /// **'أمس، 02:40 م'**
+  String get merchantWalletTransactionDateOne;
+
+  /// No description provided for @merchantWalletTransactionAmountOne.
+  ///
+  /// In ar, this message translates to:
+  /// **'-5,000'**
+  String get merchantWalletTransactionAmountOne;
+
+  /// No description provided for @merchantWalletTransactionInstant.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحويل فوري - InstaPay'**
+  String get merchantWalletTransactionInstant;
+
+  /// No description provided for @merchantWalletTransactionDateTwo.
+  ///
+  /// In ar, this message translates to:
+  /// **'21 أكتوبر'**
+  String get merchantWalletTransactionDateTwo;
+
+  /// No description provided for @merchantWalletTransactionAmountTwo.
+  ///
+  /// In ar, this message translates to:
+  /// **'-2,200'**
+  String get merchantWalletTransactionAmountTwo;
+
+  /// No description provided for @merchantWalletCompleted.
+  ///
+  /// In ar, this message translates to:
+  /// **'مكتمل'**
+  String get merchantWalletCompleted;
+
+  /// No description provided for @merchantWalletAuditNotice.
+  ///
+  /// In ar, this message translates to:
+  /// **'العمليات المالية مشفرة وتخضع لآلية الرقابة المحاسبية لمنصة وصالني'**
+  String get merchantWalletAuditNotice;
+
+  /// No description provided for @merchantWalletAuditCode.
+  ///
+  /// In ar, this message translates to:
+  /// **'رمز التحقق الدوري: AUDIT-SEC-2024-v9'**
+  String get merchantWalletAuditCode;
+
+  /// No description provided for @merchantWalletActionUnavailable.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب السحب غير متاح حالياً'**
+  String get merchantWalletActionUnavailable;
+
+  /// No description provided for @merchantProfileJustUpdated.
+  ///
+  /// In ar, this message translates to:
+  /// **'محدث لحظياً'**
+  String get merchantProfileJustUpdated;
+
+  /// No description provided for @merchantProfileBalanceTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الرصيد المتاح والمستحقات'**
+  String get merchantProfileBalanceTitle;
+
+  /// No description provided for @merchantProfileBalance.
+  ///
+  /// In ar, this message translates to:
+  /// **'14,850'**
+  String get merchantProfileBalance;
+
+  /// No description provided for @merchantProfileBalanceDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'بدلات الإشراف الميداني + مستحقات التوثيق'**
+  String get merchantProfileBalanceDetails;
+
+  /// No description provided for @merchantProfileWalletDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'تفاصيل المحفظة'**
+  String get merchantProfileWalletDetails;
+
+  /// No description provided for @merchantProfileDocumentDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'مستند معتمد للمشرف'**
+  String get merchantProfileDocumentDetails;
+
+  /// No description provided for @merchantProfileDocumentNumber.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم المستند'**
+  String get merchantProfileDocumentNumber;
+
+  /// No description provided for @merchantProfileClose.
+  ///
+  /// In ar, this message translates to:
+  /// **'إغلاق'**
+  String get merchantProfileClose;
+
+  /// No description provided for @merchantProfileMinutesUnit.
+  ///
+  /// In ar, this message translates to:
+  /// **'دقيقة مضت'**
+  String get merchantProfileMinutesUnit;
+
+  /// No description provided for @merchantProfileTwoHoursAgo.
+  ///
+  /// In ar, this message translates to:
+  /// **'منذ ساعتين'**
+  String get merchantProfileTwoHoursAgo;
+
+  /// No description provided for @merchantProfileMorningAbbreviation.
+  ///
+  /// In ar, this message translates to:
+  /// **'ص'**
+  String get merchantProfileMorningAbbreviation;
+
+  /// No description provided for @merchantInfoTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'معلومات التاجر'**
+  String get merchantInfoTitle;
+
+  /// No description provided for @merchantInfoProfile.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملف التاجر'**
+  String get merchantInfoProfile;
+
+  /// No description provided for @merchantInfoLiveMonitoring.
+  ///
+  /// In ar, this message translates to:
+  /// **'مراقبة مباشرة'**
+  String get merchantInfoLiveMonitoring;
+
+  /// No description provided for @merchantInfoStatusActive.
+  ///
+  /// In ar, this message translates to:
+  /// **'نشط'**
+  String get merchantInfoStatusActive;
+
+  /// No description provided for @merchantInfoStatusActiveVerified.
+  ///
+  /// In ar, this message translates to:
+  /// **'نشط وموثق'**
+  String get merchantInfoStatusActiveVerified;
+
+  /// No description provided for @merchantInfoStatusUnderAudit.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيد المراجعة'**
+  String get merchantInfoStatusUnderAudit;
+
+  /// No description provided for @merchantInfoStatusUpdateRequired.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحديث البيانات مطلوب'**
+  String get merchantInfoStatusUpdateRequired;
+
+  /// No description provided for @merchantInfoStatusSuspended.
+  ///
+  /// In ar, this message translates to:
+  /// **'معلق مؤقتاً'**
+  String get merchantInfoStatusSuspended;
+
+  /// No description provided for @merchantInfoAccreditedCategory.
+  ///
+  /// In ar, this message translates to:
+  /// **'معتمد لدى {category}'**
+  String merchantInfoAccreditedCategory(Object category);
+
+  /// No description provided for @merchantInfoTotalAds.
+  ///
+  /// In ar, this message translates to:
+  /// **'إجمالي الإعلانات'**
+  String get merchantInfoTotalAds;
+
+  /// No description provided for @merchantInfoActiveAds.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count} نشط'**
+  String merchantInfoActiveAds(Object count);
+
+  /// No description provided for @merchantInfoAdsUnderReview.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count} قيد المراجعة'**
+  String merchantInfoAdsUnderReview(Object count);
+
+  /// No description provided for @merchantInfoAdsShort.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعلان'**
+  String get merchantInfoAdsShort;
+
+  /// No description provided for @merchantInfoAdsGroup.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإعلانات'**
+  String get merchantInfoAdsGroup;
+
+  /// No description provided for @merchantInfoPendingOperations.
+  ///
+  /// In ar, this message translates to:
+  /// **'العمليات المعلقة'**
+  String get merchantInfoPendingOperations;
+
+  /// No description provided for @merchantInfoSuspendTemporarily.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعليق مؤقت'**
+  String get merchantInfoSuspendTemporarily;
+
+  /// No description provided for @merchantInfoMessageMerchant.
+  ///
+  /// In ar, this message translates to:
+  /// **'مراسلة التاجر'**
+  String get merchantInfoMessageMerchant;
+
+  /// No description provided for @merchantInfoActionUnavailable.
+  ///
+  /// In ar, this message translates to:
+  /// **'هذا الإجراء غير متاح حالياً'**
+  String get merchantInfoActionUnavailable;
+
+  /// No description provided for @merchantPendingOperationsEmpty.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد عمليات أو إعلانات معلقة لهذا التاجر'**
+  String get merchantPendingOperationsEmpty;
+
+  /// No description provided for @merchantPendingCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count} عملية معلقة'**
+  String merchantPendingCount(Object count);
+
+  /// No description provided for @merchantPendingMoreDetailsUnavailable.
+  ///
+  /// In ar, this message translates to:
+  /// **'عدد الإعلانات المعلقة معروف، لكن تفاصيل القائمة الكاملة غير متوفرة حالياً.'**
+  String get merchantPendingMoreDetailsUnavailable;
+
+  /// No description provided for @merchantPendingReference.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم الإعلان'**
+  String get merchantPendingReference;
+
+  /// No description provided for @merchantPendingPrice.
+  ///
+  /// In ar, this message translates to:
+  /// **'السعر'**
+  String get merchantPendingPrice;
+
+  /// No description provided for @merchantPendingApprove.
+  ///
+  /// In ar, this message translates to:
+  /// **'اعتماد'**
+  String get merchantPendingApprove;
+
+  /// No description provided for @merchantPendingReject.
+  ///
+  /// In ar, this message translates to:
+  /// **'رفض'**
+  String get merchantPendingReject;
+
+  /// No description provided for @merchantPendingOperationHandled.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تحديث حالة الإعلان'**
+  String get merchantPendingOperationHandled;
+
+  /// No description provided for @merchantConversationEmpty.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابدأ محادثة مع هذا التاجر'**
+  String get merchantConversationEmpty;
+
+  /// No description provided for @merchantConversationInputHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب رسالتك...'**
+  String get merchantConversationInputHint;
+
+  /// No description provided for @merchantConversationSend.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال'**
+  String get merchantConversationSend;
+
+  /// No description provided for @merchantInfoFinancialSettings.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإعدادات المالية وسياسة التوصيل'**
+  String get merchantInfoFinancialSettings;
+
+  /// No description provided for @merchantInfoMerchantDashboard.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحكم المشرف'**
+  String get merchantInfoMerchantDashboard;
+
+  /// No description provided for @merchantInfoFinancialSettingsDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'لوحة التحكم الرقابي للعمولات والخدمات اللوجستية وتحديد النمط المالي'**
+  String get merchantInfoFinancialSettingsDescription;
+
+  /// No description provided for @merchantInfoCfoPermission.
+  ///
+  /// In ar, this message translates to:
+  /// **'الصلاحية حصرية للمشرف المالي المعتمد'**
+  String get merchantInfoCfoPermission;
+
+  /// No description provided for @merchantInfoSalesCommission.
+  ///
+  /// In ar, this message translates to:
+  /// **'عمولة التطبيق من المبيعات'**
+  String get merchantInfoSalesCommission;
+
+  /// No description provided for @merchantInfoFixedAmount.
+  ///
+  /// In ar, this message translates to:
+  /// **'مبلغ ثابت بالأرقام (ر.س)'**
+  String get merchantInfoFixedAmount;
+
+  /// No description provided for @merchantInfoPercentage.
+  ///
+  /// In ar, this message translates to:
+  /// **'نسبة مئوية (%)'**
+  String get merchantInfoPercentage;
+
+  /// No description provided for @merchantInfoAdjustCommission.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعديل نسبة العمولة المئوية (%)'**
+  String get merchantInfoAdjustCommission;
+
+  /// No description provided for @merchantInfoSave.
+  ///
+  /// In ar, this message translates to:
+  /// **'حفظ'**
+  String get merchantInfoSave;
+
+  /// No description provided for @merchantInfoCommissionExample.
+  ///
+  /// In ar, this message translates to:
+  /// **'حاسبة تقريبية لعملية بيع بقيمة 100 ر.س:'**
+  String get merchantInfoCommissionExample;
+
+  /// No description provided for @merchantInfoCommissionValue.
+  ///
+  /// In ar, this message translates to:
+  /// **'عمولة المنصة: {amount} {currency}'**
+  String merchantInfoCommissionValue(Object amount, Object currency);
+
+  /// No description provided for @merchantInfoInvalidCommission.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل عمولة من 0 إلى 100'**
+  String get merchantInfoInvalidCommission;
+
+  /// No description provided for @merchantInfoCommissionSaved.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تحديث العمولة'**
+  String get merchantInfoCommissionSaved;
+
+  /// No description provided for @merchantInfoVerification.
+  ///
+  /// In ar, this message translates to:
+  /// **'بيانات التوثيق والاعتماد'**
+  String get merchantInfoVerification;
+
+  /// No description provided for @merchantInfoVerifiedBadge.
+  ///
+  /// In ar, this message translates to:
+  /// **'بيانات موثقة'**
+  String get merchantInfoVerifiedBadge;
+
+  /// No description provided for @merchantInfoOwner.
+  ///
+  /// In ar, this message translates to:
+  /// **'اسم المفوض / المالك'**
+  String get merchantInfoOwner;
+
+  /// No description provided for @merchantInfoPhone.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم الهاتف المعتمد'**
+  String get merchantInfoPhone;
+
+  /// No description provided for @merchantInfoEmail.
+  ///
+  /// In ar, this message translates to:
+  /// **'البريد الإلكتروني الرسمي'**
+  String get merchantInfoEmail;
+
+  /// No description provided for @merchantInfoJoinedDate.
+  ///
+  /// In ar, this message translates to:
+  /// **'تاريخ الربط الإشرافي'**
+  String get merchantInfoJoinedDate;
+
+  /// No description provided for @merchantInfoNotProvided.
+  ///
+  /// In ar, this message translates to:
+  /// **'غير متوفر'**
+  String get merchantInfoNotProvided;
+
+  /// No description provided for @merchantInfoFieldAds.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعلانات التاجر الميدانية'**
+  String get merchantInfoFieldAds;
+
+  /// No description provided for @merchantInfoShowAll.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض الكل ({count})'**
+  String merchantInfoShowAll(Object count);
+
+  /// No description provided for @merchantInfoNoAds.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد إعلانات متاحة'**
+  String get merchantInfoNoAds;
+
+  /// No description provided for @merchantInfoAdApproved.
+  ///
+  /// In ar, this message translates to:
+  /// **'معتمد'**
+  String get merchantInfoAdApproved;
+
+  /// No description provided for @merchantInfoAdUnderReview.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحت الفحص'**
+  String get merchantInfoAdUnderReview;
+
+  /// No description provided for @merchantSuspendBadge.
+  ///
+  /// In ar, this message translates to:
+  /// **'إجراء احترازي'**
+  String get merchantSuspendBadge;
+
+  /// No description provided for @merchantSuspendTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إجراء تعليق متجر'**
+  String get merchantSuspendTitle;
+
+  /// No description provided for @merchantSuspendSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'قرار رقابي وإداري عاجل'**
+  String get merchantSuspendSubtitle;
+
+  /// No description provided for @merchantSuspendImpact.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعليق المتجر سيوقف ظهور جميع إعلانات التاجر فوراً في محركات البحث وتطبيق المشترك، مع تجميد استقبال الطلبات الجديدة حتى تصحيح المخالفة واعتمادها.'**
+  String get merchantSuspendImpact;
+
+  /// No description provided for @merchantSuspendDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'تفاصيل المخالفة والملاحظات الميدانية'**
+  String get merchantSuspendDetails;
+
+  /// No description provided for @merchantSuspendCharacterCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count} / 500'**
+  String merchantSuspendCharacterCount(Object count);
+
+  /// No description provided for @merchantSuspendDetailsHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب وصفاً مفصلاً للمخالفة يظهر للتاجر في لوحة تحكمه مع توضيح الخطوات المطلوبة للتسوية...'**
+  String get merchantSuspendDetailsHint;
+
+  /// No description provided for @merchantSuspendPrivateNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'هذا النص سيظهر كسجل رسمي للتاجر في حسابه الموثق.'**
+  String get merchantSuspendPrivateNote;
+
+  /// No description provided for @merchantSuspendAttachments.
+  ///
+  /// In ar, this message translates to:
+  /// **'المستندات التوثيقية ومحاضر المعاينة'**
+  String get merchantSuspendAttachments;
+
+  /// No description provided for @merchantSuspendUpload.
+  ///
+  /// In ar, this message translates to:
+  /// **'انقر لإرفاق محضر المعاينة أو الصور'**
+  String get merchantSuspendUpload;
+
+  /// No description provided for @merchantSuspendFileTypes.
+  ///
+  /// In ar, this message translates to:
+  /// **'صيغ مدعومة: PDF, JPG, PNG (بحد أقصى 10 ميجابايت)'**
+  String get merchantSuspendFileTypes;
+
+  /// No description provided for @merchantSuspendDuration.
+  ///
+  /// In ar, this message translates to:
+  /// **'فترة التعليق المقترحة'**
+  String get merchantSuspendDuration;
+
+  /// No description provided for @merchantSuspendReasonCorrection.
+  ///
+  /// In ar, this message translates to:
+  /// **'لحين تصحيح الوضع ومعالجة المخالفة'**
+  String get merchantSuspendReasonCorrection;
+
+  /// No description provided for @merchantSuspendReasonCorrectionDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'إجراء موصى به من جهة الرقابة'**
+  String get merchantSuspendReasonCorrectionDescription;
+
+  /// No description provided for @merchantSuspendReasonDuration.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعليق محدد بـ 7 أيام'**
+  String get merchantSuspendReasonDuration;
+
+  /// No description provided for @merchantSuspendReasonDurationDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'رفع تلقائي بعد انقضاء المدة'**
+  String get merchantSuspendReasonDurationDescription;
+
+  /// No description provided for @merchantSuspendReasonLegal.
+  ///
+  /// In ar, this message translates to:
+  /// **'إحالة عاجلة للشؤون القانونية'**
+  String get merchantSuspendReasonLegal;
+
+  /// No description provided for @merchantSuspendReasonLegalDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'يتطلب تحقيقاً وتدقيقاً قانونياً'**
+  String get merchantSuspendReasonLegalDescription;
+
+  /// No description provided for @merchantSuspendConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد التعليق المؤقت وإشعار التاجر'**
+  String get merchantSuspendConfirm;
+
+  /// No description provided for @merchantSuspendCancel.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء والعودة لملف التاجر'**
+  String get merchantSuspendCancel;
+
+  /// No description provided for @noMerchantsFound.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد متاجر مطابقة لخيارات البحث'**
+  String get noMerchantsFound;
+
+  /// No description provided for @merchantsUnderSupervisionTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'التجار تحت الإشراف'**
+  String get merchantsUnderSupervisionTitle;
+
+  /// No description provided for @supervisedAreaLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'نطاق الإشراف: منطقة الرياض (وسط وشمال العاصمة)'**
+  String get supervisedAreaLabel;
+
+  /// No description provided for @supervisorFullName.
+  ///
+  /// In ar, this message translates to:
+  /// **'المشرف: أحمد بن عبد العزيز الخضيري'**
+  String get supervisorFullName;
+
+  /// No description provided for @totalFieldAccountsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إجمالي الحسابات الميدانية'**
+  String get totalFieldAccountsTitle;
+
+  /// No description provided for @merchantsUnderYourSupervision.
+  ///
+  /// In ar, this message translates to:
+  /// **'تاجراً تحت إشرافك'**
+  String get merchantsUnderYourSupervision;
+
+  /// No description provided for @complianceRate.
+  ///
+  /// In ar, this message translates to:
+  /// **'الامتثال'**
+  String get complianceRate;
+
+  /// No description provided for @activeAndVerifiedMetric.
+  ///
+  /// In ar, this message translates to:
+  /// **'نشط وموثق'**
+  String get activeAndVerifiedMetric;
+
+  /// No description provided for @pendingAlertsMetric.
+  ///
+  /// In ar, this message translates to:
+  /// **'تنبيهات معلقة'**
+  String get pendingAlertsMetric;
+
+  /// No description provided for @temporarySuspendedMetric.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعليق مؤقت'**
+  String get temporarySuspendedMetric;
+
+  /// No description provided for @searchMerchantPlaceholder.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابحث باسم المتجر، كود التاجر، أو السجل...'**
+  String get searchMerchantPlaceholder;
+
+  /// No description provided for @filterAllWithCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكل ({count})'**
+  String filterAllWithCount(Object count);
+
+  /// No description provided for @filterActiveWithCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count} نشط وموثق'**
+  String filterActiveWithCount(Object count);
+
+  /// No description provided for @filterPendingWithCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count} تنبيهات معلقة'**
+  String filterPendingWithCount(Object count);
+
+  /// No description provided for @filterSuspendedWithCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count} تعليق مؤقت'**
+  String filterSuspendedWithCount(Object count);
+
+  /// No description provided for @sortMostActive.
+  ///
+  /// In ar, this message translates to:
+  /// **'الترتيب: الأكثر نشاطاً'**
+  String get sortMostActive;
+
+  /// No description provided for @activeAdsHeader.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعلانات نشطة'**
+  String get activeAdsHeader;
+
+  /// No description provided for @pendingReviewHeader.
+  ///
+  /// In ar, this message translates to:
+  /// **'معلق للمراجعة'**
+  String get pendingReviewHeader;
+
+  /// No description provided for @platformCommissionHeader.
+  ///
+  /// In ar, this message translates to:
+  /// **'عمولة المنصة'**
+  String get platformCommissionHeader;
+
+  /// No description provided for @viewProfileAndControl.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض الملف والتحكم'**
+  String get viewProfileAndControl;
+
+  /// No description provided for @pendingProfitWithdrawalAlert.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب سحب أرباح معلق'**
+  String get pendingProfitWithdrawalAlert;
+
+  /// No description provided for @supervisoryNoteActive.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملاحظة إشرافية نشطة'**
+  String get supervisoryNoteActive;
+
+  /// No description provided for @deliveryStatusFieldInspection.
+  ///
+  /// In ar, this message translates to:
+  /// **'فحص الميدان'**
+  String get deliveryStatusFieldInspection;
+
+  /// No description provided for @deliveryStatusHeader.
+  ///
+  /// In ar, this message translates to:
+  /// **'حالة التوصيل'**
+  String get deliveryStatusHeader;
+
+  /// No description provided for @descriptionStandardsViolation.
+  ///
+  /// In ar, this message translates to:
+  /// **'مخالفة معايير الوصف VR3-858'**
+  String get descriptionStandardsViolation;
+
+  /// No description provided for @zeroAdsDisplayedSuspended.
+  ///
+  /// In ar, this message translates to:
+  /// **'0 إعلان معروض (إيقاف إداري احترازي)'**
+  String get zeroAdsDisplayedSuspended;
+
+  /// No description provided for @summonAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'استدعاء'**
+  String get summonAction;
+
+  /// No description provided for @reviewViolationAndUnfreeze.
+  ///
+  /// In ar, this message translates to:
+  /// **'مراجعة المخالفة والفك'**
+  String get reviewViolationAndUnfreeze;
+
+  /// No description provided for @suspendedBadge.
+  ///
+  /// In ar, this message translates to:
+  /// **'موقوف'**
+  String get suspendedBadge;
+
+  /// No description provided for @remainingMerchantsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'يوجد 13 تاجر آخر بحالة نشطة وممتثلة تماماً'**
+  String get remainingMerchantsTitle;
+
+  /// No description provided for @remainingMerchantsSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم فحص سجلاتهم الدورية للأسبوع الحالي بنجاح'**
+  String get remainingMerchantsSubtitle;
+
+  /// No description provided for @loadAndShowRemainingList.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحميل واستعراض بقية القائمة'**
+  String get loadAndShowRemainingList;
+
+  /// No description provided for @fieldGovernanceCardTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'حوكمة وتفويض المشرف الميداني'**
+  String get fieldGovernanceCardTitle;
+
+  /// No description provided for @fieldGovernanceCardBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'كافة التجار المسجلين أعلاه مرتبطون مباشرة بنطاق إشرافك الميداني والرقابي بموجب قرار الحوكمة والتفويض الإداري رقم SUP-4092.'**
+  String get fieldGovernanceCardBody;
+
+  /// No description provided for @addNewMerchantToSupervision.
+  ///
+  /// In ar, this message translates to:
+  /// **'إضافة تاجر جديد للإشراف'**
+  String get addNewMerchantToSupervision;
+
+  /// No description provided for @retryLoadMerchants.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعادة المحاولة'**
+  String get retryLoadMerchants;
+
+  /// No description provided for @merchantNameField.
+  ///
+  /// In ar, this message translates to:
+  /// **'اسم التاجر أو المنشأة'**
+  String get merchantNameField;
+
+  /// No description provided for @merchantCrField.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم السجل التجاري'**
+  String get merchantCrField;
+
+  /// No description provided for @merchantPhoneField.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم الهاتف المعتمد'**
+  String get merchantPhoneField;
+
+  /// No description provided for @supervisedMerchantsBadge.
+  ///
+  /// In ar, this message translates to:
+  /// **'مشرف التجار'**
+  String get supervisedMerchantsBadge;
 }
 
 class _AppLocalizationsDelegate
