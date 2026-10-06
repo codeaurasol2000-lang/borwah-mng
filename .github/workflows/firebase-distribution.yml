@@ -3,7 +3,7 @@ name: Flutter Build & Deploy to Firebase App Distribution
 on:
   push:
     branches:
-      - main
+      - main # يتم التشغيل تلقائيًا عند عمل Push لفرع main
 
 jobs:
   build-and-deploy:
@@ -28,7 +28,7 @@ jobs:
           channel: 'stable'
           cache: true
 
-      # 4. تثبيت حزم المكتبات (Packages)
+      # 4. تثبيت حزم المكتبات (Dependencies)
       - name: Install Dependencies
         run: flutter pub get
 
@@ -40,6 +40,7 @@ jobs:
       - name: Upload to Firebase App Distribution
         uses: w9jds/firebase-action@v11.16.0
         with:
-          args: appdistribution:distribute build/app/outputs/flutter-apk/app-release.apk --app ${{ secrets.FIREBASE_APP_ID }} --groups "testers"
+          args: |
+            appdistribution:distribute build/app/outputs/flutter-apk/app-release.apk --app ${{ secrets.FIREBASE_APP_ID }} --groups "testers"
         env:
           GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
