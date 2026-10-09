@@ -8,6 +8,18 @@ import '../../features/merchants/domain/usecases/get_merchants_usecase.dart';
 import '../../features/merchants/domain/usecases/get_supervised_merchants_usecase.dart';
 import '../../features/merchants/domain/usecases/get_supervisor_stats_usecase.dart';
 import '../../features/merchants/presentation/controllers/merchants_cubit.dart';
+import '../../features/products/data/datasources/product_review_data_source.dart';
+import '../../features/products/data/datasources/product_review_mock_data_source.dart';
+import '../../features/products/data/datasources/product_supervisor_audit_data_source.dart';
+import '../../features/products/data/datasources/product_supervisor_audit_shared_preferences_data_source.dart';
+import '../../features/products/data/repositories/product_review_repository_impl.dart';
+import '../../features/products/data/repositories/product_supervisor_audit_repository_impl.dart';
+import '../../features/products/domain/repositories/product_review_repository.dart';
+import '../../features/products/domain/repositories/product_supervisor_audit_repository.dart';
+import '../../features/products/domain/usecases/change_product_review_status_usecase.dart';
+import '../../features/products/domain/usecases/get_product_reviews_usecase.dart';
+import '../../features/products/domain/usecases/update_product_review_usecase.dart';
+import '../../features/products/presentation/controllers/product_review_cubit.dart';
 import '../../features/finance/data/datasources/finance_mock_data_source.dart';
 import '../../features/finance/data/datasources/finance_remote_data_source.dart';
 import '../../features/finance/data/repositories/finance_repository_impl.dart';
@@ -38,7 +50,8 @@ final sl = GetIt.instance;
 Future<void> initDependencies() async {
   // Data Sources (تبديل هذا السطر فقط بالـ Api DataSource عند استلام الـ API)
   sl.registerLazySingleton<FinanceRemoteDataSource>(
-      () => FinanceMockDataSource());
+    () => FinanceMockDataSource(),
+  );
 
   // Repositories
   sl.registerLazySingleton<FinanceRepository>(
@@ -74,12 +87,8 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton<MerchantsRepository>(
     () => MerchantsRepositoryImpl(dataSource: sl()),
   );
-  sl.registerLazySingleton(
-    () => GetMerchantsUseCase(repository: sl()),
-  );
-  sl.registerLazySingleton(
-    () => GetSupervisorStatsUseCase(repository: sl()),
-  );
+  sl.registerLazySingleton(() => GetMerchantsUseCase(repository: sl()));
+  sl.registerLazySingleton(() => GetSupervisorStatsUseCase(repository: sl()));
   sl.registerLazySingleton(
     () => GetSupervisedMerchantsUseCase(repository: sl()),
   );
@@ -88,6 +97,35 @@ Future<void> initDependencies() async {
       getMerchantsUseCase: sl(),
       getSupervisorStatsUseCase: sl(),
       getSupervisedMerchantsUseCase: sl(),
+    ),
+  );
+
+  // Product supervisor
+  sl.registerLazySingleton<ProductSupervisorAuditDataSource>(
+    () => ProductSupervisorAuditSharedPreferencesDataSource(),
+  );
+  sl.registerLazySingleton<ProductSupervisorAuditRepository>(
+    () => ProductSupervisorAuditRepositoryImpl(dataSource: sl()),
+  );
+  sl.registerLazySingleton<ProductReviewDataSource>(
+    () => ProductReviewMockDataSource(),
+  );
+  sl.registerLazySingleton<ProductReviewRepository>(
+    () => ProductReviewRepositoryImpl(dataSource: sl()),
+  );
+  sl.registerLazySingleton(() => GetProductReviewsUseCase(repository: sl()));
+  sl.registerLazySingleton(
+    () => ChangeProductReviewStatusUseCase(repository: sl()),
+  );
+  sl.registerLazySingleton(
+    () => UpdateProductReviewUseCase(repository: sl()),
+  );
+  sl.registerFactory(
+    () => ProductReviewCubit(
+      getProductReviews: sl(),
+      changeProductReviewStatus: sl(),
+      updateProductReview: sl(),
+      auditRepository: sl(),
     ),
   );
 }

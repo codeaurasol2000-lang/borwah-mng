@@ -3,15 +3,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../core/theme/app_theme.dart';
 import '../core/utils/app_locale_controller.dart';
+import '../core/widgets/app_launch_splash.dart';
 import '../features/auth/presentation/controllers/auth_cubit.dart';
 import '../features/auth/presentation/screens/login_screen.dart';
 import '../l10n/app_localizations.dart';
 import 'navigation/finance_tabs_shell.dart';
 import 'navigation/merchants_tabs_shell.dart';
+import 'navigation/product_supervisor_tabs_shell.dart';
+import 'navigation/wasalny_supervisor_tabs_shell.dart';
 
-class BarwahApp extends StatelessWidget {
+class BarwahApp extends StatefulWidget {
   const BarwahApp({super.key});
 
+  @override
+  State<BarwahApp> createState() => _BarwahAppState();
+}
+
+class _BarwahAppState extends State<BarwahApp> {
   static final GlobalKey<NavigatorState> _navigatorKey =
       GlobalKey<NavigatorState>();
 
@@ -27,6 +35,22 @@ class BarwahApp extends StatelessWidget {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute<void>(
         builder: (_) => MerchantsTabsShell(onLogout: _logout),
+      ),
+    );
+  }
+
+  void _openProducts(BuildContext context) {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute<void>(
+        builder: (_) => ProductSupervisorTabsShell(onLogout: _logout),
+      ),
+    );
+  }
+
+  void _openWasalny(BuildContext context) {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute<void>(
+        builder: (_) => WasalnySupervisorTabsShell(onLogout: _logout),
       ),
     );
   }
@@ -49,15 +73,15 @@ class BarwahApp extends StatelessWidget {
     return LoginScreen(
       onFinancialLogin: () => _openFinance(context),
       onMerchantLogin: () => _openMerchants(context),
+      onProductLogin: () => _openProducts(context),
+      onWasalnyLogin: () => _openWasalny(context),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (_) => AuthCubit()),
-      ],
+      providers: [BlocProvider(create: (_) => AuthCubit())],
       child: AnimatedBuilder(
         animation: AppLocaleController.instance,
         builder: (context, child) {
@@ -77,10 +101,61 @@ class BarwahApp extends StatelessWidget {
                 child: child ?? const SizedBox.shrink(),
               );
             },
-            home: Builder(builder: _buildLogin),
+            home: _StartupGate(
+              loginBuilder: _buildLogin,
+            ),
           );
         },
       ),
+    );
+  }
+}
+
+class _StartupGate extends StatefulWidget {
+  final WidgetBuilder loginBuilder;
+
+  const _StartupGate({required this.loginBuilder});
+
+  @override
+  State<_StartupGate> createState() => _StartupGateState();
+}
+
+class _StartupGateState extends State<_StartupGate> {
+  bool _showSplash = true;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void _onSplashAnimationComplete() {
+    if (mounted && _showSplash) {
+      setState(() => _showSplash = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 350),
+      switchInCurve: Curves.easeOutCubic,
+      switchOutCurve: Curves.easeInCubic,
+      transitionBuilder: (child, animation) => FadeTransition(
+        opacity: animation,
+        child: ScaleTransition(
+          scale: Tween<double>(begin: 0.985, end: 1).animate(animation),
+          child: child,
+        ),
+      ),
+      child: _showSplash
+          ? AppLaunchSplash(
+              key: const ValueKey('splash'),
+              onAnimationComplete: _onSplashAnimationComplete,
+            )
+          : Builder(
+              key: const ValueKey('login'),
+              builder: widget.loginBuilder,
+            ),
     );
   }
 }

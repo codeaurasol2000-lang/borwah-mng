@@ -864,7 +864,7 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                         ? 'هل تريد اعتماد طلب سحب ${req.beneficiaryName} بقيمة ${CurrencyFormatter.format(req.netAmount)} وإرساله للإدارة للموافقة؟'
                         : 'Do you want to approve the withdrawal request for ${FinanceLocalizer.localizeWithdrawalText(context, req.beneficiaryName)} (${CurrencyFormatter.format(req.netAmount)}) and send it to management?',
                   );
-                  if (confirmed && mounted) {
+                  if (confirmed && mounted && context.mounted) {
                     setState(() {
                       _requests.removeWhere((r) => r.id == req.id);
                     });
@@ -904,7 +904,7 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                           title:
                               isArabic ? 'رفض طلب السحب' : 'Reject Withdrawal',
                         );
-                        if (reason != null && mounted) {
+                        if (reason != null && mounted && context.mounted) {
                           setState(() {
                             _requests.removeWhere((r) => r.id == req.id);
                           });
@@ -944,7 +944,7 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                           requestTitle: FinanceLocalizer.localizeWithdrawalText(
                               context, req.beneficiaryName),
                         );
-                        if (confirmed && mounted) {
+                        if (confirmed && mounted && context.mounted) {
                           setState(() {
                             final idx =
                                 _requests.indexWhere((r) => r.id == req.id);

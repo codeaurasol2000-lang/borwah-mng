@@ -5,9 +5,14 @@ import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/merchant_entity.dart';
 
 class MerchantConversationScreen extends StatefulWidget {
-  final MerchantEntity merchant;
+  final MerchantEntity? merchant;
+  final String? conversationTitle;
 
-  const MerchantConversationScreen({super.key, required this.merchant});
+  const MerchantConversationScreen({
+    super.key,
+    this.merchant,
+    this.conversationTitle,
+  }) : assert(merchant != null || conversationTitle != null);
 
   @override
   State<MerchantConversationScreen> createState() =>
@@ -43,7 +48,9 @@ class _MerchantConversationScreenState
               CircleAvatar(
                 backgroundColor: AppColors.primaryDark,
                 child: Icon(
-                  widget.merchant.logoIcon ?? widget.merchant.categoryIcon,
+                  widget.merchant?.logoIcon ??
+                      widget.merchant?.categoryIcon ??
+                      Icons.support_agent_outlined,
                   color: Colors.white,
                   size: 20,
                 ),
@@ -51,7 +58,8 @@ class _MerchantConversationScreenState
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  widget.merchant.getName(isArabic),
+                  widget.conversationTitle ??
+                      widget.merchant!.getName(isArabic),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(fontSize: 15),

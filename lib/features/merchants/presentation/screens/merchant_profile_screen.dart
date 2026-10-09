@@ -230,6 +230,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                   value: '18',
                   label: l10n.merchantProfileStores,
                   onTap: () {
+                    widget.onSupervisedMerchantsTap?.call();
                     Navigator.of(context).push(
                       MaterialPageRoute<void>(
                         builder: (_) => const SupervisedMerchantsScreen(),

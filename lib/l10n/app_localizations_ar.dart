@@ -9,7 +9,7 @@ class AppLocalizationsAr extends AppLocalizations {
   AppLocalizationsAr([String locale = 'ar']) : super(locale);
 
   @override
-  String get appName => 'برواح المازوري';
+  String get appName => 'borwah_mng';
 
   @override
   String get cfoSessionTimestamp => '1446/11/04 هـ - 10:45 ص';
@@ -2562,6 +2562,1522 @@ class AppLocalizationsAr extends AppLocalizations {
   String adsMerchantRegistrationNumber(Object number) {
     return 'سجل تجاري: $number';
   }
+
+  @override
+  String get productSupervisorRoleBadge => 'مشرف المنتجات الجديدة';
+
+  @override
+  String get productReviewTab => 'قيد المراجعة';
+
+  @override
+  String get productReportsTab => 'التقارير';
+
+  @override
+  String get productSubscriptionsTab => 'ترويج المنتجات';
+
+  @override
+  String get productAccountTab => 'الحساب';
+
+  @override
+  String get wasalnySupervisorRoleBadge => 'مشرف وصلني';
+
+  @override
+  String get wasalnyRequestsTab => 'طلبات وصلني';
+
+  @override
+  String get wasalnyAccountFollowComplaint => 'متابعة الشكوى';
+
+  @override
+  String get wasalnyReportOverview => 'ملخص الأداء الميداني';
+
+  @override
+  String get wasalnyReportCompletionRate => 'نسبة إتمام الصفقات';
+
+  @override
+  String get wasalnyReportDealsDetail => 'صفقة مكتملة خلال الفترة المحددة';
+
+  @override
+  String get wasalnyReportCompletionDetail => 'من الصفقات التي تمت متابعتها';
+
+  @override
+  String get wasalnyReportResponseTime => 'متوسط سرعة الاستجابة';
+
+  @override
+  String get wasalnyReportResponseDetail => 'أسرع من المعيار المعتمد';
+
+  @override
+  String get wasalnyReportSatisfaction => 'معدل رضا الأطراف';
+
+  @override
+  String get wasalnyReportRatingDetail => 'استناداً إلى التقييمات الميدانية';
+
+  @override
+  String get wasalnyComplaintReference => 'الشكوى #CMP-1042';
+
+  @override
+  String get wasalnyComplaintOpenStatus => 'قيد المتابعة';
+
+  @override
+  String get wasalnyComplaintSubject => 'تأخر استلام شحنة بعد إتمام البيع';
+
+  @override
+  String get wasalnyComplaintDescription =>
+      'تم تسجيل الشكوى وإحالتها للمراجعة. يجري حالياً التنسيق مع أطراف الطلب للتحقق من حالة الشحنة.';
+
+  @override
+  String get wasalnyComplaintReceived => 'تم استلام الشكوى وتسجيلها';
+
+  @override
+  String get wasalnyComplaintUnderReview => 'الشكوى قيد المراجعة من فريق وصلني';
+
+  @override
+  String get wasalnyComplaintWaitingAction => 'بانتظار الإجراء وتحديث الأطراف';
+
+  @override
+  String get wasalnyNotificationsTitle => 'إشعارات وصلني';
+
+  @override
+  String get wasalnyNotificationNewRequest => 'طلب وصلني جديد';
+
+  @override
+  String get wasalnyNotificationNewRequestDescription =>
+      'يوجد طلب جديد بانتظار متابعة مرحلة التوصيل.';
+
+  @override
+  String get wasalnyNotificationComplaint => 'تحديث على شكوى';
+
+  @override
+  String get wasalnyNotificationComplaintDescription =>
+      'تم تحديث حالة الشكوى CMP-1042 وهي قيد المتابعة.';
+
+  @override
+  String get wasalnyNotificationInspection => 'اكتمل فحص شحنة';
+
+  @override
+  String get wasalnyNotificationInspectionDescription =>
+      'تم تسجيل نتيجة فحص شحنة الطلب W-1038.';
+
+  @override
+  String get wasalnyPromotionTitle => 'طلبات ترويج منتجات وصلني';
+
+  @override
+  String get wasalnyPromotionSubtitle =>
+      'راجع طلبات إبراز المنتجات المستعملة وتابع حالة كل طلب';
+
+  @override
+  String get wasalnyRequestsSafetyTitle => 'بروتوكول أمان وساطة وصلني';
+
+  @override
+  String get wasalnyRequestsSafetyDescription =>
+      'مراجعة طلبات وصلني من خلال إظهار بيانات التواصل فقط بعد تأكيد موافقة الطرفين.';
+
+  @override
+  String get wasalnyRequestsCompletionRate => 'نسبة الإتمام';
+
+  @override
+  String get wasalnyRequestsActiveDeals => 'صفقة نشطة';
+
+  @override
+  String get wasalnyRequestsAll => 'الكل';
+
+  @override
+  String get wasalnyRequestsCommunication => 'جاري التواصل';
+
+  @override
+  String get wasalnyRequestsSold => 'تم البيع';
+
+  @override
+  String get wasalnyRequestsDelivery => 'توصيل';
+
+  @override
+  String get wasalnyRequestsInspection => 'الفحص الميداني';
+
+  @override
+  String get wasalnyRequestsEmpty => 'لا توجد طلبات في هذه المرحلة.';
+
+  @override
+  String get wasalnyRequestsEstimatedValue => 'القيمة المقدرة';
+
+  @override
+  String get wasalnyRequestsSeller => 'البائع';
+
+  @override
+  String get wasalnyRequestsBuyer => 'المشتري';
+
+  @override
+  String get wasalnyRequestsOrderNumber => 'رقم الطلب';
+
+  @override
+  String get wasalnyRequestsCurrentStatus => 'الحالة الحالية';
+
+  @override
+  String get wasalnyRequestsLocation => 'الموقع';
+
+  @override
+  String get wasalnyRequestsRevealTitle => 'إظهار بيانات التواصل';
+
+  @override
+  String get wasalnyRequestsRevealConfirmation =>
+      'هل تريد إظهار بيانات التواصل للطرفين في هذا الطلب؟';
+
+  @override
+  String get wasalnyRequestsRevealAction => 'إظهار البيانات للمشتري';
+
+  @override
+  String get wasalnyRequestsHideData => 'إخفاء البيانات';
+
+  @override
+  String get wasalnyRequestsPreviewAction => 'معاينة الطلب';
+
+  @override
+  String get wasalnyRequestsPreviewTitle => 'تفاصيل الطلب';
+
+  @override
+  String get wasalnyAdsTitle => 'إعلانات المنتجات المستعملة';
+
+  @override
+  String get wasalnyAdsSubtitle => 'وحدة الرقابة والمطابقة الفنية';
+
+  @override
+  String get wasalnyAdsPendingToday => 'بانتظار المراجعة';
+
+  @override
+  String get wasalnyAdsApprovedToday => 'المعتمد اليوم';
+
+  @override
+  String get wasalnyAdsFilterAll => 'الكل';
+
+  @override
+  String get wasalnyAdsFilterPending => 'بانتظار المراجعة';
+
+  @override
+  String get wasalnyAdsFilterEdit => 'فحص وتعديل';
+
+  @override
+  String get wasalnyAdsFilterApproved => 'المعتمدة';
+
+  @override
+  String get wasalnyAdsEmpty => 'لا توجد إعلانات ضمن هذا التصنيف.';
+
+  @override
+  String get wasalnyAdsAuditNote =>
+      'تم تدقيق وتأمين جميع الإجراءات الرقابية بتسجيل التدقيق الإداري.';
+
+  @override
+  String get wasalnyAdsLoadError => 'تعذر تحميل إعلانات وصلني.';
+
+  @override
+  String get wasalnyAdsUpdateError => 'تعذر تحديث حالة الإعلان.';
+
+  @override
+  String get wasalnyAdsPendingStatus => 'بانتظار المراجعة';
+
+  @override
+  String get wasalnyAdsApprovedStatus => 'منشور - مسار وصلني نشط';
+
+  @override
+  String get wasalnyAdsHiddenStatus => 'الإعلان مخفي';
+
+  @override
+  String get wasalnyAdsRejectedStatus => 'مرفوض - بانتظار تعديل البائع';
+
+  @override
+  String get wasalnyAdsAwaitingApprovalStatus => 'بانتظار الموافقة';
+
+  @override
+  String get wasalnyAdsSuspendedStatus => 'الإعلان معلّق';
+
+  @override
+  String get wasalnyAdsEditRequestedStatus => 'مطلوب تعديل الإعلان';
+
+  @override
+  String get wasalnyAdsAcceptAction => 'قبول';
+
+  @override
+  String get wasalnyAdsHideAction => 'إخفاء';
+
+  @override
+  String get wasalnyAdsSuspendAction => 'تعليق الإعلان';
+
+  @override
+  String get wasalnyAdsRejectAction => 'رفض بسبب';
+
+  @override
+  String get wasalnyAdsHideTitle => 'إخفاء الإعلان';
+
+  @override
+  String get wasalnyAdsSuspendTitle => 'تعليق الإعلان';
+
+  @override
+  String get wasalnyAdsEditRequestTitle => 'طلب تعديل الإعلان';
+
+  @override
+  String get wasalnyAdsRejectTitle => 'رفض الإعلان';
+
+  @override
+  String get wasalnyAdsHideReason => 'أدخل سبب إخفاء الإعلان';
+
+  @override
+  String get wasalnyAdsSuspendReason => 'أدخل سبب تعليق الإعلان';
+
+  @override
+  String get wasalnyAdsEditRequestReason => 'أدخل التعديلات المطلوبة من الناشر';
+
+  @override
+  String get wasalnyAdsRejectReason => 'أدخل سبب رفض الإعلان';
+
+  @override
+  String get wasalnyAdsReasonRequired => 'السبب مطلوب لإكمال العملية.';
+
+  @override
+  String get wasalnyAdsApproved => 'تم قبول الإعلان ونشره.';
+
+  @override
+  String get wasalnyAdsHidden => 'تم إخفاء الإعلان.';
+
+  @override
+  String get wasalnyAdsRejected => 'تم رفض الإعلان.';
+
+  @override
+  String get wasalnyAdsSuspended => 'تم تعليق الإعلان.';
+
+  @override
+  String get wasalnyAdsEditRequested => 'تم إرسال طلب التعديل إلى الناشر.';
+
+  @override
+  String get wasalnyAdDetailsTitle => 'تعديل وفحص بيانات الإعلان المستعمل';
+
+  @override
+  String get wasalnyAdDetailsPermission =>
+      'صلاحية إشرافية مقيدة: تعديل البيانات الفنية فقط';
+
+  @override
+  String get wasalnyAdDetailsReadOnly => 'بيانات المعلن ثابتة (للاطلاع فقط)';
+
+  @override
+  String get wasalnyAdDetailsSellerVerified => 'موثق النفاذ';
+
+  @override
+  String get wasalnyAdDetailsSubmitted => 'تاريخ الإدراج';
+
+  @override
+  String get wasalnyAdDetailsPriceMatch =>
+      'القيمة الحالية عادلة جداً ومطابقة لنطاق السعر.';
+
+  @override
+  String get wasalnyCategoryCamera => 'إلكترونيات وتصوير ‹ كاميرات احترافية';
+
+  @override
+  String get wasalnyCategoryConsole => 'ألعاب إلكترونية ‹ منصات ألعاب';
+
+  @override
+  String get wasalnyCategoryLaptop => 'إلكترونيات ‹ أجهزة كمبيوتر محمولة';
+
+  @override
+  String get wasalnyCategoryBicycle => 'رياضة وترفيه ‹ دراجات';
+
+  @override
+  String get wasalnyAdDetailsImageGallery => 'معرض صور المنتج المفحوص';
+
+  @override
+  String wasalnyAdDetailsPhotosCount(Object count, Object total) {
+    return '$count من $total مقبولة';
+  }
+
+  @override
+  String get wasalnyAdDetailsFront => 'هيكل الكاميرا الأمامي';
+
+  @override
+  String get wasalnyAdDetailsControls => 'الشاشة وأزرار التحكم';
+
+  @override
+  String get wasalnyAdDetailsLens => 'قاعدة العدسة والمستشعر';
+
+  @override
+  String get wasalnyAdDetailsAddPhoto => 'إضافة صورة توثيق';
+
+  @override
+  String get wasalnyAdDetailsCategory => 'التصنيف والقسم المعتمد';
+
+  @override
+  String get wasalnyAdDetailsCategoryMatch =>
+      'تمت مطابقة القسم آلياً وفق نوع المنتج المستعمل والفئة السعرية.';
+
+  @override
+  String get wasalnyAdDetailsPrice => 'السعر المعتمد للنشر';
+
+  @override
+  String get wasalnyAdDetailsPriceRange => 'نطاق السعر العادل';
+
+  @override
+  String get wasalnyAdDetailsDescription => 'الوصف المعتمد وتدقيق المحتوى';
+
+  @override
+  String get wasalnyAdDetailsAutoCheck =>
+      'فحص تلقائي: نظيف وخالٍ من الكلمات المحظورة';
+
+  @override
+  String get wasalnyAdDetailsCharacters => 'حرف';
+
+  @override
+  String get wasalnyAdDetailsApprove => 'اعتماد الإعلان للنشر';
+
+  @override
+  String get wasalnyAdDetailsRequestEdit => 'طلب تعديل من الناشر';
+
+  @override
+  String get wasalnyAdDetailsSuspend => 'تعليق الإعلان';
+
+  @override
+  String get wasalnyAdDetailsReject => 'رفض الإعلان ومخالفة المعايير';
+
+  @override
+  String get wasalnyChatWithSeller => 'دردشة مع المعلن';
+
+  @override
+  String get wasalnyCallSeller => 'الاتصال بالمعلن';
+
+  @override
+  String get wasalnyChatOrCallSeller => 'دردشة مع المعلن أو الاتصال به';
+
+  @override
+  String get wasalnyContactSellerTitle => 'التواصل مع الشخص المعلن';
+
+  @override
+  String get wasalnyContactSellerSubtitle =>
+      'تواصل مباشرة مع المعلن لمناقشة تفاصيل الإعلان أو طلب توضيحات فنية';
+
+  @override
+  String get wasalnyCallNow => 'اتصال الآن';
+
+  @override
+  String wasalnyCallingSeller(Object phone) {
+    return 'جاري الاتصال بالمعلن: $phone';
+  }
+
+  @override
+  String get wasalnyCopyPhone => 'نسخ رقم الهاتف';
+
+  @override
+  String get wasalnyPhoneCopied => 'تم نسخ رقم المعلن إلى الحافظة';
+
+  @override
+  String get wasalnySellerPhoneLabel => 'رقم هاتف المعلن';
+
+  @override
+  String get wasalnyAdsUpdated => 'تم تحديث الإعلان.';
+
+  @override
+  String get wasalnyAdsReason => 'سبب الإجراء';
+
+  @override
+  String productComingSoon(Object section) {
+    return 'قسم $section قيد التجهيز';
+  }
+
+  @override
+  String get productSupervisorWelcome => 'مرحباً، المشرف محمد';
+
+  @override
+  String get productReviewSubtitle => 'مشرف مراجعة المنتجات الجديدة';
+
+  @override
+  String get productPendingAdsCount => 'بانتظار المراجعة';
+
+  @override
+  String get productApprovedAdsCount => 'إعلان معتمد';
+
+  @override
+  String get productSearchHint => 'ابحث برقم الإعلان أو عنوان المنتج...';
+
+  @override
+  String get productCategoryAll => 'الكل';
+
+  @override
+  String get productCategoryHome => 'أجهزة منزلية';
+
+  @override
+  String get productCategoryElectronics => 'إلكترونيات';
+
+  @override
+  String get productCategoryWatches => 'عطور وساعات';
+
+  @override
+  String get productReviewListTitle => 'المنتجات الجديدة قيد المراجعة';
+
+  @override
+  String productReceivedMinutesAgo(int count) {
+    return 'منذ $count دقيقة';
+  }
+
+  @override
+  String get productConditionNew => 'جديد بالكرتون';
+
+  @override
+  String get productConditionUsed => 'غير مستخدم';
+
+  @override
+  String get productAcceptAction => 'قبول';
+
+  @override
+  String get productHideAction => 'إخفاء';
+
+  @override
+  String get productRejectAction => 'رفض';
+
+  @override
+  String get productSuspendAction => 'تعليق';
+
+  @override
+  String get productSuspendConfirmTitle => 'تأكيد تعليق الإعلان';
+
+  @override
+  String productSuspendConfirmMessage(String title) {
+    return 'هل تريد تعليق «$title» وإيقاف ظهوره مؤقتًا؟';
+  }
+
+  @override
+  String get productStatusSuspended => 'تم التعليق';
+
+  @override
+  String get productFeaturedBadge => 'إعلان مميز';
+
+  @override
+  String get productSuspendSheetTitle => 'تعديل الإجراء الرقابي';
+
+  @override
+  String productSuspendSheetSubtitle(String reference, String title) {
+    return 'إعلان #$reference • $title';
+  }
+
+  @override
+  String get productSuspendChooseAction => 'تحديد الحالة الرقابية الجديدة';
+
+  @override
+  String get productSuspendRepublish => 'إظهار وإعادة النشر (مفعل)';
+
+  @override
+  String get productSuspendRepublishHint =>
+      'تفعيل الظهور المباشر في سوق المنتجات الجديدة';
+
+  @override
+  String get productSuspendHideTemporarily => 'إخفاء مؤقت (تعليق الإعلان)';
+
+  @override
+  String get productSuspendHideTemporarilyHint =>
+      'حجب مؤقت بانتظار استيفاء الشروط الرقابية';
+
+  @override
+  String get productSuspendRejectFinal => 'رفض نهائي';
+
+  @override
+  String get productSuspendRejectFinalHint =>
+      'مخالفة المعايير الجديدة وإغلاق التذكرة فورًا';
+
+  @override
+  String get productSuspendSelected => 'محدد';
+
+  @override
+  String get productSuspendCurrent => 'الحالي';
+
+  @override
+  String get productSuspendReasonTitle => 'سبب تغيير الحالة وملاحظات المعتمد';
+
+  @override
+  String get productSuspendReasonHint => 'اكتب سبب الإجراء الرقابي...';
+
+  @override
+  String get productSuspendDefaultReason =>
+      'تم استيفاء صور التغليف والتحقق بنجاح وإعادة تفعيل الإعلان';
+
+  @override
+  String get productSuspendReasonNote => 'سيظهر هذا التوضيح في سجل التدقيق';
+
+  @override
+  String get productSuspendNotifyTitle => 'إرسال إشعار فوري للناشر';
+
+  @override
+  String get productSuspendNotifyHint =>
+      'تنبيه فوري عن التغيير والسبب المحدد للحالة';
+
+  @override
+  String get productSuspendSaveAction => 'حفظ وتحديث الحالة';
+
+  @override
+  String get productReviewImagesHint =>
+      'اضغط لمراجعة صور السلعة وفاتورة الشراء';
+
+  @override
+  String get productAcceptConfirmTitle => 'تأكيد قبول المنتج';
+
+  @override
+  String productAcceptConfirmMessage(Object title) {
+    return 'هل تريد قبول «$title» واعتماده للنشر؟';
+  }
+
+  @override
+  String get productHideConfirmTitle => 'تأكيد إخفاء المنتج';
+
+  @override
+  String productHideConfirmMessage(Object title) {
+    return 'هل تريد إخفاء «$title» من قائمة المنتجات المعروضة؟';
+  }
+
+  @override
+  String get productRejectConfirmTitle => 'تأكيد رفض المنتج';
+
+  @override
+  String get productRejectReasonHint => 'أدخل سبب رفض المنتج';
+
+  @override
+  String get productRejectReasonRequired => 'سبب الرفض مطلوب لإكمال العملية';
+
+  @override
+  String get productHideReasonHint => 'أدخل سبب إخفاء المنتج';
+
+  @override
+  String get productHideReasonRequired => 'سبب الإخفاء مطلوب لإكمال العملية';
+
+  @override
+  String get productConfirmAction => 'تأكيد العملية';
+
+  @override
+  String get productCancelAction => 'إلغاء';
+
+  @override
+  String get productStatusApproved => 'تم القبول';
+
+  @override
+  String get productStatusHidden => 'تم الإخفاء';
+
+  @override
+  String get productStatusRejected => 'تم الرفض';
+
+  @override
+  String get productEmptyResults => 'لا توجد منتجات مطابقة';
+
+  @override
+  String get productReviewActionSuccess => 'تم تحديث حالة المنتج';
+
+  @override
+  String get productReviewLoadError =>
+      'تعذر تحميل المنتجات قيد المراجعة. حاول مرة أخرى.';
+
+  @override
+  String get productReviewUpdateError =>
+      'تعذر حفظ قرار المنتج. حدّث الصفحة وحاول مرة أخرى.';
+
+  @override
+  String get productDetailsTitle => 'مراجعة المنتج';
+
+  @override
+  String get productDetailsAppBarTitle => 'عرض الإعلان';
+
+  @override
+  String get productDetailsInvoice => 'فاتورة الشراء';
+
+  @override
+  String get productDetailsPhotos => 'صور المنتج';
+
+  @override
+  String get productDetailsMerchant => 'التاجر';
+
+  @override
+  String get productDetailsPrice => 'السعر';
+
+  @override
+  String get productDetailsCategory => 'التصنيف';
+
+  @override
+  String get productDetailsCondition => 'حالة المنتج';
+
+  @override
+  String get productReviewSessionInProgress => 'جلسة فحص ومراجعة نشطة';
+
+  @override
+  String get productSellerLabel => 'المعلن:';
+
+  @override
+  String get productSellerVerified => 'موثق';
+
+  @override
+  String get productViewFullAd => 'عرض تفاصيل الإعلان الكاملة';
+
+  @override
+  String get productViewFullAdHint =>
+      'شاشة لمراجعة وتعديل تفاصيل الإعلان والوصف';
+
+  @override
+  String get productInvoiceAttached => 'فاتورة الشراء مرفقة';
+
+  @override
+  String get productImageQualityChecked => 'جودة الصور مفحوصة';
+
+  @override
+  String get productAuditChecklistTitle =>
+      'قائمة التدقيق الإلزامي للمنتجات الجديدة:';
+
+  @override
+  String get productAuditPackagingTitle =>
+      'شريط الأمان والغلاف البلاستيكي سليم تماماً';
+
+  @override
+  String get productAuditPackagingHint =>
+      'تم فحص التغليف ولم يظهر أي تمزق أو إعادة إغلاق حراري.';
+
+  @override
+  String get productAuditSerialTitle =>
+      'الرقم التسلسلي مطابق للمواصفات المحلية';
+
+  @override
+  String get productAuditSerialHint =>
+      'الباركود المسجل متطابق مع قاعدة بيانات الهيئة الرسمية.';
+
+  @override
+  String get productAuditDescriptionTitle =>
+      'لا يوجد وصف يلمح لأي استخدام مسبق أو تجريبي';
+
+  @override
+  String get productAuditDescriptionHint =>
+      'خلو نصوص الإعلان من عبارات مثل «مفتوح للتجربة» أو «شبه جديد».';
+
+  @override
+  String get productInstantPublishingTitle => 'نشر تلقائي فوري';
+
+  @override
+  String get productInstantPublishingHint =>
+      'اعتماد هذا الفحص سيقوم بنشر الإعلان مباشرة في السوق المفتوح. وإرسال إشعار رسمي للمعلن بانتهاء التدقيق.';
+
+  @override
+  String get productApproveAndPublishNow => 'اعتماد ونشر فوراً';
+
+  @override
+  String get productBackToReview => 'إغلاق / رجوع';
+
+  @override
+  String get productFullDetailsTitle => 'عرض تفاصيل الإعلان';
+
+  @override
+  String get productPhotoDocumentationTitle => 'معاينة صور التوثيق والتغليف';
+
+  @override
+  String get productPhotoCount => 'صور مرفوعة';
+
+  @override
+  String get productPhotoAdOriginal => 'منتج جديد - مغلق أصلي';
+
+  @override
+  String get productPhotoQualityCheck => 'فحص الملصق';
+
+  @override
+  String get productSellerInquiryTitle => 'استفسار للمعلن';
+
+  @override
+  String get productSellerInquiryHint =>
+      'طلب توضيح أو إشعار المعلن بتعديل فوري';
+
+  @override
+  String get productSendInquiry => 'مراسلة';
+
+  @override
+  String get productInquiryMessageHint => 'اكتب استفسارك للمعلن...';
+
+  @override
+  String get productApprovedCategory => 'التصنيف المعتمد';
+
+  @override
+  String get productDescriptionAndCondition => 'وصف المنتج وحالته';
+
+  @override
+  String get productWarrantyLabel => 'إضافة صيغة الضمان';
+
+  @override
+  String get productDescriptionHint => 'اكتب وصف المنتج وتفاصيل حالته...';
+
+  @override
+  String productDescriptionCharacterCount(int count) {
+    return '$count حرف';
+  }
+
+  @override
+  String get productDescriptionSafetyCheck =>
+      'تم التحقق من خلو النص من الألفاظ المضللة';
+
+  @override
+  String get productAdHistoryTitle => 'سجل حالة الإعلان';
+
+  @override
+  String get productHistoryOpenStatus => 'مفتوح';
+
+  @override
+  String get productHistoryCreated => 'تم إنشاء الإعلان بواسطة المستخدم';
+
+  @override
+  String get productHistoryDocumentsAttached => 'إرفاق صور التغليف والباركود';
+
+  @override
+  String get productHistoryAssigned => 'إسناد الإعلان للمشرف الميداني';
+
+  @override
+  String get productHistoryCurrent =>
+      'الحالة الحالية: قيد فحص المواصفات والاستيفاءات';
+
+  @override
+  String get productEditPermissionHint =>
+      'صلاحية التعديل الرقابي مقتصرة على التصنيف والسعر والوصف فقط. لا يمكن تغيير بيانات الناشر.';
+
+  @override
+  String get productFinalDecisionLabel => 'قرار المشرف الإداري النهائي';
+
+  @override
+  String get productRequiredFieldsError =>
+      'يرجى استكمال السعر والوصف قبل المتابعة.';
+
+  @override
+  String get productInvalidPriceError => 'أدخل سعرًا صحيحًا بالأرقام.';
+
+  @override
+  String get productWorkspaceComingSoon => 'هذه الصفحة قيد التجهيز';
+
+  @override
+  String get productPromotionTitle => 'إدارة ترويج المنتجات المميزة';
+
+  @override
+  String get productPromotionSubtitle =>
+      'راجع طلبات إبراز المنتجات وتابع العروض النشطة';
+
+  @override
+  String get productPromotionPending => 'بانتظار القرار';
+
+  @override
+  String get productPromotionActive => 'نشط';
+
+  @override
+  String get productPromotionTotal => 'إجمالي الطلبات';
+
+  @override
+  String get productPromotionRequests => 'طلبات الترويج';
+
+  @override
+  String get productPromotionFilterAll => 'الكل';
+
+  @override
+  String get productPromotionCompleted => 'مكتمل';
+
+  @override
+  String get productPromotionEmpty => 'لا توجد طلبات ضمن هذا التصنيف.';
+
+  @override
+  String get productPromotionPlanInfo =>
+      'راجع أهلية الإعلان وحالة الدفع قبل تفعيل باقة الترويج. مدة الباقة تبدأ بعد الاعتماد.';
+
+  @override
+  String get productPromotionFeaturedPlan => 'ظهور مميز';
+
+  @override
+  String get productPromotionPremiumPlan => 'ظهور مميز بلس';
+
+  @override
+  String get productPromotionDays => 'يوم';
+
+  @override
+  String get productPromotionRequestedAt => 'تاريخ الطلب:';
+
+  @override
+  String get productPromotionDecisionNote => 'ملاحظة القرار';
+
+  @override
+  String get productPromotionApprove => 'اعتماد الترويج';
+
+  @override
+  String get productPromotionReject => 'رفض الطلب';
+
+  @override
+  String get productPromotionApproveTitle => 'تأكيد اعتماد الترويج';
+
+  @override
+  String productPromotionApproveMessage(Object title) {
+    return 'هل تريد اعتماد طلب ترويج «$title»؟';
+  }
+
+  @override
+  String get productPromotionConfirmApprove => 'تأكيد الاعتماد';
+
+  @override
+  String get productPromotionPaymentStatusTitle => 'حالة الدفع';
+
+  @override
+  String get productPromotionViewPaymentStatus => 'عرض حالة الدفع';
+
+  @override
+  String get productPromotionPaidByFinance => 'تم تأكيد الدفع من المالية';
+
+  @override
+  String get productPromotionUnpaid => 'لم يتم الدفع بعد';
+
+  @override
+  String get productPromotionUnpaidMessage =>
+      'لا يمكن اعتماد طلب الترويج قبل تأكيد المالية استلام المبلغ.';
+
+  @override
+  String get productPromotionRejectTitle => 'رفض طلب الترويج';
+
+  @override
+  String get productPromotionRejectReasonHint => 'اكتب سبب رفض الطلب';
+
+  @override
+  String get productPromotionConfirmReject => 'تأكيد الرفض';
+
+  @override
+  String get productPromotionApproved => 'تم اعتماد طلب الترويج.';
+
+  @override
+  String get productPromotionRejected => 'تم رفض طلب الترويج.';
+
+  @override
+  String get productPromotionExpired => 'منتهي';
+
+  @override
+  String get productPromotionDisclaimer =>
+      'بيانات الطلبات المعروضة تجريبية؛ يلزم ربطها بخدمة الاشتراكات والمدفوعات قبل التشغيل الفعلي.';
+
+  @override
+  String get productPromotionAuditApproved => 'اعتماد طلب ترويج منتج';
+
+  @override
+  String get productPromotionAuditRejected => 'رفض طلب ترويج منتج';
+
+  @override
+  String get productWalletTitle => 'محفظة المشرف';
+
+  @override
+  String get productWalletBack => 'رجوع';
+
+  @override
+  String get productWalletSupervisorId => 'SUP-9942';
+
+  @override
+  String get productWalletVerified => 'موثق';
+
+  @override
+  String get productWalletAvailableForWithdrawal =>
+      'الرصيد المتاح للسحب الفوري';
+
+  @override
+  String get productWalletBalanceAmount => '8,450 ر.س';
+
+  @override
+  String get productWalletReady => 'نشط وجاهز';
+
+  @override
+  String get productWalletBalanceNote =>
+      'يشمل مستحقات الإشراف المعتمدة وبدلات التدقيق المنتهية وجاهزة للتحويل الفوري.';
+
+  @override
+  String get productWalletTotalDues => 'إجمالي المستحقات';
+
+  @override
+  String get productWalletTotalDuesAmount => '12,500 ر.س';
+
+  @override
+  String get productWalletDuesDetail => 'الراتب + الحوافز المحققة';
+
+  @override
+  String get productWalletPendingReview => 'قيد التدقيق المالي';
+
+  @override
+  String get productWalletPendingAmount => '4,050 ر.س';
+
+  @override
+  String get productWalletPendingDetail => 'مراجعة الفحص والمكافآت';
+
+  @override
+  String get productWalletSettlementRate => 'دورة تسوية أسبوعية منتظمة';
+
+  @override
+  String get productWalletSettlementPercent => 'معدل جاهزية الصرف: 68%';
+
+  @override
+  String get productWalletRequestTitle => 'طلب سحب المستحقات المالية';
+
+  @override
+  String get productWalletNoFees => 'بدون رسوم تحويل';
+
+  @override
+  String get productWalletAmountToWithdraw => 'مبلغ السحب المطلوب';
+
+  @override
+  String get productWalletWithdrawableHint =>
+      'سحب كامل المبلغ المتاح (8,450 ر.س)';
+
+  @override
+  String get productWalletCurrency => 'ر.س';
+
+  @override
+  String get productWalletLimitNote =>
+      'الحد الأدنى لعملية السحب 100 ر.س، الحد الأقصى اليومي 20,000 ر.س.';
+
+  @override
+  String get productWalletChooseDestination => 'اختر وجهة التحويل';
+
+  @override
+  String get productWalletInstapay => 'إنستاباي';
+
+  @override
+  String get productWalletFast => 'فوري';
+
+  @override
+  String get productWalletMobileWallet => 'محفظة هاتف';
+
+  @override
+  String get productWalletWalletProviders => 'فودافون / أورنج';
+
+  @override
+  String get productWalletBankTransfer => 'تحويل بنكي';
+
+  @override
+  String get productWalletIban => 'آيبان (IBAN)';
+
+  @override
+  String get productWalletIbanAddress =>
+      'عنوان الدفع اللحظي (IPA) أو رقم الآيبان المصرفي';
+
+  @override
+  String get productWalletPaymentAddress =>
+      'عنوان الدفع اللحظي (IPA) أو رقم الهاتف المرتبط';
+
+  @override
+  String get productWalletProcessingTime =>
+      'سرعة المعالجة: فوري ومباشر على مدار الساعة';
+
+  @override
+  String get productWalletFeeDetails =>
+      'رسوم المعالجة والتحويل: 0.5 ر.س (محفظة بالكامل للمشرف)';
+
+  @override
+  String get productWalletSubmitRequest => 'تأكيد وطلب السحب المالي';
+
+  @override
+  String get productWalletAmountError => 'أدخل مبلغاً بين 100 و8,450 ر.س.';
+
+  @override
+  String get productWalletDetailsError =>
+      'أكمل بيانات الحساب قبل إرسال طلب السحب.';
+
+  @override
+  String get productWalletConfirmTitle => 'تأكيد طلب السحب';
+
+  @override
+  String productWalletConfirmMessage(Object amount) {
+    return 'هل تريد تأكيد سحب مبلغ $amount ر.س؟';
+  }
+
+  @override
+  String get productWalletConfirmAction => 'تأكيد السحب';
+
+  @override
+  String get productWalletRequestSent => 'تم تسجيل طلب السحب بنجاح.';
+
+  @override
+  String get productWalletBonusTitle => 'حافز الإنجاز الأسبوعي متاح!';
+
+  @override
+  String get productWalletBonusAmount => '+500 ر.س';
+
+  @override
+  String get productWalletBonusDescription =>
+      'أنجزت 4 من 5 أهداف ميدانياً بنجاح يفوق المعايير المحددة.';
+
+  @override
+  String get productWalletHistoryTitle => 'سجل العمليات والتحويلات الأخيرة';
+
+  @override
+  String get productWalletFullStatement => 'عرض كشف الحساب الكامل';
+
+  @override
+  String get productWalletTransactionOne => 'سحب بنكي - مصرف الراجحي';
+
+  @override
+  String get productWalletTransactionOneMeta => 'TRX-9821 • أمس، 02:40 م';
+
+  @override
+  String get productWalletTransactionOneAmount => '-5,000';
+
+  @override
+  String get productWalletTransactionTwo => 'عمولة فحص ميداني معتمد';
+
+  @override
+  String get productWalletTransactionTwoMeta =>
+      'أجهزة إلكترونية • WS-4088 • 24 أكتوبر';
+
+  @override
+  String get productWalletTransactionTwoAmount => '+350';
+
+  @override
+  String get productWalletTransactionThree => 'تحويل فوري - InstaPay';
+
+  @override
+  String get productWalletTransactionThreeMeta => 'IPA-3310 • 21 أكتوبر';
+
+  @override
+  String get productWalletTransactionThreeAmount => '-2,200';
+
+  @override
+  String get productWalletPaid => 'مكتمل';
+
+  @override
+  String get productWalletDeposit => 'إيداع';
+
+  @override
+  String get productWalletAuditTitle =>
+      'العمليات المالية مشفرة وتخضع لتدقيق هيئة الرقابة المحاسبية لمنصة وسوقي';
+
+  @override
+  String get productWalletAuditCode => 'رمز التدقيق الدوري: AUDIT-SEC-2024-v9';
+
+  @override
+  String get productWalletStatementUnavailable =>
+      'سيتم عرض تفاصيل كشف الحساب عند ربط المحفظة بالخدمات المالية.';
+
+  @override
+  String get productSupervisorToolsTitle => 'سجل المشرف والمساندة';
+
+  @override
+  String get productAuditHistoryTitle => 'سجل القرارات والتدقيق الرقابي';
+
+  @override
+  String get productAuditHistorySubtitle =>
+      'مراجعة سجل قراراتك وإجراءاتك السابقة';
+
+  @override
+  String get productAuditEmpty => 'لا توجد عمليات مسجلة حتى الآن.';
+
+  @override
+  String get productAuditLoadError => 'تعذر تحميل سجل التدقيق. حاول مرة أخرى.';
+
+  @override
+  String get productAuditSaveError =>
+      'تعذر حفظ العملية في سجل التدقيق. لم يتم تسجيل الطلب.';
+
+  @override
+  String get productAuditActionApproved => 'اعتماد منتج';
+
+  @override
+  String get productAuditActionHidden => 'إخفاء منتج';
+
+  @override
+  String get productAuditActionRejected => 'رفض منتج';
+
+  @override
+  String get productAuditActionSuspended => 'تعليق إعلان';
+
+  @override
+  String get productAuditActionUpdated => 'تعديل تفاصيل منتج';
+
+  @override
+  String get productAuditActionFieldAvailability => 'تغيير التوفر الميداني';
+
+  @override
+  String get productAuditActionUrgentNotifications =>
+      'تغيير تنبيهات البلاغات العاجلة';
+
+  @override
+  String get productAuditEnabled => 'تم التفعيل';
+
+  @override
+  String get productAuditDisabled => 'تم التعطيل';
+
+  @override
+  String get productAuditActionWithdrawalRequested => 'طلب سحب مستحقات مالية';
+
+  @override
+  String get productAuditActionOther => 'إجراء رقابي';
+
+  @override
+  String get productSupportTitle => 'مركز المساندة والدعم';
+
+  @override
+  String get productSupportSubtitle =>
+      'الدعم الإداري والتقني والتواصل مع رئيس المشرفين';
+
+  @override
+  String get productAdminSupportTitle => 'الدعم الإداري';
+
+  @override
+  String get productAdminSupportDetail =>
+      'استفسارات الإجراءات والسياسات والتصعيد الإداري';
+
+  @override
+  String get productTechnicalSupportTitle => 'الدعم التقني';
+
+  @override
+  String get productTechnicalSupportDetail =>
+      'المساعدة في مشكلات التطبيق والحساب والأدوات';
+
+  @override
+  String get productSupportContactTitle => 'التواصل مع فريق الدعم';
+
+  @override
+  String get productHeadSupervisorName => 'رئيس المشرفين';
+
+  @override
+  String get productHeadSupervisorRole => 'التصعيد والمتابعة الإدارية';
+
+  @override
+  String get productTechnicalSupportName => 'فريق الدعم التقني';
+
+  @override
+  String get productTechnicalSupportHours => 'متاح لمتابعة الأعطال التقنية';
+
+  @override
+  String get productSupportOpenChat => 'بدء محادثة';
+
+  @override
+  String get productSupportHours =>
+      'تواصل مع الدعم عبر المحادثة، وتظهر ساعات العمل وفق الجدول المعتمد.';
+
+  @override
+  String get productChatsTitle => 'الدردشات';
+
+  @override
+  String get productChatToday => 'اليوم';
+
+  @override
+  String get productChatYesterday => 'أمس';
+
+  @override
+  String get productHeadSupervisorPreview =>
+      'يمكنك إرسال الاستفسارات وطلبات التصعيد هنا.';
+
+  @override
+  String get productTechnicalSupportPreview => 'تواصل معنا للمساعدة التقنية.';
+
+  @override
+  String get productNotificationsTitle => 'الإشعارات';
+
+  @override
+  String get productNotificationsMarkAllRead => 'تحديد الكل كمقروء';
+
+  @override
+  String get productNotificationNewReviewTitle => 'طلبات جديدة قيد المراجعة';
+
+  @override
+  String get productNotificationNewReviewBody =>
+      'توجد منتجات جديدة بانتظار إجراء المراجعة.';
+
+  @override
+  String get productNotificationWalletTitle => 'تحديث المستحقات المالية';
+
+  @override
+  String get productNotificationWalletBody =>
+      'تم تحديث ملخص مستحقاتك ودورة التسوية الأسبوعية.';
+
+  @override
+  String get productNotificationPolicyTitle => 'تنبيه رقابي';
+
+  @override
+  String get productNotificationPolicyBody =>
+      'يرجى مراجعة قائمة التدقيق قبل اعتماد المنتجات.';
+
+  @override
+  String get productNotificationToday => 'اليوم';
+
+  @override
+  String get productNotificationYesterday => 'أمس';
+
+  @override
+  String get productNotificationEarlier => 'سابقاً';
+
+  @override
+  String get productReportEyebrow => 'الرقابة والجودة التنفيذية';
+
+  @override
+  String get productReportTitle => 'تقارير قسم المنتجات الجديدة';
+
+  @override
+  String get productReportExport => 'تصدير';
+
+  @override
+  String get productReportToday => 'اليوم';
+
+  @override
+  String get productReportThisWeek => 'هذا الأسبوع';
+
+  @override
+  String get productReportThisMonth => 'هذا الشهر';
+
+  @override
+  String get productReportCustom => 'مخصص';
+
+  @override
+  String get productReportReviewedAds => 'الإعلانات المفحوصة';
+
+  @override
+  String get productReportComparedToPrevious => 'مقارنة بالفترة السابقة';
+
+  @override
+  String get productReportApprovalRate => 'معدل الاعتماد';
+
+  @override
+  String productReportApprovedCount(int count) {
+    return '$count إعلان معتمد';
+  }
+
+  @override
+  String get productReportDeclinedRate => 'الحجب والرفض';
+
+  @override
+  String productReportDeclinedCount(int count) {
+    return '$count إعلان محجوب';
+  }
+
+  @override
+  String get productReportAverageReview => 'متوسط سرعة الفحص';
+
+  @override
+  String get productReportMinutesAndFaster => 'أسرع بنسبة 25%';
+
+  @override
+  String get productReportMinuteUnit => 'دقيقة';
+
+  @override
+  String get productReportStandardsTitle => 'معايير التحقق الصارمة للجديد';
+
+  @override
+  String get productReportStandardsVersion => 'بروتوكول 4.2';
+
+  @override
+  String get productReportPackagingTitle => 'شرط التغليف الحراري';
+
+  @override
+  String get productReportPackagingHint =>
+      'التأكد من عدم فتح الشريط الأمني الأصلي';
+
+  @override
+  String get productReportSerialTitle => 'التحقق التسلسلي';
+
+  @override
+  String get productReportSerialHint =>
+      'فحص قاعدة بيانات الضمان المحلي المعتمد';
+
+  @override
+  String get productReportCategoryTitle => 'توزيع أصناف المنتجات الجديدة';
+
+  @override
+  String productReportAdsCount(int count) {
+    return '$count إعلان';
+  }
+
+  @override
+  String get productReportElectronics => 'إلكترونيات وهواتف ذكية';
+
+  @override
+  String get productReportGames => 'أجهزة وألعاب ترفيهية';
+
+  @override
+  String get productReportPerfumes => 'عطور وساعات فاخرة';
+
+  @override
+  String get productReportHomeAppliances => 'أجهزة منزلية ومطبخ';
+
+  @override
+  String get productReportAuditTitle => 'أحدث الإجراءات الرقابية المسجلة';
+
+  @override
+  String get productReportLive => 'تحديث حي';
+
+  @override
+  String get productReportHidden => 'تم الإخفاء';
+
+  @override
+  String get productReportApproved => 'تم الاعتماد';
+
+  @override
+  String get productReportRejected => 'تم الرفض';
+
+  @override
+  String productReportActionHeadline(String adNumber) {
+    return 'إعلان $adNumber';
+  }
+
+  @override
+  String get productReportEditAction => 'تعديل الإجراء';
+
+  @override
+  String get productReportEditDialogTitle => 'تعديل الإجراء الرقابي';
+
+  @override
+  String get productReportActionStatus => 'حالة الإجراء';
+
+  @override
+  String get productReportActionReason => 'سبب الإجراء';
+
+  @override
+  String get productReportApplyEdit => 'تطبيق';
+
+  @override
+  String get productReportRecentActionsNote =>
+      'هذه أحدث الإجراءات المسجلة في الفترة المحددة.';
+
+  @override
+  String get productReportDataNote =>
+      'بيانات عرض تجريبية تتغير حسب الفترة المحددة';
+
+  @override
+  String get productReportSaveAndUpdate => 'حفظ وتحديث الحالة فورًا';
+
+  @override
+  String get productReportDiscardChanges => 'إلغاء والتراجع';
+
+  @override
+  String get productReportSaved => 'تم حفظ تحديثات التقرير محليًا';
+
+  @override
+  String get productReportExportTitle => 'تصدير التقرير بصيغة CSV';
+
+  @override
+  String get productReportCopyCsv => 'نسخ CSV';
+
+  @override
+  String get productReportExportCopied => 'تم نسخ بيانات التقرير';
+
+  @override
+  String get productProfileMetricsTitle => 'المؤشرات الرقابية والتشغيلية';
+
+  @override
+  String get productProfileLastUpdated => 'آخر تحديث: 12 دقيقة';
+
+  @override
+  String get productProfileName => 'م. طارق بن عبد العزيز العتيبي';
+
+  @override
+  String get productProfileRegion => 'منطقة الرياض والمحافظات المجاورة';
+
+  @override
+  String get productProfileSupervisorId => 'SUP-1082';
+
+  @override
+  String get productProfileVerified => 'مشرف ميداني معتمد';
+
+  @override
+  String get productProfileFieldAvailability => 'متاح ميدانيًا لاستلام الفحص';
+
+  @override
+  String get productProfileFieldAvailabilityHint =>
+      'الاستجابة المباشرة ضمن نطاق 15 كم';
+
+  @override
+  String get productProfileReviewed => 'الصفقات المفحوصة';
+
+  @override
+  String get productProfileSinceLastMonth => '+18% عن الشهر الماضي';
+
+  @override
+  String get productProfileApprovalMetric => 'التوفيق والحل الودي';
+
+  @override
+  String get productProfileApprovedOfTotal => 'من أصل 263 نزاعًا مفتوحًا';
+
+  @override
+  String get productProfileResponseSpeed => 'متوسط سرعة الاستجابة';
+
+  @override
+  String get productProfileFasterThanAverage => 'أسرع بـ 6 دقائق من المعيار';
+
+  @override
+  String get productProfileQualityMetric => 'معدل الرضا الرقابي';
+
+  @override
+  String get productProfileQualityDetail => 'استنادًا إلى 210 تقييمًا فنيًا';
+
+  @override
+  String get productProfileDocumentsTitle =>
+      'الوثائق والتفويضات الإشرافية المعتمدة';
+
+  @override
+  String get productProfileAuthorization => 'بطاقة الرقابة الميدانية';
+
+  @override
+  String get productProfileAuthorizationSubtitle =>
+      'تفويض إشرافي نشط • ينتهي 15/06/1447 هـ';
+
+  @override
+  String get productProfileActive => 'نشطة';
+
+  @override
+  String get productProfilePolicy => 'لائحة ضوابط وحجز الضمان';
+
+  @override
+  String get productProfilePolicySubtitle => 'الإصدار 4.2 المعتمد';
+
+  @override
+  String get productProfileDelegation => 'وثيقة صلاحيات حسم النزاع';
+
+  @override
+  String get productProfileDelegationSubtitle => 'تفويض إشرافي مباشر';
+
+  @override
+  String get productProfileReview => 'مراجعة';
+
+  @override
+  String get productProfileWalletTitle => 'محفظتي والبيانات المالية';
+
+  @override
+  String get productProfileJustUpdated => 'محدثة الآن';
+
+  @override
+  String get productProfileWalletBalance => 'الرصيد المتاح والمستحقات';
+
+  @override
+  String get productProfileWalletAmount => '14,850 ر.س';
+
+  @override
+  String get productProfileWalletDetail =>
+      'بدلات الإشراف الميداني + مستحقات التوفيق';
+
+  @override
+  String get productProfileOperationsTitle =>
+      'الإعدادات التشغيلية والمهام الميدانية';
+
+  @override
+  String get productProfileUrgentAlerts =>
+      'تنبيهات البلاغات العاجلة (VIP Dispatch)';
+
+  @override
+  String get productProfileUrgentAlertsSubtitle =>
+      'إشعار صوتي فوري لأولوية قصوى للنزاعات والاستلام';
+
+  @override
+  String get productProfileAuditLog => 'سجل القرارات والتدقيق الرقابي السابق';
+
+  @override
+  String get productProfileAuditLogSubtitle =>
+      'أرشيف محاضر التفتيش وإغلاق البلاغات المنجزة';
+
+  @override
+  String get productProfileAuditLogDetail =>
+      'سجل القرارات الرقابية متاح للمراجعة من لوحة التقارير.';
+
+  @override
+  String get productProfileSupport => 'مركز المساندة والدعم الإداري والتقني';
+
+  @override
+  String get productProfileSupportSubtitle =>
+      'اتصال مباشر بمدير العمليات المركزية';
+
+  @override
+  String get productProfileSupportDetail =>
+      'للحصول على المساندة، تواصل مع مدير العمليات المركزية عبر قنوات الدعم المعتمدة.';
+
+  @override
+  String get productProfileEndSession => 'إنهاء الجلسة الإشرافية وتسجيل الخروج';
+
+  @override
+  String get productProfileFooter =>
+      'بوابة الرقابة الميدانية • تطبيق برواح المازوري للإدارة';
+
+  @override
+  String get productProfileBuild => 'Build 2.9.44 - Auth Token Valid';
 
   @override
   String get adsMerchantVerified => 'موثق';

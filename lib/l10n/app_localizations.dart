@@ -101,7 +101,7 @@ abstract class AppLocalizations {
   /// No description provided for @appName.
   ///
   /// In ar, this message translates to:
-  /// **'برواح المازوري'**
+  /// **'borwah_mng'**
   String get appName;
 
   /// No description provided for @cfoSessionTimestamp.
@@ -4909,6 +4909,2820 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'سجل تجاري: {number}'**
   String adsMerchantRegistrationNumber(Object number);
+
+  /// No description provided for @productSupervisorRoleBadge.
+  ///
+  /// In ar, this message translates to:
+  /// **'مشرف المنتجات الجديدة'**
+  String get productSupervisorRoleBadge;
+
+  /// No description provided for @productReviewTab.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيد المراجعة'**
+  String get productReviewTab;
+
+  /// No description provided for @productReportsTab.
+  ///
+  /// In ar, this message translates to:
+  /// **'التقارير'**
+  String get productReportsTab;
+
+  /// No description provided for @productSubscriptionsTab.
+  ///
+  /// In ar, this message translates to:
+  /// **'ترويج المنتجات'**
+  String get productSubscriptionsTab;
+
+  /// No description provided for @productAccountTab.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحساب'**
+  String get productAccountTab;
+
+  /// No description provided for @wasalnySupervisorRoleBadge.
+  ///
+  /// In ar, this message translates to:
+  /// **'مشرف وصلني'**
+  String get wasalnySupervisorRoleBadge;
+
+  /// No description provided for @wasalnyRequestsTab.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلبات وصلني'**
+  String get wasalnyRequestsTab;
+
+  /// No description provided for @wasalnyAccountFollowComplaint.
+  ///
+  /// In ar, this message translates to:
+  /// **'متابعة الشكوى'**
+  String get wasalnyAccountFollowComplaint;
+
+  /// No description provided for @wasalnyReportOverview.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملخص الأداء الميداني'**
+  String get wasalnyReportOverview;
+
+  /// No description provided for @wasalnyReportCompletionRate.
+  ///
+  /// In ar, this message translates to:
+  /// **'نسبة إتمام الصفقات'**
+  String get wasalnyReportCompletionRate;
+
+  /// No description provided for @wasalnyReportDealsDetail.
+  ///
+  /// In ar, this message translates to:
+  /// **'صفقة مكتملة خلال الفترة المحددة'**
+  String get wasalnyReportDealsDetail;
+
+  /// No description provided for @wasalnyReportCompletionDetail.
+  ///
+  /// In ar, this message translates to:
+  /// **'من الصفقات التي تمت متابعتها'**
+  String get wasalnyReportCompletionDetail;
+
+  /// No description provided for @wasalnyReportResponseTime.
+  ///
+  /// In ar, this message translates to:
+  /// **'متوسط سرعة الاستجابة'**
+  String get wasalnyReportResponseTime;
+
+  /// No description provided for @wasalnyReportResponseDetail.
+  ///
+  /// In ar, this message translates to:
+  /// **'أسرع من المعيار المعتمد'**
+  String get wasalnyReportResponseDetail;
+
+  /// No description provided for @wasalnyReportSatisfaction.
+  ///
+  /// In ar, this message translates to:
+  /// **'معدل رضا الأطراف'**
+  String get wasalnyReportSatisfaction;
+
+  /// No description provided for @wasalnyReportRatingDetail.
+  ///
+  /// In ar, this message translates to:
+  /// **'استناداً إلى التقييمات الميدانية'**
+  String get wasalnyReportRatingDetail;
+
+  /// No description provided for @wasalnyComplaintReference.
+  ///
+  /// In ar, this message translates to:
+  /// **'الشكوى #CMP-1042'**
+  String get wasalnyComplaintReference;
+
+  /// No description provided for @wasalnyComplaintOpenStatus.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيد المتابعة'**
+  String get wasalnyComplaintOpenStatus;
+
+  /// No description provided for @wasalnyComplaintSubject.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأخر استلام شحنة بعد إتمام البيع'**
+  String get wasalnyComplaintSubject;
+
+  /// No description provided for @wasalnyComplaintDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تسجيل الشكوى وإحالتها للمراجعة. يجري حالياً التنسيق مع أطراف الطلب للتحقق من حالة الشحنة.'**
+  String get wasalnyComplaintDescription;
+
+  /// No description provided for @wasalnyComplaintReceived.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم استلام الشكوى وتسجيلها'**
+  String get wasalnyComplaintReceived;
+
+  /// No description provided for @wasalnyComplaintUnderReview.
+  ///
+  /// In ar, this message translates to:
+  /// **'الشكوى قيد المراجعة من فريق وصلني'**
+  String get wasalnyComplaintUnderReview;
+
+  /// No description provided for @wasalnyComplaintWaitingAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار الإجراء وتحديث الأطراف'**
+  String get wasalnyComplaintWaitingAction;
+
+  /// No description provided for @wasalnyNotificationsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إشعارات وصلني'**
+  String get wasalnyNotificationsTitle;
+
+  /// No description provided for @wasalnyNotificationNewRequest.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب وصلني جديد'**
+  String get wasalnyNotificationNewRequest;
+
+  /// No description provided for @wasalnyNotificationNewRequestDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'يوجد طلب جديد بانتظار متابعة مرحلة التوصيل.'**
+  String get wasalnyNotificationNewRequestDescription;
+
+  /// No description provided for @wasalnyNotificationComplaint.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحديث على شكوى'**
+  String get wasalnyNotificationComplaint;
+
+  /// No description provided for @wasalnyNotificationComplaintDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تحديث حالة الشكوى CMP-1042 وهي قيد المتابعة.'**
+  String get wasalnyNotificationComplaintDescription;
+
+  /// No description provided for @wasalnyNotificationInspection.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتمل فحص شحنة'**
+  String get wasalnyNotificationInspection;
+
+  /// No description provided for @wasalnyNotificationInspectionDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تسجيل نتيجة فحص شحنة الطلب W-1038.'**
+  String get wasalnyNotificationInspectionDescription;
+
+  /// No description provided for @wasalnyPromotionTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلبات ترويج منتجات وصلني'**
+  String get wasalnyPromotionTitle;
+
+  /// No description provided for @wasalnyPromotionSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'راجع طلبات إبراز المنتجات المستعملة وتابع حالة كل طلب'**
+  String get wasalnyPromotionSubtitle;
+
+  /// No description provided for @wasalnyRequestsSafetyTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'بروتوكول أمان وساطة وصلني'**
+  String get wasalnyRequestsSafetyTitle;
+
+  /// No description provided for @wasalnyRequestsSafetyDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'مراجعة طلبات وصلني من خلال إظهار بيانات التواصل فقط بعد تأكيد موافقة الطرفين.'**
+  String get wasalnyRequestsSafetyDescription;
+
+  /// No description provided for @wasalnyRequestsCompletionRate.
+  ///
+  /// In ar, this message translates to:
+  /// **'نسبة الإتمام'**
+  String get wasalnyRequestsCompletionRate;
+
+  /// No description provided for @wasalnyRequestsActiveDeals.
+  ///
+  /// In ar, this message translates to:
+  /// **'صفقة نشطة'**
+  String get wasalnyRequestsActiveDeals;
+
+  /// No description provided for @wasalnyRequestsAll.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكل'**
+  String get wasalnyRequestsAll;
+
+  /// No description provided for @wasalnyRequestsCommunication.
+  ///
+  /// In ar, this message translates to:
+  /// **'جاري التواصل'**
+  String get wasalnyRequestsCommunication;
+
+  /// No description provided for @wasalnyRequestsSold.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم البيع'**
+  String get wasalnyRequestsSold;
+
+  /// No description provided for @wasalnyRequestsDelivery.
+  ///
+  /// In ar, this message translates to:
+  /// **'توصيل'**
+  String get wasalnyRequestsDelivery;
+
+  /// No description provided for @wasalnyRequestsInspection.
+  ///
+  /// In ar, this message translates to:
+  /// **'الفحص الميداني'**
+  String get wasalnyRequestsInspection;
+
+  /// No description provided for @wasalnyRequestsEmpty.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد طلبات في هذه المرحلة.'**
+  String get wasalnyRequestsEmpty;
+
+  /// No description provided for @wasalnyRequestsEstimatedValue.
+  ///
+  /// In ar, this message translates to:
+  /// **'القيمة المقدرة'**
+  String get wasalnyRequestsEstimatedValue;
+
+  /// No description provided for @wasalnyRequestsSeller.
+  ///
+  /// In ar, this message translates to:
+  /// **'البائع'**
+  String get wasalnyRequestsSeller;
+
+  /// No description provided for @wasalnyRequestsBuyer.
+  ///
+  /// In ar, this message translates to:
+  /// **'المشتري'**
+  String get wasalnyRequestsBuyer;
+
+  /// No description provided for @wasalnyRequestsOrderNumber.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم الطلب'**
+  String get wasalnyRequestsOrderNumber;
+
+  /// No description provided for @wasalnyRequestsCurrentStatus.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحالة الحالية'**
+  String get wasalnyRequestsCurrentStatus;
+
+  /// No description provided for @wasalnyRequestsLocation.
+  ///
+  /// In ar, this message translates to:
+  /// **'الموقع'**
+  String get wasalnyRequestsLocation;
+
+  /// No description provided for @wasalnyRequestsRevealTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إظهار بيانات التواصل'**
+  String get wasalnyRequestsRevealTitle;
+
+  /// No description provided for @wasalnyRequestsRevealConfirmation.
+  ///
+  /// In ar, this message translates to:
+  /// **'هل تريد إظهار بيانات التواصل للطرفين في هذا الطلب؟'**
+  String get wasalnyRequestsRevealConfirmation;
+
+  /// No description provided for @wasalnyRequestsRevealAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'إظهار البيانات للمشتري'**
+  String get wasalnyRequestsRevealAction;
+
+  /// No description provided for @wasalnyRequestsHideData.
+  ///
+  /// In ar, this message translates to:
+  /// **'إخفاء البيانات'**
+  String get wasalnyRequestsHideData;
+
+  /// No description provided for @wasalnyRequestsPreviewAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'معاينة الطلب'**
+  String get wasalnyRequestsPreviewAction;
+
+  /// No description provided for @wasalnyRequestsPreviewTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تفاصيل الطلب'**
+  String get wasalnyRequestsPreviewTitle;
+
+  /// No description provided for @wasalnyAdsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعلانات المنتجات المستعملة'**
+  String get wasalnyAdsTitle;
+
+  /// No description provided for @wasalnyAdsSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'وحدة الرقابة والمطابقة الفنية'**
+  String get wasalnyAdsSubtitle;
+
+  /// No description provided for @wasalnyAdsPendingToday.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار المراجعة'**
+  String get wasalnyAdsPendingToday;
+
+  /// No description provided for @wasalnyAdsApprovedToday.
+  ///
+  /// In ar, this message translates to:
+  /// **'المعتمد اليوم'**
+  String get wasalnyAdsApprovedToday;
+
+  /// No description provided for @wasalnyAdsFilterAll.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكل'**
+  String get wasalnyAdsFilterAll;
+
+  /// No description provided for @wasalnyAdsFilterPending.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار المراجعة'**
+  String get wasalnyAdsFilterPending;
+
+  /// No description provided for @wasalnyAdsFilterEdit.
+  ///
+  /// In ar, this message translates to:
+  /// **'فحص وتعديل'**
+  String get wasalnyAdsFilterEdit;
+
+  /// No description provided for @wasalnyAdsFilterApproved.
+  ///
+  /// In ar, this message translates to:
+  /// **'المعتمدة'**
+  String get wasalnyAdsFilterApproved;
+
+  /// No description provided for @wasalnyAdsEmpty.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد إعلانات ضمن هذا التصنيف.'**
+  String get wasalnyAdsEmpty;
+
+  /// No description provided for @wasalnyAdsAuditNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تدقيق وتأمين جميع الإجراءات الرقابية بتسجيل التدقيق الإداري.'**
+  String get wasalnyAdsAuditNote;
+
+  /// No description provided for @wasalnyAdsLoadError.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر تحميل إعلانات وصلني.'**
+  String get wasalnyAdsLoadError;
+
+  /// No description provided for @wasalnyAdsUpdateError.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر تحديث حالة الإعلان.'**
+  String get wasalnyAdsUpdateError;
+
+  /// No description provided for @wasalnyAdsPendingStatus.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار المراجعة'**
+  String get wasalnyAdsPendingStatus;
+
+  /// No description provided for @wasalnyAdsApprovedStatus.
+  ///
+  /// In ar, this message translates to:
+  /// **'منشور - مسار وصلني نشط'**
+  String get wasalnyAdsApprovedStatus;
+
+  /// No description provided for @wasalnyAdsHiddenStatus.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإعلان مخفي'**
+  String get wasalnyAdsHiddenStatus;
+
+  /// No description provided for @wasalnyAdsRejectedStatus.
+  ///
+  /// In ar, this message translates to:
+  /// **'مرفوض - بانتظار تعديل البائع'**
+  String get wasalnyAdsRejectedStatus;
+
+  /// No description provided for @wasalnyAdsAwaitingApprovalStatus.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار الموافقة'**
+  String get wasalnyAdsAwaitingApprovalStatus;
+
+  /// No description provided for @wasalnyAdsSuspendedStatus.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإعلان معلّق'**
+  String get wasalnyAdsSuspendedStatus;
+
+  /// No description provided for @wasalnyAdsEditRequestedStatus.
+  ///
+  /// In ar, this message translates to:
+  /// **'مطلوب تعديل الإعلان'**
+  String get wasalnyAdsEditRequestedStatus;
+
+  /// No description provided for @wasalnyAdsAcceptAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'قبول'**
+  String get wasalnyAdsAcceptAction;
+
+  /// No description provided for @wasalnyAdsHideAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'إخفاء'**
+  String get wasalnyAdsHideAction;
+
+  /// No description provided for @wasalnyAdsSuspendAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعليق الإعلان'**
+  String get wasalnyAdsSuspendAction;
+
+  /// No description provided for @wasalnyAdsRejectAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'رفض بسبب'**
+  String get wasalnyAdsRejectAction;
+
+  /// No description provided for @wasalnyAdsHideTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إخفاء الإعلان'**
+  String get wasalnyAdsHideTitle;
+
+  /// No description provided for @wasalnyAdsSuspendTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعليق الإعلان'**
+  String get wasalnyAdsSuspendTitle;
+
+  /// No description provided for @wasalnyAdsEditRequestTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب تعديل الإعلان'**
+  String get wasalnyAdsEditRequestTitle;
+
+  /// No description provided for @wasalnyAdsRejectTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'رفض الإعلان'**
+  String get wasalnyAdsRejectTitle;
+
+  /// No description provided for @wasalnyAdsHideReason.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل سبب إخفاء الإعلان'**
+  String get wasalnyAdsHideReason;
+
+  /// No description provided for @wasalnyAdsSuspendReason.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل سبب تعليق الإعلان'**
+  String get wasalnyAdsSuspendReason;
+
+  /// No description provided for @wasalnyAdsEditRequestReason.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل التعديلات المطلوبة من الناشر'**
+  String get wasalnyAdsEditRequestReason;
+
+  /// No description provided for @wasalnyAdsRejectReason.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل سبب رفض الإعلان'**
+  String get wasalnyAdsRejectReason;
+
+  /// No description provided for @wasalnyAdsReasonRequired.
+  ///
+  /// In ar, this message translates to:
+  /// **'السبب مطلوب لإكمال العملية.'**
+  String get wasalnyAdsReasonRequired;
+
+  /// No description provided for @wasalnyAdsApproved.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم قبول الإعلان ونشره.'**
+  String get wasalnyAdsApproved;
+
+  /// No description provided for @wasalnyAdsHidden.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إخفاء الإعلان.'**
+  String get wasalnyAdsHidden;
+
+  /// No description provided for @wasalnyAdsRejected.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم رفض الإعلان.'**
+  String get wasalnyAdsRejected;
+
+  /// No description provided for @wasalnyAdsSuspended.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تعليق الإعلان.'**
+  String get wasalnyAdsSuspended;
+
+  /// No description provided for @wasalnyAdsEditRequested.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إرسال طلب التعديل إلى الناشر.'**
+  String get wasalnyAdsEditRequested;
+
+  /// No description provided for @wasalnyAdDetailsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعديل وفحص بيانات الإعلان المستعمل'**
+  String get wasalnyAdDetailsTitle;
+
+  /// No description provided for @wasalnyAdDetailsPermission.
+  ///
+  /// In ar, this message translates to:
+  /// **'صلاحية إشرافية مقيدة: تعديل البيانات الفنية فقط'**
+  String get wasalnyAdDetailsPermission;
+
+  /// No description provided for @wasalnyAdDetailsReadOnly.
+  ///
+  /// In ar, this message translates to:
+  /// **'بيانات المعلن ثابتة (للاطلاع فقط)'**
+  String get wasalnyAdDetailsReadOnly;
+
+  /// No description provided for @wasalnyAdDetailsSellerVerified.
+  ///
+  /// In ar, this message translates to:
+  /// **'موثق النفاذ'**
+  String get wasalnyAdDetailsSellerVerified;
+
+  /// No description provided for @wasalnyAdDetailsSubmitted.
+  ///
+  /// In ar, this message translates to:
+  /// **'تاريخ الإدراج'**
+  String get wasalnyAdDetailsSubmitted;
+
+  /// No description provided for @wasalnyAdDetailsPriceMatch.
+  ///
+  /// In ar, this message translates to:
+  /// **'القيمة الحالية عادلة جداً ومطابقة لنطاق السعر.'**
+  String get wasalnyAdDetailsPriceMatch;
+
+  /// No description provided for @wasalnyCategoryCamera.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلكترونيات وتصوير ‹ كاميرات احترافية'**
+  String get wasalnyCategoryCamera;
+
+  /// No description provided for @wasalnyCategoryConsole.
+  ///
+  /// In ar, this message translates to:
+  /// **'ألعاب إلكترونية ‹ منصات ألعاب'**
+  String get wasalnyCategoryConsole;
+
+  /// No description provided for @wasalnyCategoryLaptop.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلكترونيات ‹ أجهزة كمبيوتر محمولة'**
+  String get wasalnyCategoryLaptop;
+
+  /// No description provided for @wasalnyCategoryBicycle.
+  ///
+  /// In ar, this message translates to:
+  /// **'رياضة وترفيه ‹ دراجات'**
+  String get wasalnyCategoryBicycle;
+
+  /// No description provided for @wasalnyAdDetailsImageGallery.
+  ///
+  /// In ar, this message translates to:
+  /// **'معرض صور المنتج المفحوص'**
+  String get wasalnyAdDetailsImageGallery;
+
+  /// No description provided for @wasalnyAdDetailsPhotosCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count} من {total} مقبولة'**
+  String wasalnyAdDetailsPhotosCount(Object count, Object total);
+
+  /// No description provided for @wasalnyAdDetailsFront.
+  ///
+  /// In ar, this message translates to:
+  /// **'هيكل الكاميرا الأمامي'**
+  String get wasalnyAdDetailsFront;
+
+  /// No description provided for @wasalnyAdDetailsControls.
+  ///
+  /// In ar, this message translates to:
+  /// **'الشاشة وأزرار التحكم'**
+  String get wasalnyAdDetailsControls;
+
+  /// No description provided for @wasalnyAdDetailsLens.
+  ///
+  /// In ar, this message translates to:
+  /// **'قاعدة العدسة والمستشعر'**
+  String get wasalnyAdDetailsLens;
+
+  /// No description provided for @wasalnyAdDetailsAddPhoto.
+  ///
+  /// In ar, this message translates to:
+  /// **'إضافة صورة توثيق'**
+  String get wasalnyAdDetailsAddPhoto;
+
+  /// No description provided for @wasalnyAdDetailsCategory.
+  ///
+  /// In ar, this message translates to:
+  /// **'التصنيف والقسم المعتمد'**
+  String get wasalnyAdDetailsCategory;
+
+  /// No description provided for @wasalnyAdDetailsCategoryMatch.
+  ///
+  /// In ar, this message translates to:
+  /// **'تمت مطابقة القسم آلياً وفق نوع المنتج المستعمل والفئة السعرية.'**
+  String get wasalnyAdDetailsCategoryMatch;
+
+  /// No description provided for @wasalnyAdDetailsPrice.
+  ///
+  /// In ar, this message translates to:
+  /// **'السعر المعتمد للنشر'**
+  String get wasalnyAdDetailsPrice;
+
+  /// No description provided for @wasalnyAdDetailsPriceRange.
+  ///
+  /// In ar, this message translates to:
+  /// **'نطاق السعر العادل'**
+  String get wasalnyAdDetailsPriceRange;
+
+  /// No description provided for @wasalnyAdDetailsDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'الوصف المعتمد وتدقيق المحتوى'**
+  String get wasalnyAdDetailsDescription;
+
+  /// No description provided for @wasalnyAdDetailsAutoCheck.
+  ///
+  /// In ar, this message translates to:
+  /// **'فحص تلقائي: نظيف وخالٍ من الكلمات المحظورة'**
+  String get wasalnyAdDetailsAutoCheck;
+
+  /// No description provided for @wasalnyAdDetailsCharacters.
+  ///
+  /// In ar, this message translates to:
+  /// **'حرف'**
+  String get wasalnyAdDetailsCharacters;
+
+  /// No description provided for @wasalnyAdDetailsApprove.
+  ///
+  /// In ar, this message translates to:
+  /// **'اعتماد الإعلان للنشر'**
+  String get wasalnyAdDetailsApprove;
+
+  /// No description provided for @wasalnyAdDetailsRequestEdit.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب تعديل من الناشر'**
+  String get wasalnyAdDetailsRequestEdit;
+
+  /// No description provided for @wasalnyAdDetailsSuspend.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعليق الإعلان'**
+  String get wasalnyAdDetailsSuspend;
+
+  /// No description provided for @wasalnyAdDetailsReject.
+  ///
+  /// In ar, this message translates to:
+  /// **'رفض الإعلان ومخالفة المعايير'**
+  String get wasalnyAdDetailsReject;
+
+  /// No description provided for @wasalnyChatWithSeller.
+  ///
+  /// In ar, this message translates to:
+  /// **'دردشة مع المعلن'**
+  String get wasalnyChatWithSeller;
+
+  /// No description provided for @wasalnyCallSeller.
+  ///
+  /// In ar, this message translates to:
+  /// **'الاتصال بالمعلن'**
+  String get wasalnyCallSeller;
+
+  /// No description provided for @wasalnyChatOrCallSeller.
+  ///
+  /// In ar, this message translates to:
+  /// **'دردشة مع المعلن أو الاتصال به'**
+  String get wasalnyChatOrCallSeller;
+
+  /// No description provided for @wasalnyContactSellerTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'التواصل مع الشخص المعلن'**
+  String get wasalnyContactSellerTitle;
+
+  /// No description provided for @wasalnyContactSellerSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تواصل مباشرة مع المعلن لمناقشة تفاصيل الإعلان أو طلب توضيحات فنية'**
+  String get wasalnyContactSellerSubtitle;
+
+  /// No description provided for @wasalnyCallNow.
+  ///
+  /// In ar, this message translates to:
+  /// **'اتصال الآن'**
+  String get wasalnyCallNow;
+
+  /// No description provided for @wasalnyCallingSeller.
+  ///
+  /// In ar, this message translates to:
+  /// **'جاري الاتصال بالمعلن: {phone}'**
+  String wasalnyCallingSeller(Object phone);
+
+  /// No description provided for @wasalnyCopyPhone.
+  ///
+  /// In ar, this message translates to:
+  /// **'نسخ رقم الهاتف'**
+  String get wasalnyCopyPhone;
+
+  /// No description provided for @wasalnyPhoneCopied.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم نسخ رقم المعلن إلى الحافظة'**
+  String get wasalnyPhoneCopied;
+
+  /// No description provided for @wasalnySellerPhoneLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم هاتف المعلن'**
+  String get wasalnySellerPhoneLabel;
+
+  /// No description provided for @wasalnyAdsUpdated.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تحديث الإعلان.'**
+  String get wasalnyAdsUpdated;
+
+  /// No description provided for @wasalnyAdsReason.
+  ///
+  /// In ar, this message translates to:
+  /// **'سبب الإجراء'**
+  String get wasalnyAdsReason;
+
+  /// No description provided for @productComingSoon.
+  ///
+  /// In ar, this message translates to:
+  /// **'قسم {section} قيد التجهيز'**
+  String productComingSoon(Object section);
+
+  /// No description provided for @productSupervisorWelcome.
+  ///
+  /// In ar, this message translates to:
+  /// **'مرحباً، المشرف محمد'**
+  String get productSupervisorWelcome;
+
+  /// No description provided for @productReviewSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'مشرف مراجعة المنتجات الجديدة'**
+  String get productReviewSubtitle;
+
+  /// No description provided for @productPendingAdsCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار المراجعة'**
+  String get productPendingAdsCount;
+
+  /// No description provided for @productApprovedAdsCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعلان معتمد'**
+  String get productApprovedAdsCount;
+
+  /// No description provided for @productSearchHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابحث برقم الإعلان أو عنوان المنتج...'**
+  String get productSearchHint;
+
+  /// No description provided for @productCategoryAll.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكل'**
+  String get productCategoryAll;
+
+  /// No description provided for @productCategoryHome.
+  ///
+  /// In ar, this message translates to:
+  /// **'أجهزة منزلية'**
+  String get productCategoryHome;
+
+  /// No description provided for @productCategoryElectronics.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلكترونيات'**
+  String get productCategoryElectronics;
+
+  /// No description provided for @productCategoryWatches.
+  ///
+  /// In ar, this message translates to:
+  /// **'عطور وساعات'**
+  String get productCategoryWatches;
+
+  /// No description provided for @productReviewListTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'المنتجات الجديدة قيد المراجعة'**
+  String get productReviewListTitle;
+
+  /// No description provided for @productReceivedMinutesAgo.
+  ///
+  /// In ar, this message translates to:
+  /// **'منذ {count} دقيقة'**
+  String productReceivedMinutesAgo(int count);
+
+  /// No description provided for @productConditionNew.
+  ///
+  /// In ar, this message translates to:
+  /// **'جديد بالكرتون'**
+  String get productConditionNew;
+
+  /// No description provided for @productConditionUsed.
+  ///
+  /// In ar, this message translates to:
+  /// **'غير مستخدم'**
+  String get productConditionUsed;
+
+  /// No description provided for @productAcceptAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'قبول'**
+  String get productAcceptAction;
+
+  /// No description provided for @productHideAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'إخفاء'**
+  String get productHideAction;
+
+  /// No description provided for @productRejectAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'رفض'**
+  String get productRejectAction;
+
+  /// No description provided for @productSuspendAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعليق'**
+  String get productSuspendAction;
+
+  /// No description provided for @productSuspendConfirmTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد تعليق الإعلان'**
+  String get productSuspendConfirmTitle;
+
+  /// No description provided for @productSuspendConfirmMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'هل تريد تعليق «{title}» وإيقاف ظهوره مؤقتًا؟'**
+  String productSuspendConfirmMessage(String title);
+
+  /// No description provided for @productStatusSuspended.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم التعليق'**
+  String get productStatusSuspended;
+
+  /// No description provided for @productFeaturedBadge.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعلان مميز'**
+  String get productFeaturedBadge;
+
+  /// No description provided for @productSuspendSheetTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعديل الإجراء الرقابي'**
+  String get productSuspendSheetTitle;
+
+  /// No description provided for @productSuspendSheetSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعلان #{reference} • {title}'**
+  String productSuspendSheetSubtitle(String reference, String title);
+
+  /// No description provided for @productSuspendChooseAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحديد الحالة الرقابية الجديدة'**
+  String get productSuspendChooseAction;
+
+  /// No description provided for @productSuspendRepublish.
+  ///
+  /// In ar, this message translates to:
+  /// **'إظهار وإعادة النشر (مفعل)'**
+  String get productSuspendRepublish;
+
+  /// No description provided for @productSuspendRepublishHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'تفعيل الظهور المباشر في سوق المنتجات الجديدة'**
+  String get productSuspendRepublishHint;
+
+  /// No description provided for @productSuspendHideTemporarily.
+  ///
+  /// In ar, this message translates to:
+  /// **'إخفاء مؤقت (تعليق الإعلان)'**
+  String get productSuspendHideTemporarily;
+
+  /// No description provided for @productSuspendHideTemporarilyHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'حجب مؤقت بانتظار استيفاء الشروط الرقابية'**
+  String get productSuspendHideTemporarilyHint;
+
+  /// No description provided for @productSuspendRejectFinal.
+  ///
+  /// In ar, this message translates to:
+  /// **'رفض نهائي'**
+  String get productSuspendRejectFinal;
+
+  /// No description provided for @productSuspendRejectFinalHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'مخالفة المعايير الجديدة وإغلاق التذكرة فورًا'**
+  String get productSuspendRejectFinalHint;
+
+  /// No description provided for @productSuspendSelected.
+  ///
+  /// In ar, this message translates to:
+  /// **'محدد'**
+  String get productSuspendSelected;
+
+  /// No description provided for @productSuspendCurrent.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحالي'**
+  String get productSuspendCurrent;
+
+  /// No description provided for @productSuspendReasonTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'سبب تغيير الحالة وملاحظات المعتمد'**
+  String get productSuspendReasonTitle;
+
+  /// No description provided for @productSuspendReasonHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب سبب الإجراء الرقابي...'**
+  String get productSuspendReasonHint;
+
+  /// No description provided for @productSuspendDefaultReason.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم استيفاء صور التغليف والتحقق بنجاح وإعادة تفعيل الإعلان'**
+  String get productSuspendDefaultReason;
+
+  /// No description provided for @productSuspendReasonNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيظهر هذا التوضيح في سجل التدقيق'**
+  String get productSuspendReasonNote;
+
+  /// No description provided for @productSuspendNotifyTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال إشعار فوري للناشر'**
+  String get productSuspendNotifyTitle;
+
+  /// No description provided for @productSuspendNotifyHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'تنبيه فوري عن التغيير والسبب المحدد للحالة'**
+  String get productSuspendNotifyHint;
+
+  /// No description provided for @productSuspendSaveAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'حفظ وتحديث الحالة'**
+  String get productSuspendSaveAction;
+
+  /// No description provided for @productReviewImagesHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اضغط لمراجعة صور السلعة وفاتورة الشراء'**
+  String get productReviewImagesHint;
+
+  /// No description provided for @productAcceptConfirmTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد قبول المنتج'**
+  String get productAcceptConfirmTitle;
+
+  /// No description provided for @productAcceptConfirmMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'هل تريد قبول «{title}» واعتماده للنشر؟'**
+  String productAcceptConfirmMessage(Object title);
+
+  /// No description provided for @productHideConfirmTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد إخفاء المنتج'**
+  String get productHideConfirmTitle;
+
+  /// No description provided for @productHideConfirmMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'هل تريد إخفاء «{title}» من قائمة المنتجات المعروضة؟'**
+  String productHideConfirmMessage(Object title);
+
+  /// No description provided for @productRejectConfirmTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد رفض المنتج'**
+  String get productRejectConfirmTitle;
+
+  /// No description provided for @productRejectReasonHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل سبب رفض المنتج'**
+  String get productRejectReasonHint;
+
+  /// No description provided for @productRejectReasonRequired.
+  ///
+  /// In ar, this message translates to:
+  /// **'سبب الرفض مطلوب لإكمال العملية'**
+  String get productRejectReasonRequired;
+
+  /// No description provided for @productHideReasonHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل سبب إخفاء المنتج'**
+  String get productHideReasonHint;
+
+  /// No description provided for @productHideReasonRequired.
+  ///
+  /// In ar, this message translates to:
+  /// **'سبب الإخفاء مطلوب لإكمال العملية'**
+  String get productHideReasonRequired;
+
+  /// No description provided for @productConfirmAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد العملية'**
+  String get productConfirmAction;
+
+  /// No description provided for @productCancelAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء'**
+  String get productCancelAction;
+
+  /// No description provided for @productStatusApproved.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم القبول'**
+  String get productStatusApproved;
+
+  /// No description provided for @productStatusHidden.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم الإخفاء'**
+  String get productStatusHidden;
+
+  /// No description provided for @productStatusRejected.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم الرفض'**
+  String get productStatusRejected;
+
+  /// No description provided for @productEmptyResults.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد منتجات مطابقة'**
+  String get productEmptyResults;
+
+  /// No description provided for @productReviewActionSuccess.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تحديث حالة المنتج'**
+  String get productReviewActionSuccess;
+
+  /// No description provided for @productReviewLoadError.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر تحميل المنتجات قيد المراجعة. حاول مرة أخرى.'**
+  String get productReviewLoadError;
+
+  /// No description provided for @productReviewUpdateError.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر حفظ قرار المنتج. حدّث الصفحة وحاول مرة أخرى.'**
+  String get productReviewUpdateError;
+
+  /// No description provided for @productDetailsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'مراجعة المنتج'**
+  String get productDetailsTitle;
+
+  /// No description provided for @productDetailsAppBarTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض الإعلان'**
+  String get productDetailsAppBarTitle;
+
+  /// No description provided for @productDetailsInvoice.
+  ///
+  /// In ar, this message translates to:
+  /// **'فاتورة الشراء'**
+  String get productDetailsInvoice;
+
+  /// No description provided for @productDetailsPhotos.
+  ///
+  /// In ar, this message translates to:
+  /// **'صور المنتج'**
+  String get productDetailsPhotos;
+
+  /// No description provided for @productDetailsMerchant.
+  ///
+  /// In ar, this message translates to:
+  /// **'التاجر'**
+  String get productDetailsMerchant;
+
+  /// No description provided for @productDetailsPrice.
+  ///
+  /// In ar, this message translates to:
+  /// **'السعر'**
+  String get productDetailsPrice;
+
+  /// No description provided for @productDetailsCategory.
+  ///
+  /// In ar, this message translates to:
+  /// **'التصنيف'**
+  String get productDetailsCategory;
+
+  /// No description provided for @productDetailsCondition.
+  ///
+  /// In ar, this message translates to:
+  /// **'حالة المنتج'**
+  String get productDetailsCondition;
+
+  /// No description provided for @productReviewSessionInProgress.
+  ///
+  /// In ar, this message translates to:
+  /// **'جلسة فحص ومراجعة نشطة'**
+  String get productReviewSessionInProgress;
+
+  /// No description provided for @productSellerLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'المعلن:'**
+  String get productSellerLabel;
+
+  /// No description provided for @productSellerVerified.
+  ///
+  /// In ar, this message translates to:
+  /// **'موثق'**
+  String get productSellerVerified;
+
+  /// No description provided for @productViewFullAd.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض تفاصيل الإعلان الكاملة'**
+  String get productViewFullAd;
+
+  /// No description provided for @productViewFullAdHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'شاشة لمراجعة وتعديل تفاصيل الإعلان والوصف'**
+  String get productViewFullAdHint;
+
+  /// No description provided for @productInvoiceAttached.
+  ///
+  /// In ar, this message translates to:
+  /// **'فاتورة الشراء مرفقة'**
+  String get productInvoiceAttached;
+
+  /// No description provided for @productImageQualityChecked.
+  ///
+  /// In ar, this message translates to:
+  /// **'جودة الصور مفحوصة'**
+  String get productImageQualityChecked;
+
+  /// No description provided for @productAuditChecklistTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'قائمة التدقيق الإلزامي للمنتجات الجديدة:'**
+  String get productAuditChecklistTitle;
+
+  /// No description provided for @productAuditPackagingTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'شريط الأمان والغلاف البلاستيكي سليم تماماً'**
+  String get productAuditPackagingTitle;
+
+  /// No description provided for @productAuditPackagingHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم فحص التغليف ولم يظهر أي تمزق أو إعادة إغلاق حراري.'**
+  String get productAuditPackagingHint;
+
+  /// No description provided for @productAuditSerialTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الرقم التسلسلي مطابق للمواصفات المحلية'**
+  String get productAuditSerialTitle;
+
+  /// No description provided for @productAuditSerialHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'الباركود المسجل متطابق مع قاعدة بيانات الهيئة الرسمية.'**
+  String get productAuditSerialHint;
+
+  /// No description provided for @productAuditDescriptionTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يوجد وصف يلمح لأي استخدام مسبق أو تجريبي'**
+  String get productAuditDescriptionTitle;
+
+  /// No description provided for @productAuditDescriptionHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'خلو نصوص الإعلان من عبارات مثل «مفتوح للتجربة» أو «شبه جديد».'**
+  String get productAuditDescriptionHint;
+
+  /// No description provided for @productInstantPublishingTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'نشر تلقائي فوري'**
+  String get productInstantPublishingTitle;
+
+  /// No description provided for @productInstantPublishingHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اعتماد هذا الفحص سيقوم بنشر الإعلان مباشرة في السوق المفتوح. وإرسال إشعار رسمي للمعلن بانتهاء التدقيق.'**
+  String get productInstantPublishingHint;
+
+  /// No description provided for @productApproveAndPublishNow.
+  ///
+  /// In ar, this message translates to:
+  /// **'اعتماد ونشر فوراً'**
+  String get productApproveAndPublishNow;
+
+  /// No description provided for @productBackToReview.
+  ///
+  /// In ar, this message translates to:
+  /// **'إغلاق / رجوع'**
+  String get productBackToReview;
+
+  /// No description provided for @productFullDetailsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض تفاصيل الإعلان'**
+  String get productFullDetailsTitle;
+
+  /// No description provided for @productPhotoDocumentationTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'معاينة صور التوثيق والتغليف'**
+  String get productPhotoDocumentationTitle;
+
+  /// No description provided for @productPhotoCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'صور مرفوعة'**
+  String get productPhotoCount;
+
+  /// No description provided for @productPhotoAdOriginal.
+  ///
+  /// In ar, this message translates to:
+  /// **'منتج جديد - مغلق أصلي'**
+  String get productPhotoAdOriginal;
+
+  /// No description provided for @productPhotoQualityCheck.
+  ///
+  /// In ar, this message translates to:
+  /// **'فحص الملصق'**
+  String get productPhotoQualityCheck;
+
+  /// No description provided for @productSellerInquiryTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'استفسار للمعلن'**
+  String get productSellerInquiryTitle;
+
+  /// No description provided for @productSellerInquiryHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب توضيح أو إشعار المعلن بتعديل فوري'**
+  String get productSellerInquiryHint;
+
+  /// No description provided for @productSendInquiry.
+  ///
+  /// In ar, this message translates to:
+  /// **'مراسلة'**
+  String get productSendInquiry;
+
+  /// No description provided for @productInquiryMessageHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب استفسارك للمعلن...'**
+  String get productInquiryMessageHint;
+
+  /// No description provided for @productApprovedCategory.
+  ///
+  /// In ar, this message translates to:
+  /// **'التصنيف المعتمد'**
+  String get productApprovedCategory;
+
+  /// No description provided for @productDescriptionAndCondition.
+  ///
+  /// In ar, this message translates to:
+  /// **'وصف المنتج وحالته'**
+  String get productDescriptionAndCondition;
+
+  /// No description provided for @productWarrantyLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'إضافة صيغة الضمان'**
+  String get productWarrantyLabel;
+
+  /// No description provided for @productDescriptionHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب وصف المنتج وتفاصيل حالته...'**
+  String get productDescriptionHint;
+
+  /// No description provided for @productDescriptionCharacterCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count} حرف'**
+  String productDescriptionCharacterCount(int count);
+
+  /// No description provided for @productDescriptionSafetyCheck.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم التحقق من خلو النص من الألفاظ المضللة'**
+  String get productDescriptionSafetyCheck;
+
+  /// No description provided for @productAdHistoryTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجل حالة الإعلان'**
+  String get productAdHistoryTitle;
+
+  /// No description provided for @productHistoryOpenStatus.
+  ///
+  /// In ar, this message translates to:
+  /// **'مفتوح'**
+  String get productHistoryOpenStatus;
+
+  /// No description provided for @productHistoryCreated.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إنشاء الإعلان بواسطة المستخدم'**
+  String get productHistoryCreated;
+
+  /// No description provided for @productHistoryDocumentsAttached.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرفاق صور التغليف والباركود'**
+  String get productHistoryDocumentsAttached;
+
+  /// No description provided for @productHistoryAssigned.
+  ///
+  /// In ar, this message translates to:
+  /// **'إسناد الإعلان للمشرف الميداني'**
+  String get productHistoryAssigned;
+
+  /// No description provided for @productHistoryCurrent.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحالة الحالية: قيد فحص المواصفات والاستيفاءات'**
+  String get productHistoryCurrent;
+
+  /// No description provided for @productEditPermissionHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'صلاحية التعديل الرقابي مقتصرة على التصنيف والسعر والوصف فقط. لا يمكن تغيير بيانات الناشر.'**
+  String get productEditPermissionHint;
+
+  /// No description provided for @productFinalDecisionLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'قرار المشرف الإداري النهائي'**
+  String get productFinalDecisionLabel;
+
+  /// No description provided for @productRequiredFieldsError.
+  ///
+  /// In ar, this message translates to:
+  /// **'يرجى استكمال السعر والوصف قبل المتابعة.'**
+  String get productRequiredFieldsError;
+
+  /// No description provided for @productInvalidPriceError.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل سعرًا صحيحًا بالأرقام.'**
+  String get productInvalidPriceError;
+
+  /// No description provided for @productWorkspaceComingSoon.
+  ///
+  /// In ar, this message translates to:
+  /// **'هذه الصفحة قيد التجهيز'**
+  String get productWorkspaceComingSoon;
+
+  /// No description provided for @productPromotionTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إدارة ترويج المنتجات المميزة'**
+  String get productPromotionTitle;
+
+  /// No description provided for @productPromotionSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'راجع طلبات إبراز المنتجات وتابع العروض النشطة'**
+  String get productPromotionSubtitle;
+
+  /// No description provided for @productPromotionPending.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار القرار'**
+  String get productPromotionPending;
+
+  /// No description provided for @productPromotionActive.
+  ///
+  /// In ar, this message translates to:
+  /// **'نشط'**
+  String get productPromotionActive;
+
+  /// No description provided for @productPromotionTotal.
+  ///
+  /// In ar, this message translates to:
+  /// **'إجمالي الطلبات'**
+  String get productPromotionTotal;
+
+  /// No description provided for @productPromotionRequests.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلبات الترويج'**
+  String get productPromotionRequests;
+
+  /// No description provided for @productPromotionFilterAll.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكل'**
+  String get productPromotionFilterAll;
+
+  /// No description provided for @productPromotionCompleted.
+  ///
+  /// In ar, this message translates to:
+  /// **'مكتمل'**
+  String get productPromotionCompleted;
+
+  /// No description provided for @productPromotionEmpty.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد طلبات ضمن هذا التصنيف.'**
+  String get productPromotionEmpty;
+
+  /// No description provided for @productPromotionPlanInfo.
+  ///
+  /// In ar, this message translates to:
+  /// **'راجع أهلية الإعلان وحالة الدفع قبل تفعيل باقة الترويج. مدة الباقة تبدأ بعد الاعتماد.'**
+  String get productPromotionPlanInfo;
+
+  /// No description provided for @productPromotionFeaturedPlan.
+  ///
+  /// In ar, this message translates to:
+  /// **'ظهور مميز'**
+  String get productPromotionFeaturedPlan;
+
+  /// No description provided for @productPromotionPremiumPlan.
+  ///
+  /// In ar, this message translates to:
+  /// **'ظهور مميز بلس'**
+  String get productPromotionPremiumPlan;
+
+  /// No description provided for @productPromotionDays.
+  ///
+  /// In ar, this message translates to:
+  /// **'يوم'**
+  String get productPromotionDays;
+
+  /// No description provided for @productPromotionRequestedAt.
+  ///
+  /// In ar, this message translates to:
+  /// **'تاريخ الطلب:'**
+  String get productPromotionRequestedAt;
+
+  /// No description provided for @productPromotionDecisionNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملاحظة القرار'**
+  String get productPromotionDecisionNote;
+
+  /// No description provided for @productPromotionApprove.
+  ///
+  /// In ar, this message translates to:
+  /// **'اعتماد الترويج'**
+  String get productPromotionApprove;
+
+  /// No description provided for @productPromotionReject.
+  ///
+  /// In ar, this message translates to:
+  /// **'رفض الطلب'**
+  String get productPromotionReject;
+
+  /// No description provided for @productPromotionApproveTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد اعتماد الترويج'**
+  String get productPromotionApproveTitle;
+
+  /// No description provided for @productPromotionApproveMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'هل تريد اعتماد طلب ترويج «{title}»؟'**
+  String productPromotionApproveMessage(Object title);
+
+  /// No description provided for @productPromotionConfirmApprove.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد الاعتماد'**
+  String get productPromotionConfirmApprove;
+
+  /// No description provided for @productPromotionPaymentStatusTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'حالة الدفع'**
+  String get productPromotionPaymentStatusTitle;
+
+  /// No description provided for @productPromotionViewPaymentStatus.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض حالة الدفع'**
+  String get productPromotionViewPaymentStatus;
+
+  /// No description provided for @productPromotionPaidByFinance.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تأكيد الدفع من المالية'**
+  String get productPromotionPaidByFinance;
+
+  /// No description provided for @productPromotionUnpaid.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم يتم الدفع بعد'**
+  String get productPromotionUnpaid;
+
+  /// No description provided for @productPromotionUnpaidMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يمكن اعتماد طلب الترويج قبل تأكيد المالية استلام المبلغ.'**
+  String get productPromotionUnpaidMessage;
+
+  /// No description provided for @productPromotionRejectTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'رفض طلب الترويج'**
+  String get productPromotionRejectTitle;
+
+  /// No description provided for @productPromotionRejectReasonHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب سبب رفض الطلب'**
+  String get productPromotionRejectReasonHint;
+
+  /// No description provided for @productPromotionConfirmReject.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد الرفض'**
+  String get productPromotionConfirmReject;
+
+  /// No description provided for @productPromotionApproved.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم اعتماد طلب الترويج.'**
+  String get productPromotionApproved;
+
+  /// No description provided for @productPromotionRejected.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم رفض طلب الترويج.'**
+  String get productPromotionRejected;
+
+  /// No description provided for @productPromotionExpired.
+  ///
+  /// In ar, this message translates to:
+  /// **'منتهي'**
+  String get productPromotionExpired;
+
+  /// No description provided for @productPromotionDisclaimer.
+  ///
+  /// In ar, this message translates to:
+  /// **'بيانات الطلبات المعروضة تجريبية؛ يلزم ربطها بخدمة الاشتراكات والمدفوعات قبل التشغيل الفعلي.'**
+  String get productPromotionDisclaimer;
+
+  /// No description provided for @productPromotionAuditApproved.
+  ///
+  /// In ar, this message translates to:
+  /// **'اعتماد طلب ترويج منتج'**
+  String get productPromotionAuditApproved;
+
+  /// No description provided for @productPromotionAuditRejected.
+  ///
+  /// In ar, this message translates to:
+  /// **'رفض طلب ترويج منتج'**
+  String get productPromotionAuditRejected;
+
+  /// No description provided for @productWalletTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'محفظة المشرف'**
+  String get productWalletTitle;
+
+  /// No description provided for @productWalletBack.
+  ///
+  /// In ar, this message translates to:
+  /// **'رجوع'**
+  String get productWalletBack;
+
+  /// No description provided for @productWalletSupervisorId.
+  ///
+  /// In ar, this message translates to:
+  /// **'SUP-9942'**
+  String get productWalletSupervisorId;
+
+  /// No description provided for @productWalletVerified.
+  ///
+  /// In ar, this message translates to:
+  /// **'موثق'**
+  String get productWalletVerified;
+
+  /// No description provided for @productWalletAvailableForWithdrawal.
+  ///
+  /// In ar, this message translates to:
+  /// **'الرصيد المتاح للسحب الفوري'**
+  String get productWalletAvailableForWithdrawal;
+
+  /// No description provided for @productWalletBalanceAmount.
+  ///
+  /// In ar, this message translates to:
+  /// **'8,450 ر.س'**
+  String get productWalletBalanceAmount;
+
+  /// No description provided for @productWalletReady.
+  ///
+  /// In ar, this message translates to:
+  /// **'نشط وجاهز'**
+  String get productWalletReady;
+
+  /// No description provided for @productWalletBalanceNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'يشمل مستحقات الإشراف المعتمدة وبدلات التدقيق المنتهية وجاهزة للتحويل الفوري.'**
+  String get productWalletBalanceNote;
+
+  /// No description provided for @productWalletTotalDues.
+  ///
+  /// In ar, this message translates to:
+  /// **'إجمالي المستحقات'**
+  String get productWalletTotalDues;
+
+  /// No description provided for @productWalletTotalDuesAmount.
+  ///
+  /// In ar, this message translates to:
+  /// **'12,500 ر.س'**
+  String get productWalletTotalDuesAmount;
+
+  /// No description provided for @productWalletDuesDetail.
+  ///
+  /// In ar, this message translates to:
+  /// **'الراتب + الحوافز المحققة'**
+  String get productWalletDuesDetail;
+
+  /// No description provided for @productWalletPendingReview.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيد التدقيق المالي'**
+  String get productWalletPendingReview;
+
+  /// No description provided for @productWalletPendingAmount.
+  ///
+  /// In ar, this message translates to:
+  /// **'4,050 ر.س'**
+  String get productWalletPendingAmount;
+
+  /// No description provided for @productWalletPendingDetail.
+  ///
+  /// In ar, this message translates to:
+  /// **'مراجعة الفحص والمكافآت'**
+  String get productWalletPendingDetail;
+
+  /// No description provided for @productWalletSettlementRate.
+  ///
+  /// In ar, this message translates to:
+  /// **'دورة تسوية أسبوعية منتظمة'**
+  String get productWalletSettlementRate;
+
+  /// No description provided for @productWalletSettlementPercent.
+  ///
+  /// In ar, this message translates to:
+  /// **'معدل جاهزية الصرف: 68%'**
+  String get productWalletSettlementPercent;
+
+  /// No description provided for @productWalletRequestTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب سحب المستحقات المالية'**
+  String get productWalletRequestTitle;
+
+  /// No description provided for @productWalletNoFees.
+  ///
+  /// In ar, this message translates to:
+  /// **'بدون رسوم تحويل'**
+  String get productWalletNoFees;
+
+  /// No description provided for @productWalletAmountToWithdraw.
+  ///
+  /// In ar, this message translates to:
+  /// **'مبلغ السحب المطلوب'**
+  String get productWalletAmountToWithdraw;
+
+  /// No description provided for @productWalletWithdrawableHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'سحب كامل المبلغ المتاح (8,450 ر.س)'**
+  String get productWalletWithdrawableHint;
+
+  /// No description provided for @productWalletCurrency.
+  ///
+  /// In ar, this message translates to:
+  /// **'ر.س'**
+  String get productWalletCurrency;
+
+  /// No description provided for @productWalletLimitNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحد الأدنى لعملية السحب 100 ر.س، الحد الأقصى اليومي 20,000 ر.س.'**
+  String get productWalletLimitNote;
+
+  /// No description provided for @productWalletChooseDestination.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر وجهة التحويل'**
+  String get productWalletChooseDestination;
+
+  /// No description provided for @productWalletInstapay.
+  ///
+  /// In ar, this message translates to:
+  /// **'إنستاباي'**
+  String get productWalletInstapay;
+
+  /// No description provided for @productWalletFast.
+  ///
+  /// In ar, this message translates to:
+  /// **'فوري'**
+  String get productWalletFast;
+
+  /// No description provided for @productWalletMobileWallet.
+  ///
+  /// In ar, this message translates to:
+  /// **'محفظة هاتف'**
+  String get productWalletMobileWallet;
+
+  /// No description provided for @productWalletWalletProviders.
+  ///
+  /// In ar, this message translates to:
+  /// **'فودافون / أورنج'**
+  String get productWalletWalletProviders;
+
+  /// No description provided for @productWalletBankTransfer.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحويل بنكي'**
+  String get productWalletBankTransfer;
+
+  /// No description provided for @productWalletIban.
+  ///
+  /// In ar, this message translates to:
+  /// **'آيبان (IBAN)'**
+  String get productWalletIban;
+
+  /// No description provided for @productWalletIbanAddress.
+  ///
+  /// In ar, this message translates to:
+  /// **'عنوان الدفع اللحظي (IPA) أو رقم الآيبان المصرفي'**
+  String get productWalletIbanAddress;
+
+  /// No description provided for @productWalletPaymentAddress.
+  ///
+  /// In ar, this message translates to:
+  /// **'عنوان الدفع اللحظي (IPA) أو رقم الهاتف المرتبط'**
+  String get productWalletPaymentAddress;
+
+  /// No description provided for @productWalletProcessingTime.
+  ///
+  /// In ar, this message translates to:
+  /// **'سرعة المعالجة: فوري ومباشر على مدار الساعة'**
+  String get productWalletProcessingTime;
+
+  /// No description provided for @productWalletFeeDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'رسوم المعالجة والتحويل: 0.5 ر.س (محفظة بالكامل للمشرف)'**
+  String get productWalletFeeDetails;
+
+  /// No description provided for @productWalletSubmitRequest.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد وطلب السحب المالي'**
+  String get productWalletSubmitRequest;
+
+  /// No description provided for @productWalletAmountError.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل مبلغاً بين 100 و8,450 ر.س.'**
+  String get productWalletAmountError;
+
+  /// No description provided for @productWalletDetailsError.
+  ///
+  /// In ar, this message translates to:
+  /// **'أكمل بيانات الحساب قبل إرسال طلب السحب.'**
+  String get productWalletDetailsError;
+
+  /// No description provided for @productWalletConfirmTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد طلب السحب'**
+  String get productWalletConfirmTitle;
+
+  /// No description provided for @productWalletConfirmMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'هل تريد تأكيد سحب مبلغ {amount} ر.س؟'**
+  String productWalletConfirmMessage(Object amount);
+
+  /// No description provided for @productWalletConfirmAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد السحب'**
+  String get productWalletConfirmAction;
+
+  /// No description provided for @productWalletRequestSent.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تسجيل طلب السحب بنجاح.'**
+  String get productWalletRequestSent;
+
+  /// No description provided for @productWalletBonusTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'حافز الإنجاز الأسبوعي متاح!'**
+  String get productWalletBonusTitle;
+
+  /// No description provided for @productWalletBonusAmount.
+  ///
+  /// In ar, this message translates to:
+  /// **'+500 ر.س'**
+  String get productWalletBonusAmount;
+
+  /// No description provided for @productWalletBonusDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'أنجزت 4 من 5 أهداف ميدانياً بنجاح يفوق المعايير المحددة.'**
+  String get productWalletBonusDescription;
+
+  /// No description provided for @productWalletHistoryTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجل العمليات والتحويلات الأخيرة'**
+  String get productWalletHistoryTitle;
+
+  /// No description provided for @productWalletFullStatement.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض كشف الحساب الكامل'**
+  String get productWalletFullStatement;
+
+  /// No description provided for @productWalletTransactionOne.
+  ///
+  /// In ar, this message translates to:
+  /// **'سحب بنكي - مصرف الراجحي'**
+  String get productWalletTransactionOne;
+
+  /// No description provided for @productWalletTransactionOneMeta.
+  ///
+  /// In ar, this message translates to:
+  /// **'TRX-9821 • أمس، 02:40 م'**
+  String get productWalletTransactionOneMeta;
+
+  /// No description provided for @productWalletTransactionOneAmount.
+  ///
+  /// In ar, this message translates to:
+  /// **'-5,000'**
+  String get productWalletTransactionOneAmount;
+
+  /// No description provided for @productWalletTransactionTwo.
+  ///
+  /// In ar, this message translates to:
+  /// **'عمولة فحص ميداني معتمد'**
+  String get productWalletTransactionTwo;
+
+  /// No description provided for @productWalletTransactionTwoMeta.
+  ///
+  /// In ar, this message translates to:
+  /// **'أجهزة إلكترونية • WS-4088 • 24 أكتوبر'**
+  String get productWalletTransactionTwoMeta;
+
+  /// No description provided for @productWalletTransactionTwoAmount.
+  ///
+  /// In ar, this message translates to:
+  /// **'+350'**
+  String get productWalletTransactionTwoAmount;
+
+  /// No description provided for @productWalletTransactionThree.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحويل فوري - InstaPay'**
+  String get productWalletTransactionThree;
+
+  /// No description provided for @productWalletTransactionThreeMeta.
+  ///
+  /// In ar, this message translates to:
+  /// **'IPA-3310 • 21 أكتوبر'**
+  String get productWalletTransactionThreeMeta;
+
+  /// No description provided for @productWalletTransactionThreeAmount.
+  ///
+  /// In ar, this message translates to:
+  /// **'-2,200'**
+  String get productWalletTransactionThreeAmount;
+
+  /// No description provided for @productWalletPaid.
+  ///
+  /// In ar, this message translates to:
+  /// **'مكتمل'**
+  String get productWalletPaid;
+
+  /// No description provided for @productWalletDeposit.
+  ///
+  /// In ar, this message translates to:
+  /// **'إيداع'**
+  String get productWalletDeposit;
+
+  /// No description provided for @productWalletAuditTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'العمليات المالية مشفرة وتخضع لتدقيق هيئة الرقابة المحاسبية لمنصة وسوقي'**
+  String get productWalletAuditTitle;
+
+  /// No description provided for @productWalletAuditCode.
+  ///
+  /// In ar, this message translates to:
+  /// **'رمز التدقيق الدوري: AUDIT-SEC-2024-v9'**
+  String get productWalletAuditCode;
+
+  /// No description provided for @productWalletStatementUnavailable.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيتم عرض تفاصيل كشف الحساب عند ربط المحفظة بالخدمات المالية.'**
+  String get productWalletStatementUnavailable;
+
+  /// No description provided for @productSupervisorToolsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجل المشرف والمساندة'**
+  String get productSupervisorToolsTitle;
+
+  /// No description provided for @productAuditHistoryTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجل القرارات والتدقيق الرقابي'**
+  String get productAuditHistoryTitle;
+
+  /// No description provided for @productAuditHistorySubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'مراجعة سجل قراراتك وإجراءاتك السابقة'**
+  String get productAuditHistorySubtitle;
+
+  /// No description provided for @productAuditEmpty.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد عمليات مسجلة حتى الآن.'**
+  String get productAuditEmpty;
+
+  /// No description provided for @productAuditLoadError.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر تحميل سجل التدقيق. حاول مرة أخرى.'**
+  String get productAuditLoadError;
+
+  /// No description provided for @productAuditSaveError.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر حفظ العملية في سجل التدقيق. لم يتم تسجيل الطلب.'**
+  String get productAuditSaveError;
+
+  /// No description provided for @productAuditActionApproved.
+  ///
+  /// In ar, this message translates to:
+  /// **'اعتماد منتج'**
+  String get productAuditActionApproved;
+
+  /// No description provided for @productAuditActionHidden.
+  ///
+  /// In ar, this message translates to:
+  /// **'إخفاء منتج'**
+  String get productAuditActionHidden;
+
+  /// No description provided for @productAuditActionRejected.
+  ///
+  /// In ar, this message translates to:
+  /// **'رفض منتج'**
+  String get productAuditActionRejected;
+
+  /// No description provided for @productAuditActionSuspended.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعليق إعلان'**
+  String get productAuditActionSuspended;
+
+  /// No description provided for @productAuditActionUpdated.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعديل تفاصيل منتج'**
+  String get productAuditActionUpdated;
+
+  /// No description provided for @productAuditActionFieldAvailability.
+  ///
+  /// In ar, this message translates to:
+  /// **'تغيير التوفر الميداني'**
+  String get productAuditActionFieldAvailability;
+
+  /// No description provided for @productAuditActionUrgentNotifications.
+  ///
+  /// In ar, this message translates to:
+  /// **'تغيير تنبيهات البلاغات العاجلة'**
+  String get productAuditActionUrgentNotifications;
+
+  /// No description provided for @productAuditEnabled.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم التفعيل'**
+  String get productAuditEnabled;
+
+  /// No description provided for @productAuditDisabled.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم التعطيل'**
+  String get productAuditDisabled;
+
+  /// No description provided for @productAuditActionWithdrawalRequested.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب سحب مستحقات مالية'**
+  String get productAuditActionWithdrawalRequested;
+
+  /// No description provided for @productAuditActionOther.
+  ///
+  /// In ar, this message translates to:
+  /// **'إجراء رقابي'**
+  String get productAuditActionOther;
+
+  /// No description provided for @productSupportTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'مركز المساندة والدعم'**
+  String get productSupportTitle;
+
+  /// No description provided for @productSupportSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الدعم الإداري والتقني والتواصل مع رئيس المشرفين'**
+  String get productSupportSubtitle;
+
+  /// No description provided for @productAdminSupportTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الدعم الإداري'**
+  String get productAdminSupportTitle;
+
+  /// No description provided for @productAdminSupportDetail.
+  ///
+  /// In ar, this message translates to:
+  /// **'استفسارات الإجراءات والسياسات والتصعيد الإداري'**
+  String get productAdminSupportDetail;
+
+  /// No description provided for @productTechnicalSupportTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الدعم التقني'**
+  String get productTechnicalSupportTitle;
+
+  /// No description provided for @productTechnicalSupportDetail.
+  ///
+  /// In ar, this message translates to:
+  /// **'المساعدة في مشكلات التطبيق والحساب والأدوات'**
+  String get productTechnicalSupportDetail;
+
+  /// No description provided for @productSupportContactTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'التواصل مع فريق الدعم'**
+  String get productSupportContactTitle;
+
+  /// No description provided for @productHeadSupervisorName.
+  ///
+  /// In ar, this message translates to:
+  /// **'رئيس المشرفين'**
+  String get productHeadSupervisorName;
+
+  /// No description provided for @productHeadSupervisorRole.
+  ///
+  /// In ar, this message translates to:
+  /// **'التصعيد والمتابعة الإدارية'**
+  String get productHeadSupervisorRole;
+
+  /// No description provided for @productTechnicalSupportName.
+  ///
+  /// In ar, this message translates to:
+  /// **'فريق الدعم التقني'**
+  String get productTechnicalSupportName;
+
+  /// No description provided for @productTechnicalSupportHours.
+  ///
+  /// In ar, this message translates to:
+  /// **'متاح لمتابعة الأعطال التقنية'**
+  String get productTechnicalSupportHours;
+
+  /// No description provided for @productSupportOpenChat.
+  ///
+  /// In ar, this message translates to:
+  /// **'بدء محادثة'**
+  String get productSupportOpenChat;
+
+  /// No description provided for @productSupportHours.
+  ///
+  /// In ar, this message translates to:
+  /// **'تواصل مع الدعم عبر المحادثة، وتظهر ساعات العمل وفق الجدول المعتمد.'**
+  String get productSupportHours;
+
+  /// No description provided for @productChatsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الدردشات'**
+  String get productChatsTitle;
+
+  /// No description provided for @productChatToday.
+  ///
+  /// In ar, this message translates to:
+  /// **'اليوم'**
+  String get productChatToday;
+
+  /// No description provided for @productChatYesterday.
+  ///
+  /// In ar, this message translates to:
+  /// **'أمس'**
+  String get productChatYesterday;
+
+  /// No description provided for @productHeadSupervisorPreview.
+  ///
+  /// In ar, this message translates to:
+  /// **'يمكنك إرسال الاستفسارات وطلبات التصعيد هنا.'**
+  String get productHeadSupervisorPreview;
+
+  /// No description provided for @productTechnicalSupportPreview.
+  ///
+  /// In ar, this message translates to:
+  /// **'تواصل معنا للمساعدة التقنية.'**
+  String get productTechnicalSupportPreview;
+
+  /// No description provided for @productNotificationsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإشعارات'**
+  String get productNotificationsTitle;
+
+  /// No description provided for @productNotificationsMarkAllRead.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحديد الكل كمقروء'**
+  String get productNotificationsMarkAllRead;
+
+  /// No description provided for @productNotificationNewReviewTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلبات جديدة قيد المراجعة'**
+  String get productNotificationNewReviewTitle;
+
+  /// No description provided for @productNotificationNewReviewBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'توجد منتجات جديدة بانتظار إجراء المراجعة.'**
+  String get productNotificationNewReviewBody;
+
+  /// No description provided for @productNotificationWalletTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحديث المستحقات المالية'**
+  String get productNotificationWalletTitle;
+
+  /// No description provided for @productNotificationWalletBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تحديث ملخص مستحقاتك ودورة التسوية الأسبوعية.'**
+  String get productNotificationWalletBody;
+
+  /// No description provided for @productNotificationPolicyTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تنبيه رقابي'**
+  String get productNotificationPolicyTitle;
+
+  /// No description provided for @productNotificationPolicyBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'يرجى مراجعة قائمة التدقيق قبل اعتماد المنتجات.'**
+  String get productNotificationPolicyBody;
+
+  /// No description provided for @productNotificationToday.
+  ///
+  /// In ar, this message translates to:
+  /// **'اليوم'**
+  String get productNotificationToday;
+
+  /// No description provided for @productNotificationYesterday.
+  ///
+  /// In ar, this message translates to:
+  /// **'أمس'**
+  String get productNotificationYesterday;
+
+  /// No description provided for @productNotificationEarlier.
+  ///
+  /// In ar, this message translates to:
+  /// **'سابقاً'**
+  String get productNotificationEarlier;
+
+  /// No description provided for @productReportEyebrow.
+  ///
+  /// In ar, this message translates to:
+  /// **'الرقابة والجودة التنفيذية'**
+  String get productReportEyebrow;
+
+  /// No description provided for @productReportTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تقارير قسم المنتجات الجديدة'**
+  String get productReportTitle;
+
+  /// No description provided for @productReportExport.
+  ///
+  /// In ar, this message translates to:
+  /// **'تصدير'**
+  String get productReportExport;
+
+  /// No description provided for @productReportToday.
+  ///
+  /// In ar, this message translates to:
+  /// **'اليوم'**
+  String get productReportToday;
+
+  /// No description provided for @productReportThisWeek.
+  ///
+  /// In ar, this message translates to:
+  /// **'هذا الأسبوع'**
+  String get productReportThisWeek;
+
+  /// No description provided for @productReportThisMonth.
+  ///
+  /// In ar, this message translates to:
+  /// **'هذا الشهر'**
+  String get productReportThisMonth;
+
+  /// No description provided for @productReportCustom.
+  ///
+  /// In ar, this message translates to:
+  /// **'مخصص'**
+  String get productReportCustom;
+
+  /// No description provided for @productReportReviewedAds.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإعلانات المفحوصة'**
+  String get productReportReviewedAds;
+
+  /// No description provided for @productReportComparedToPrevious.
+  ///
+  /// In ar, this message translates to:
+  /// **'مقارنة بالفترة السابقة'**
+  String get productReportComparedToPrevious;
+
+  /// No description provided for @productReportApprovalRate.
+  ///
+  /// In ar, this message translates to:
+  /// **'معدل الاعتماد'**
+  String get productReportApprovalRate;
+
+  /// No description provided for @productReportApprovedCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count} إعلان معتمد'**
+  String productReportApprovedCount(int count);
+
+  /// No description provided for @productReportDeclinedRate.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحجب والرفض'**
+  String get productReportDeclinedRate;
+
+  /// No description provided for @productReportDeclinedCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count} إعلان محجوب'**
+  String productReportDeclinedCount(int count);
+
+  /// No description provided for @productReportAverageReview.
+  ///
+  /// In ar, this message translates to:
+  /// **'متوسط سرعة الفحص'**
+  String get productReportAverageReview;
+
+  /// No description provided for @productReportMinutesAndFaster.
+  ///
+  /// In ar, this message translates to:
+  /// **'أسرع بنسبة 25%'**
+  String get productReportMinutesAndFaster;
+
+  /// No description provided for @productReportMinuteUnit.
+  ///
+  /// In ar, this message translates to:
+  /// **'دقيقة'**
+  String get productReportMinuteUnit;
+
+  /// No description provided for @productReportStandardsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'معايير التحقق الصارمة للجديد'**
+  String get productReportStandardsTitle;
+
+  /// No description provided for @productReportStandardsVersion.
+  ///
+  /// In ar, this message translates to:
+  /// **'بروتوكول 4.2'**
+  String get productReportStandardsVersion;
+
+  /// No description provided for @productReportPackagingTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'شرط التغليف الحراري'**
+  String get productReportPackagingTitle;
+
+  /// No description provided for @productReportPackagingHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'التأكد من عدم فتح الشريط الأمني الأصلي'**
+  String get productReportPackagingHint;
+
+  /// No description provided for @productReportSerialTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'التحقق التسلسلي'**
+  String get productReportSerialTitle;
+
+  /// No description provided for @productReportSerialHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'فحص قاعدة بيانات الضمان المحلي المعتمد'**
+  String get productReportSerialHint;
+
+  /// No description provided for @productReportCategoryTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'توزيع أصناف المنتجات الجديدة'**
+  String get productReportCategoryTitle;
+
+  /// No description provided for @productReportAdsCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count} إعلان'**
+  String productReportAdsCount(int count);
+
+  /// No description provided for @productReportElectronics.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلكترونيات وهواتف ذكية'**
+  String get productReportElectronics;
+
+  /// No description provided for @productReportGames.
+  ///
+  /// In ar, this message translates to:
+  /// **'أجهزة وألعاب ترفيهية'**
+  String get productReportGames;
+
+  /// No description provided for @productReportPerfumes.
+  ///
+  /// In ar, this message translates to:
+  /// **'عطور وساعات فاخرة'**
+  String get productReportPerfumes;
+
+  /// No description provided for @productReportHomeAppliances.
+  ///
+  /// In ar, this message translates to:
+  /// **'أجهزة منزلية ومطبخ'**
+  String get productReportHomeAppliances;
+
+  /// No description provided for @productReportAuditTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'أحدث الإجراءات الرقابية المسجلة'**
+  String get productReportAuditTitle;
+
+  /// No description provided for @productReportLive.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحديث حي'**
+  String get productReportLive;
+
+  /// No description provided for @productReportHidden.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم الإخفاء'**
+  String get productReportHidden;
+
+  /// No description provided for @productReportApproved.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم الاعتماد'**
+  String get productReportApproved;
+
+  /// No description provided for @productReportRejected.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم الرفض'**
+  String get productReportRejected;
+
+  /// No description provided for @productReportActionHeadline.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعلان {adNumber}'**
+  String productReportActionHeadline(String adNumber);
+
+  /// No description provided for @productReportEditAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعديل الإجراء'**
+  String get productReportEditAction;
+
+  /// No description provided for @productReportEditDialogTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعديل الإجراء الرقابي'**
+  String get productReportEditDialogTitle;
+
+  /// No description provided for @productReportActionStatus.
+  ///
+  /// In ar, this message translates to:
+  /// **'حالة الإجراء'**
+  String get productReportActionStatus;
+
+  /// No description provided for @productReportActionReason.
+  ///
+  /// In ar, this message translates to:
+  /// **'سبب الإجراء'**
+  String get productReportActionReason;
+
+  /// No description provided for @productReportApplyEdit.
+  ///
+  /// In ar, this message translates to:
+  /// **'تطبيق'**
+  String get productReportApplyEdit;
+
+  /// No description provided for @productReportRecentActionsNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'هذه أحدث الإجراءات المسجلة في الفترة المحددة.'**
+  String get productReportRecentActionsNote;
+
+  /// No description provided for @productReportDataNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'بيانات عرض تجريبية تتغير حسب الفترة المحددة'**
+  String get productReportDataNote;
+
+  /// No description provided for @productReportSaveAndUpdate.
+  ///
+  /// In ar, this message translates to:
+  /// **'حفظ وتحديث الحالة فورًا'**
+  String get productReportSaveAndUpdate;
+
+  /// No description provided for @productReportDiscardChanges.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلغاء والتراجع'**
+  String get productReportDiscardChanges;
+
+  /// No description provided for @productReportSaved.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم حفظ تحديثات التقرير محليًا'**
+  String get productReportSaved;
+
+  /// No description provided for @productReportExportTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تصدير التقرير بصيغة CSV'**
+  String get productReportExportTitle;
+
+  /// No description provided for @productReportCopyCsv.
+  ///
+  /// In ar, this message translates to:
+  /// **'نسخ CSV'**
+  String get productReportCopyCsv;
+
+  /// No description provided for @productReportExportCopied.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم نسخ بيانات التقرير'**
+  String get productReportExportCopied;
+
+  /// No description provided for @productProfileMetricsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'المؤشرات الرقابية والتشغيلية'**
+  String get productProfileMetricsTitle;
+
+  /// No description provided for @productProfileLastUpdated.
+  ///
+  /// In ar, this message translates to:
+  /// **'آخر تحديث: 12 دقيقة'**
+  String get productProfileLastUpdated;
+
+  /// No description provided for @productProfileName.
+  ///
+  /// In ar, this message translates to:
+  /// **'م. طارق بن عبد العزيز العتيبي'**
+  String get productProfileName;
+
+  /// No description provided for @productProfileRegion.
+  ///
+  /// In ar, this message translates to:
+  /// **'منطقة الرياض والمحافظات المجاورة'**
+  String get productProfileRegion;
+
+  /// No description provided for @productProfileSupervisorId.
+  ///
+  /// In ar, this message translates to:
+  /// **'SUP-1082'**
+  String get productProfileSupervisorId;
+
+  /// No description provided for @productProfileVerified.
+  ///
+  /// In ar, this message translates to:
+  /// **'مشرف ميداني معتمد'**
+  String get productProfileVerified;
+
+  /// No description provided for @productProfileFieldAvailability.
+  ///
+  /// In ar, this message translates to:
+  /// **'متاح ميدانيًا لاستلام الفحص'**
+  String get productProfileFieldAvailability;
+
+  /// No description provided for @productProfileFieldAvailabilityHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'الاستجابة المباشرة ضمن نطاق 15 كم'**
+  String get productProfileFieldAvailabilityHint;
+
+  /// No description provided for @productProfileReviewed.
+  ///
+  /// In ar, this message translates to:
+  /// **'الصفقات المفحوصة'**
+  String get productProfileReviewed;
+
+  /// No description provided for @productProfileSinceLastMonth.
+  ///
+  /// In ar, this message translates to:
+  /// **'+18% عن الشهر الماضي'**
+  String get productProfileSinceLastMonth;
+
+  /// No description provided for @productProfileApprovalMetric.
+  ///
+  /// In ar, this message translates to:
+  /// **'التوفيق والحل الودي'**
+  String get productProfileApprovalMetric;
+
+  /// No description provided for @productProfileApprovedOfTotal.
+  ///
+  /// In ar, this message translates to:
+  /// **'من أصل 263 نزاعًا مفتوحًا'**
+  String get productProfileApprovedOfTotal;
+
+  /// No description provided for @productProfileResponseSpeed.
+  ///
+  /// In ar, this message translates to:
+  /// **'متوسط سرعة الاستجابة'**
+  String get productProfileResponseSpeed;
+
+  /// No description provided for @productProfileFasterThanAverage.
+  ///
+  /// In ar, this message translates to:
+  /// **'أسرع بـ 6 دقائق من المعيار'**
+  String get productProfileFasterThanAverage;
+
+  /// No description provided for @productProfileQualityMetric.
+  ///
+  /// In ar, this message translates to:
+  /// **'معدل الرضا الرقابي'**
+  String get productProfileQualityMetric;
+
+  /// No description provided for @productProfileQualityDetail.
+  ///
+  /// In ar, this message translates to:
+  /// **'استنادًا إلى 210 تقييمًا فنيًا'**
+  String get productProfileQualityDetail;
+
+  /// No description provided for @productProfileDocumentsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الوثائق والتفويضات الإشرافية المعتمدة'**
+  String get productProfileDocumentsTitle;
+
+  /// No description provided for @productProfileAuthorization.
+  ///
+  /// In ar, this message translates to:
+  /// **'بطاقة الرقابة الميدانية'**
+  String get productProfileAuthorization;
+
+  /// No description provided for @productProfileAuthorizationSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تفويض إشرافي نشط • ينتهي 15/06/1447 هـ'**
+  String get productProfileAuthorizationSubtitle;
+
+  /// No description provided for @productProfileActive.
+  ///
+  /// In ar, this message translates to:
+  /// **'نشطة'**
+  String get productProfileActive;
+
+  /// No description provided for @productProfilePolicy.
+  ///
+  /// In ar, this message translates to:
+  /// **'لائحة ضوابط وحجز الضمان'**
+  String get productProfilePolicy;
+
+  /// No description provided for @productProfilePolicySubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإصدار 4.2 المعتمد'**
+  String get productProfilePolicySubtitle;
+
+  /// No description provided for @productProfileDelegation.
+  ///
+  /// In ar, this message translates to:
+  /// **'وثيقة صلاحيات حسم النزاع'**
+  String get productProfileDelegation;
+
+  /// No description provided for @productProfileDelegationSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تفويض إشرافي مباشر'**
+  String get productProfileDelegationSubtitle;
+
+  /// No description provided for @productProfileReview.
+  ///
+  /// In ar, this message translates to:
+  /// **'مراجعة'**
+  String get productProfileReview;
+
+  /// No description provided for @productProfileWalletTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'محفظتي والبيانات المالية'**
+  String get productProfileWalletTitle;
+
+  /// No description provided for @productProfileJustUpdated.
+  ///
+  /// In ar, this message translates to:
+  /// **'محدثة الآن'**
+  String get productProfileJustUpdated;
+
+  /// No description provided for @productProfileWalletBalance.
+  ///
+  /// In ar, this message translates to:
+  /// **'الرصيد المتاح والمستحقات'**
+  String get productProfileWalletBalance;
+
+  /// No description provided for @productProfileWalletAmount.
+  ///
+  /// In ar, this message translates to:
+  /// **'14,850 ر.س'**
+  String get productProfileWalletAmount;
+
+  /// No description provided for @productProfileWalletDetail.
+  ///
+  /// In ar, this message translates to:
+  /// **'بدلات الإشراف الميداني + مستحقات التوفيق'**
+  String get productProfileWalletDetail;
+
+  /// No description provided for @productProfileOperationsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإعدادات التشغيلية والمهام الميدانية'**
+  String get productProfileOperationsTitle;
+
+  /// No description provided for @productProfileUrgentAlerts.
+  ///
+  /// In ar, this message translates to:
+  /// **'تنبيهات البلاغات العاجلة (VIP Dispatch)'**
+  String get productProfileUrgentAlerts;
+
+  /// No description provided for @productProfileUrgentAlertsSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إشعار صوتي فوري لأولوية قصوى للنزاعات والاستلام'**
+  String get productProfileUrgentAlertsSubtitle;
+
+  /// No description provided for @productProfileAuditLog.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجل القرارات والتدقيق الرقابي السابق'**
+  String get productProfileAuditLog;
+
+  /// No description provided for @productProfileAuditLogSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'أرشيف محاضر التفتيش وإغلاق البلاغات المنجزة'**
+  String get productProfileAuditLogSubtitle;
+
+  /// No description provided for @productProfileAuditLogDetail.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجل القرارات الرقابية متاح للمراجعة من لوحة التقارير.'**
+  String get productProfileAuditLogDetail;
+
+  /// No description provided for @productProfileSupport.
+  ///
+  /// In ar, this message translates to:
+  /// **'مركز المساندة والدعم الإداري والتقني'**
+  String get productProfileSupport;
+
+  /// No description provided for @productProfileSupportSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'اتصال مباشر بمدير العمليات المركزية'**
+  String get productProfileSupportSubtitle;
+
+  /// No description provided for @productProfileSupportDetail.
+  ///
+  /// In ar, this message translates to:
+  /// **'للحصول على المساندة، تواصل مع مدير العمليات المركزية عبر قنوات الدعم المعتمدة.'**
+  String get productProfileSupportDetail;
+
+  /// No description provided for @productProfileEndSession.
+  ///
+  /// In ar, this message translates to:
+  /// **'إنهاء الجلسة الإشرافية وتسجيل الخروج'**
+  String get productProfileEndSession;
+
+  /// No description provided for @productProfileFooter.
+  ///
+  /// In ar, this message translates to:
+  /// **'بوابة الرقابة الميدانية • تطبيق برواح المازوري للإدارة'**
+  String get productProfileFooter;
+
+  /// No description provided for @productProfileBuild.
+  ///
+  /// In ar, this message translates to:
+  /// **'Build 2.9.44 - Auth Token Valid'**
+  String get productProfileBuild;
 
   /// No description provided for @adsMerchantVerified.
   ///

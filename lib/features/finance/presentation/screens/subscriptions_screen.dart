@@ -1095,7 +1095,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                         ? 'هل تريد اعتماد طلب ${sub.providerName} لباقة ${sub.targetPackageName} بقيمة ${CurrencyFormatter.format(sub.totalAmount)} وإرساله للإدارة للموافقة؟'
                         : 'Do you want to approve ${FinanceLocalizer.localizeProviderName(context, sub.providerName)} for ${FinanceLocalizer.localizePackageName(context, sub.targetPackageName)} (${CurrencyFormatter.format(sub.totalAmount)}) and send it to management?',
                   );
-                  if (confirmed && mounted) {
+                  if (confirmed && mounted && context.mounted) {
                     setState(() {
                       _subscriptions.removeWhere((s) => s.id == sub.id);
                     });
@@ -1133,7 +1133,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                           requestTitle: FinanceLocalizer.localizeProviderName(
                               context, sub.providerName),
                         );
-                        if (confirmed && mounted) {
+                        if (confirmed && mounted && context.mounted) {
                           setState(() {
                             _subscriptions.removeWhere((s) => s.id == sub.id);
                           });
@@ -1172,7 +1172,7 @@ class _SubscriptionsScreenState extends State<SubscriptionsScreen> {
                               ? 'رفض طلب الاشتراك / الترقية'
                               : 'Reject Subscription Request',
                         );
-                        if (reason != null && mounted) {
+                        if (reason != null && mounted && context.mounted) {
                           setState(() {
                             _subscriptions.removeWhere((s) => s.id == sub.id);
                           });

@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appName => 'Browah Al-Mazory';
+  String get appName => 'borwah_mng';
 
   @override
   String get cfoSessionTimestamp => '04/11/1446 AH - 10:45 AM';
@@ -2648,6 +2648,1568 @@ class AppLocalizationsEn extends AppLocalizations {
   String adsMerchantRegistrationNumber(Object number) {
     return 'Registration: $number';
   }
+
+  @override
+  String get productSupervisorRoleBadge => 'New Products Supervisor';
+
+  @override
+  String get productReviewTab => 'Under review';
+
+  @override
+  String get productReportsTab => 'Reports';
+
+  @override
+  String get productSubscriptionsTab => 'Product promotions';
+
+  @override
+  String get productAccountTab => 'Account';
+
+  @override
+  String get wasalnySupervisorRoleBadge => 'Wasalny Supervisor';
+
+  @override
+  String get wasalnyRequestsTab => 'Wasalny requests';
+
+  @override
+  String get wasalnyAccountFollowComplaint => 'Track complaint';
+
+  @override
+  String get wasalnyReportOverview => 'Field performance overview';
+
+  @override
+  String get wasalnyReportCompletionRate => 'Deal completion rate';
+
+  @override
+  String get wasalnyReportDealsDetail =>
+      'Deals completed in the selected period';
+
+  @override
+  String get wasalnyReportCompletionDetail =>
+      'Of deals handled by the supervisor';
+
+  @override
+  String get wasalnyReportResponseTime => 'Average response time';
+
+  @override
+  String get wasalnyReportResponseDetail => 'Faster than the service standard';
+
+  @override
+  String get wasalnyReportSatisfaction => 'Party satisfaction rating';
+
+  @override
+  String get wasalnyReportRatingDetail => 'Based on field service ratings';
+
+  @override
+  String get wasalnyComplaintReference => 'Complaint #CMP-1042';
+
+  @override
+  String get wasalnyComplaintOpenStatus => 'Being followed up';
+
+  @override
+  String get wasalnyComplaintSubject =>
+      'Shipment delayed after sale completion';
+
+  @override
+  String get wasalnyComplaintDescription =>
+      'The complaint has been recorded and referred for review. The request parties are being contacted to verify the shipment status.';
+
+  @override
+  String get wasalnyComplaintReceived => 'Complaint received and recorded';
+
+  @override
+  String get wasalnyComplaintUnderReview => 'Complaint under review by Wasalny';
+
+  @override
+  String get wasalnyComplaintWaitingAction =>
+      'Waiting for action and party updates';
+
+  @override
+  String get wasalnyNotificationsTitle => 'Wasalny notifications';
+
+  @override
+  String get wasalnyNotificationNewRequest => 'New Wasalny request';
+
+  @override
+  String get wasalnyNotificationNewRequestDescription =>
+      'A new request is waiting for delivery-stage follow-up.';
+
+  @override
+  String get wasalnyNotificationComplaint => 'Complaint update';
+
+  @override
+  String get wasalnyNotificationComplaintDescription =>
+      'Complaint CMP-1042 has been updated and is being followed up.';
+
+  @override
+  String get wasalnyNotificationInspection => 'Shipment inspection completed';
+
+  @override
+  String get wasalnyNotificationInspectionDescription =>
+      'The inspection result for request W-1038 has been recorded.';
+
+  @override
+  String get wasalnyPromotionTitle => 'Wasalny product promotion requests';
+
+  @override
+  String get wasalnyPromotionSubtitle =>
+      'Review used-product promotion requests and track each request status';
+
+  @override
+  String get wasalnyRequestsSafetyTitle => 'Wasalny secure mediation protocol';
+
+  @override
+  String get wasalnyRequestsSafetyDescription =>
+      'Review Wasalny requests and reveal contact details only after both parties confirm.';
+
+  @override
+  String get wasalnyRequestsCompletionRate => 'Completion rate';
+
+  @override
+  String get wasalnyRequestsActiveDeals => 'Active deals';
+
+  @override
+  String get wasalnyRequestsAll => 'All';
+
+  @override
+  String get wasalnyRequestsCommunication => 'Coordinating';
+
+  @override
+  String get wasalnyRequestsSold => 'Sold';
+
+  @override
+  String get wasalnyRequestsDelivery => 'Delivery';
+
+  @override
+  String get wasalnyRequestsInspection => 'Inspection';
+
+  @override
+  String get wasalnyRequestsEmpty => 'There are no requests at this stage.';
+
+  @override
+  String get wasalnyRequestsEstimatedValue => 'Estimated value';
+
+  @override
+  String get wasalnyRequestsSeller => 'Seller';
+
+  @override
+  String get wasalnyRequestsBuyer => 'Buyer';
+
+  @override
+  String get wasalnyRequestsOrderNumber => 'Request number';
+
+  @override
+  String get wasalnyRequestsCurrentStatus => 'Current status';
+
+  @override
+  String get wasalnyRequestsLocation => 'Location';
+
+  @override
+  String get wasalnyRequestsRevealTitle => 'Reveal contact details';
+
+  @override
+  String get wasalnyRequestsRevealConfirmation =>
+      'Reveal contact details to both parties in this request?';
+
+  @override
+  String get wasalnyRequestsRevealAction => 'Show details to buyer';
+
+  @override
+  String get wasalnyRequestsHideData => 'Hide details';
+
+  @override
+  String get wasalnyRequestsPreviewAction => 'Preview request';
+
+  @override
+  String get wasalnyRequestsPreviewTitle => 'Request details';
+
+  @override
+  String get wasalnyAdsTitle => 'Used product advertisements';
+
+  @override
+  String get wasalnyAdsSubtitle => 'Supervision and technical compliance';
+
+  @override
+  String get wasalnyAdsPendingToday => 'Awaiting review';
+
+  @override
+  String get wasalnyAdsApprovedToday => 'Approved today';
+
+  @override
+  String get wasalnyAdsFilterAll => 'All';
+
+  @override
+  String get wasalnyAdsFilterPending => 'Awaiting review';
+
+  @override
+  String get wasalnyAdsFilterEdit => 'Inspect and edit';
+
+  @override
+  String get wasalnyAdsFilterApproved => 'Approved';
+
+  @override
+  String get wasalnyAdsEmpty => 'There are no ads in this category.';
+
+  @override
+  String get wasalnyAdsAuditNote =>
+      'All moderation actions are secured and recorded in the administrative audit log.';
+
+  @override
+  String get wasalnyAdsLoadError =>
+      'Wasalny advertisements could not be loaded.';
+
+  @override
+  String get wasalnyAdsUpdateError =>
+      'The advertisement status could not be updated.';
+
+  @override
+  String get wasalnyAdsPendingStatus => 'Awaiting review';
+
+  @override
+  String get wasalnyAdsApprovedStatus => 'Published - Wasalny delivery active';
+
+  @override
+  String get wasalnyAdsHiddenStatus => 'Advertisement hidden';
+
+  @override
+  String get wasalnyAdsRejectedStatus => 'Rejected - awaiting seller edits';
+
+  @override
+  String get wasalnyAdsAwaitingApprovalStatus => 'Awaiting approval';
+
+  @override
+  String get wasalnyAdsSuspendedStatus => 'Advertisement suspended';
+
+  @override
+  String get wasalnyAdsEditRequestedStatus => 'Changes requested';
+
+  @override
+  String get wasalnyAdsAcceptAction => 'Accept';
+
+  @override
+  String get wasalnyAdsHideAction => 'Hide';
+
+  @override
+  String get wasalnyAdsSuspendAction => 'Suspend';
+
+  @override
+  String get wasalnyAdsRejectAction => 'Reject';
+
+  @override
+  String get wasalnyAdsHideTitle => 'Hide advertisement';
+
+  @override
+  String get wasalnyAdsSuspendTitle => 'Suspend advertisement';
+
+  @override
+  String get wasalnyAdsEditRequestTitle => 'Request advertisement changes';
+
+  @override
+  String get wasalnyAdsRejectTitle => 'Reject advertisement';
+
+  @override
+  String get wasalnyAdsHideReason =>
+      'Enter a reason for hiding this advertisement';
+
+  @override
+  String get wasalnyAdsSuspendReason =>
+      'Enter a reason for suspending this advertisement';
+
+  @override
+  String get wasalnyAdsEditRequestReason =>
+      'Enter the changes required from the publisher';
+
+  @override
+  String get wasalnyAdsRejectReason =>
+      'Enter a reason for rejecting this advertisement';
+
+  @override
+  String get wasalnyAdsReasonRequired => 'A reason is required to continue.';
+
+  @override
+  String get wasalnyAdsApproved => 'Advertisement approved and published.';
+
+  @override
+  String get wasalnyAdsHidden => 'Advertisement hidden.';
+
+  @override
+  String get wasalnyAdsRejected => 'Advertisement rejected.';
+
+  @override
+  String get wasalnyAdsSuspended => 'Advertisement suspended.';
+
+  @override
+  String get wasalnyAdsEditRequested => 'Changes requested from the publisher.';
+
+  @override
+  String get wasalnyAdDetailsTitle => 'Inspect used advertisement';
+
+  @override
+  String get wasalnyAdDetailsPermission =>
+      'Restricted supervisor access: technical details only';
+
+  @override
+  String get wasalnyAdDetailsReadOnly => 'Publisher details are read-only';
+
+  @override
+  String get wasalnyAdDetailsSellerVerified => 'Verified seller';
+
+  @override
+  String get wasalnyAdDetailsSubmitted => 'Submitted';
+
+  @override
+  String get wasalnyAdDetailsPriceMatch =>
+      'The current price is fair and matches the suggested range.';
+
+  @override
+  String get wasalnyCategoryCamera =>
+      'Electronics & imaging > Professional cameras';
+
+  @override
+  String get wasalnyCategoryConsole => 'Gaming > Consoles';
+
+  @override
+  String get wasalnyCategoryLaptop => 'Electronics > Laptops';
+
+  @override
+  String get wasalnyCategoryBicycle => 'Sports & recreation > Bicycles';
+
+  @override
+  String get wasalnyAdDetailsImageGallery => 'Inspected product photos';
+
+  @override
+  String wasalnyAdDetailsPhotosCount(Object count, Object total) {
+    return '$count of $total accepted';
+  }
+
+  @override
+  String get wasalnyAdDetailsFront => 'Front camera body';
+
+  @override
+  String get wasalnyAdDetailsControls => 'Screen and controls';
+
+  @override
+  String get wasalnyAdDetailsLens => 'Lens mount and sensor';
+
+  @override
+  String get wasalnyAdDetailsAddPhoto => 'Add documentation photo';
+
+  @override
+  String get wasalnyAdDetailsCategory => 'Approved category';
+
+  @override
+  String get wasalnyAdDetailsCategoryMatch =>
+      'Category matched automatically to the used product type and price range.';
+
+  @override
+  String get wasalnyAdDetailsPrice => 'Listed price';
+
+  @override
+  String get wasalnyAdDetailsPriceRange => 'Fair price range';
+
+  @override
+  String get wasalnyAdDetailsDescription =>
+      'Approved description and content review';
+
+  @override
+  String get wasalnyAdDetailsAutoCheck =>
+      'Automatic check: clean and free of restricted terms';
+
+  @override
+  String get wasalnyAdDetailsCharacters => 'characters';
+
+  @override
+  String get wasalnyAdDetailsApprove => 'Approve advertisement';
+
+  @override
+  String get wasalnyAdDetailsRequestEdit => 'Request changes from publisher';
+
+  @override
+  String get wasalnyAdDetailsSuspend => 'Suspend advertisement';
+
+  @override
+  String get wasalnyAdDetailsReject => 'Reject for policy violation';
+
+  @override
+  String get wasalnyChatWithSeller => 'Chat with advertiser';
+
+  @override
+  String get wasalnyCallSeller => 'Call advertiser';
+
+  @override
+  String get wasalnyChatOrCallSeller => 'Chat with advertiser or call';
+
+  @override
+  String get wasalnyContactSellerTitle => 'Contact the advertiser';
+
+  @override
+  String get wasalnyContactSellerSubtitle =>
+      'Contact the advertiser directly to discuss ad details or request technical clarification';
+
+  @override
+  String get wasalnyCallNow => 'Call now';
+
+  @override
+  String wasalnyCallingSeller(Object phone) {
+    return 'Calling advertiser: $phone';
+  }
+
+  @override
+  String get wasalnyCopyPhone => 'Copy phone number';
+
+  @override
+  String get wasalnyPhoneCopied =>
+      'Advertiser phone number copied to clipboard';
+
+  @override
+  String get wasalnySellerPhoneLabel => 'Advertiser phone number';
+
+  @override
+  String get wasalnyAdsUpdated => 'Advertisement updated.';
+
+  @override
+  String get wasalnyAdsReason => 'Action reason';
+
+  @override
+  String productComingSoon(Object section) {
+    return '$section is coming soon';
+  }
+
+  @override
+  String get productSupervisorWelcome => 'Welcome, Supervisor Mohamed';
+
+  @override
+  String get productReviewSubtitle => 'New products review supervisor';
+
+  @override
+  String get productPendingAdsCount => 'Awaiting review';
+
+  @override
+  String get productApprovedAdsCount => 'Approved ads';
+
+  @override
+  String get productSearchHint => 'Search by ad number or product title...';
+
+  @override
+  String get productCategoryAll => 'All';
+
+  @override
+  String get productCategoryHome => 'Home appliances';
+
+  @override
+  String get productCategoryElectronics => 'Electronics';
+
+  @override
+  String get productCategoryWatches => 'Perfumes & watches';
+
+  @override
+  String get productReviewListTitle => 'New products under review';
+
+  @override
+  String productReceivedMinutesAgo(int count) {
+    return '$count minutes ago';
+  }
+
+  @override
+  String get productConditionNew => 'New in box';
+
+  @override
+  String get productConditionUsed => 'Used';
+
+  @override
+  String get productAcceptAction => 'Accept';
+
+  @override
+  String get productHideAction => 'Hide';
+
+  @override
+  String get productRejectAction => 'Reject';
+
+  @override
+  String get productSuspendAction => 'Suspend';
+
+  @override
+  String get productSuspendConfirmTitle => 'Confirm ad suspension';
+
+  @override
+  String productSuspendConfirmMessage(String title) {
+    return 'Do you want to suspend “$title” and temporarily stop it from appearing?';
+  }
+
+  @override
+  String get productStatusSuspended => 'Suspended';
+
+  @override
+  String get productFeaturedBadge => 'Featured';
+
+  @override
+  String get productSuspendSheetTitle => 'Edit compliance action';
+
+  @override
+  String productSuspendSheetSubtitle(String reference, String title) {
+    return 'Ad #$reference • $title';
+  }
+
+  @override
+  String get productSuspendChooseAction => 'Select the new compliance status';
+
+  @override
+  String get productSuspendRepublish => 'Show and republish (enabled)';
+
+  @override
+  String get productSuspendRepublishHint =>
+      'Enable direct visibility in the new products marketplace';
+
+  @override
+  String get productSuspendHideTemporarily => 'Hide temporarily (suspend ad)';
+
+  @override
+  String get productSuspendHideTemporarilyHint =>
+      'Temporarily hidden until compliance requirements are met';
+
+  @override
+  String get productSuspendRejectFinal => 'Reject permanently';
+
+  @override
+  String get productSuspendRejectFinalHint =>
+      'Violates new standards and close the ticket immediately';
+
+  @override
+  String get productSuspendSelected => 'Selected';
+
+  @override
+  String get productSuspendCurrent => 'Current';
+
+  @override
+  String get productSuspendReasonTitle =>
+      'Reason for status change and reviewer notes';
+
+  @override
+  String get productSuspendReasonHint =>
+      'Enter the reason for this compliance action...';
+
+  @override
+  String get productSuspendDefaultReason =>
+      'Packaging photos were verified and the ad is ready to be reactivated';
+
+  @override
+  String get productSuspendReasonNote =>
+      'This note will appear in the audit log';
+
+  @override
+  String get productSuspendNotifyTitle =>
+      'Send an immediate notification to the publisher';
+
+  @override
+  String get productSuspendNotifyHint =>
+      'Notify them immediately about the status change and reason';
+
+  @override
+  String get productSuspendSaveAction => 'Save and update status';
+
+  @override
+  String get productReviewImagesHint =>
+      'Tap to review product photos and purchase invoice';
+
+  @override
+  String get productAcceptConfirmTitle => 'Confirm product acceptance';
+
+  @override
+  String productAcceptConfirmMessage(Object title) {
+    return 'Do you want to accept “$title” and approve it for publishing?';
+  }
+
+  @override
+  String get productHideConfirmTitle => 'Confirm hiding product';
+
+  @override
+  String productHideConfirmMessage(Object title) {
+    return 'Do you want to hide “$title” from the displayed products list?';
+  }
+
+  @override
+  String get productRejectConfirmTitle => 'Confirm product rejection';
+
+  @override
+  String get productRejectReasonHint =>
+      'Enter a reason for rejecting this product';
+
+  @override
+  String get productRejectReasonRequired =>
+      'A rejection reason is required to continue';
+
+  @override
+  String get productHideReasonHint => 'Enter a reason for hiding this product';
+
+  @override
+  String get productHideReasonRequired =>
+      'A reason for hiding is required to continue';
+
+  @override
+  String get productConfirmAction => 'Confirm';
+
+  @override
+  String get productCancelAction => 'Cancel';
+
+  @override
+  String get productStatusApproved => 'Accepted';
+
+  @override
+  String get productStatusHidden => 'Hidden';
+
+  @override
+  String get productStatusRejected => 'Rejected';
+
+  @override
+  String get productEmptyResults => 'No matching products found';
+
+  @override
+  String get productReviewActionSuccess => 'Product status updated';
+
+  @override
+  String get productReviewLoadError =>
+      'Could not load products under review. Please try again.';
+
+  @override
+  String get productReviewUpdateError =>
+      'Could not save the product decision. Refresh and try again.';
+
+  @override
+  String get productDetailsTitle => 'Product review';
+
+  @override
+  String get productDetailsAppBarTitle => 'View advertisement';
+
+  @override
+  String get productDetailsInvoice => 'Purchase invoice';
+
+  @override
+  String get productDetailsPhotos => 'Product photos';
+
+  @override
+  String get productDetailsMerchant => 'Merchant';
+
+  @override
+  String get productDetailsPrice => 'Price';
+
+  @override
+  String get productDetailsCategory => 'Category';
+
+  @override
+  String get productDetailsCondition => 'Condition';
+
+  @override
+  String get productReviewSessionInProgress => 'Active inspection and review';
+
+  @override
+  String get productSellerLabel => 'Seller:';
+
+  @override
+  String get productSellerVerified => 'Verified';
+
+  @override
+  String get productViewFullAd => 'View full advertisement details';
+
+  @override
+  String get productViewFullAdHint =>
+      'Review and edit advertisement details and description';
+
+  @override
+  String get productInvoiceAttached => 'Purchase invoice attached';
+
+  @override
+  String get productImageQualityChecked => 'Image quality checked';
+
+  @override
+  String get productAuditChecklistTitle =>
+      'Mandatory new product audit checklist:';
+
+  @override
+  String get productAuditPackagingTitle =>
+      'Security seal and plastic wrapping are fully intact';
+
+  @override
+  String get productAuditPackagingHint =>
+      'Packaging inspected; no tears or signs of heat resealing.';
+
+  @override
+  String get productAuditSerialTitle =>
+      'Serial number matches local specifications';
+
+  @override
+  String get productAuditSerialHint =>
+      'Registered barcode matches the official authority database.';
+
+  @override
+  String get productAuditDescriptionTitle =>
+      'Description does not imply prior or trial use';
+
+  @override
+  String get productAuditDescriptionHint =>
+      'No phrases such as “opened for testing” or “like new”.';
+
+  @override
+  String get productInstantPublishingTitle => 'Publish immediately';
+
+  @override
+  String get productInstantPublishingHint =>
+      'Approving this inspection publishes the ad directly to the marketplace and sends the seller an official review completion notification.';
+
+  @override
+  String get productApproveAndPublishNow => 'Approve and publish now';
+
+  @override
+  String get productBackToReview => 'Close / Back';
+
+  @override
+  String get productFullDetailsTitle => 'Advertisement details';
+
+  @override
+  String get productPhotoDocumentationTitle =>
+      'Packaging and documentation photo review';
+
+  @override
+  String get productPhotoCount => 'Uploaded photos';
+
+  @override
+  String get productPhotoAdOriginal => 'New product - original seal';
+
+  @override
+  String get productPhotoQualityCheck => 'Label inspection';
+
+  @override
+  String get productSellerInquiryTitle => 'Ask the seller';
+
+  @override
+  String get productSellerInquiryHint =>
+      'Request clarification or an immediate correction';
+
+  @override
+  String get productSendInquiry => 'Message';
+
+  @override
+  String get productInquiryMessageHint =>
+      'Write your question to the seller...';
+
+  @override
+  String get productApprovedCategory => 'Approved category';
+
+  @override
+  String get productDescriptionAndCondition =>
+      'Product description and condition';
+
+  @override
+  String get productWarrantyLabel => 'Add warranty statement';
+
+  @override
+  String get productDescriptionHint =>
+      'Enter the product description and condition...';
+
+  @override
+  String productDescriptionCharacterCount(int count) {
+    return '$count characters';
+  }
+
+  @override
+  String get productDescriptionSafetyCheck => 'Checked for misleading wording';
+
+  @override
+  String get productAdHistoryTitle => 'Advertisement status history';
+
+  @override
+  String get productHistoryOpenStatus => 'Open';
+
+  @override
+  String get productHistoryCreated => 'Advertisement created by the user';
+
+  @override
+  String get productHistoryDocumentsAttached =>
+      'Packaging and barcode photos attached';
+
+  @override
+  String get productHistoryAssigned =>
+      'Advertisement assigned to field supervisor';
+
+  @override
+  String get productHistoryCurrent =>
+      'Current status: specification and requirements review';
+
+  @override
+  String get productEditPermissionHint =>
+      'Supervisory editing is limited to category, price, and description. Publisher details cannot be changed.';
+
+  @override
+  String get productFinalDecisionLabel =>
+      'Final administrative supervisor decision';
+
+  @override
+  String get productRequiredFieldsError =>
+      'Complete the price and description before continuing.';
+
+  @override
+  String get productInvalidPriceError => 'Enter a valid numeric price.';
+
+  @override
+  String get productWorkspaceComingSoon => 'This page is coming soon';
+
+  @override
+  String get productPromotionTitle => 'Featured Product Promotions';
+
+  @override
+  String get productPromotionSubtitle =>
+      'Review promotion requests and monitor active listings';
+
+  @override
+  String get productPromotionPending => 'Awaiting decision';
+
+  @override
+  String get productPromotionActive => 'Active';
+
+  @override
+  String get productPromotionTotal => 'Total requests';
+
+  @override
+  String get productPromotionRequests => 'Promotion requests';
+
+  @override
+  String get productPromotionFilterAll => 'All';
+
+  @override
+  String get productPromotionCompleted => 'Completed';
+
+  @override
+  String get productPromotionEmpty => 'There are no requests in this category.';
+
+  @override
+  String get productPromotionPlanInfo =>
+      'Check listing eligibility and payment status before activating a promotion. The plan duration starts upon approval.';
+
+  @override
+  String get productPromotionFeaturedPlan => 'Featured';
+
+  @override
+  String get productPromotionPremiumPlan => 'Featured Plus';
+
+  @override
+  String get productPromotionDays => 'days';
+
+  @override
+  String get productPromotionRequestedAt => 'Requested:';
+
+  @override
+  String get productPromotionDecisionNote => 'Decision note';
+
+  @override
+  String get productPromotionApprove => 'Approve promotion';
+
+  @override
+  String get productPromotionReject => 'Reject request';
+
+  @override
+  String get productPromotionApproveTitle => 'Confirm promotion approval';
+
+  @override
+  String productPromotionApproveMessage(Object title) {
+    return 'Approve the promotion request for “$title”?';
+  }
+
+  @override
+  String get productPromotionConfirmApprove => 'Confirm approval';
+
+  @override
+  String get productPromotionPaymentStatusTitle => 'Payment status';
+
+  @override
+  String get productPromotionViewPaymentStatus => 'View payment status';
+
+  @override
+  String get productPromotionPaidByFinance => 'Payment confirmed by Finance';
+
+  @override
+  String get productPromotionUnpaid => 'Payment has not been completed';
+
+  @override
+  String get productPromotionUnpaidMessage =>
+      'This promotion cannot be approved until Finance confirms receipt of payment.';
+
+  @override
+  String get productPromotionRejectTitle => 'Reject promotion request';
+
+  @override
+  String get productPromotionRejectReasonHint =>
+      'Enter a reason for rejecting this request';
+
+  @override
+  String get productPromotionConfirmReject => 'Confirm rejection';
+
+  @override
+  String get productPromotionApproved => 'Promotion request approved.';
+
+  @override
+  String get productPromotionRejected => 'Promotion request rejected.';
+
+  @override
+  String get productPromotionExpired => 'Expired';
+
+  @override
+  String get productPromotionDisclaimer =>
+      'Displayed requests are sample data; connect the subscription and payment services before production use.';
+
+  @override
+  String get productPromotionAuditApproved => 'Product promotion approved';
+
+  @override
+  String get productPromotionAuditRejected => 'Product promotion rejected';
+
+  @override
+  String get productWalletTitle => 'Supervisor Wallet';
+
+  @override
+  String get productWalletBack => 'Back';
+
+  @override
+  String get productWalletSupervisorId => 'SUP-9942';
+
+  @override
+  String get productWalletVerified => 'Verified';
+
+  @override
+  String get productWalletAvailableForWithdrawal =>
+      'Available for instant withdrawal';
+
+  @override
+  String get productWalletBalanceAmount => 'SAR 8,450';
+
+  @override
+  String get productWalletReady => 'Active and ready';
+
+  @override
+  String get productWalletBalanceNote =>
+      'Includes approved supervision dues and completed audit allowances, ready for instant transfer.';
+
+  @override
+  String get productWalletTotalDues => 'Total dues';
+
+  @override
+  String get productWalletTotalDuesAmount => 'SAR 12,500';
+
+  @override
+  String get productWalletDuesDetail => 'Salary + earned incentives';
+
+  @override
+  String get productWalletPendingReview => 'Pending financial review';
+
+  @override
+  String get productWalletPendingAmount => 'SAR 4,050';
+
+  @override
+  String get productWalletPendingDetail => 'Inspection and reward review';
+
+  @override
+  String get productWalletSettlementRate => 'Regular weekly settlement cycle';
+
+  @override
+  String get productWalletSettlementPercent => 'Payout readiness: 68%';
+
+  @override
+  String get productWalletRequestTitle =>
+      'Request withdrawal of financial dues';
+
+  @override
+  String get productWalletNoFees => 'No transfer fees';
+
+  @override
+  String get productWalletAmountToWithdraw => 'Amount to withdraw';
+
+  @override
+  String get productWalletWithdrawableHint =>
+      'Withdraw all available funds (SAR 8,450)';
+
+  @override
+  String get productWalletCurrency => 'SAR';
+
+  @override
+  String get productWalletLimitNote =>
+      'Minimum withdrawal is SAR 100; daily maximum is SAR 20,000.';
+
+  @override
+  String get productWalletChooseDestination => 'Choose transfer destination';
+
+  @override
+  String get productWalletInstapay => 'InstaPay';
+
+  @override
+  String get productWalletFast => 'Instant';
+
+  @override
+  String get productWalletMobileWallet => 'Mobile wallet';
+
+  @override
+  String get productWalletWalletProviders => 'Vodafone / Orange';
+
+  @override
+  String get productWalletBankTransfer => 'Bank transfer';
+
+  @override
+  String get productWalletIban => 'IBAN';
+
+  @override
+  String get productWalletIbanAddress =>
+      'Instant payment address (IPA) or bank IBAN';
+
+  @override
+  String get productWalletPaymentAddress =>
+      'Instant payment address (IPA) or linked phone number';
+
+  @override
+  String get productWalletProcessingTime =>
+      'Processing: immediate, available 24/7';
+
+  @override
+  String get productWalletFeeDetails =>
+      'Processing and transfer fee: SAR 0.5 (fully covered for the supervisor)';
+
+  @override
+  String get productWalletSubmitRequest => 'Confirm and request withdrawal';
+
+  @override
+  String get productWalletAmountError =>
+      'Enter an amount between SAR 100 and SAR 8,450.';
+
+  @override
+  String get productWalletDetailsError =>
+      'Complete the account details before submitting your withdrawal request.';
+
+  @override
+  String get productWalletConfirmTitle => 'Confirm withdrawal request';
+
+  @override
+  String productWalletConfirmMessage(Object amount) {
+    return 'Confirm withdrawal of SAR $amount?';
+  }
+
+  @override
+  String get productWalletConfirmAction => 'Confirm withdrawal';
+
+  @override
+  String get productWalletRequestSent =>
+      'Withdrawal request submitted successfully.';
+
+  @override
+  String get productWalletBonusTitle => 'Weekly achievement bonus available!';
+
+  @override
+  String get productWalletBonusAmount => '+SAR 500';
+
+  @override
+  String get productWalletBonusDescription =>
+      'You completed 4 of 5 field goals, exceeding the defined standards.';
+
+  @override
+  String get productWalletHistoryTitle => 'Recent transactions and transfers';
+
+  @override
+  String get productWalletFullStatement => 'View full account statement';
+
+  @override
+  String get productWalletTransactionOne => 'Bank withdrawal - Al Rajhi Bank';
+
+  @override
+  String get productWalletTransactionOneMeta => 'TRX-9821 • Yesterday, 2:40 PM';
+
+  @override
+  String get productWalletTransactionOneAmount => '-5,000';
+
+  @override
+  String get productWalletTransactionTwo =>
+      'Approved field inspection commission';
+
+  @override
+  String get productWalletTransactionTwoMeta =>
+      'Electronics • WS-4088 • Oct 24';
+
+  @override
+  String get productWalletTransactionTwoAmount => '+350';
+
+  @override
+  String get productWalletTransactionThree => 'Instant transfer - InstaPay';
+
+  @override
+  String get productWalletTransactionThreeMeta => 'IPA-3310 • Oct 21';
+
+  @override
+  String get productWalletTransactionThreeAmount => '-2,200';
+
+  @override
+  String get productWalletPaid => 'Completed';
+
+  @override
+  String get productWalletDeposit => 'Deposit';
+
+  @override
+  String get productWalletAuditTitle =>
+      'Financial operations are encrypted and audited by the platform accounting oversight authority';
+
+  @override
+  String get productWalletAuditCode => 'Periodic audit code: AUDIT-SEC-2024-v9';
+
+  @override
+  String get productWalletStatementUnavailable =>
+      'Full account statement details will appear once the wallet is connected to financial services.';
+
+  @override
+  String get productSupervisorToolsTitle => 'Supervisor records and support';
+
+  @override
+  String get productAuditHistoryTitle =>
+      'Decision and compliance audit history';
+
+  @override
+  String get productAuditHistorySubtitle =>
+      'Review your previous decisions and actions';
+
+  @override
+  String get productAuditEmpty => 'No actions have been recorded yet.';
+
+  @override
+  String get productAuditLoadError =>
+      'Could not load the audit history. Please try again.';
+
+  @override
+  String get productAuditSaveError =>
+      'Could not save the action to the audit log. The request was not recorded.';
+
+  @override
+  String get productAuditActionApproved => 'Product approved';
+
+  @override
+  String get productAuditActionHidden => 'Product hidden';
+
+  @override
+  String get productAuditActionRejected => 'Product rejected';
+
+  @override
+  String get productAuditActionSuspended => 'Advertisement suspended';
+
+  @override
+  String get productAuditActionUpdated => 'Product details updated';
+
+  @override
+  String get productAuditActionFieldAvailability =>
+      'Field availability changed';
+
+  @override
+  String get productAuditActionUrgentNotifications =>
+      'Urgent alerts setting changed';
+
+  @override
+  String get productAuditEnabled => 'Enabled';
+
+  @override
+  String get productAuditDisabled => 'Disabled';
+
+  @override
+  String get productAuditActionWithdrawalRequested =>
+      'Financial withdrawal requested';
+
+  @override
+  String get productAuditActionOther => 'Compliance action';
+
+  @override
+  String get productSupportTitle => 'Support and assistance center';
+
+  @override
+  String get productSupportSubtitle =>
+      'Administrative and technical support, and contact with the head supervisor';
+
+  @override
+  String get productAdminSupportTitle => 'Administrative support';
+
+  @override
+  String get productAdminSupportDetail =>
+      'Questions about procedures, policies, and administrative escalation';
+
+  @override
+  String get productTechnicalSupportTitle => 'Technical support';
+
+  @override
+  String get productTechnicalSupportDetail =>
+      'Help with application, account, and tool issues';
+
+  @override
+  String get productSupportContactTitle => 'Contact the support team';
+
+  @override
+  String get productHeadSupervisorName => 'Head Supervisor';
+
+  @override
+  String get productHeadSupervisorRole =>
+      'Administrative follow-up and escalation';
+
+  @override
+  String get productTechnicalSupportName => 'Technical Support Team';
+
+  @override
+  String get productTechnicalSupportHours =>
+      'Available to help with technical issues';
+
+  @override
+  String get productSupportOpenChat => 'Start chat';
+
+  @override
+  String get productSupportHours =>
+      'Contact support by chat; service hours follow the approved schedule.';
+
+  @override
+  String get productChatsTitle => 'Chats';
+
+  @override
+  String get productChatToday => 'Today';
+
+  @override
+  String get productChatYesterday => 'Yesterday';
+
+  @override
+  String get productHeadSupervisorPreview =>
+      'Send questions and escalation requests here.';
+
+  @override
+  String get productTechnicalSupportPreview =>
+      'Contact us for technical assistance.';
+
+  @override
+  String get productNotificationsTitle => 'Notifications';
+
+  @override
+  String get productNotificationsMarkAllRead => 'Mark all as read';
+
+  @override
+  String get productNotificationNewReviewTitle =>
+      'New products awaiting review';
+
+  @override
+  String get productNotificationNewReviewBody =>
+      'There are new products waiting for your review.';
+
+  @override
+  String get productNotificationWalletTitle => 'Financial dues updated';
+
+  @override
+  String get productNotificationWalletBody =>
+      'Your dues summary and weekly settlement cycle were updated.';
+
+  @override
+  String get productNotificationPolicyTitle => 'Compliance reminder';
+
+  @override
+  String get productNotificationPolicyBody =>
+      'Review the checklist before approving products.';
+
+  @override
+  String get productNotificationToday => 'Today';
+
+  @override
+  String get productNotificationYesterday => 'Yesterday';
+
+  @override
+  String get productNotificationEarlier => 'Earlier';
+
+  @override
+  String get productReportEyebrow => 'Executive compliance and quality';
+
+  @override
+  String get productReportTitle => 'New Products Department Reports';
+
+  @override
+  String get productReportExport => 'Export';
+
+  @override
+  String get productReportToday => 'Today';
+
+  @override
+  String get productReportThisWeek => 'This week';
+
+  @override
+  String get productReportThisMonth => 'This month';
+
+  @override
+  String get productReportCustom => 'Custom';
+
+  @override
+  String get productReportReviewedAds => 'Ads inspected';
+
+  @override
+  String get productReportComparedToPrevious => 'compared to previous period';
+
+  @override
+  String get productReportApprovalRate => 'Approval rate';
+
+  @override
+  String productReportApprovedCount(int count) {
+    return '$count approved ads';
+  }
+
+  @override
+  String get productReportDeclinedRate => 'Hidden and rejected';
+
+  @override
+  String productReportDeclinedCount(int count) {
+    return '$count ads hidden';
+  }
+
+  @override
+  String get productReportAverageReview => 'Average inspection speed';
+
+  @override
+  String get productReportMinutesAndFaster => '25% faster';
+
+  @override
+  String get productReportMinuteUnit => 'min';
+
+  @override
+  String get productReportStandardsTitle =>
+      'Strict verification standards for new items';
+
+  @override
+  String get productReportStandardsVersion => 'Protocol 4.2';
+
+  @override
+  String get productReportPackagingTitle => 'Thermal packaging requirement';
+
+  @override
+  String get productReportPackagingHint =>
+      'Verify the original security seal is intact';
+
+  @override
+  String get productReportSerialTitle => 'Serial verification';
+
+  @override
+  String get productReportSerialHint =>
+      'Check the approved local warranty database';
+
+  @override
+  String get productReportCategoryTitle => 'New product category distribution';
+
+  @override
+  String productReportAdsCount(int count) {
+    return '$count ads';
+  }
+
+  @override
+  String get productReportElectronics => 'Electronics and smartphones';
+
+  @override
+  String get productReportGames => 'Gaming and entertainment';
+
+  @override
+  String get productReportPerfumes => 'Luxury perfumes and watches';
+
+  @override
+  String get productReportHomeAppliances => 'Home and kitchen appliances';
+
+  @override
+  String get productReportAuditTitle => 'Latest recorded compliance actions';
+
+  @override
+  String get productReportLive => 'Live';
+
+  @override
+  String get productReportHidden => 'Hidden';
+
+  @override
+  String get productReportApproved => 'Approved';
+
+  @override
+  String get productReportRejected => 'Rejected';
+
+  @override
+  String productReportActionHeadline(String adNumber) {
+    return 'Ad $adNumber';
+  }
+
+  @override
+  String get productReportEditAction => 'Edit action';
+
+  @override
+  String get productReportEditDialogTitle => 'Edit compliance action';
+
+  @override
+  String get productReportActionStatus => 'Action status';
+
+  @override
+  String get productReportActionReason => 'Reason';
+
+  @override
+  String get productReportApplyEdit => 'Apply';
+
+  @override
+  String get productReportRecentActionsNote =>
+      'These are the latest actions recorded in the selected period.';
+
+  @override
+  String get productReportDataNote =>
+      'Sample report data changes with the selected period';
+
+  @override
+  String get productReportSaveAndUpdate => 'Save and update status now';
+
+  @override
+  String get productReportDiscardChanges => 'Cancel and revert';
+
+  @override
+  String get productReportSaved => 'Report updates saved locally';
+
+  @override
+  String get productReportExportTitle => 'Export report as CSV';
+
+  @override
+  String get productReportCopyCsv => 'Copy CSV';
+
+  @override
+  String get productReportExportCopied => 'Report data copied';
+
+  @override
+  String get productProfileMetricsTitle => 'Compliance and operational metrics';
+
+  @override
+  String get productProfileLastUpdated => 'Last updated: 12 minutes ago';
+
+  @override
+  String get productProfileName => 'Eng. Tarek Abdulaziz Al-Otaibi';
+
+  @override
+  String get productProfileRegion =>
+      'Riyadh region and surrounding governorates';
+
+  @override
+  String get productProfileSupervisorId => 'SUP-1082';
+
+  @override
+  String get productProfileVerified => 'Certified field supervisor';
+
+  @override
+  String get productProfileFieldAvailability =>
+      'Available for field inspections';
+
+  @override
+  String get productProfileFieldAvailabilityHint =>
+      'Direct response within a 15 km radius';
+
+  @override
+  String get productProfileReviewed => 'Inspections reviewed';
+
+  @override
+  String get productProfileSinceLastMonth => '+18% from last month';
+
+  @override
+  String get productProfileApprovalMetric =>
+      'Mediation and amicable resolution';
+
+  @override
+  String get productProfileApprovedOfTotal => 'Out of 263 open disputes';
+
+  @override
+  String get productProfileResponseSpeed => 'Average response speed';
+
+  @override
+  String get productProfileFasterThanAverage => '6 minutes faster than target';
+
+  @override
+  String get productProfileQualityMetric => 'Compliance satisfaction rate';
+
+  @override
+  String get productProfileQualityDetail => 'Based on 210 technical ratings';
+
+  @override
+  String get productProfileDocumentsTitle =>
+      'Approved supervisory documents and delegations';
+
+  @override
+  String get productProfileAuthorization => 'Field supervision authorization';
+
+  @override
+  String get productProfileAuthorizationSubtitle =>
+      'Active supervisory delegation • Expires 15/06/1447 AH';
+
+  @override
+  String get productProfileActive => 'Active';
+
+  @override
+  String get productProfilePolicy => 'Guarantee hold policy';
+
+  @override
+  String get productProfilePolicySubtitle => 'Approved version 4.2';
+
+  @override
+  String get productProfileDelegation => 'Dispute resolution authority';
+
+  @override
+  String get productProfileDelegationSubtitle =>
+      'Direct supervisory delegation';
+
+  @override
+  String get productProfileReview => 'Review';
+
+  @override
+  String get productProfileWalletTitle => 'My wallet and financial details';
+
+  @override
+  String get productProfileJustUpdated => 'Updated now';
+
+  @override
+  String get productProfileWalletBalance => 'Available balance and dues';
+
+  @override
+  String get productProfileWalletAmount => 'SAR 14,850';
+
+  @override
+  String get productProfileWalletDetail =>
+      'Field supervision allowances + mediation dues';
+
+  @override
+  String get productProfileOperationsTitle =>
+      'Operational settings and field assignments';
+
+  @override
+  String get productProfileUrgentAlerts =>
+      'Urgent incident alerts (VIP Dispatch)';
+
+  @override
+  String get productProfileUrgentAlertsSubtitle =>
+      'Immediate sound alert for high-priority disputes and pickups';
+
+  @override
+  String get productProfileAuditLog =>
+      'Previous decisions and compliance audit log';
+
+  @override
+  String get productProfileAuditLogSubtitle =>
+      'Archive of inspection reports and completed incidents';
+
+  @override
+  String get productProfileAuditLogDetail =>
+      'Compliance decisions are available for review from the reports dashboard.';
+
+  @override
+  String get productProfileSupport =>
+      'Administrative and technical support center';
+
+  @override
+  String get productProfileSupportSubtitle =>
+      'Direct contact with the central operations manager';
+
+  @override
+  String get productProfileSupportDetail =>
+      'For assistance, contact the central operations manager through approved support channels.';
+
+  @override
+  String get productProfileEndSession => 'End supervisory session and sign out';
+
+  @override
+  String get productProfileFooter =>
+      'Field compliance portal • Barwah Al-Mazory Management';
+
+  @override
+  String get productProfileBuild => 'Build 2.9.44 - Auth Token Valid';
 
   @override
   String get adsMerchantVerified => 'Verified';

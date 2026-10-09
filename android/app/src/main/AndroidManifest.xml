@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="برواح المازوري"
+        android:label="borwah_mng"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

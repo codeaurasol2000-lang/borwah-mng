@@ -1,0 +1,634 @@
+import 'package:flutter/material.dart';
+
+import '../../../../core/constants/app_colors.dart';
+import '../../../../l10n/app_localizations.dart';
+import '../../domain/entities/product_review.dart';
+import 'product_ad_full_details_screen.dart';
+
+class ProductReviewDetailsScreen extends StatefulWidget {
+  final ProductReview product;
+  final bool isArabic;
+  final Future<void> Function(
+    ProductReview product,
+    ProductReviewStatus status,
+  ) onSubmit;
+
+  const ProductReviewDetailsScreen({
+    super.key,
+    required this.product,
+    required this.isArabic,
+    required this.onSubmit,
+  });
+
+  @override
+  State<ProductReviewDetailsScreen> createState() =>
+      _ProductReviewDetailsScreenState();
+}
+
+class _ProductReviewDetailsScreenState
+    extends State<ProductReviewDetailsScreen> {
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final product = widget.product;
+    final title = widget.isArabic ? product.titleAr : product.titleEn;
+    final merchant =
+        widget.isArabic ? product.merchantNameAr : product.merchantNameEn;
+    final price = widget.isArabic ? product.priceAr : product.priceEn;
+    final isPending = product.status == ProductReviewStatus.pending;
+
+    return Scaffold(
+      backgroundColor: const Color(0xFFF5F7F9),
+      appBar: AppBar(
+        title: Text(l10n.productDetailsAppBarTitle),
+        centerTitle: true,
+        backgroundColor: const Color(0xFFF5F7F9),
+        foregroundColor: AppColors.primaryDark,
+        elevation: 0,
+        leading: IconButton(
+          tooltip: l10n.productBackToReview,
+          onPressed: () => Navigator.of(context).maybePop(),
+          icon: const Icon(Icons.arrow_back_ios_new, size: 19),
+        ),
+        actions: const [
+          Padding(
+            padding: EdgeInsetsDirectional.only(end: 12),
+            child: CircleAvatar(
+              radius: 15,
+              backgroundColor: AppColors.primaryDark,
+              child: Icon(Icons.person_outline, color: Colors.white, size: 17),
+            ),
+          ),
+        ],
+      ),
+      body: ListView(
+        padding: const EdgeInsets.fromLTRB(16, 4, 16, 18),
+        children: [
+          _reviewStatusStrip(l10n, product),
+          const SizedBox(height: 12),
+          _productSummary(
+            context,
+            l10n,
+            product: product,
+            title: title,
+            merchant: merchant,
+            price: price,
+          ),
+          const SizedBox(height: 14),
+          _auditChecklist(l10n),
+          const SizedBox(height: 14),
+          _instantPublishingNotice(l10n),
+        ],
+      ),
+      bottomNavigationBar: SafeArea(
+        minimum: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              width: double.infinity,
+              height: 54,
+              child: FilledButton.icon(
+                onPressed: isPending
+                    ? () => widget.onSubmit(
+                          product,
+                          ProductReviewStatus.approved,
+                        )
+                    : null,
+                icon: const Icon(Icons.verified_outlined, size: 20),
+                label: Text(
+                  l10n.productApproveAndPublishNow,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+                style: FilledButton.styleFrom(
+                  backgroundColor: AppColors.primaryDark,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  elevation: 3,
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            SizedBox(
+              width: double.infinity,
+              height: 46,
+              child: OutlinedButton.icon(
+                onPressed: () => Navigator.of(context).maybePop(),
+                icon: const Icon(Icons.arrow_forward, size: 18),
+                label: Text(l10n.productBackToReview),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: AppColors.textSecondary,
+                  backgroundColor: const Color(0xFFE7E9EC),
+                  side: BorderSide.none,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(13),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _reviewStatusStrip(AppLocalizations l10n, ProductReview product) {
+    final isPending = product.status == ProductReviewStatus.pending;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFEFF1F3),
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.circle, color: AppColors.info, size: 10),
+          const SizedBox(width: 7),
+          Expanded(
+            child: Text(
+              isPending
+                  ? l10n.productReviewSessionInProgress
+                  : _statusLabel(product.status, l10n),
+              style: const TextStyle(
+                color: AppColors.textSecondary,
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+            decoration: BoxDecoration(
+              color: const Color(0xFFDDE3E9),
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  product.reference,
+                  style: const TextStyle(
+                    color: AppColors.primaryDark,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                const Icon(
+                  Icons.verified,
+                  color: AppColors.info,
+                  size: 14,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _productSummary(
+    BuildContext context,
+    AppLocalizations l10n, {
+    required ProductReview product,
+    required String title,
+    required String merchant,
+    required String price,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(17),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.035),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(13),
+            child: AspectRatio(
+              aspectRatio: 1.16,
+              child: _mainProductImage(context, l10n, product),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            title,
+            textAlign: TextAlign.start,
+            style: const TextStyle(
+              color: AppColors.primaryDark,
+              fontWeight: FontWeight.bold,
+              fontSize: 17,
+              height: 1.35,
+            ),
+          ),
+          const SizedBox(height: 5),
+          Row(
+            children: [
+              const Icon(
+                Icons.person_pin_circle_outlined,
+                color: AppColors.textSecondary,
+                size: 16,
+              ),
+              const SizedBox(width: 4),
+              Text(
+                l10n.productSellerLabel,
+                style: const TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 10,
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  merchant,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: AppColors.primaryDark,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              const Icon(Icons.verified, color: AppColors.info, size: 15),
+              const SizedBox(width: 3),
+              Text(
+                l10n.productSellerVerified,
+                style: const TextStyle(color: AppColors.info, fontSize: 9),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF0F2F4),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: [
+                Text(
+                  l10n.productDetailsPrice,
+                  style: const TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 11,
+                  ),
+                ),
+                const Spacer(),
+                Text(
+                  price,
+                  style: const TextStyle(
+                    color: AppColors.primaryDark,
+                    fontSize: 19,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 10),
+          Material(
+            color: const Color(0xFFE7E9EC),
+            borderRadius: BorderRadius.circular(12),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(12),
+              onTap: () => Navigator.of(context).push<void>(
+                MaterialPageRoute<void>(
+                  builder: (_) => ProductAdFullDetailsScreen(
+                    product: product,
+                    isArabic: widget.isArabic,
+                    onSubmit: widget.onSubmit,
+                  ),
+                ),
+              ),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                child: Row(
+                  children: [
+                    const Icon(Icons.visibility, color: AppColors.info),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n.productViewFullAd,
+                            style: const TextStyle(
+                              color: AppColors.primaryDark,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
+                          Text(
+                            l10n.productViewFullAdHint,
+                            style: const TextStyle(
+                              color: AppColors.textSecondary,
+                              fontSize: 9,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Icon(Icons.arrow_back, color: AppColors.info),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _mainProductImage(
+    BuildContext context,
+    AppLocalizations l10n,
+    ProductReview product,
+  ) {
+    return Container(
+      color: const Color(0xFFE7EBEF),
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  const Color(0xFFEFF2F4),
+                  const Color(0xFFD9E0E5),
+                  _imageAccent(product.imageKind).withValues(alpha: 0.48),
+                ],
+              ),
+            ),
+          ),
+          Center(
+            child: Container(
+              width: 154,
+              height: 126,
+              decoration: BoxDecoration(
+                color: const Color(0xFFF8F8F6),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.white, width: 4),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.14),
+                    blurRadius: 12,
+                    offset: const Offset(0, 7),
+                  ),
+                ],
+              ),
+              child: Center(
+                child: Icon(
+                  _iconFor(product.imageKind),
+                  size: 70,
+                  color: _imageAccent(product.imageKind),
+                ),
+              ),
+            ),
+          ),
+          PositionedDirectional(
+            top: 10,
+            start: 10,
+            child: _imagePill(
+              l10n.productInvoiceAttached,
+              Icons.receipt_long_outlined,
+            ),
+          ),
+          PositionedDirectional(
+            top: 10,
+            end: 10,
+            child: _imagePill(
+              l10n.productImageQualityChecked,
+              Icons.photo_camera_back_outlined,
+            ),
+          ),
+          PositionedDirectional(
+            bottom: 10,
+            start: 10,
+            child: _imagePill(
+              product.condition == ProductCondition.used
+                  ? l10n.productConditionUsed
+                  : l10n.productConditionNew,
+              Icons.verified,
+              light: true,
+            ),
+          ),
+          PositionedDirectional(
+            bottom: 10,
+            end: 10,
+            child: _imagePill(
+              '${product.photoCount} ${l10n.productDetailsPhotos}',
+              Icons.photo_library_outlined,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _imagePill(String label, IconData icon, {bool light = false}) {
+    final foreground = light ? AppColors.primaryDark : Colors.white;
+    final background =
+        light ? Colors.white.withValues(alpha: 0.92) : const Color(0xDD102A48);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      decoration: BoxDecoration(
+        color: background,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: foreground, size: 13),
+          const SizedBox(width: 4),
+          Text(
+            label,
+            style: TextStyle(
+              color: foreground,
+              fontSize: 8,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _auditChecklist(AppLocalizations l10n) {
+    return Container(
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(17),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              const Icon(
+                Icons.fact_check_outlined,
+                color: AppColors.info,
+                size: 21,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  l10n.productAuditChecklistTitle,
+                  style: const TextStyle(
+                    color: AppColors.primaryDark,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          _checklistItem(
+            l10n.productAuditPackagingTitle,
+            l10n.productAuditPackagingHint,
+          ),
+          const SizedBox(height: 8),
+          _checklistItem(
+            l10n.productAuditSerialTitle,
+            l10n.productAuditSerialHint,
+          ),
+          const SizedBox(height: 8),
+          _checklistItem(
+            l10n.productAuditDescriptionTitle,
+            l10n.productAuditDescriptionHint,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _checklistItem(String title, String hint) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 11),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF0F2F4),
+        borderRadius: BorderRadius.circular(13),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Icon(
+            Icons.check_box_rounded,
+            color: AppColors.primaryDark,
+            size: 23,
+          ),
+          const SizedBox(width: 9),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    color: AppColors.textPrimary,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                  ),
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  hint,
+                  style: const TextStyle(
+                    color: AppColors.textSecondary,
+                    height: 1.35,
+                    fontSize: 10,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _instantPublishingNotice(AppLocalizations l10n) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF0F2F4),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Icon(Icons.bolt, color: AppColors.info, size: 25),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.productInstantPublishingTitle,
+                  style: const TextStyle(
+                    color: AppColors.primaryDark,
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  l10n.productInstantPublishingHint,
+                  style: const TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 10,
+                    height: 1.4,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _statusLabel(ProductReviewStatus status, AppLocalizations l10n) =>
+      switch (status) {
+        ProductReviewStatus.pending => l10n.productReviewSessionInProgress,
+        ProductReviewStatus.approved => l10n.productStatusApproved,
+        ProductReviewStatus.hidden => l10n.productStatusHidden,
+        ProductReviewStatus.rejected => l10n.productStatusRejected,
+        ProductReviewStatus.suspended => l10n.productStatusSuspended,
+      };
+
+  Color _imageAccent(ProductImageKind kind) => switch (kind) {
+        ProductImageKind.watch => const Color(0xFF50677A),
+        ProductImageKind.appliance => const Color(0xFF637A89),
+        ProductImageKind.camera => const Color(0xFF232A31),
+        ProductImageKind.phone => const Color(0xFF697F9B),
+        ProductImageKind.fragrance => const Color(0xFF95795E),
+        ProductImageKind.tool => const Color(0xFF76816B),
+      };
+
+  IconData _iconFor(ProductImageKind kind) => switch (kind) {
+        ProductImageKind.watch => Icons.watch_outlined,
+        ProductImageKind.appliance => Icons.kitchen_outlined,
+        ProductImageKind.camera => Icons.camera_alt_outlined,
+        ProductImageKind.phone => Icons.phone_iphone,
+        ProductImageKind.fragrance => Icons.spa_outlined,
+        ProductImageKind.tool => Icons.handyman_outlined,
+      };
+}
