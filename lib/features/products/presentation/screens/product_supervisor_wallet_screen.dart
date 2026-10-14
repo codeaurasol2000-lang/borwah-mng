@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../finance/presentation/utils/financial_request_notifications.dart';
+import '../../../finance/domain/entities/withdrawal_request_entity.dart';
+import '../../../finance/domain/repositories/finance_repository.dart';
+import '../../../finance/presentation/widgets/withdrawal_request_details_sheet.dart';
 import '../../domain/entities/product_supervisor_audit_entry.dart';
 import '../../domain/repositories/product_supervisor_audit_repository.dart';
 
@@ -24,6 +28,67 @@ class _ProductSupervisorWalletScreenState
   final _accountNameController =
       TextEditingController(text: 'م. عبد الرحمن الشهري (موثق)');
   _PayoutDestination _destination = _PayoutDestination.instapay;
+  FinancialOperationType _operationType = FinancialOperationType.withdrawal;
+  bool _isSubmitting = false;
+  bool _isLoadingRequests = true;
+  bool _requestsLoadFailed = false;
+  List<WithdrawalRequestEntity> _financialRequests = const [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFinancialRequests();
+  }
+
+  Future<void> _loadFinancialRequests() async {
+    if (mounted) {
+      setState(() {
+        _isLoadingRequests = true;
+        _requestsLoadFailed = false;
+      });
+    }
+    try {
+      final result = await sl<FinanceRepository>().getSupervisorWithdrawals();
+      if (!mounted) return;
+      result.fold(
+        (failure) {
+          FlutterError.reportError(
+            FlutterErrorDetails(
+              exception: StateError(failure.message),
+              library: 'product supervisor wallet',
+              context: ErrorDescription('while loading finance request status'),
+            ),
+          );
+          setState(() {
+            _isLoadingRequests = false;
+            _requestsLoadFailed = true;
+          });
+        },
+        (requests) => setState(() {
+          _financialRequests = requests
+              .where((request) => request.sourceAccount == 'products')
+              .toList(growable: false);
+          _isLoadingRequests = false;
+          _requestsLoadFailed = false;
+        }),
+      );
+    } on Object catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'product supervisor wallet',
+          context: ErrorDescription('while loading finance request status'),
+        ),
+      );
+      if (mounted) {
+        setState(() {
+          _isLoadingRequests = false;
+          _requestsLoadFailed = true;
+        });
+      }
+    }
+  }
 
   @override
   void dispose() {
@@ -36,9 +101,17 @@ class _ProductSupervisorWalletScreenState
   Future<void> _confirmWithdrawal() async {
     final l10n = AppLocalizations.of(context)!;
     final amount = int.tryParse(_amountController.text.trim());
-    if (amount == null || amount < 100 || amount > 8450) {
+    final maxAmount =
+        _operationType == FinancialOperationType.withdrawal ? 8450 : 20000;
+    if (amount == null || amount < 100 || amount > maxAmount) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.productWalletAmountError)),
+        SnackBar(
+          content: Text(
+            _operationType == FinancialOperationType.withdrawal
+                ? l10n.financeWalletInvalidWithdrawalAmount
+                : l10n.financeWalletInvalidDepositAmount,
+          ),
+        ),
       );
       return;
     }
@@ -53,8 +126,15 @@ class _ProductSupervisorWalletScreenState
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: Text(l10n.productWalletConfirmTitle),
-        content: Text(l10n.productWalletConfirmMessage(amount.toString())),
+        title: Text(_operationType == FinancialOperationType.withdrawal
+            ? l10n.productWalletConfirmTitle
+            : l10n.financeWalletConfirmDepositTitle),
+        content: Text(_operationType == FinancialOperationType.withdrawal
+            ? l10n.productWalletConfirmMessage(amount.toString())
+            : l10n.financeWalletConfirmDepositMessage(
+                amount.toString(),
+                l10n.finRequestCurrency,
+              )),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext, false),
@@ -62,12 +142,80 @@ class _ProductSupervisorWalletScreenState
           ),
           FilledButton(
             onPressed: () => Navigator.pop(dialogContext, true),
-            child: Text(l10n.productWalletConfirmAction),
+            child: Text(_operationType == FinancialOperationType.withdrawal
+                ? l10n.productWalletConfirmAction
+                : l10n.financeWalletConfirmDepositAction),
           ),
         ],
       ),
     );
     if (!mounted || confirmed != true) return;
+    setState(() => _isSubmitting = true);
+    final transferAddress = _addressController.text.trim();
+    final transferMethod = switch (_destination) {
+      _PayoutDestination.instapay => l10n.productWalletInstapay,
+      _PayoutDestination.wallet => l10n.productWalletMobileWallet,
+      _PayoutDestination.bank => l10n.productWalletBankTransfer,
+    };
+    var requestCreated = false;
+    String? requestFailure;
+    WithdrawalRequestEntity? submittedRequest;
+    try {
+      final financeResult =
+          await sl<FinanceRepository>().submitSupervisorWithdrawal(
+        beneficiaryName: _accountNameController.text.trim(),
+        beneficiaryRole: 'مشرف حساب المنتجات',
+        sourceAccount: 'products',
+        amount: amount.toDouble(),
+        operationType: _operationType,
+        bankName: transferMethod,
+        iban: transferAddress,
+        transferMethod: transferMethod,
+      );
+      if (!mounted) return;
+      requestCreated = financeResult.fold(
+        (failure) {
+          requestFailure = failure.message;
+          return false;
+        },
+        (request) {
+          submittedRequest = request;
+          return true;
+        },
+      );
+    } catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'product supervisor wallet',
+          context: ErrorDescription('while submitting a financial request'),
+        ),
+      );
+      if (!mounted) return;
+      await _loadFinancialRequests();
+      if (!mounted) return;
+      setState(() => _isSubmitting = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(requestFailure ?? l10n.financeWalletRequestFailed),
+        ),
+      );
+      return;
+    }
+    if (!mounted) return;
+    if (!requestCreated) {
+      setState(() => _isSubmitting = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(l10n.financeWalletRequestFailed)),
+      );
+      return;
+    }
+
+    if (submittedRequest != null) {
+      await notifyFinanceOfSupervisorRequest(submittedRequest!);
+    }
+    var auditSaved = true;
     try {
       await sl<ProductSupervisorAuditRepository>().recordEntry(
         ProductSupervisorAuditEntry(
@@ -88,15 +236,16 @@ class _ProductSupervisorWalletScreenState
           context: ErrorDescription('while recording a withdrawal request'),
         ),
       );
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.productAuditSaveError)),
-      );
-      return;
+      auditSaved = false;
     }
     if (!mounted) return;
+    setState(() => _isSubmitting = false);
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(l10n.productWalletRequestSent)),
+      SnackBar(
+        content: Text(auditSaved
+            ? l10n.financeWalletRequestSubmitted
+            : '${l10n.financeWalletRequestSubmitted} ${l10n.productAuditSaveError}'),
+      ),
     );
   }
 
@@ -193,54 +342,7 @@ class _ProductSupervisorWalletScreenState
               description: l10n.productWalletBonusDescription,
             ),
             const SizedBox(height: 22),
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    l10n.productWalletHistoryTitle,
-                    style: const TextStyle(
-                      color: AppColors.textPrimary,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () => _showFullHistory(context, l10n),
-                  child: Text(
-                    l10n.productWalletFullStatement,
-                    style: const TextStyle(fontSize: 11),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 4),
-            _TransactionTile(
-              title: l10n.productWalletTransactionOne,
-              subtitle: l10n.productWalletTransactionOneMeta,
-              amount: l10n.productWalletTransactionOneAmount,
-              status: l10n.productWalletPaid,
-              icon: Icons.account_balance_outlined,
-              positive: false,
-            ),
-            const SizedBox(height: 6),
-            _TransactionTile(
-              title: l10n.productWalletTransactionTwo,
-              subtitle: l10n.productWalletTransactionTwoMeta,
-              amount: l10n.productWalletTransactionTwoAmount,
-              status: l10n.productWalletDeposit,
-              icon: Icons.add_task_outlined,
-              positive: true,
-            ),
-            const SizedBox(height: 6),
-            _TransactionTile(
-              title: l10n.productWalletTransactionThree,
-              subtitle: l10n.productWalletTransactionThreeMeta,
-              amount: l10n.productWalletTransactionThreeAmount,
-              status: l10n.productWalletPaid,
-              icon: Icons.bolt_rounded,
-              positive: false,
-            ),
+            _buildFinanceRequestHistory(l10n),
             const SizedBox(height: 18),
             _AuditFooter(
               title: l10n.productWalletAuditTitle,
@@ -270,7 +372,7 @@ class _ProductSupervisorWalletScreenState
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  l10n.productWalletRequestTitle,
+                  l10n.financeWalletRequestTitle,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     color: AppColors.textPrimary,
@@ -285,8 +387,49 @@ class _ProductSupervisorWalletScreenState
           Row(
             children: [
               Expanded(
+                child: ChoiceChip(
+                  key: const ValueKey('product_wallet_withdrawal'),
+                  label: Text(l10n.financeOperationWithdrawal),
+                  selected: _operationType == FinancialOperationType.withdrawal,
+                  onSelected: _isSubmitting
+                      ? null
+                      : (_) => setState(
+                            () => _operationType =
+                                FinancialOperationType.withdrawal,
+                          ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: ChoiceChip(
+                  key: const ValueKey('product_wallet_deposit'),
+                  label: Text(l10n.financeOperationDeposit),
+                  selected: _operationType == FinancialOperationType.deposit,
+                  onSelected: _isSubmitting
+                      ? null
+                      : (_) => setState(
+                            () =>
+                                _operationType = FinancialOperationType.deposit,
+                          ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            l10n.financeWalletOperationNote,
+            style: const TextStyle(
+              color: AppColors.textSecondary,
+              fontSize: 10,
+              height: 1.4,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
                 child: Text(
-                  l10n.productWalletAmountToWithdraw,
+                  l10n.financeWalletAmountLabel,
                   style: const TextStyle(
                       fontSize: 12, color: AppColors.textSecondary),
                 ),
@@ -413,10 +556,10 @@ class _ProductSupervisorWalletScreenState
           SizedBox(
             height: 50,
             child: FilledButton.icon(
-              onPressed: _confirmWithdrawal,
+              onPressed: _isSubmitting ? null : _confirmWithdrawal,
               icon: const Icon(Icons.currency_exchange, size: 19),
               label: Text(
-                l10n.productWalletSubmitRequest,
+                l10n.financeWalletSubmitRequest,
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               style: FilledButton.styleFrom(
@@ -432,30 +575,97 @@ class _ProductSupervisorWalletScreenState
     );
   }
 
-  void _showFullHistory(BuildContext context, AppLocalizations l10n) {
-    showModalBottomSheet<void>(
-      context: context,
-      showDragHandle: true,
-      builder: (context) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 4, 20, 24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+  Widget _buildFinanceRequestHistory(AppLocalizations l10n) {
+    final isArabic = l10n.localeName.startsWith('ar');
+    String statusLabel(RequestStatus status) => switch (status) {
+          RequestStatus.pending => l10n.withdrawalDetailsStatusPending,
+          RequestStatus.underInvestigation =>
+            l10n.withdrawalDetailsStatusInvestigation,
+          RequestStatus.approved => l10n.withdrawalDetailsStatusApproved,
+          RequestStatus.frozen => l10n.withdrawalDetailsStatusFrozen,
+          RequestStatus.rejected => l10n.withdrawalDetailsStatusRejected,
+        };
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.cardBorder),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
             children: [
-              Text(
-                l10n.productWalletFullStatement,
-                style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              Expanded(
+                child: Text(
+                  l10n.productWalletHistoryTitle,
+                  style: const TextStyle(
+                    color: AppColors.textPrimary,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
               ),
-              const SizedBox(height: 8),
-              Text(
-                l10n.productWalletStatementUnavailable,
-                style: const TextStyle(color: AppColors.textSecondary),
+              IconButton(
+                tooltip: l10n.refreshBalances,
+                onPressed: _isLoadingRequests ? null : _loadFinancialRequests,
+                icon: const Icon(Icons.refresh),
               ),
             ],
           ),
-        ),
+          if (_isLoadingRequests)
+            const Center(child: CircularProgressIndicator())
+          else if (_requestsLoadFailed)
+            TextButton.icon(
+              onPressed: _loadFinancialRequests,
+              icon: const Icon(Icons.refresh),
+              label: Text(l10n.financeWalletHistoryLoadError),
+            )
+          else if (_financialRequests.isEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              child: Text(
+                l10n.financeWalletNoRequests,
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: AppColors.textSecondary),
+              ),
+            )
+          else
+            for (final request in _financialRequests)
+              Material(
+                color: Colors.white,
+                child: ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(
+                    request.operationType == FinancialOperationType.withdrawal
+                        ? l10n.financeOperationWithdrawal
+                        : l10n.financeOperationDeposit,
+                    style: const TextStyle(fontWeight: FontWeight.w700),
+                  ),
+                  subtitle: Text(
+                    '${request.requestNumber} · ${statusLabel(request.status)}'
+                    '${request.alertNotice == null ? '' : '\n${request.alertNotice}'}',
+                    textDirection:
+                        isArabic ? TextDirection.rtl : TextDirection.ltr,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  trailing: Text(
+                    '${request.netAmount.toStringAsFixed(2)} ${l10n.finRequestCurrency}',
+                    textAlign: TextAlign.end,
+                    style: const TextStyle(
+                      color: AppColors.primaryDark,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 11,
+                    ),
+                  ),
+                  onTap: () =>
+                      showWithdrawalRequestDetailsSheet(context, request),
+                ),
+              ),
+        ],
       ),
     );
   }
@@ -718,86 +928,6 @@ class _BonusBanner extends StatelessWidget {
   }
 }
 
-class _TransactionTile extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final String amount;
-  final String status;
-  final IconData icon;
-  final bool positive;
-
-  const _TransactionTile({
-    required this.title,
-    required this.subtitle,
-    required this.amount,
-    required this.status,
-    required this.icon,
-    required this.positive,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-        border: Border.all(color: AppColors.cardBorder),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Wrap(
-                  spacing: 6,
-                  runSpacing: 3,
-                  children: [
-                    Text(title,
-                        style: const TextStyle(
-                            color: AppColors.textPrimary,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 12)),
-                    _SmallBadge(text: status),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                Text(subtitle,
-                    style: const TextStyle(
-                        color: AppColors.textMutedDark, fontSize: 10)),
-              ],
-            ),
-          ),
-          const SizedBox(width: 8),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                amount,
-                style: TextStyle(
-                  color: positive ? AppColors.infoDark : AppColors.textPrimary,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                ),
-              ),
-              Text(context.l10n.productWalletCurrency,
-                  style: const TextStyle(
-                      color: AppColors.textSecondary, fontSize: 9)),
-            ],
-          ),
-          const SizedBox(width: 10),
-          CircleAvatar(
-            radius: 20,
-            backgroundColor: AppColors.surfaceLight,
-            child: Icon(icon, color: AppColors.primaryDark, size: 20),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class _DestinationButton extends StatelessWidget {
   final bool selected;
   final IconData icon;
@@ -984,8 +1114,4 @@ class _AuditFooter extends StatelessWidget {
       ],
     );
   }
-}
-
-extension on BuildContext {
-  AppLocalizations get l10n => AppLocalizations.of(this)!;
 }

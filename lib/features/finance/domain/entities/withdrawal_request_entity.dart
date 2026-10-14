@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 
 enum BeneficiaryType { merchant, user, supervisor, serviceProvider }
 enum RequestStatus { pending, underInvestigation, approved, frozen, rejected }
+enum FinancialOperationType { withdrawal, deposit, promotion }
 
 class WithdrawalRequestEntity extends Equatable {
   final String id;
@@ -22,6 +23,8 @@ class WithdrawalRequestEntity extends Equatable {
   final bool isInstantTransferReady;   // هل متاح للصرف الفوري
   final String? sourceOfFunds;         // مصدر المستحقات أو تفاصيل الإنجاز الميداني
   final String? transferMethod;        // طريقة التحويل
+  final FinancialOperationType operationType;
+  final String? sourceAccount;
 
   const WithdrawalRequestEntity({
     required this.id,
@@ -42,6 +45,8 @@ class WithdrawalRequestEntity extends Equatable {
     this.isInstantTransferReady = false,
     this.sourceOfFunds,
     this.transferMethod,
+    this.operationType = FinancialOperationType.withdrawal,
+    this.sourceAccount,
   });
 
   WithdrawalRequestEntity copyWith({
@@ -63,6 +68,8 @@ class WithdrawalRequestEntity extends Equatable {
     bool? isInstantTransferReady,
     String? sourceOfFunds,
     String? transferMethod,
+    FinancialOperationType? operationType,
+    String? sourceAccount,
   }) {
     return WithdrawalRequestEntity(
       id: id ?? this.id,
@@ -83,9 +90,18 @@ class WithdrawalRequestEntity extends Equatable {
       isInstantTransferReady: isInstantTransferReady ?? this.isInstantTransferReady,
       sourceOfFunds: sourceOfFunds ?? this.sourceOfFunds,
       transferMethod: transferMethod ?? this.transferMethod,
+      operationType: operationType ?? this.operationType,
+      sourceAccount: sourceAccount ?? this.sourceAccount,
     );
   }
 
   @override
-  List<Object?> get props => [id, requestNumber, netAmount, status];
+  List<Object?> get props => [
+        id,
+        requestNumber,
+        netAmount,
+        status,
+        operationType,
+        sourceAccount,
+      ];
 }

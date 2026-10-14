@@ -14,6 +14,7 @@ class MerchantModel extends MerchantEntity {
     super.logoUrl,
     super.logoIcon,
     required super.status,
+    super.isFeatured = false,
     super.statusTagText,
     super.statusTagTextEn,
     super.location,
@@ -52,6 +53,7 @@ class MerchantModel extends MerchantEntity {
     super.violationNotice,
     super.violationNoticeEn,
     super.recentAdvertisements = const [],
+    super.allAdvertisements = const [],
   });
 
   factory MerchantModel.fromJson(Map<String, dynamic> json) {
@@ -69,6 +71,7 @@ class MerchantModel extends MerchantEntity {
         (e) => e.name == json['status'],
         orElse: () => MerchantStatus.activeVerified,
       ),
+      isFeatured: json['isFeatured'] as bool? ?? false,
       statusTagText: json['statusTagText'] as String?,
       statusTagTextEn: json['statusTagTextEn'] as String?,
       location: json['location'] as String?,
@@ -106,6 +109,19 @@ class MerchantModel extends MerchantEntity {
       violationNotice: json['violationNotice'] as String?,
       violationNoticeEn: json['violationNoticeEn'] as String?,
       recentAdvertisements: (json['recentAdvertisements'] as List<dynamic>?)
+              ?.map((e) => MerchantAdvertisement(
+                    title: e['title'] as String,
+                    titleEn: e['titleEn'] as String,
+                    reference: e['reference'] as String,
+                    price: e['price'] as String,
+                    status: MerchantAdvertisementStatus.values.firstWhere(
+                      (s) => s.name == e['status'],
+                      orElse: () => MerchantAdvertisementStatus.approved,
+                    ),
+                  ))
+              .toList() ??
+          const [],
+      allAdvertisements: (json['allAdvertisements'] as List<dynamic>?)
               ?.map((e) => MerchantAdvertisement(
                     title: e['title'] as String,
                     titleEn: e['titleEn'] as String,

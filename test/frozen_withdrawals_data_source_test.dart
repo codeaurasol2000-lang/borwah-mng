@@ -1,12 +1,16 @@
 import 'package:barwah_app/features/finance/data/datasources/finance_mock_data_source.dart';
 import 'package:barwah_app/features/finance/domain/entities/withdrawal_request_entity.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   group('FinanceMockDataSource frozen withdrawals', () {
     late FinanceMockDataSource dataSource;
 
     setUp(() {
+      SharedPreferences.setMockInitialValues({});
       dataSource = FinanceMockDataSource();
     });
 
@@ -24,7 +28,9 @@ void main() {
 
     test('restores a held request to pending and removes it from this queue',
         () async {
-      final request = (await dataSource.getFrozenWithdrawals()).first;
+      final request = (await dataSource.getFrozenWithdrawals()).firstWhere(
+        (request) => request.beneficiaryType == BeneficiaryType.serviceProvider,
+      );
       final balancesBefore = (await dataSource.getBankAccounts())
           .map((account) => account.balance)
           .toList();
@@ -32,10 +38,11 @@ void main() {
       await dataSource.restoreFrozenWithdrawal(
           request.id, request.beneficiaryType);
 
-      final requestsAfter = await dataSource.getFrozenWithdrawals();
+      final reloadedDataSource = FinanceMockDataSource();
+      final requestsAfter = await reloadedDataSource.getFrozenWithdrawals();
       final allWithdrawals = [
-        ...await dataSource.getMerchantWithdrawals(),
-        ...await dataSource.getSupervisorWithdrawals(),
+        ...await reloadedDataSource.getMerchantWithdrawals(),
+        ...await reloadedDataSource.getSupervisorWithdrawals(),
       ];
       final restored = allWithdrawals.singleWhere(
         (item) =>
@@ -54,7 +61,9 @@ void main() {
     });
 
     test('rejects and stores the forfeiture reason', () async {
-      final request = (await dataSource.getFrozenWithdrawals()).first;
+      final request = (await dataSource.getFrozenWithdrawals()).firstWhere(
+        (request) => request.beneficiaryType == BeneficiaryType.serviceProvider,
+      );
       final balancesBefore = (await dataSource.getBankAccounts())
           .map((account) => account.balance)
           .toList();
@@ -66,9 +75,10 @@ void main() {
         reason,
       );
 
+      final reloadedDataSource = FinanceMockDataSource();
       final allWithdrawals = [
-        ...await dataSource.getMerchantWithdrawals(),
-        ...await dataSource.getSupervisorWithdrawals(),
+        ...await reloadedDataSource.getMerchantWithdrawals(),
+        ...await reloadedDataSource.getSupervisorWithdrawals(),
       ];
       final rejected = allWithdrawals.singleWhere(
         (item) =>
@@ -78,7 +88,7 @@ void main() {
 
       expect(rejected.status, RequestStatus.rejected);
       expect(rejected.alertNotice, reason);
-      expect(await dataSource.getFrozenWithdrawals(), hasLength(2));
+      expect(await reloadedDataSource.getFrozenWithdrawals(), hasLength(2));
       expect(
         (await dataSource.getBankAccounts())
             .map((account) => account.balance)

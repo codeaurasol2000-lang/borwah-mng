@@ -25,7 +25,39 @@ abstract class FinanceRemoteDataSource {
     String? attachmentName,
   });
   Future<List<WithdrawalRequestEntity>> getMerchantWithdrawals();
+  Future<WithdrawalRequestEntity> submitMerchantFinancialRequest({
+    required String beneficiaryName,
+    required String requestTitle,
+    required String sourceAccount,
+    required double amount,
+    BeneficiaryType beneficiaryType = BeneficiaryType.merchant,
+    FinancialOperationType operationType = FinancialOperationType.deposit,
+  });
+  Future<void> approveMerchantFinancialRequest(String requestId);
+  Future<void> freezeMerchantFinancialRequest(String requestId, String reason);
+  Future<void> rejectMerchantFinancialRequest(String requestId, String reason);
   Future<List<WithdrawalRequestEntity>> getSupervisorWithdrawals();
+  Future<WithdrawalRequestEntity> submitSupervisorFinancialRequest({
+    required String beneficiaryName,
+    required String beneficiaryRole,
+    required String sourceAccount,
+    required double amount,
+    required FinancialOperationType operationType,
+    required String bankName,
+    required String iban,
+    required String transferMethod,
+    required String dateText,
+  });
+  Future<WithdrawalRequestEntity> submitSupervisorWithdrawal({
+    required String beneficiaryName,
+    required String beneficiaryRole,
+    required String sourceAccount,
+    required double amount,
+    FinancialOperationType operationType = FinancialOperationType.withdrawal,
+    required String bankName,
+    required String iban,
+    required String transferMethod,
+  });
   Future<List<WithdrawalRequestEntity>> getFrozenWithdrawals();
   Future<void> restoreFrozenWithdrawal(
       String requestId, BeneficiaryType beneficiaryType);
@@ -45,4 +77,5 @@ abstract class FinanceRemoteDataSource {
   Future<DepartmentWalletEntity> getDepartmentWallet(DepartmentType type);
   Future<void> approveWithdrawal(String requestId);
   Future<void> freezeWithdrawal(String requestId, String reason);
+  Future<void> rejectWithdrawal(String requestId, String reason);
 }

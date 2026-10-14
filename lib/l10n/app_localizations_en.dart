@@ -309,6 +309,1143 @@ class AppLocalizationsEn extends AppLocalizations {
       'Dues for certified technicians and service providers';
 
   @override
+  String get servicesSupervisorRoleBadge => 'Services Supervisor';
+
+  @override
+  String get servicesSupervisorBadgeCode => '#SRV-01';
+
+  @override
+  String get servicesSupervisorAccountName => 'Services Supervisor';
+
+  @override
+  String get servicesProfileTitle => 'My Profile';
+
+  @override
+  String get servicesProfileName => 'Abdulaziz bin Khalid Al-Salem';
+
+  @override
+  String get servicesProfileIdentity => 'Senior Field Supervisor · Services';
+
+  @override
+  String get servicesProfileCoverage =>
+      'Coverage: Riyadh and neighboring areas';
+
+  @override
+  String get servicesProfileAvailability =>
+      'On duty — available for assignments';
+
+  @override
+  String get servicesProfileCompletedTasks => 'Completed requests';
+
+  @override
+  String get servicesProfileFieldTasks => 'Verified field tasks';
+
+  @override
+  String get servicesProfilePerformanceRating => 'Performance rating';
+
+  @override
+  String get servicesProfileRatingDetail => 'Excellent · Last 120 tasks';
+
+  @override
+  String get servicesProfileAssignmentTime => 'Average assignment time';
+
+  @override
+  String get servicesProfileMinutes => 'minutes';
+
+  @override
+  String get servicesProfileComplaintResolution => 'Complaint resolution';
+
+  @override
+  String get servicesProfileResolutionDetail => 'Within target';
+
+  @override
+  String get servicesProfileDemoMetricsNotice =>
+      'Profile details, performance metrics, and balances are demo values until an approved data source is connected.';
+
+  @override
+  String get servicesProfileLoadError =>
+      'Could not load profile details saved on this device.';
+
+  @override
+  String get servicesProfileWalletTitle => 'Dues and commissions wallet';
+
+  @override
+  String get servicesProfileWalletDescription =>
+      'Manage dues and withdraw earnings';
+
+  @override
+  String get servicesProfileAvailableBalance => 'Available to withdraw';
+
+  @override
+  String get servicesProfilePendingDues => 'Pending settlement';
+
+  @override
+  String get servicesProfileCurrency => 'SAR';
+
+  @override
+  String get servicesProfileOpenWallet => 'Open wallet and withdraw';
+
+  @override
+  String get servicesProfileWalletDetails =>
+      'Review your available balance and pending dues from the wallet page.';
+
+  @override
+  String get servicesAccountEditProfile => 'Account and notification settings';
+
+  @override
+  String get servicesAccountName => 'Name';
+
+  @override
+  String get servicesAccountPhone => 'Phone number';
+
+  @override
+  String get servicesAccountCoverage => 'Coverage area';
+
+  @override
+  String get servicesAccountSave => 'Save';
+
+  @override
+  String get servicesAccountSaved => 'Changes saved on this device';
+
+  @override
+  String servicesAccountSaveError(Object error) {
+    return 'Could not save changes: $error';
+  }
+
+  @override
+  String get servicesAccountLoadError => 'Could not load local account data.';
+
+  @override
+  String get servicesAccountRetry => 'Retry';
+
+  @override
+  String get servicesAccountNameRequired => 'Enter a name.';
+
+  @override
+  String get servicesAccountLocalOnly =>
+      'These details are stored on this device only and do not update the server account.';
+
+  @override
+  String get servicesAccountNotificationsTitle => 'Notification preferences';
+
+  @override
+  String get servicesAccountAssignmentAlerts => 'Service assignment alerts';
+
+  @override
+  String get servicesAccountComplaintAlerts => 'Complaint updates';
+
+  @override
+  String get servicesAccountSystemAlerts => 'Administrative notices';
+
+  @override
+  String get servicesAccountPreferencesLocalOnly =>
+      'Preferences are stored locally and are not connected to a notification service.';
+
+  @override
+  String get servicesAccountWalletTitle => 'Wallet and transactions';
+
+  @override
+  String get servicesAccountWalletUnavailable => 'Wallet is not connected';
+
+  @override
+  String get servicesAccountWalletUnavailableDetails =>
+      'An approved financial service must be connected to show balances or submit withdrawals. No transactions can be made in this build.';
+
+  @override
+  String get servicesAccountActivityTitle => 'Account activity';
+
+  @override
+  String get servicesAccountNoActivity => 'No activity has been recorded yet.';
+
+  @override
+  String get servicesAccountActivityLocalOnly =>
+      'This history is stored on this device and is not a centralized audit log.';
+
+  @override
+  String get servicesAccountActivityProfileUpdated => 'Profile details updated';
+
+  @override
+  String get servicesAccountActivityPreferencesUpdated =>
+      'Notification preferences updated';
+
+  @override
+  String get servicesAccountActivityOther => 'Account activity';
+
+  @override
+  String get servicesAccountLogoutTitle => 'Sign out';
+
+  @override
+  String get servicesAccountLogoutMessage =>
+      'Do you want to sign out of the services supervisor account?';
+
+  @override
+  String get servicesWalletBack => 'Back';
+
+  @override
+  String get servicesWalletTitle => 'My wallet and transactions';
+
+  @override
+  String get servicesWalletSummaryTitle => 'Wallet summary';
+
+  @override
+  String get servicesWalletLiveUpdate => 'Demo data';
+
+  @override
+  String get servicesWalletTotalBalance => 'Total balance';
+
+  @override
+  String get servicesWalletAvailable => 'Available balance';
+
+  @override
+  String get servicesWalletReadyForTransfer => 'Ready for transfer';
+
+  @override
+  String get servicesWalletPending => 'Pending dues';
+
+  @override
+  String get servicesWalletExpectedThisWeek => 'Expected this week';
+
+  @override
+  String get servicesWalletMonthlyCommissions => 'Current month commissions';
+
+  @override
+  String get servicesWalletWithdrawalTitle => 'Request a withdrawal';
+
+  @override
+  String get servicesWalletAmountLabel => 'Withdrawal amount';
+
+  @override
+  String get servicesWalletMaxAmount => 'Maximum';
+
+  @override
+  String get servicesWalletMethodTitle => 'Choose a transfer method';
+
+  @override
+  String get servicesWalletInstapay => 'InstaPay transfer';
+
+  @override
+  String get servicesWalletInstapayDetails => 'Instant transfer to account';
+
+  @override
+  String get servicesWalletInstapayId => 'InstaPay ID';
+
+  @override
+  String get servicesWalletMobileWallet => 'Mobile wallet';
+
+  @override
+  String get servicesWalletMobileWalletDetails => 'Transfer to a phone number';
+
+  @override
+  String get servicesWalletMobileNumber => 'Phone number';
+
+  @override
+  String get servicesWalletBank => 'Bank transfer';
+
+  @override
+  String get servicesWalletBankDetails => 'Deposit to bank account';
+
+  @override
+  String get servicesWalletBankAccount => 'Bank account number';
+
+  @override
+  String get servicesWalletReviewNote =>
+      'Requests are recorded for financial-supervisor review. A transfer or deposit will not occur until approval and payment-service integration.';
+
+  @override
+  String get servicesWalletSubmit => 'Submit withdrawal request';
+
+  @override
+  String get financeWalletWithdrawal => 'Withdrawal';
+
+  @override
+  String get financeWalletDeposit => 'Deposit';
+
+  @override
+  String get financeWalletDepositTitle => 'Request a wallet deposit';
+
+  @override
+  String get financeWalletSubmitDeposit => 'Submit deposit request';
+
+  @override
+  String get financeWalletWithdrawalNote =>
+      'The request will remain pending and no money will be transferred until the financial supervisor approves it.';
+
+  @override
+  String get financeWalletDepositNote =>
+      'The requested amount will not be added to your balance until the financial supervisor approves it.';
+
+  @override
+  String get financeWalletConfirmWithdrawal => 'Confirm withdrawal request';
+
+  @override
+  String get financeWalletConfirmDeposit => 'Confirm deposit request';
+
+  @override
+  String financeWalletConfirmWithdrawalMessage(Object amount, Object currency) {
+    return 'Send a withdrawal request for $amount $currency to the financial supervisor?';
+  }
+
+  @override
+  String financeWalletConfirmDepositMessage(Object amount, Object currency) {
+    return 'Send a deposit request for $amount $currency to the financial supervisor?';
+  }
+
+  @override
+  String get financeWalletInvalidDepositAmount =>
+      'Enter a valid amount greater than zero.';
+
+  @override
+  String get financeWalletWithdrawalRequestSent =>
+      'Withdrawal request sent to the financial supervisor. It is pending approval.';
+
+  @override
+  String get financeWalletDepositRequestSent =>
+      'Deposit request sent to the financial supervisor. It is pending approval.';
+
+  @override
+  String get financeWalletRequestFailed =>
+      'Could not submit the financial request. Please try again.';
+
+  @override
+  String get financeWalletHistoryLoadError =>
+      'Could not load your financial requests. Tap to retry.';
+
+  @override
+  String get financeWalletNoRequests =>
+      'You have not submitted any financial requests.';
+
+  @override
+  String financeWalletPendingNotification(Object count) {
+    return '$count new supervisor financial request(s) await your review.';
+  }
+
+  @override
+  String get financeOperationType => 'Operation type';
+
+  @override
+  String get financeSourceAccount => 'Requesting account';
+
+  @override
+  String get financeRequestApprovalTitle => 'Approve financial request';
+
+  @override
+  String get financeRequestRejectionTitle => 'Reject financial request';
+
+  @override
+  String financeRequestApprovalConfirmation(
+      Object operation, Object name, Object amount) {
+    return 'Approve this $operation request for $name ($amount)?';
+  }
+
+  @override
+  String get financeRequestApproved =>
+      'Request approved. Actual payment or balance posting still requires payment-service integration.';
+
+  @override
+  String get financeRequestApprovedBadge => 'Approved';
+
+  @override
+  String get financeRequestRejected => 'Financial request rejected.';
+
+  @override
+  String get financeRequestRejectedBadge => 'Rejected';
+
+  @override
+  String get financeRequestFrozen =>
+      'Financial request frozen for investigation.';
+
+  @override
+  String get financeRequestDecisionFailed =>
+      'Could not save the decision. The request was not changed.';
+
+  @override
+  String get servicesWalletHistoryTitle => 'Transaction history';
+
+  @override
+  String get servicesWalletFullStatement => 'View all';
+
+  @override
+  String get servicesWalletStatementNotice =>
+      'This device-local request history is not synced to a server or financial service.';
+
+  @override
+  String get servicesWalletHistoryInstapay => 'InstaPay transfer';
+
+  @override
+  String get servicesWalletHistoryOneDate => 'Today · 10:30 AM';
+
+  @override
+  String get servicesWalletStatusCompleted => 'Completed';
+
+  @override
+  String get servicesWalletHistoryBank => 'Bank transfer';
+
+  @override
+  String get servicesWalletHistoryTwoDate => 'Yesterday · 02:15 PM';
+
+  @override
+  String get servicesWalletHistoryReview => 'Withdrawal request';
+
+  @override
+  String get servicesWalletHistoryThreeDate => 'May 18, 2025 · 11:20 AM';
+
+  @override
+  String get servicesWalletHistoryNewRequest => 'New withdrawal request';
+
+  @override
+  String get servicesWalletHistoryJustNow => 'Just now';
+
+  @override
+  String get servicesWalletStatusReview => 'Under review';
+
+  @override
+  String get servicesWalletComplianceTitle => 'Compliance notice';
+
+  @override
+  String get servicesWalletComplianceBody =>
+      'Balances are demo values. Requests are saved locally for financial-supervisor approval; no real transfer, deposit, push notification, or server request occurs.';
+
+  @override
+  String get servicesWalletAmountError =>
+      'Enter an amount greater than zero and no more than the available balance.';
+
+  @override
+  String get servicesWalletDestinationError =>
+      'Enter destination details before submitting the request.';
+
+  @override
+  String get servicesWalletConfirmTitle => 'Confirm withdrawal request';
+
+  @override
+  String servicesWalletConfirmMessage(Object amount, Object currency) {
+    return 'Add a withdrawal request for $amount $currency to the demo history?';
+  }
+
+  @override
+  String get servicesWalletRequestSent =>
+      'Added to the demo history only; nothing was sent to a financial provider.';
+
+  @override
+  String get servicesProfileAdministrationTitle =>
+      'Administrative details and credentials';
+
+  @override
+  String get servicesProfileDelegationTitle =>
+      'Professional delegation and supervision';
+
+  @override
+  String get servicesProfileDelegationDetail => 'Valid through 1447/06/30 AH';
+
+  @override
+  String get servicesProfileActive => 'Active';
+
+  @override
+  String get servicesProfileNotificationsTitle => 'Instant complaint alerts';
+
+  @override
+  String get servicesProfileNotificationsDetail =>
+      'Immediate alerts for high-priority tasks';
+
+  @override
+  String get servicesProfileEnabled => 'Enabled';
+
+  @override
+  String get servicesProfileAuditTitle => 'Supervisor activity and audit log';
+
+  @override
+  String get servicesProfileAuditDetail =>
+      'Field operations and supervisory activity records';
+
+  @override
+  String get servicesProfileLogout => 'Sign out of supervisor session';
+
+  @override
+  String get servicesProfileFooter =>
+      'Field Services Management Portal · Version 2.4.1';
+
+  @override
+  String get servicesReviewTab => 'Under Review';
+
+  @override
+  String get servicesProvidersTab => 'Service Providers';
+
+  @override
+  String get servicesComplaintsTab => 'Complaints';
+
+  @override
+  String get servicesReviewTitle => 'Service requests under review';
+
+  @override
+  String get servicesReviewSubtitle =>
+      'Review requests, verify technical work, and assign operations';
+
+  @override
+  String servicesNewRequestsCount(Object count) {
+    return '$count new';
+  }
+
+  @override
+  String get servicesCompletedToday => 'Approved today';
+
+  @override
+  String get servicesAwaitingDecision => 'Awaiting decision';
+
+  @override
+  String get servicesFilterAll => 'All';
+
+  @override
+  String get servicesFilterMaintenance => 'Maintenance & appliances';
+
+  @override
+  String get servicesFilterElectrical => 'Electrical & wiring';
+
+  @override
+  String get servicesFilterMoving => 'Moving & setup';
+
+  @override
+  String get servicesRequestsEmpty =>
+      'There are no requests matching this category.';
+
+  @override
+  String get servicesUnderReview => 'Under review';
+
+  @override
+  String get servicesUrgent => 'Urgent';
+
+  @override
+  String get servicesVerifiedProvider => 'Verified technician';
+
+  @override
+  String get servicesWorkDescription => 'Requested work:';
+
+  @override
+  String get servicesCurrency => 'SAR';
+
+  @override
+  String get servicesUrgentNotice =>
+      'Field delay alert: please review the appointment and contact the service provider.';
+
+  @override
+  String get servicesApproveAction => 'Accept request';
+
+  @override
+  String get servicesRejectAction => 'Reject request';
+
+  @override
+  String get servicesViewDetails => 'View technical request details';
+
+  @override
+  String get servicesApproveTitle => 'Are you sure you want to accept?';
+
+  @override
+  String get servicesRejectTitle => 'Reject service request';
+
+  @override
+  String get servicesApproveMessage =>
+      'The request will be accepted and removed from the current review queue.';
+
+  @override
+  String get servicesRejectMessage =>
+      'The request will be rejected and removed from the current review queue.';
+
+  @override
+  String get servicesRequestApproved =>
+      'The request status was updated in the review queue.';
+
+  @override
+  String get servicesRequestRejected => 'The request was rejected.';
+
+  @override
+  String servicesRequestRejectedWithReason(String reason) {
+    return 'The request was rejected. Reason: $reason';
+  }
+
+  @override
+  String get servicesFeaturedRequest => 'Featured request';
+
+  @override
+  String get servicesCommentAction => 'Comment';
+
+  @override
+  String get servicesCommentTitle => 'Add a request comment';
+
+  @override
+  String get servicesCommentHint =>
+      'Write your comment or notes about this request...';
+
+  @override
+  String get servicesCommentSave => 'Save comment';
+
+  @override
+  String get servicesCommentSaved => 'The comment was saved to the request.';
+
+  @override
+  String get servicesDecisionProvider => 'Service provider';
+
+  @override
+  String get servicesDecisionDiagnosticFee => 'Estimated fee';
+
+  @override
+  String get servicesApprovalNotification =>
+      'The customer and provider will be notified that the request is accepted and ready for service.';
+
+  @override
+  String get servicesApproveConfirmPublish => 'Confirm publish and accept';
+
+  @override
+  String get servicesRejectionQuickReasons => 'Quick reasons';
+
+  @override
+  String get servicesRejectionReasonScope => 'Outside service area';
+
+  @override
+  String get servicesRejectionReasonDetails => 'Incomplete work details';
+
+  @override
+  String get servicesRejectionReasonTerms => 'Violates service terms';
+
+  @override
+  String get servicesRejectionReasonLabel => 'Required rejection reason';
+
+  @override
+  String get servicesRejectionReasonHint =>
+      'Describe the reason for rejection...';
+
+  @override
+  String get servicesRejectionAuditNote =>
+      'The rejection reason will be recorded and shared with the customer in the request history.';
+
+  @override
+  String get servicesRejectConfirm => 'Confirm request rejection';
+
+  @override
+  String get servicesProvidersComingSoon =>
+      'The service provider management and approval page will be prepared in the next phase.';
+
+  @override
+  String get servicesProvidersPortalBadge =>
+      'Field assignment and screening portal';
+
+  @override
+  String get servicesProvidersTitle => 'Available service providers';
+
+  @override
+  String get servicesProvidersSubtitle =>
+      'Database of approved and trusted service providers ready for matching and direct assignment';
+
+  @override
+  String get servicesCertifiedProviders => 'Certified providers';
+
+  @override
+  String get servicesAvailableNow => 'Available now';
+
+  @override
+  String get servicesCommitmentRate => 'Commitment rate';
+
+  @override
+  String get servicesProvidersSearchHint =>
+      'Search by name, registration, specialty, or district...';
+
+  @override
+  String get servicesProvidersClearSearch => 'Clear search';
+
+  @override
+  String get servicesProvidersFilterPlumbing => 'Plumbing';
+
+  @override
+  String get servicesProvidersEmpty =>
+      'No service providers match the selected search or category.';
+
+  @override
+  String get servicesProvidersAvailable => 'Available now';
+
+  @override
+  String get servicesProvidersBusy => 'Currently on a job';
+
+  @override
+  String get servicesProvidersCommercialRegister => 'Verified registration';
+
+  @override
+  String get servicesProvidersLicense => 'Approved professional license';
+
+  @override
+  String get servicesProvidersServiceTerms => 'Responds within 15 min';
+
+  @override
+  String get servicesProvidersExecutionWindow =>
+      'Available in 2 hours (about 3:30 PM)';
+
+  @override
+  String servicesProvidersTasksCount(Object count) {
+    return '$count completed tasks';
+  }
+
+  @override
+  String servicesProvidersCommitment(Object rate) {
+    return '$rate commitment';
+  }
+
+  @override
+  String get servicesProvidersViewProfile => 'View provider profile and record';
+
+  @override
+  String get servicesProvidersGovernanceTitle => 'Provider records governance';
+
+  @override
+  String get servicesProvidersGovernanceMessage =>
+      'Field supervisors can screen, match, and assign requests. Editing permanent records or approving new providers requires electronic authorization from central provider and licensing administration.';
+
+  @override
+  String get servicesProvidersSpecialty => 'Technical specialty';
+
+  @override
+  String get servicesProvidersRegisteredSkills => 'Registered skills';
+
+  @override
+  String get servicesProvidersCoverage => 'Coverage area';
+
+  @override
+  String get servicesProvidersRating => 'Customer rating';
+
+  @override
+  String get servicesProvidersCompletedTasks => 'Completed tasks';
+
+  @override
+  String get servicesProvidersSampleProfileNotice =>
+      'Profile and record data are samples and need to be connected to provider records.';
+
+  @override
+  String get servicesProviderProfileTitle => 'Provider profile and work record';
+
+  @override
+  String get servicesProviderProfileRegistryNumber => 'Provider ID';
+
+  @override
+  String get servicesProviderProfileVerified =>
+      'Provider details and credentials verified';
+
+  @override
+  String get servicesProviderProfileFeatured => 'Featured provider';
+
+  @override
+  String get servicesProviderProfileNeedsReview => 'Needs review';
+
+  @override
+  String get servicesProviderProfileCall => 'Call';
+
+  @override
+  String get servicesProviderProfileChat => 'Chat';
+
+  @override
+  String get servicesProviderProfileCallUnavailable =>
+      'A phone call could not be started on this device.';
+
+  @override
+  String get servicesProviderProfileCertifications =>
+      'Licenses and certifications';
+
+  @override
+  String get servicesProviderProfileSpecialties =>
+      'Specialties and field teams';
+
+  @override
+  String get servicesProviderProfileFieldTeam => 'Field team';
+
+  @override
+  String get servicesProviderProfileApprovedTeam =>
+      'Approved team available for assignment';
+
+  @override
+  String get servicesProviderProfileRecentTasks =>
+      'Recent completed tasks and operations';
+
+  @override
+  String get servicesProviderProfileTaskDetail =>
+      'Service completed and reviewed by the customer.';
+
+  @override
+  String get servicesProviderProfileTaskCompleted => 'Completed';
+
+  @override
+  String get servicesProviderProfileTaskRecord => 'View record';
+
+  @override
+  String get servicesProviderProfileCompletedTasksDetail => 'Documented tasks';
+
+  @override
+  String get servicesProviderProfileRatingDetail => 'Customer rating';
+
+  @override
+  String get servicesProviderProfileCommitmentDetail =>
+      'On-time commitment rate';
+
+  @override
+  String get servicesProviderProfileResponseTime => 'Response time';
+
+  @override
+  String get servicesProviderProfileMinutes => 'minutes';
+
+  @override
+  String get servicesChatsTitle => 'Service chats';
+
+  @override
+  String get servicesComplaintsTitle => 'Service complaints and reports';
+
+  @override
+  String get servicesComplaintsSubtitle =>
+      'Resolve field disputes and ensure service quality and warranty coverage';
+
+  @override
+  String get servicesComplaintActive => 'Active complaints';
+
+  @override
+  String get servicesComplaintUrgent => 'Urgent';
+
+  @override
+  String get servicesComplaintPriorityMedium => 'Medium priority';
+
+  @override
+  String get servicesComplaintResolutionTime => 'Average resolution';
+
+  @override
+  String get servicesComplaintMinutes => 'minutes';
+
+  @override
+  String get servicesComplaintSatisfaction => 'Customer satisfaction';
+
+  @override
+  String get servicesComplaintApproved => 'Approved satisfaction';
+
+  @override
+  String get servicesComplaintSearchHint =>
+      'Search by complaint ID, client or provider...';
+
+  @override
+  String get servicesComplaintFilterAll => 'All';
+
+  @override
+  String get servicesComplaintFilterInvestigating => 'Investigating';
+
+  @override
+  String get servicesComplaintFilterWaiting => 'Awaiting response';
+
+  @override
+  String get servicesComplaintFilterClosed => 'Resolved';
+
+  @override
+  String get servicesComplaintNoResults =>
+      'No complaints match this search or filter.';
+
+  @override
+  String servicesComplaintAgeMinutes(int count) {
+    return '$count minutes ago';
+  }
+
+  @override
+  String servicesComplaintAgeHours(int count) {
+    return '$count hours ago';
+  }
+
+  @override
+  String get servicesComplaintClient => 'Reporting client';
+
+  @override
+  String get servicesComplaintProvider => 'Reported provider';
+
+  @override
+  String get servicesComplaintClientOne => 'Dr. Maha Al-Dubaisi';
+
+  @override
+  String get servicesComplaintClientTwo => 'Sarah Al-Otaibi';
+
+  @override
+  String get servicesComplaintClientThree => 'Client Fahd';
+
+  @override
+  String get servicesComplaintProviderOne => 'Precision Cooling Establishment';
+
+  @override
+  String get servicesComplaintProviderTwo => 'Comprehensive Excellence Team';
+
+  @override
+  String get servicesComplaintProviderThree => 'Fahd Al-Arjahi';
+
+  @override
+  String servicesComplaintProviderId(String id) {
+    return 'Linked request: $id';
+  }
+
+  @override
+  String get servicesComplaintRiyadh => 'Riyadh';
+
+  @override
+  String get servicesComplaintSubjectOne => 'Split AC maintenance and cooling';
+
+  @override
+  String get servicesComplaintDescriptionOne =>
+      'Persistent water leakage from the indoor unit after maintenance. The report is under review and a field inspection is being scheduled to verify warranty work.';
+
+  @override
+  String get servicesComplaintSubjectTwo =>
+      'Electrical upgrades and smart settings';
+
+  @override
+  String get servicesComplaintDescriptionTwo =>
+      'The field visit missed its scheduled time by a full hour without an apology or prior notice about the technician\'s delay.';
+
+  @override
+  String get servicesComplaintSubjectThree =>
+      'Bedroom furniture moving and installation';
+
+  @override
+  String get servicesComplaintDescriptionThree =>
+      'The issue was addressed and approved after the client confirmed service delivery.';
+
+  @override
+  String get servicesComplaintLocationOne => 'Al Narjis District, Riyadh';
+
+  @override
+  String get servicesComplaintLocationTwo => 'Al Malqa District, Riyadh';
+
+  @override
+  String get servicesComplaintLocationThree => 'Al Yasmin District, Riyadh';
+
+  @override
+  String get servicesComplaintPriceOne => '280';
+
+  @override
+  String get servicesComplaintPriceTwo => '450';
+
+  @override
+  String get servicesComplaintPriceThree => '1,200';
+
+  @override
+  String get servicesComplaintClosedToday => 'Closed today at 11:30 AM';
+
+  @override
+  String get servicesComplaintUnderReview => 'Under supervisor review';
+
+  @override
+  String get servicesComplaintWaitingProvider => 'Awaiting provider response';
+
+  @override
+  String get servicesComplaintClosed => 'Resolved and closed';
+
+  @override
+  String get servicesComplaintInvestigateAndResolve =>
+      'Inspect, investigate and resolve';
+
+  @override
+  String get servicesComplaintContactParties => 'Contact both parties';
+
+  @override
+  String servicesComplaintGroupChatTitle(String id) {
+    return 'Complaint $id group chat';
+  }
+
+  @override
+  String get servicesComplaintReassign => 'Reassign immediately';
+
+  @override
+  String get servicesComplaintEscalate => 'Escalate to chief supervisor';
+
+  @override
+  String get servicesComplaintShowResolution => 'View settlement record';
+
+  @override
+  String get servicesComplaintResolutionRecorded =>
+      'Approved supervisory action: The issue was resolved onsite and compensation was credited to the client for the delay.';
+
+  @override
+  String get servicesComplaintClosedAudit => 'Closed audit record — read only';
+
+  @override
+  String get servicesComplaintResolutionTitle =>
+      'Quality resolution for field disputes';
+
+  @override
+  String get servicesComplaintResolutionDescription =>
+      'The services supervisor can settle disputes, schedule service visits and manage warranty actions, including reassignment to an alternative provider.';
+
+  @override
+  String get servicesComplaintDetails => 'Complaint details';
+
+  @override
+  String get servicesComplaintActionConfirmation =>
+      'This action will be recorded in the complaint history and notify the related parties. Continue?';
+
+  @override
+  String get servicesComplaintEscalationConfirmation =>
+      'The complaint will be referred to the chief supervisor for review. Escalate now?';
+
+  @override
+  String get servicesComplaintEscalated => 'Escalated';
+
+  @override
+  String servicesComplaintEscalatedNotice(String id) {
+    return 'Complaint $id was escalated to the chief supervisor.';
+  }
+
+  @override
+  String get servicesComplaintContactNotice =>
+      'Contact options for the client and service provider are ready.';
+
+  @override
+  String get servicesComplaintActionRecorded =>
+      'The action was recorded and the parties were notified.';
+
+  @override
+  String get servicesNoNewNotifications => 'There are no new notifications.';
+
+  @override
+  String get servicesNotificationsTitle => 'Notifications';
+
+  @override
+  String get servicesDetailsTitle => 'Request preview and details';
+
+  @override
+  String get servicesRequestWorkDetailsTitle => 'Service scope and location';
+
+  @override
+  String get servicesRequestLocationLabel => 'Service address';
+
+  @override
+  String get servicesRequestPhotosTitle => 'Attached service photos';
+
+  @override
+  String get servicesRequestNoPhotos =>
+      'No photos are attached to this request.';
+
+  @override
+  String get servicesRequestAssignmentTitle =>
+      'Assign the service to a provider';
+
+  @override
+  String get servicesRequestAssignmentDescription =>
+      'Choose an available provider matching the service category from the providers list.';
+
+  @override
+  String get servicesRequestChooseProvider => 'Choose a service provider';
+
+  @override
+  String get servicesRequestNoMatchingProviders =>
+      'No providers are currently available for this category.';
+
+  @override
+  String get servicesRequestAssignProvider => 'Assign service';
+
+  @override
+  String servicesRequestAssigned(String provider) {
+    return 'Service assigned to $provider';
+  }
+
+  @override
+  String get servicesComplaintPartiesTitle => 'Dispute parties and contact';
+
+  @override
+  String get servicesComplaintProblemTitle => 'Reported problem';
+
+  @override
+  String get servicesComplaintFiledBy => 'Reporting party';
+
+  @override
+  String get servicesComplaintServiceInfoTitle => 'Disputed service details';
+
+  @override
+  String get servicesComplaintPriceLabel => 'Service price';
+
+  @override
+  String get servicesComplaintPhotosTitle => 'Attached problem photos';
+
+  @override
+  String get servicesComplaintNoPhotos =>
+      'No photos are attached to this complaint.';
+
+  @override
+  String get servicesBackToRequests => 'Back to requests';
+
+  @override
+  String get servicesCallPhone => 'Call';
+
+  @override
+  String get servicesContactWhatsApp => 'WhatsApp';
+
+  @override
+  String get servicesEstimatedCost => 'Estimated service cost';
+
+  @override
+  String get servicesApprovedEstimate => 'Approved estimate';
+
+  @override
+  String get servicesEstimatedCostTotal => 'Estimated total cost';
+
+  @override
+  String get servicesInspectionFee => 'Initial inspection fee';
+
+  @override
+  String get servicesLaborAndPartsFee => 'Labor and parts';
+
+  @override
+  String get servicesRequestMoreInfoTitle =>
+      'Request additional information from customer';
+
+  @override
+  String get servicesRequestMoreInfoDescription =>
+      'If request details are unclear or additional information is needed to complete the review before assignment, send the customer a direct question.';
+
+  @override
+  String get servicesRequestMoreInfoHint =>
+      'Enter your question or the details needed from the customer...';
+
+  @override
+  String get servicesRequireExtraPhotos =>
+      'Require additional supporting photos';
+
+  @override
+  String get servicesSendInfoRequest => 'Send request';
+
+  @override
+  String get servicesInfoRequestRequired =>
+      'Enter the requested information before sending.';
+
+  @override
+  String get servicesInfoRequestSent =>
+      'The information request was sent to the customer.';
+
+  @override
+  String get servicesEditClassification =>
+      'Edit technical service classification';
+
+  @override
+  String get servicesCurrentClassification => 'Current approved classification';
+
+  @override
+  String get servicesApprovedClassification => 'Approved classification';
+
+  @override
+  String get servicesExecutionPeriod => 'Preferred execution period';
+
+  @override
+  String get servicesDayPeriod => 'Daytime (9:00 AM - 1:00 PM)';
+
+  @override
+  String get servicesEveningPeriod => 'Evening (4:00 PM - 9:00 PM)';
+
+  @override
+  String get servicesSaveClassification => 'Update and save classification';
+
+  @override
+  String get servicesClassificationSaved =>
+      'Service classification and period saved.';
+
+  @override
+  String get servicesContactUnavailable =>
+      'Could not start contact from this device.';
+
+  @override
+  String get servicesPublishConfirm => 'Confirm request publication';
+
+  @override
   String get deliveryLogisticsWalletTitle =>
       'Delivery Couriers & Logistics Wallet';
 
@@ -2627,6 +3764,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get adsApprovedStatus => 'Ad approved';
 
   @override
+  String get adsPremiumWaitingFinance => 'Waiting for finance review';
+
+  @override
+  String get adsPremiumWaitingManagement =>
+      'Waiting for management approval and fee deduction';
+
+  @override
   String get adsHiddenStatus => 'Ad hidden';
 
   @override
@@ -2724,6 +3868,201 @@ class AppLocalizationsEn extends AppLocalizations {
       'Waiting for action and party updates';
 
   @override
+  String get wasalnyComplaintsListIntro =>
+      'Select a complaint to review its details and dispute parties';
+
+  @override
+  String wasalnyComplaintReferenceWithId(String id) {
+    return 'Complaint #$id';
+  }
+
+  @override
+  String get wasalnyComplaintOpenDetails => 'View details';
+
+  @override
+  String get wasalnyComplaintDetailsTitle => 'Complaint details';
+
+  @override
+  String get wasalnyComplaintDetailsSection => 'Complaint information';
+
+  @override
+  String get wasalnyComplaintRequestSection => 'Request information';
+
+  @override
+  String get wasalnyComplaintPartiesSection => 'Dispute parties';
+
+  @override
+  String get wasalnyComplaintSeller => 'Seller';
+
+  @override
+  String get wasalnyComplaintBuyer => 'Buyer';
+
+  @override
+  String get wasalnyComplaintRequest => 'Request ID';
+
+  @override
+  String get wasalnyComplaintAmount => 'Deal amount';
+
+  @override
+  String get wasalnyComplaintCreatedAt => 'Complaint date';
+
+  @override
+  String get wasalnyComplaintResolvedStatus => 'Resolved amicably';
+
+  @override
+  String get wasalnyComplaintEscalatedStatus => 'Escalated to head supervisor';
+
+  @override
+  String get wasalnyComplaintResolveFriendly =>
+      'Resolve complaint and dispute amicably';
+
+  @override
+  String get wasalnyComplaintEscalateHead =>
+      'Escalate complaint to head supervisor';
+
+  @override
+  String get wasalnyComplaintEscalationSheetKicker =>
+      'MODULE 03: ADMIN COMPLAINT ESCALATION';
+
+  @override
+  String get wasalnyComplaintEscalationSheetType => 'Type: Bottom sheet';
+
+  @override
+  String get wasalnyComplaintEscalationSheetTitle =>
+      'Complaint escalation action';
+
+  @override
+  String get wasalnyComplaintEscalationSheetSubtitle =>
+      'Escalate this complaint to the head supervisor';
+
+  @override
+  String get wasalnyComplaintEscalationFileLabel =>
+      'Supervisory complaint file';
+
+  @override
+  String get wasalnyComplaintEscalationPending =>
+      'Awaiting administrative escalation';
+
+  @override
+  String get wasalnyComplaintEscalationHeldAmount => 'Held warranty amount';
+
+  @override
+  String get wasalnyComplaintEscalationNoHeldAmount => 'No amount on hold';
+
+  @override
+  String get wasalnyComplaintEscalationPolicyTitle =>
+      'Oversight committee authority and policy';
+
+  @override
+  String get wasalnyComplaintEscalationPolicyBody =>
+      'The complaint will be sent to the head supervisor to review the recorded facts and evidence and determine the appropriate administrative action under platform policy. Escalation does not change the held amount.';
+
+  @override
+  String get wasalnyComplaintEscalationAuditTrail => 'Auditable activity log';
+
+  @override
+  String get wasalnyComplaintEscalationEvidenceTitle =>
+      'Complaint summary and recorded evidence';
+
+  @override
+  String get wasalnyComplaintEscalationVerifiedLabel => 'Verified information';
+
+  @override
+  String get wasalnyComplaintEscalationNoWarranty =>
+      'No field-warranty information is recorded.';
+
+  @override
+  String get wasalnyComplaintEscalationConfirm =>
+      'Confirm formal complaint escalation';
+
+  @override
+  String get wasalnyComplaintBackToList => 'Back to complaints';
+
+  @override
+  String get wasalnyComplaintCallSeller => 'Call seller';
+
+  @override
+  String get wasalnyComplaintCallBuyer => 'Call buyer';
+
+  @override
+  String get wasalnyComplaintResolvedMessage =>
+      'Complaint marked as resolved amicably';
+
+  @override
+  String get wasalnyComplaintEscalatedMessage =>
+      'Complaint escalated to the head supervisor';
+
+  @override
+  String get wasalnyComplaintCallFailed =>
+      'Could not start a call on this device';
+
+  @override
+  String get wasalnyComplaintsLoadError => 'Could not load complaints';
+
+  @override
+  String get wasalnyComplaintsRetry => 'Try again';
+
+  @override
+  String get wasalnyComplaintPartyUnavailable => 'No party linked';
+
+  @override
+  String get wasalnyComplaintItem => 'Item';
+
+  @override
+  String get wasalnyComplaintDealCode => 'Deal ID';
+
+  @override
+  String get wasalnyComplaintWarranty => 'Field warranty';
+
+  @override
+  String get wasalnyComplaintResolveNote =>
+      'Seller and buyer agreed on an amicable resolution';
+
+  @override
+  String get wasalnyComplaintResolveFailed =>
+      'Could not record the amicable resolution';
+
+  @override
+  String get wasalnyComplaintEscalationReason =>
+      'Complaint requires head supervisor review';
+
+  @override
+  String get wasalnyComplaintEscalationFailed =>
+      'Could not escalate the complaint';
+
+  @override
+  String get wasalnyComplaintActionTakenStatus => 'Action taken';
+
+  @override
+  String get wasalnyAuditComplaintResolved => 'Complaint resolved amicably';
+
+  @override
+  String get wasalnyAuditComplaintEscalated =>
+      'Complaint escalated to head supervisor';
+
+  @override
+  String get wasalnyAuditAdApproved => 'Wasalny advertisement approved';
+
+  @override
+  String get wasalnyAuditAdHidden => 'Wasalny advertisement hidden';
+
+  @override
+  String get wasalnyAuditAdRejected => 'Wasalny advertisement rejected';
+
+  @override
+  String get wasalnyAuditAdSuspended => 'Wasalny advertisement suspended';
+
+  @override
+  String get wasalnyAuditAdEditRequested =>
+      'Wasalny advertisement edit requested';
+
+  @override
+  String get wasalnyAuditContactRevealed => 'Request contact details revealed';
+
+  @override
+  String get wasalnyAuditContactHidden => 'Request contact details hidden';
+
+  @override
   String get wasalnyNotificationsTitle => 'Wasalny notifications';
 
   @override
@@ -2746,6 +4085,76 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get wasalnyNotificationInspectionDescription =>
       'The inspection result for request W-1038 has been recorded.';
+
+  @override
+  String get wasalnyPromotionSendToFinance => 'Send to finance supervisor';
+
+  @override
+  String get wasalnyPromotionSentToFinance =>
+      'The promotion request was sent to the finance supervisor for review.';
+
+  @override
+  String get wasalnyPromotionFinancePending =>
+      'The promotion request is still awaiting the finance supervisor\'s approval.';
+
+  @override
+  String get wasalnyPromotionFinanceRequestType => 'Product promotion request';
+
+  @override
+  String wasalnyPromotionFinanceApprovalConfirmation(
+      Object amount, Object beneficiary) {
+    return 'Approve $beneficiary\'s promotion for $amount and forward it to management for deduction?';
+  }
+
+  @override
+  String get wasalnyPromotionFinanceApproved =>
+      'The promotion request was approved and forwarded to management for deduction.';
+
+  @override
+  String get wasalnyPromotionFinanceRejected =>
+      'The promotion request was rejected and the Wasalny supervisor was notified.';
+
+  @override
+  String get wasalnyComplaintChatParty => 'Chat with both parties';
+
+  @override
+  String get wasalnyRequestsMonthlyLimitTitle => 'Monthly limit reached';
+
+  @override
+  String get wasalnyRequestsMonthlyLimitMessage =>
+      'This buyer has used two contact-disclosure requests this month. An in-app subscription is required to reveal more details.';
+
+  @override
+  String get wasalnyPremiumCustomer => 'Premium customer';
+
+  @override
+  String get wasalnyPremiumAdChoiceTitle =>
+      'Is this ad included in the package?';
+
+  @override
+  String get wasalnyPremiumAdChoiceMessage =>
+      'This customer is Premium. Should the ad use their package or be treated as a paid promotion?';
+
+  @override
+  String get wasalnyPremiumAdIncluded => 'Included in package';
+
+  @override
+  String get wasalnyPremiumAdPaid => 'Paid promotion';
+
+  @override
+  String get wasalnyHeadInboxTitle => 'Wasalny escalations';
+
+  @override
+  String get wasalnyNotificationSourceFinance => 'Finance supervisor';
+
+  @override
+  String get wasalnyNotificationSourceChief => 'Head supervisor';
+
+  @override
+  String get wasalnyNotificationSourceWasalny => 'Wasalny account';
+
+  @override
+  String get wasalnyNotificationEmpty => 'No notifications yet.';
 
   @override
   String get wasalnyPromotionTitle => 'Wasalny product promotion requests';
@@ -2771,7 +4180,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get wasalnyRequestsAll => 'All';
 
   @override
+  String get wasalnyRequestsAwaitingApproval => 'Awaiting approval';
+
+  @override
   String get wasalnyRequestsCommunication => 'Coordinating';
+
+  @override
+  String get wasalnyRequestsUnderReview => 'Under review';
 
   @override
   String get wasalnyRequestsSold => 'Sold';
@@ -4095,6 +5510,14 @@ class AppLocalizationsEn extends AppLocalizations {
       'Direct response within a 15 km radius';
 
   @override
+  String get productProfilePreferenceLocalOnlyNotice =>
+      'These settings are saved on this device only; notification delivery is not connected.';
+
+  @override
+  String get productProfilePreferenceLoadError =>
+      'Could not load saved settings. Tap to retry.';
+
+  @override
   String get productProfileReviewed => 'Inspections reviewed';
 
   @override
@@ -4690,8 +6113,66 @@ class AppLocalizationsEn extends AppLocalizations {
       'Instant alert when an ad is submitted or qualified';
 
   @override
+  String get merchantProfileLocalOnlyNotice =>
+      'Changes are stored on this device only; notification delivery is not connected.';
+
+  @override
+  String get merchantProfileLocalAuditNotice =>
+      'This local history records profile changes made on this device only; it is not a server audit log.';
+
+  @override
+  String get merchantProfileNoLocalActivity =>
+      'No local profile changes recorded yet.';
+
+  @override
+  String get merchantProfilePreferenceUpdated => 'Profile preference changed';
+
+  @override
+  String get merchantProfileEnabled => 'Enabled';
+
+  @override
+  String get merchantProfileDisabled => 'Disabled';
+
+  @override
+  String get merchantProfileLoadError =>
+      'Could not load saved profile settings.';
+
+  @override
+  String get merchantProfileSaveError =>
+      'Could not save this setting on the device. Please try again.';
+
+  @override
+  String get merchantProfileRetry => 'Retry';
+
+  @override
   String get merchantProfileSecurityAudit =>
       'Security and Administrative Audit';
+
+  @override
+  String get merchantProfileChangeSettings => 'Change settings';
+
+  @override
+  String get merchantAuditSuspended => 'Merchant suspended';
+
+  @override
+  String get merchantAuditUnsuspended => 'Merchant suspension lifted';
+
+  @override
+  String get merchantAuditFinancialSubmitted =>
+      'Financial request referred to finance';
+
+  @override
+  String get merchantAuditFinancialRejected => 'Financial request rejected';
+
+  @override
+  String get merchantAuditAdModerated => 'Merchant advertisement reviewed';
+
+  @override
+  String get merchantAuditCommissionUpdated => 'Merchant commission updated';
+
+  @override
+  String get merchantAuditLoadError =>
+      'Could not load the supervisory activity log.';
 
   @override
   String get merchantProfileViewAll => 'Full history';
@@ -5303,4 +6784,407 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get supervisedMerchantsBadge => 'Merchant Supervisor';
+
+  @override
+  String get servicesSupervisorTitle => 'Services Supervisor';
+
+  @override
+  String get servicesSupervisorBadge => 'Services Supervisor · SRV-01';
+
+  @override
+  String get serviceProvidersTab => 'Service providers';
+
+  @override
+  String get servicesAccountTab => 'My account';
+
+  @override
+  String serviceProvidersCount(int count) {
+    return '$count service providers';
+  }
+
+  @override
+  String get serviceProviderProfileTitle => 'Provider profile and work history';
+
+  @override
+  String get serviceProviderAvailableForWork =>
+      'Available for immediate task assignments';
+
+  @override
+  String get serviceProviderVerified => 'Verified';
+
+  @override
+  String get serviceProviderRegistryNumber => 'Commercial registration number';
+
+  @override
+  String get serviceProviderViewProfileAndHistory =>
+      'View provider profile and history';
+
+  @override
+  String get serviceProviderPerformanceTitle =>
+      'Operational performance (KPIs)';
+
+  @override
+  String get serviceProviderUpdatedNow => 'Live updates';
+
+  @override
+  String get serviceProviderCompletedTasks => 'Completed tasks';
+
+  @override
+  String get serviceProviderTaskCompletionRate => '99.1% completion rate';
+
+  @override
+  String get serviceProviderOverallRating => 'Overall rating';
+
+  @override
+  String get serviceProviderRatingOutOfFive => 'Out of 5.0 · 162 ratings';
+
+  @override
+  String get serviceProviderOnTimeRate => 'On-time rate';
+
+  @override
+  String get serviceProviderPunctualityDetail => 'Reliable field service';
+
+  @override
+  String get serviceProviderResponseSpeed => 'Response speed';
+
+  @override
+  String get serviceProviderMinutes => 'minutes';
+
+  @override
+  String get serviceProviderSpecialtiesTitle =>
+      'Official specialties and accreditations';
+
+  @override
+  String get serviceProviderSpecialtyAirConditioning =>
+      'Split and central AC maintenance and professional duct upgrades';
+
+  @override
+  String get serviceProviderSpecialtyAppliances =>
+      'Refrigerant charging, recovery and R410A testing to standards';
+
+  @override
+  String get serviceProviderSpecialtyElectrical =>
+      'Periodic pressure washing and preventive maintenance for residential complexes';
+
+  @override
+  String get serviceProviderPlanTitle => 'Accredited professional plan';
+
+  @override
+  String get serviceProviderPlanDescription =>
+      'Security screening and practical service-quality training';
+
+  @override
+  String get serviceProviderPlanTier => '6 technicians';
+
+  @override
+  String get serviceProviderRecentTasksTitle =>
+      'Recent completed tasks and operations';
+
+  @override
+  String get serviceProviderFullHistory => 'Full history';
+
+  @override
+  String get serviceProviderViewFullHistory => 'View full history';
+
+  @override
+  String get serviceProviderTaskAreaOne => 'Al Malqa district';
+
+  @override
+  String get serviceProviderTaskAreaTwo => 'Al Yasmin district';
+
+  @override
+  String get serviceProviderTaskAreaThree => 'Al Sahafa district';
+
+  @override
+  String get serviceProviderTaskTitleOne => 'Central concealed AC maintenance';
+
+  @override
+  String get serviceProviderTaskTitleTwo =>
+      'Commercial building refrigerant inspection and refill';
+
+  @override
+  String get serviceProviderTaskTitleThree =>
+      'Removal and installation of 4 new split units';
+
+  @override
+  String get serviceProviderTaskDetailOne =>
+      'Thorough and fast service, with inspection completed ahead of schedule.';
+
+  @override
+  String get serviceProviderTaskDetailTwo =>
+      'Cooling system safety was verified before handover.';
+
+  @override
+  String get serviceProviderTaskDetailThree =>
+      'Pipe insulation was tested after installation.';
+
+  @override
+  String get serviceProviderTaskCompleted => 'Completed and approved';
+
+  @override
+  String get serviceProviderHistoryEntryOne =>
+      'Central concealed AC maintenance · Al Malqa · 5.0';
+
+  @override
+  String get serviceProviderHistoryEntryTwo =>
+      'Refrigerant inspection and refill · Al Yasmin · 4.8';
+
+  @override
+  String get serviceProviderHistoryEntryThree =>
+      'Split unit removal and installation · Al Sahafa · Complete';
+
+  @override
+  String get serviceProviderHistoryEntryFour =>
+      'Routine AC maintenance · Al Narjis · 5.0';
+
+  @override
+  String get serviceProviderHistoryEntryFive =>
+      'Electrical wiring inspection · Al Wurud · 4.9';
+
+  @override
+  String get servicesComplaintFilters => 'Complaint filters';
+
+  @override
+  String get servicesComplaintRequireCompensation =>
+      'Require provider compensation';
+
+  @override
+  String get servicesComplaintAlreadyClosed =>
+      'This complaint is closed; you can review its resolution record.';
+
+  @override
+  String get servicesComplaintFiltersHint =>
+      'Filter by status or search by complaint ID, client or provider.';
+
+  @override
+  String get merchantFeaturedBadge => 'Featured merchant';
+
+  @override
+  String get merchantStandardBadge => 'Standard merchant';
+
+  @override
+  String get merchantSuspendedSection => 'Suspended merchants';
+
+  @override
+  String get merchantUnsuspendAction => 'Lift suspension';
+
+  @override
+  String get merchantUnsuspendConfirm =>
+      'Reactivate this merchant and remove it from the suspended merchants list?';
+
+  @override
+  String get merchantUnsuspendSuccess =>
+      'The suspension was lifted and the merchant was restored.';
+
+  @override
+  String get merchantSuspendSuccess =>
+      'The merchant was suspended and moved to the suspended list.';
+
+  @override
+  String get merchantSuspensionSaveError =>
+      'Could not save the merchant status. Please try again.';
+
+  @override
+  String get merchantFinanceStatusTitle =>
+      'Financial supervisor request status';
+
+  @override
+  String get merchantFinanceViewStatus => 'View request status';
+
+  @override
+  String get merchantFinanceStatusPending =>
+      'Under financial supervisor review';
+
+  @override
+  String get merchantFinanceStatusApproved => 'Approved';
+
+  @override
+  String get merchantFinanceStatusRejected => 'Rejected';
+
+  @override
+  String get merchantFinanceStatusOnHold => 'On hold / under investigation';
+
+  @override
+  String get merchantFinanceRequestTitle => 'Transaction details';
+
+  @override
+  String get merchantFinanceAmountLabel => 'Amount';
+
+  @override
+  String get merchantFinanceDateLabel => 'Request date';
+
+  @override
+  String get merchantFinanceStatusLabel => 'Status';
+
+  @override
+  String get merchantFinanceNoteLabel => 'Request note';
+
+  @override
+  String get merchantLinkHasCommercialRegister =>
+      'Merchant has a commercial registration';
+
+  @override
+  String get merchantLinkLocalScopeNotice =>
+      'Without a registration, use the verified phone number. This prototype saves a request only on this device, scoped to your signed-in account; secure shared assignment requires the backend.';
+
+  @override
+  String get merchantLinkValidationError =>
+      'Enter a merchant name, a valid phone number, and a registration number when applicable.';
+
+  @override
+  String get merchantLinkSessionRequired =>
+      'Sign in again before submitting a merchant link request.';
+
+  @override
+  String get merchantLinkSavedLocally =>
+      'Link request saved locally. It has not been sent to the merchant or platform.';
+
+  @override
+  String get merchantLinkSaveFailed => 'Could not save the link request.';
+
+  @override
+  String get merchantLinkSaving => 'Saving request...';
+
+  @override
+  String get adsArchiveTitle => 'Ad archive';
+
+  @override
+  String get adsReviewQueueTab => 'Review queue';
+
+  @override
+  String get adsPremium => 'Premium';
+
+  @override
+  String get adsRegular => 'Standard';
+
+  @override
+  String get adsSaveFailed => 'Could not save this decision. Please try again.';
+
+  @override
+  String get adsLoadFailed => 'Could not load saved advertisement decisions.';
+
+  @override
+  String get adsFrozenStatus => 'Frozen';
+
+  @override
+  String get adsFreezeAction => 'Freeze ad';
+
+  @override
+  String get adsUnfreezeAction => 'Restore ad';
+
+  @override
+  String get finRequestLocalWorkflowNotice =>
+      'Requests are stored locally and queued for finance review in this demo. No payment is deducted and no merchant notification is sent.';
+
+  @override
+  String get finRequestSentConfirmation =>
+      'Request sent to the financial supervisor.';
+
+  @override
+  String get finRequestActionFailed =>
+      'Could not complete this action. Please try again.';
+
+  @override
+  String get finRequestRejectTitle => 'Reject merchant request';
+
+  @override
+  String get finRequestRejectReason => 'Enter a reason for the merchant';
+
+  @override
+  String get finRequestRejectAction => 'Reject request';
+
+  @override
+  String get finRequestRejected => 'Rejected';
+
+  @override
+  String get finRequestRejectionSaved => 'Rejection reason saved.';
+
+  @override
+  String get financeWalletRequestSubmitted =>
+      'Request sent to the financial supervisor for review. No transfer has been made.';
+
+  @override
+  String get financeRequestsInProgressTab => 'In progress';
+
+  @override
+  String get financeRequestsArchiveTab => 'Archive';
+
+  @override
+  String get financeRequestsArchiveSearchHint =>
+      'Search by request number, beneficiary, or source';
+
+  @override
+  String get financeRequestsArchiveEmpty =>
+      'Completed and rejected requests will appear here.';
+
+  @override
+  String get financeRequestsArchiveNoResults =>
+      'No archived requests match your search or filter.';
+
+  @override
+  String get financeRequestsInProgressEmpty =>
+      'There are no requests waiting for review.';
+
+  @override
+  String get financeRequestRefreshFailed =>
+      'The decision was saved, but the request list could not be refreshed.';
+
+  @override
+  String get financeRequestListFailed =>
+      'Financial requests could not be loaded. Pull down to retry.';
+
+  @override
+  String get financeRecordApproval => 'Record approval';
+
+  @override
+  String get financeApproveOnlyConfirmation =>
+      'Record approval for this request? This does not trigger a transfer. Amount:';
+
+  @override
+  String get withdrawalDetailsSourceAccount => 'Request source account';
+
+  @override
+  String get withdrawalDetailsOperationType => 'Operation type';
+
+  @override
+  String get financeOperationWithdrawal => 'Withdrawal';
+
+  @override
+  String get financeOperationDeposit => 'Deposit';
+
+  @override
+  String get financeWalletRequestTitle => 'Wallet operation request';
+
+  @override
+  String get financeWalletAmountLabel => 'Amount';
+
+  @override
+  String get financeWalletInvalidWithdrawalAmount =>
+      'Enter a withdrawal amount between SAR 100 and SAR 8,450.';
+
+  @override
+  String get financeWalletInvalidDetails =>
+      'Enter a valid amount between SAR 100 and SAR 20,000 and provide a payment destination.';
+
+  @override
+  String get financeWalletConfirmDepositTitle => 'Confirm deposit request';
+
+  @override
+  String get financeWalletConfirmDepositAction => 'Confirm deposit request';
+
+  @override
+  String get financeWalletSubmitRequest => 'Send financial request for review';
+
+  @override
+  String get financeWalletOperationNote =>
+      'The financial supervisor must approve this request. Approval is recorded in the app; no money is moved until a payment service is integrated.';
+
+  @override
+  String get merchantInfoAdRejected => 'Rejected';
+
+  @override
+  String get merchantInfoAdFrozen => 'Frozen';
+
+  @override
+  String get merchantInfoAdHidden => 'Hidden';
 }

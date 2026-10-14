@@ -8,7 +8,12 @@ import '../../domain/entities/product_supervisor_audit_entry.dart';
 import '../../domain/repositories/product_supervisor_audit_repository.dart';
 
 class ProductSupervisorAuditScreen extends StatefulWidget {
-  const ProductSupervisorAuditScreen({super.key});
+  final String? actionKeyPrefix;
+
+  const ProductSupervisorAuditScreen({
+    super.key,
+    this.actionKeyPrefix,
+  });
 
   @override
   State<ProductSupervisorAuditScreen> createState() =>
@@ -61,12 +66,25 @@ class _ProductSupervisorAuditScreenState
               message: l10n.productAuditEmpty,
             );
           }
+          final entries = snapshot.data!
+              .where(
+                (entry) =>
+                    widget.actionKeyPrefix == null ||
+                    entry.actionKey.startsWith(widget.actionKeyPrefix!),
+              )
+              .toList(growable: false);
+          if (entries.isEmpty) {
+            return _AuditMessage(
+              icon: Icons.fact_check_outlined,
+              message: l10n.productAuditEmpty,
+            );
+          }
           return ListView.separated(
             padding: const EdgeInsets.all(16),
-            itemCount: snapshot.data!.length,
+            itemCount: entries.length,
             separatorBuilder: (_, __) => const SizedBox(height: 9),
             itemBuilder: (context, index) {
-              final entry = snapshot.data![index];
+              final entry = entries[index];
               return Container(
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
@@ -138,10 +156,25 @@ class _ProductSupervisorAuditScreenState
         'promotion_rejected' => l10n.productPromotionAuditRejected,
         'profile_field_availability_changed' =>
           l10n.productAuditActionFieldAvailability,
+        'wasalny_profile_field_availability_changed' =>
+          l10n.productAuditActionFieldAvailability,
         'profile_urgent_notifications_changed' =>
+          l10n.productAuditActionUrgentNotifications,
+        'wasalny_profile_urgent_notifications_changed' =>
           l10n.productAuditActionUrgentNotifications,
         'wallet_withdrawal_requested' =>
           l10n.productAuditActionWithdrawalRequested,
+        'wasalny_complaint_resolved' => l10n.wasalnyAuditComplaintResolved,
+        'wasalny_complaint_escalated' => l10n.wasalnyAuditComplaintEscalated,
+        'wasalny_ad_approved' => l10n.wasalnyAuditAdApproved,
+        'wasalny_ad_hidden' => l10n.wasalnyAuditAdHidden,
+        'wasalny_ad_rejected' => l10n.wasalnyAuditAdRejected,
+        'wasalny_ad_suspended' => l10n.wasalnyAuditAdSuspended,
+        'wasalny_ad_editRequested' => l10n.wasalnyAuditAdEditRequested,
+        'wasalny_promotion_approved' => l10n.productPromotionAuditApproved,
+        'wasalny_promotion_rejected' => l10n.productPromotionAuditRejected,
+        'wasalny_request_contact_revealed' => l10n.wasalnyAuditContactRevealed,
+        'wasalny_request_contact_hidden' => l10n.wasalnyAuditContactHidden,
         _ => l10n.productAuditActionOther,
       };
 }

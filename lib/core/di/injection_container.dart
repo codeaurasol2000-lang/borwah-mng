@@ -1,5 +1,7 @@
 import 'package:get_it/get_it.dart';
 
+import '../network/api_configuration.dart';
+import '../network/api_consumer.dart';
 import '../../features/merchants/data/datasources/merchants_data_source.dart';
 import '../../features/merchants/data/datasources/merchants_mock_data_source.dart';
 import '../../features/merchants/data/repositories/merchants_repository_impl.dart';
@@ -44,11 +46,23 @@ import '../../features/finance/domain/usecases/freeze_bank_link_request_usecase.
 import '../../features/finance/domain/usecases/reject_bank_link_request_usecase.dart';
 import '../../features/finance/domain/usecases/restore_frozen_bank_link_request_usecase.dart';
 import '../../features/finance/domain/usecases/reject_frozen_bank_link_request_usecase.dart';
+import '../../features/wasalny_supervisor/data/datasources/wasalny_complaints_data_source.dart';
+import '../../features/wasalny_supervisor/data/datasources/wasalny_complaints_api_data_source.dart';
+import '../../features/wasalny_supervisor/data/datasources/wasalny_complaints_mock_data_source.dart';
+import '../../features/wasalny_supervisor/data/repositories/wasalny_complaints_repository_impl.dart';
+import '../../features/wasalny_supervisor/domain/repositories/wasalny_complaints_repository.dart';
+import '../../features/wasalny_supervisor/domain/usecases/escalate_wasalny_complaint_usecase.dart';
+import '../../features/wasalny_supervisor/domain/usecases/get_wasalny_complaints_usecase.dart';
+import '../../features/wasalny_supervisor/domain/usecases/resolve_wasalny_complaint_usecase.dart';
+import '../../features/wasalny_supervisor/presentation/controllers/wasalny_complaints_cubit.dart';
 
 final sl = GetIt.instance;
 
 Future<void> initDependencies() async {
-  // Data Sources (تبديل هذا السطر فقط بالـ Api DataSource عند استلام الـ API)
+  final apiConfiguration = ApiConfiguration.fromEnvironment();
+  apiConfiguration.validate();
+
+  // Finance API wiring will follow the backend financial-request contract.
   sl.registerLazySingleton<FinanceRemoteDataSource>(
     () => FinanceMockDataSource(),
   );
@@ -125,6 +139,34 @@ Future<void> initDependencies() async {
       getProductReviews: sl(),
       changeProductReviewStatus: sl(),
       updateProductReview: sl(),
+      auditRepository: sl(),
+    ),
+  );
+
+  // Wasalny complaints
+  if (apiConfiguration.useMockData) {
+    sl.registerLazySingleton<WasalnyComplaintsDataSource>(
+      () => WasalnyComplaintsMockDataSource(),
+    );
+  } else {
+    sl.registerLazySingleton<ApiConsumer>(
+      () => ApiConsumer(baseUrl: apiConfiguration.baseUrl),
+    );
+    sl.registerLazySingleton<WasalnyComplaintsDataSource>(
+      () => WasalnyComplaintsApiDataSource(apiConsumer: sl()),
+    );
+  }
+  sl.registerLazySingleton<WasalnyComplaintsRepository>(
+    () => WasalnyComplaintsRepositoryImpl(dataSource: sl()),
+  );
+  sl.registerLazySingleton(() => GetWasalnyComplaintsUseCase(sl()));
+  sl.registerLazySingleton(() => EscalateWasalnyComplaintUseCase(sl()));
+  sl.registerLazySingleton(() => ResolveWasalnyComplaintUseCase(sl()));
+  sl.registerFactory(
+    () => WasalnyComplaintsCubit(
+      getComplaints: sl(),
+      escalateComplaint: sl(),
+      resolveComplaint: sl(),
       auditRepository: sl(),
     ),
   );

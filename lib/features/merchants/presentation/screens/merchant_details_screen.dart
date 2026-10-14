@@ -4,14 +4,21 @@ import 'package:flutter/services.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../data/merchant_advertisement_local_store.dart';
+import '../../data/merchant_supervisor_local_store.dart';
 import '../../domain/entities/merchant_entity.dart';
 import 'merchant_conversation_screen.dart';
 import 'merchant_pending_operations_screen.dart';
 
 class MerchantDetailsScreen extends StatefulWidget {
   final MerchantEntity merchant;
+  final bool? isLocallySuspended;
 
-  const MerchantDetailsScreen({super.key, required this.merchant});
+  const MerchantDetailsScreen({
+    super.key,
+    required this.merchant,
+    this.isLocallySuspended,
+  });
 
   @override
   State<MerchantDetailsScreen> createState() => _MerchantDetailsScreenState();
@@ -20,6 +27,8 @@ class MerchantDetailsScreen extends StatefulWidget {
 class _MerchantDetailsScreenState extends State<MerchantDetailsScreen> {
   late final TextEditingController _commissionController;
   late double _commissionPercent;
+  late bool _isSuspended;
+  Map<String, MerchantAdvertisementStatus> _advertisementStatuses = {};
 
   MerchantEntity get merchant => widget.merchant;
 
@@ -27,16 +36,50 @@ class _MerchantDetailsScreenState extends State<MerchantDetailsScreen> {
   void initState() {
     super.initState();
     _commissionPercent = merchant.commissionPercent ?? 5;
+    _isSuspended = widget.isLocallySuspended ??
+        (merchant.isSuspended ||
+            merchant.status == MerchantStatus.temporarilySuspended);
     _commissionController = TextEditingController(
       text: _commissionPercent.toStringAsFixed(1),
     );
+    MerchantAdvertisementLocalStore.version.addListener(
+      _refreshAdvertisementStatuses,
+    );
+    _refreshAdvertisementStatuses();
   }
 
   @override
   void dispose() {
+    MerchantAdvertisementLocalStore.version.removeListener(
+      _refreshAdvertisementStatuses,
+    );
     _commissionController.dispose();
     super.dispose();
   }
+
+  Future<void> _refreshAdvertisementStatuses() async {
+    try {
+      final statuses = await MerchantAdvertisementLocalStore.loadStatuses();
+      if (mounted) setState(() => _advertisementStatuses = statuses);
+    } catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'merchant advertisement status refresh',
+        ),
+      );
+      if (mounted) {
+        _showMessage(AppLocalizations.of(context)!.adsLoadFailed);
+      }
+    }
+  }
+
+  MerchantAdvertisementStatus _advertisementStatus(
+    MerchantAdvertisement ad,
+  ) =>
+      _advertisementStatuses[ad.reference] ??
+      MerchantAdvertisementLocalStore.statusFor(ad.reference, ad.status);
 
   @override
   Widget build(BuildContext context) {
@@ -148,8 +191,10 @@ class _MerchantDetailsScreenState extends State<MerchantDetailsScreen> {
                   children: [
                     _badge(
                       _statusLabel(l10n),
-                      const Color(0xFFE7F8F1),
-                      AppColors.success,
+                      _isSuspended
+                          ? const Color(0xFFFFE8E6)
+                          : const Color(0xFFE7F8F1),
+                      _isSuspended ? AppColors.danger : AppColors.success,
                     ),
                     const SizedBox(height: 10),
                     Text(
@@ -175,6 +220,8 @@ class _MerchantDetailsScreenState extends State<MerchantDetailsScreen> {
                         fontSize: 10,
                       ),
                     ),
+                    const SizedBox(height: 6),
+                    _merchantTierBadge(l10n, merchant.isFeatured),
                   ],
                 ),
               ),
@@ -256,11 +303,15 @@ class _MerchantDetailsScreenState extends State<MerchantDetailsScreen> {
         const SizedBox(width: 8),
         Expanded(
           child: _actionButton(
-            l10n.merchantInfoSuspendTemporarily,
-            Icons.warning_amber_rounded,
-            const Color(0xFFF59E0B),
-            AppColors.primaryDark,
-            _showSuspensionSheet,
+            _isSuspended
+                ? l10n.merchantUnsuspendAction
+                : l10n.merchantInfoSuspendTemporarily,
+            _isSuspended
+                ? Icons.play_circle_outline
+                : Icons.warning_amber_rounded,
+            _isSuspended ? AppColors.successDark : const Color(0xFFF59E0B),
+            _isSuspended ? Colors.white : AppColors.primaryDark,
+            _isSuspended ? _liftMerchantSuspension : _showSuspensionSheet,
           ),
         ),
         const SizedBox(width: 8),
@@ -281,14 +332,90 @@ class _MerchantDetailsScreenState extends State<MerchantDetailsScreen> {
     );
   }
 
-  Future<void> _showSuspensionSheet() {
-    return showModalBottomSheet<void>(
+  Future<void> _showSuspensionSheet() async {
+    final l10n = AppLocalizations.of(context)!;
+    final isArabic = l10n.localeName.startsWith('ar');
+    final result =
+        await showModalBottomSheet<({String reason, String details})>(
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
       backgroundColor: Colors.transparent,
       builder: (_) => _MerchantSuspensionSheet(merchant: merchant),
     );
+    if (result == null || !mounted) return;
+    final details = [
+      result.reason,
+      if (result.details.isNotEmpty) result.details,
+    ].join(' · ');
+    try {
+      await MerchantSupervisorLocalStore.setMerchantSuspended(
+        merchantId: merchant.id,
+        merchantName: merchant.getName(isArabic),
+        isSuspended: true,
+        action: l10n.merchantAuditSuspended,
+        details: details,
+      );
+      if (!mounted) return;
+      setState(() => _isSuspended = true);
+      AppSnackBar.showSuccess(context, l10n.merchantSuspendSuccess);
+    } on Object catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'merchant suspension',
+        ),
+      );
+      if (mounted) {
+        AppSnackBar.showError(context, l10n.merchantSuspensionSaveError);
+      }
+    }
+  }
+
+  Future<void> _liftMerchantSuspension() async {
+    final l10n = AppLocalizations.of(context)!;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.merchantUnsuspendAction),
+        content: Text(l10n.merchantUnsuspendConfirm),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(l10n.cancelAction),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text(l10n.merchantUnsuspendAction),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+    try {
+      await MerchantSupervisorLocalStore.setMerchantSuspended(
+        merchantId: merchant.id,
+        merchantName: merchant.getName(l10n.localeName.startsWith('ar')),
+        isSuspended: false,
+        action: l10n.merchantAuditUnsuspended,
+        details: l10n.merchantUnsuspendSuccess,
+      );
+      if (!mounted) return;
+      setState(() => _isSuspended = false);
+      AppSnackBar.showSuccess(context, l10n.merchantUnsuspendSuccess);
+    } on Object catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'merchant suspension',
+        ),
+      );
+      if (mounted) {
+        AppSnackBar.showError(context, l10n.merchantSuspensionSaveError);
+      }
+    }
   }
 
   Widget _actionButton(
@@ -569,6 +696,7 @@ class _MerchantDetailsScreenState extends State<MerchantDetailsScreen> {
             l10n.merchantInfoFieldAds,
             Icons.directions_car_outlined,
             trailing: l10n.merchantInfoShowAll(merchant.adsCount.toString()),
+            onTrailingTap: () => _showAllAdvertisements(l10n, isArabic),
           ),
           const SizedBox(height: 12),
           if (ads.isEmpty)
@@ -629,15 +757,13 @@ class _MerchantDetailsScreenState extends State<MerchantDetailsScreen> {
                     ),
                     const SizedBox(width: 8),
                     _badge(
-                      ad.status == MerchantAdvertisementStatus.approved
-                          ? l10n.merchantInfoAdApproved
-                          : l10n.merchantInfoAdUnderReview,
-                      ad.status == MerchantAdvertisementStatus.approved
-                          ? const Color(0xFFE0F5EC)
-                          : const Color(0xFFFFF3D6),
-                      ad.status == MerchantAdvertisementStatus.approved
-                          ? AppColors.success
-                          : const Color(0xFFAC6900),
+                      _advertisementStatusLabel(l10n, _advertisementStatus(ad)),
+                      _advertisementStatusBackground(
+                        _advertisementStatus(ad),
+                      ),
+                      _advertisementStatusForeground(
+                        _advertisementStatus(ad),
+                      ),
                     ),
                   ],
                 ),
@@ -652,6 +778,7 @@ class _MerchantDetailsScreenState extends State<MerchantDetailsScreen> {
     String title,
     IconData icon, {
     String? trailing,
+    VoidCallback? onTrailingTap,
   }) {
     return Row(
       children: [
@@ -671,10 +798,14 @@ class _MerchantDetailsScreenState extends State<MerchantDetailsScreen> {
         if (trailing != null) ...[
           const SizedBox(width: 8),
           Flexible(
-            child: _badge(
-              trailing,
-              const Color(0xFFEAF0FF),
-              AppColors.info,
+            child: InkWell(
+              onTap: onTrailingTap,
+              borderRadius: BorderRadius.circular(18),
+              child: _badge(
+                trailing,
+                const Color(0xFFEAF0FF),
+                AppColors.info,
+              ),
             ),
           ),
         ],
@@ -769,6 +900,16 @@ class _MerchantDetailsScreenState extends State<MerchantDetailsScreen> {
     );
   }
 
+  Widget _merchantTierBadge(AppLocalizations l10n, bool isFeatured) {
+    final foreground =
+        isFeatured ? const Color(0xFF9A6700) : AppColors.textSecondary;
+    return _badge(
+      isFeatured ? l10n.merchantFeaturedBadge : l10n.merchantStandardBadge,
+      isFeatured ? const Color(0xFFFFF4CC) : const Color(0xFFF1F3F5),
+      foreground,
+    );
+  }
+
   Widget _badge(String text, Color background, Color foreground) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
@@ -798,11 +939,21 @@ class _MerchantDetailsScreenState extends State<MerchantDetailsScreen> {
 
   String _countAds(MerchantAdvertisementStatus status) =>
       merchant.recentAdvertisements
-          .where((ad) => ad.status == status)
+          .where((ad) {
+            final current = _advertisementStatus(ad);
+            return current == status ||
+                (status == MerchantAdvertisementStatus.underReview &&
+                    (current == MerchantAdvertisementStatus.awaitingFinance ||
+                        current ==
+                            MerchantAdvertisementStatus.awaitingManagement));
+          })
           .length
           .toString();
 
   String _statusLabel(AppLocalizations l10n) {
+    if (_isSuspended) {
+      return l10n.merchantInfoStatusSuspended;
+    }
     return switch (merchant.status) {
       MerchantStatus.active => l10n.merchantInfoStatusActive,
       MerchantStatus.activeVerified => l10n.merchantInfoStatusActiveVerified,
@@ -811,6 +962,129 @@ class _MerchantDetailsScreenState extends State<MerchantDetailsScreen> {
       MerchantStatus.temporarilySuspended => l10n.merchantInfoStatusSuspended,
     };
   }
+
+  void _showAllAdvertisements(AppLocalizations l10n, bool isArabic) {
+    final advertisements = merchant.allAdvertisements.isEmpty
+        ? merchant.recentAdvertisements
+        : merchant.allAdvertisements;
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (sheetContext) => SafeArea(
+        top: false,
+        child: Container(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.sizeOf(sheetContext).height * 0.78,
+          ),
+          padding: const EdgeInsets.fromLTRB(16, 10, 16, 20),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 42,
+                height: 5,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFC5C8CE),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              const SizedBox(height: 14),
+              Text(
+                l10n.merchantInfoShowAll(advertisements.length.toString()),
+                style: const TextStyle(
+                  color: AppColors.primaryDark,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Flexible(
+                child: advertisements.isEmpty
+                    ? Center(child: Text(l10n.merchantInfoNoAds))
+                    : ListView(
+                        shrinkWrap: true,
+                        children: advertisements
+                            .map(
+                              (ad) => ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                title: Text(ad.getTitle(isArabic)),
+                                subtitle: Text(
+                                  '${ad.reference} • ${ad.price} '
+                                  '${l10n.finRequestCurrency}',
+                                ),
+                                trailing: _badge(
+                                  _advertisementStatusLabel(
+                                    l10n,
+                                    _advertisementStatus(ad),
+                                  ),
+                                  _advertisementStatusBackground(
+                                    _advertisementStatus(ad),
+                                  ),
+                                  _advertisementStatusForeground(
+                                    _advertisementStatus(ad),
+                                  ),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                      ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  String _advertisementStatusLabel(
+    AppLocalizations l10n,
+    MerchantAdvertisementStatus status,
+  ) =>
+      switch (status) {
+        MerchantAdvertisementStatus.approved => l10n.merchantInfoAdApproved,
+        MerchantAdvertisementStatus.awaitingFinance =>
+          l10n.adsPremiumWaitingFinance,
+        MerchantAdvertisementStatus.awaitingManagement =>
+          l10n.adsPremiumWaitingManagement,
+        MerchantAdvertisementStatus.underReview =>
+          l10n.merchantInfoAdUnderReview,
+        MerchantAdvertisementStatus.rejected => l10n.merchantInfoAdRejected,
+        MerchantAdvertisementStatus.frozen => l10n.merchantInfoAdFrozen,
+        MerchantAdvertisementStatus.hidden => l10n.merchantInfoAdHidden,
+      };
+
+  Color _advertisementStatusBackground(
+    MerchantAdvertisementStatus status,
+  ) =>
+      switch (status) {
+        MerchantAdvertisementStatus.approved => const Color(0xFFE0F5EC),
+        MerchantAdvertisementStatus.awaitingFinance ||
+        MerchantAdvertisementStatus.awaitingManagement =>
+          const Color(0xFFEAF0FF),
+        MerchantAdvertisementStatus.underReview => const Color(0xFFFFF3D6),
+        MerchantAdvertisementStatus.rejected => const Color(0xFFFFE8E6),
+        MerchantAdvertisementStatus.frozen => const Color(0xFFE8EAED),
+        MerchantAdvertisementStatus.hidden => const Color(0xFFE8EAED),
+      };
+
+  Color _advertisementStatusForeground(
+    MerchantAdvertisementStatus status,
+  ) =>
+      switch (status) {
+        MerchantAdvertisementStatus.approved => AppColors.success,
+        MerchantAdvertisementStatus.awaitingFinance ||
+        MerchantAdvertisementStatus.awaitingManagement =>
+          AppColors.info,
+        MerchantAdvertisementStatus.underReview => const Color(0xFFAC6900),
+        MerchantAdvertisementStatus.rejected => AppColors.danger,
+        MerchantAdvertisementStatus.frozen => const Color(0xFF805800),
+        MerchantAdvertisementStatus.hidden => AppColors.textSecondary,
+      };
 
   void _saveCommission() {
     final l10n = AppLocalizations.of(context)!;
@@ -821,6 +1095,22 @@ class _MerchantDetailsScreenState extends State<MerchantDetailsScreen> {
     }
     setState(() => _commissionPercent = updatedValue);
     _showMessage(l10n.merchantInfoCommissionSaved);
+    MerchantSupervisorLocalStore.recordAction(
+      action: l10n.merchantAuditCommissionUpdated,
+      subject: merchant.getName(l10n.localeName.startsWith('ar')),
+      details: '${updatedValue.toStringAsFixed(1)}%',
+    ).catchError((Object error, StackTrace stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'merchant supervisor audit',
+        ),
+      );
+      if (mounted) {
+        AppSnackBar.showError(context, l10n.merchantAuditLoadError);
+      }
+    });
   }
 
   void _showMessage(String message) {
@@ -954,7 +1244,7 @@ class _MerchantSuspensionSheetState extends State<_MerchantSuspensionSheet> {
                     SizedBox(
                       height: 52,
                       child: FilledButton.icon(
-                        onPressed: () => _showUnavailable(l10n),
+                        onPressed: () => _confirmSuspension(l10n),
                         icon: const Icon(Icons.block),
                         label: Text(l10n.merchantSuspendConfirm),
                         style: FilledButton.styleFrom(
@@ -1337,5 +1627,17 @@ class _MerchantSuspensionSheetState extends State<_MerchantSuspensionSheet> {
 
   void _showUnavailable(AppLocalizations l10n) {
     AppSnackBar.showInfo(context, l10n.merchantInfoActionUnavailable);
+  }
+
+  void _confirmSuspension(AppLocalizations l10n) {
+    final reasons = [
+      l10n.merchantSuspendReasonCorrection,
+      l10n.merchantSuspendReasonDuration,
+      l10n.merchantSuspendReasonLegal,
+    ];
+    Navigator.of(context).pop((
+      reason: reasons[_selectedReason],
+      details: _detailsController.text.trim(),
+    ));
   }
 }

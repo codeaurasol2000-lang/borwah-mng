@@ -1,5 +1,6 @@
 import 'package:barwah_app/app/navigation/product_supervisor_tabs_shell.dart';
 import 'package:barwah_app/core/di/injection_container.dart';
+import 'package:barwah_app/features/products/domain/repositories/product_supervisor_audit_repository.dart';
 import 'package:barwah_app/features/products/data/datasources/product_review_mock_data_source.dart';
 import 'package:barwah_app/features/products/data/repositories/product_review_repository_impl.dart';
 import 'package:barwah_app/features/products/domain/usecases/change_product_review_status_usecase.dart';
@@ -10,8 +11,18 @@ import 'package:barwah_app/features/products/presentation/screens/product_superv
 import 'package:barwah_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
+  setUpAll(() async {
+    await sl.reset();
+    await initDependencies();
+  });
+
+  setUp(() {
+    SharedPreferences.setMockInitialValues({});
+  });
+
   Widget buildTestApp(Locale locale, {VoidCallback? onLogout}) {
     return MaterialApp(
       locale: locale,
@@ -51,6 +62,49 @@ void main() {
         find.text('تفويض إشرافي نشط • ينتهي 15/06/1447 هـ'), findsNWidgets(2));
     await tester.tap(find.text('إلغاء'));
     await tester.pumpAndSettle();
+  });
+
+  testWidgets('profile preferences persist and are audited locally',
+      (tester) async {
+    tester.view.physicalSize = const Size(390, 1600);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    await tester.pumpWidget(buildTestApp(const Locale('en')));
+    await tester.pumpAndSettle();
+
+    final availabilityToggle = find.byKey(
+      const ValueKey('product_profile_field_availability_toggle'),
+    );
+    await tester.ensureVisible(availabilityToggle);
+    expect(tester.widget<Switch>(availabilityToggle).value, isTrue);
+    await tester.tap(availabilityToggle);
+    await tester.pumpAndSettle();
+
+    expect(tester.widget<Switch>(availabilityToggle).value, isFalse);
+    expect(
+      find.textContaining('saved on this device only'),
+      findsOneWidget,
+    );
+
+    final entries = await sl<ProductSupervisorAuditRepository>().getEntries();
+    expect(
+      entries.any(
+        (entry) =>
+            entry.actionKey == 'profile_field_availability_changed' &&
+            entry.details == 'Disabled',
+      ),
+      isTrue,
+    );
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pumpWidget(buildTestApp(const Locale('en')));
+    await tester.pumpAndSettle();
+    expect(tester.widget<Switch>(availabilityToggle).value, isFalse);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('profile logout is confirmed before callback', (tester) async {

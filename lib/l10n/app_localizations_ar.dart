@@ -293,6 +293,1122 @@ class AppLocalizationsAr extends AppLocalizations {
       'مستحقات فنيين معتمدين ومزودي الخدمات';
 
   @override
+  String get servicesSupervisorRoleBadge => 'مشرف الخدمات';
+
+  @override
+  String get servicesSupervisorBadgeCode => '#SRV-01';
+
+  @override
+  String get servicesSupervisorAccountName => 'مشرف الخدمات';
+
+  @override
+  String get servicesProfileTitle => 'الملف الشخصي';
+
+  @override
+  String get servicesProfileName => 'م. عبد العزيز بن خالد السالم';
+
+  @override
+  String get servicesProfileIdentity => 'مشرف ميداني أول · إدارة الخدمات';
+
+  @override
+  String get servicesProfileCoverage => 'النطاق: الرياض والمناطق المجاورة';
+
+  @override
+  String get servicesProfileAvailability => 'على رأس العمل - متاح للمناوبة';
+
+  @override
+  String get servicesProfileCompletedTasks => 'الطلبات المنجزة';
+
+  @override
+  String get servicesProfileFieldTasks => 'مهمة موثقة ميدانياً';
+
+  @override
+  String get servicesProfilePerformanceRating => 'تقييم الأداء';
+
+  @override
+  String get servicesProfileRatingDetail => 'ممتاز · وفق آخر 120 مهمة';
+
+  @override
+  String get servicesProfileAssignmentTime => 'متوسط زمن الإسناد';
+
+  @override
+  String get servicesProfileMinutes => 'دقيقة';
+
+  @override
+  String get servicesProfileComplaintResolution => 'حل ومتابعة البلاغات';
+
+  @override
+  String get servicesProfileResolutionDetail => 'ضمن المعدل العام';
+
+  @override
+  String get servicesProfileDemoMetricsNotice =>
+      'بيانات الملف ومؤشرات الأداء والأرصدة المعروضة تجريبية حتى ربط الحساب بمصدر بيانات معتمد.';
+
+  @override
+  String get servicesProfileLoadError =>
+      'تعذر تحميل بيانات الملف المحفوظة على هذا الجهاز.';
+
+  @override
+  String get servicesProfileWalletTitle => 'محفظة المستحقات والعمولات';
+
+  @override
+  String get servicesProfileWalletDescription =>
+      'إدارة المستحقات وسحب الأرباح حسب النظام';
+
+  @override
+  String get servicesProfileAvailableBalance => 'الرصيد المتاح للسحب';
+
+  @override
+  String get servicesProfilePendingDues => 'قيد التسوية والمراجعة';
+
+  @override
+  String get servicesProfileCurrency => 'ر.س';
+
+  @override
+  String get servicesProfileOpenWallet => 'فتح المحفظة وسحب الرصيد';
+
+  @override
+  String get servicesProfileWalletDetails =>
+      'يمكنك مراجعة الرصيد المتاح والمستحقات قيد التسوية من صفحة المحفظة.';
+
+  @override
+  String get servicesAccountEditProfile => 'إعدادات الحساب والتنبيهات';
+
+  @override
+  String get servicesAccountName => 'الاسم';
+
+  @override
+  String get servicesAccountPhone => 'رقم الهاتف';
+
+  @override
+  String get servicesAccountCoverage => 'نطاق التغطية';
+
+  @override
+  String get servicesAccountSave => 'حفظ';
+
+  @override
+  String get servicesAccountSaved => 'تم حفظ التغييرات على هذا الجهاز';
+
+  @override
+  String servicesAccountSaveError(Object error) {
+    return 'تعذر حفظ التغييرات: $error';
+  }
+
+  @override
+  String get servicesAccountLoadError => 'تعذر تحميل بيانات الحساب المحلية.';
+
+  @override
+  String get servicesAccountRetry => 'إعادة المحاولة';
+
+  @override
+  String get servicesAccountNameRequired => 'يرجى إدخال الاسم.';
+
+  @override
+  String get servicesAccountLocalOnly =>
+      'هذه البيانات محفوظة على هذا الجهاز فقط ولا تُحدّث الحساب على الخادم.';
+
+  @override
+  String get servicesAccountNotificationsTitle => 'تفضيلات التنبيهات';
+
+  @override
+  String get servicesAccountAssignmentAlerts => 'تنبيهات إسناد الخدمات';
+
+  @override
+  String get servicesAccountComplaintAlerts => 'تحديثات الشكاوى';
+
+  @override
+  String get servicesAccountSystemAlerts => 'التنبيهات الإدارية';
+
+  @override
+  String get servicesAccountPreferencesLocalOnly =>
+      'التفضيلات محفوظة محليًا؛ لم يتم ربطها بخدمة إشعارات.';
+
+  @override
+  String get servicesAccountWalletTitle => 'المحفظة والعمليات المالية';
+
+  @override
+  String get servicesAccountWalletUnavailable => 'المحفظة غير متصلة';
+
+  @override
+  String get servicesAccountWalletUnavailableDetails =>
+      'يلزم ربط خدمة مالية معتمدة لعرض الرصيد أو إرسال طلبات السحب. لا تُجرى معاملات من هذه النسخة.';
+
+  @override
+  String get servicesAccountActivityTitle => 'سجل نشاط الحساب';
+
+  @override
+  String get servicesAccountNoActivity => 'لا توجد أنشطة محفوظة حتى الآن.';
+
+  @override
+  String get servicesAccountActivityLocalOnly =>
+      'السجل محلي على هذا الجهاز، وليس سجل تدقيق مركزيًا.';
+
+  @override
+  String get servicesAccountActivityProfileUpdated => 'تم تعديل بيانات الملف';
+
+  @override
+  String get servicesAccountActivityPreferencesUpdated =>
+      'تم تعديل تفضيلات التنبيهات';
+
+  @override
+  String get servicesAccountActivityOther => 'نشاط الحساب';
+
+  @override
+  String get servicesAccountLogoutTitle => 'تسجيل الخروج';
+
+  @override
+  String get servicesAccountLogoutMessage =>
+      'هل تريد تسجيل الخروج من حساب مشرف الخدمات؟';
+
+  @override
+  String get servicesWalletBack => 'العودة';
+
+  @override
+  String get servicesWalletTitle => 'محفظتي والعمليات المالية';
+
+  @override
+  String get servicesWalletSummaryTitle => 'ملخص المحفظة';
+
+  @override
+  String get servicesWalletLiveUpdate => 'بيانات تجريبية';
+
+  @override
+  String get servicesWalletTotalBalance => 'إجمالي الرصيد';
+
+  @override
+  String get servicesWalletAvailable => 'الرصيد المتاح';
+
+  @override
+  String get servicesWalletReadyForTransfer => 'جاهز للتحويل';
+
+  @override
+  String get servicesWalletPending => 'مستحقات معلقة';
+
+  @override
+  String get servicesWalletExpectedThisWeek => 'متوقعة هذا الأسبوع';
+
+  @override
+  String get servicesWalletMonthlyCommissions => 'عمولات الشهر الحالي';
+
+  @override
+  String get servicesWalletWithdrawalTitle => 'طلب سحب رصيد';
+
+  @override
+  String get servicesWalletAmountLabel => 'المبلغ المراد سحبه';
+
+  @override
+  String get servicesWalletMaxAmount => 'الحد الأقصى';
+
+  @override
+  String get servicesWalletMethodTitle => 'اختر طريقة التحويل';
+
+  @override
+  String get servicesWalletInstapay => 'تحويل عبر إنستاباي';
+
+  @override
+  String get servicesWalletInstapayDetails => 'تحويل فوري إلى الحساب';
+
+  @override
+  String get servicesWalletInstapayId => 'معرّف إنستاباي';
+
+  @override
+  String get servicesWalletMobileWallet => 'محفظة هاتفية';
+
+  @override
+  String get servicesWalletMobileWalletDetails => 'تحويل إلى رقم الهاتف';
+
+  @override
+  String get servicesWalletMobileNumber => 'رقم الهاتف';
+
+  @override
+  String get servicesWalletBank => 'تحويل بنكي';
+
+  @override
+  String get servicesWalletBankDetails => 'إيداع إلى الحساب البنكي';
+
+  @override
+  String get servicesWalletBankAccount => 'رقم الحساب البنكي';
+
+  @override
+  String get servicesWalletReviewNote =>
+      'يتم تسجيل الطلبات لمراجعة المشرف المالي. لن يتم التحويل أو الإيداع قبل الموافقة وتكامل خدمة الدفع.';
+
+  @override
+  String get servicesWalletSubmit => 'إرسال طلب السحب';
+
+  @override
+  String get financeWalletWithdrawal => 'سحب';
+
+  @override
+  String get financeWalletDeposit => 'إيداع';
+
+  @override
+  String get financeWalletDepositTitle => 'طلب إيداع في المحفظة';
+
+  @override
+  String get financeWalletSubmitDeposit => 'إرسال طلب إيداع';
+
+  @override
+  String get financeWalletWithdrawalNote =>
+      'سيظل الطلب قيد المراجعة ولن يتم تحويل أي أموال حتى موافقة المشرف المالي.';
+
+  @override
+  String get financeWalletDepositNote =>
+      'لن تتم إضافة المبلغ إلى رصيدك حتى موافقة المشرف المالي.';
+
+  @override
+  String get financeWalletConfirmWithdrawal => 'تأكيد طلب السحب';
+
+  @override
+  String get financeWalletConfirmDeposit => 'تأكيد طلب الإيداع';
+
+  @override
+  String financeWalletConfirmWithdrawalMessage(Object amount, Object currency) {
+    return 'هل تريد إرسال طلب سحب بقيمة $amount $currency إلى المشرف المالي؟';
+  }
+
+  @override
+  String financeWalletConfirmDepositMessage(Object amount, Object currency) {
+    return 'هل تريد إرسال طلب إيداع بقيمة $amount $currency إلى المشرف المالي؟';
+  }
+
+  @override
+  String get financeWalletInvalidDepositAmount =>
+      'أدخل مبلغًا صحيحًا أكبر من صفر.';
+
+  @override
+  String get financeWalletWithdrawalRequestSent =>
+      'تم إرسال طلب السحب إلى المشرف المالي، والطلب قيد المراجعة.';
+
+  @override
+  String get financeWalletDepositRequestSent =>
+      'تم إرسال طلب الإيداع إلى المشرف المالي، والطلب قيد المراجعة.';
+
+  @override
+  String get financeWalletRequestFailed =>
+      'تعذر إرسال الطلب المالي. حاول مرة أخرى.';
+
+  @override
+  String get financeWalletHistoryLoadError =>
+      'تعذر تحميل طلباتك المالية. اضغط لإعادة المحاولة.';
+
+  @override
+  String get financeWalletNoRequests => 'لم ترسل أي طلبات مالية حتى الآن.';
+
+  @override
+  String financeWalletPendingNotification(Object count) {
+    return 'لديك $count طلبات مالية جديدة من المشرفين بانتظار المراجعة.';
+  }
+
+  @override
+  String get financeOperationType => 'نوع العملية';
+
+  @override
+  String get financeSourceAccount => 'الحساب صاحب الطلب';
+
+  @override
+  String get financeRequestApprovalTitle => 'اعتماد الطلب المالي';
+
+  @override
+  String get financeRequestRejectionTitle => 'رفض الطلب المالي';
+
+  @override
+  String financeRequestApprovalConfirmation(
+      Object operation, Object name, Object amount) {
+    return 'هل تريد اعتماد طلب $operation الخاص بـ $name بقيمة $amount؟';
+  }
+
+  @override
+  String get financeRequestApproved =>
+      'تم اعتماد الطلب. يتطلب تنفيذ التحويل أو إضافة الرصيد تكامل خدمة الدفع.';
+
+  @override
+  String get financeRequestApprovedBadge => 'معتمد';
+
+  @override
+  String get financeRequestRejected => 'تم رفض الطلب المالي.';
+
+  @override
+  String get financeRequestRejectedBadge => 'مرفوض';
+
+  @override
+  String get financeRequestFrozen => 'تم تجميد الطلب المالي للتحقيق.';
+
+  @override
+  String get financeRequestDecisionFailed =>
+      'تعذر حفظ القرار، ولم يتم تغيير الطلب.';
+
+  @override
+  String get servicesWalletHistoryTitle => 'سجل العمليات المالية';
+
+  @override
+  String get servicesWalletFullStatement => 'عرض الكل';
+
+  @override
+  String get servicesWalletStatementNotice =>
+      'سجل الطلبات محفوظ على هذا الجهاز فقط وغير متزامن مع خادم أو خدمة مالية.';
+
+  @override
+  String get servicesWalletHistoryInstapay => 'تحويل إنستاباي';
+
+  @override
+  String get servicesWalletHistoryOneDate => 'اليوم · 10:30 ص';
+
+  @override
+  String get servicesWalletStatusCompleted => 'مكتمل';
+
+  @override
+  String get servicesWalletHistoryBank => 'تحويل بنكي';
+
+  @override
+  String get servicesWalletHistoryTwoDate => 'أمس · 02:15 م';
+
+  @override
+  String get servicesWalletHistoryReview => 'طلب سحب';
+
+  @override
+  String get servicesWalletHistoryThreeDate => '18 مايو 2025 · 11:20 ص';
+
+  @override
+  String get servicesWalletHistoryNewRequest => 'طلب سحب جديد';
+
+  @override
+  String get servicesWalletHistoryJustNow => 'الآن';
+
+  @override
+  String get servicesWalletStatusReview => 'قيد المراجعة';
+
+  @override
+  String get servicesWalletComplianceTitle => 'تنويه رقابي';
+
+  @override
+  String get servicesWalletComplianceBody =>
+      'الأرصدة المعروضة تجريبية. تُحفظ الطلبات محليًا لموافقة المشرف المالي؛ ولا يحدث تحويل أو إيداع فعلي أو إشعار فوري أو إرسال إلى خادم.';
+
+  @override
+  String get servicesWalletAmountError =>
+      'أدخل مبلغًا أكبر من صفر ولا يتجاوز الرصيد المتاح.';
+
+  @override
+  String get servicesWalletDestinationError =>
+      'أدخل بيانات الوجهة قبل إرسال الطلب.';
+
+  @override
+  String get servicesWalletConfirmTitle => 'تأكيد طلب السحب';
+
+  @override
+  String servicesWalletConfirmMessage(Object amount, Object currency) {
+    return 'هل تريد إضافة طلب سحب بقيمة $amount $currency إلى السجل التجريبي؟';
+  }
+
+  @override
+  String get servicesWalletRequestSent =>
+      'أُضيف الطلب إلى السجل التجريبي فقط، ولم يُرسل إلى جهة مالية.';
+
+  @override
+  String get servicesProfileAdministrationTitle =>
+      'البيانات الإدارية والاعتمادات';
+
+  @override
+  String get servicesProfileDelegationTitle => 'التفويض المهني واعتماد الإشراف';
+
+  @override
+  String get servicesProfileDelegationDetail =>
+      'ساري المفعول حتى 1447/06/30 هـ';
+
+  @override
+  String get servicesProfileActive => 'مفعل';
+
+  @override
+  String get servicesProfileNotificationsTitle => 'تنبيهات البلاغات الفورية';
+
+  @override
+  String get servicesProfileNotificationsDetail =>
+      'إشعار فوري للمهام ذات الأولوية العالية';
+
+  @override
+  String get servicesProfileEnabled => 'مفعل';
+
+  @override
+  String get servicesProfileAuditTitle => 'سجل نشاطات المشرف والتدقيق';
+
+  @override
+  String get servicesProfileAuditDetail =>
+      'سجل الإجراءات ومراجعات التشغيل الميدانية';
+
+  @override
+  String get servicesProfileLogout => 'تسجيل الخروج من الجلسة الإشرافية';
+
+  @override
+  String get servicesProfileFooter =>
+      'بوابة إدارة الخدمات الميدانية · الإصدار 2.4.1';
+
+  @override
+  String get servicesReviewTab => 'قيد المراجعة';
+
+  @override
+  String get servicesProvidersTab => 'مقدمو الخدمة';
+
+  @override
+  String get servicesComplaintsTab => 'الشكاوى';
+
+  @override
+  String get servicesReviewTitle => 'طلبات الخدمات قيد المراجعة';
+
+  @override
+  String get servicesReviewSubtitle =>
+      'فحص الطلبات والتحقق من الأعمال الفنية وإسناد التشغيل';
+
+  @override
+  String servicesNewRequestsCount(Object count) {
+    return '$count جديدة';
+  }
+
+  @override
+  String get servicesCompletedToday => 'المعتمد اليوم';
+
+  @override
+  String get servicesAwaitingDecision => 'بانتظار القرار';
+
+  @override
+  String get servicesFilterAll => 'الكل';
+
+  @override
+  String get servicesFilterMaintenance => 'صيانة وأجهزة';
+
+  @override
+  String get servicesFilterElectrical => 'كهرباء وتمديدات';
+
+  @override
+  String get servicesFilterMoving => 'نقل وترتيب';
+
+  @override
+  String get servicesRequestsEmpty => 'لا توجد طلبات مطابقة لهذا التصنيف.';
+
+  @override
+  String get servicesUnderReview => 'قيد المراجعة';
+
+  @override
+  String get servicesUrgent => 'عاجل';
+
+  @override
+  String get servicesVerifiedProvider => 'فني موثق';
+
+  @override
+  String get servicesWorkDescription => 'بيان الأعمال المطلوبة:';
+
+  @override
+  String get servicesCurrency => 'ر.س';
+
+  @override
+  String get servicesUrgentNotice =>
+      'تنبيه تأخير ميداني: يرجى مراجعة الموعد والتواصل مع مزود الخدمة.';
+
+  @override
+  String get servicesApproveAction => 'قبول الطلب';
+
+  @override
+  String get servicesRejectAction => 'رفض الطلب';
+
+  @override
+  String get servicesViewDetails => 'معاينة تفاصيل الطلب الفنية';
+
+  @override
+  String get servicesApproveTitle => 'هل أنت متأكد من قبول الطلب؟';
+
+  @override
+  String get servicesRejectTitle => 'رفض طلب الخدمة';
+
+  @override
+  String get servicesApproveMessage =>
+      'سيتم قبول الطلب وإزالته من قائمة المراجعة الحالية.';
+
+  @override
+  String get servicesRejectMessage =>
+      'سيتم رفض الطلب وإزالته من قائمة المراجعة الحالية.';
+
+  @override
+  String get servicesRequestApproved =>
+      'تم تحديث حالة الطلب في قائمة المراجعة.';
+
+  @override
+  String get servicesRequestRejected => 'تم رفض الطلب.';
+
+  @override
+  String servicesRequestRejectedWithReason(String reason) {
+    return 'تم رفض الطلب. السبب: $reason';
+  }
+
+  @override
+  String get servicesFeaturedRequest => 'إعلان مميز';
+
+  @override
+  String get servicesCommentAction => 'تعليق';
+
+  @override
+  String get servicesCommentTitle => 'إضافة تعليق على الطلب';
+
+  @override
+  String get servicesCommentHint => 'اكتب تعليقك أو ملاحظاتك على الطلب...';
+
+  @override
+  String get servicesCommentSave => 'حفظ التعليق';
+
+  @override
+  String get servicesCommentSaved => 'تم حفظ التعليق على الطلب.';
+
+  @override
+  String get servicesDecisionProvider => 'مقدم الخدمة';
+
+  @override
+  String get servicesDecisionDiagnosticFee => 'التكلفة المقدرة';
+
+  @override
+  String get servicesApprovalNotification =>
+      'سيتم إشعار العميل ومقدم الخدمة بقبول الطلب وإتاحته للتنفيذ.';
+
+  @override
+  String get servicesApproveConfirmPublish => 'تأكيد النشر والقبول';
+
+  @override
+  String get servicesRejectionQuickReasons => 'نماذج أسباب سريعة';
+
+  @override
+  String get servicesRejectionReasonScope => 'خارج النطاق الجغرافي';
+
+  @override
+  String get servicesRejectionReasonDetails => 'بيانات العمل غير مكتملة';
+
+  @override
+  String get servicesRejectionReasonTerms => 'مخالفة شروط الخدمة';
+
+  @override
+  String get servicesRejectionReasonLabel => 'سبب الرفض الإلزامي';
+
+  @override
+  String get servicesRejectionReasonHint => 'اكتب سبب الرفض بالتفصيل...';
+
+  @override
+  String get servicesRejectionAuditNote =>
+      'سيتم تسجيل سبب الرفض وإشعار العميل به مع توثيق الإجراء في سجل الطلب.';
+
+  @override
+  String get servicesRejectConfirm => 'تأكيد رفض الطلب';
+
+  @override
+  String get servicesProvidersComingSoon =>
+      'سيتم تجهيز صفحة إدارة واعتماد مقدمي الخدمة في المرحلة التالية.';
+
+  @override
+  String get servicesProvidersPortalBadge => 'بوابة الإسناد والفرز الميداني';
+
+  @override
+  String get servicesProvidersTitle => 'مقدمو الخدمات المتاحين';
+
+  @override
+  String get servicesProvidersSubtitle =>
+      'قاعدة بيانات مزودي الخدمة المعتمدين والموثوقين والمهيئين للمطابقة والإسناد المباشر';
+
+  @override
+  String get servicesCertifiedProviders => 'مزود معتمد';
+
+  @override
+  String get servicesAvailableNow => 'متاح الآن';
+
+  @override
+  String get servicesCommitmentRate => 'نسبة الالتزام';
+
+  @override
+  String get servicesProvidersSearchHint =>
+      'ابحث بالاسم، السجل التجاري، التخصص أو الحي...';
+
+  @override
+  String get servicesProvidersClearSearch => 'مسح البحث';
+
+  @override
+  String get servicesProvidersFilterPlumbing => 'سباكة';
+
+  @override
+  String get servicesProvidersEmpty =>
+      'لا يوجد مقدمو خدمة يطابقون البحث أو التصنيف المحدد.';
+
+  @override
+  String get servicesProvidersAvailable => 'متاح فوراً';
+
+  @override
+  String get servicesProvidersBusy => 'في مهمة حالياً';
+
+  @override
+  String get servicesProvidersCommercialRegister => 'سجل تجاري موثق';
+
+  @override
+  String get servicesProvidersLicense => 'ترخيص مهني معتمد';
+
+  @override
+  String get servicesProvidersServiceTerms => 'استجابة خلال 15 دقيقة';
+
+  @override
+  String get servicesProvidersExecutionWindow =>
+      'متاح بعد ساعتين (03:30 م تقريباً)';
+
+  @override
+  String servicesProvidersTasksCount(Object count) {
+    return '$count مهمة منجزة';
+  }
+
+  @override
+  String servicesProvidersCommitment(Object rate) {
+    return 'التزام $rate';
+  }
+
+  @override
+  String get servicesProvidersViewProfile => 'عرض ملف مقدم الخدمة وسجله';
+
+  @override
+  String get servicesProvidersGovernanceTitle => 'حوكمة بيانات وسجلات المزودين';
+
+  @override
+  String get servicesProvidersGovernanceMessage =>
+      'صلاحية المشرف الميداني تقتصر على الفرز والمطابقة وإسناد الطلبات. تعديل السجلات الثابتة أو اعتماد مزودين جدد يتطلب تفويضاً إلكترونياً لإدارة شؤون المزودين والتراخيص المركزية.';
+
+  @override
+  String get servicesProvidersSpecialty => 'التخصص الفني';
+
+  @override
+  String get servicesProvidersRegisteredSkills => 'المهارات المسجلة';
+
+  @override
+  String get servicesProvidersCoverage => 'نطاق التغطية';
+
+  @override
+  String get servicesProvidersRating => 'تقييم العملاء';
+
+  @override
+  String get servicesProvidersCompletedTasks => 'المهام المكتملة';
+
+  @override
+  String get servicesProvidersSampleProfileNotice =>
+      'بيانات الملف والسجل المعروض تجريبية وتحتاج ربطها ببيانات مزودي الخدمة.';
+
+  @override
+  String get servicesProviderProfileTitle => 'الملف والسجل المهني للمزود';
+
+  @override
+  String get servicesProviderProfileRegistryNumber => 'رقم المزود';
+
+  @override
+  String get servicesProviderProfileVerified =>
+      'بيانات المزود واعتماداته موثقة';
+
+  @override
+  String get servicesProviderProfileFeatured => 'مزود مميز';
+
+  @override
+  String get servicesProviderProfileNeedsReview => 'يحتاج إلى مراجعة';
+
+  @override
+  String get servicesProviderProfileCall => 'اتصال';
+
+  @override
+  String get servicesProviderProfileChat => 'محادثة';
+
+  @override
+  String get servicesProviderProfileCallUnavailable =>
+      'تعذر بدء الاتصال من هذا الجهاز.';
+
+  @override
+  String get servicesProviderProfileCertifications => 'التراخيص والاعتمادات';
+
+  @override
+  String get servicesProviderProfileSpecialties => 'التخصصات وفرق العمل';
+
+  @override
+  String get servicesProviderProfileFieldTeam => 'فريق العمل الميداني';
+
+  @override
+  String get servicesProviderProfileApprovedTeam => 'فريق معتمد ومتاح للإسناد';
+
+  @override
+  String get servicesProviderProfileRecentTasks =>
+      'أحدث المهام والعمليات المنجزة';
+
+  @override
+  String get servicesProviderProfileTaskDetail =>
+      'تم تنفيذ الخدمة ومراجعتها من العميل.';
+
+  @override
+  String get servicesProviderProfileTaskCompleted => 'مكتمل';
+
+  @override
+  String get servicesProviderProfileTaskRecord => 'عرض السجل';
+
+  @override
+  String get servicesProviderProfileCompletedTasksDetail => 'مهمة موثقة';
+
+  @override
+  String get servicesProviderProfileRatingDetail => 'تقييم العملاء';
+
+  @override
+  String get servicesProviderProfileCommitmentDetail =>
+      'نسبة الالتزام بالمواعيد';
+
+  @override
+  String get servicesProviderProfileResponseTime => 'سرعة الاستجابة';
+
+  @override
+  String get servicesProviderProfileMinutes => 'دقيقة';
+
+  @override
+  String get servicesChatsTitle => 'محادثات الخدمات';
+
+  @override
+  String get servicesComplaintsTitle => 'شكاوى وبلاغات الخدمات';
+
+  @override
+  String get servicesComplaintsSubtitle =>
+      'معالجة النزاعات الميدانية وضمان جودة التنفيذ وإجراءات الضمان';
+
+  @override
+  String get servicesComplaintActive => 'الشكاوى النشطة';
+
+  @override
+  String get servicesComplaintUrgent => 'عاجلة';
+
+  @override
+  String get servicesComplaintPriorityMedium => 'متوسطة الأولوية';
+
+  @override
+  String get servicesComplaintResolutionTime => 'معدل الحل';
+
+  @override
+  String get servicesComplaintMinutes => 'دقيقة';
+
+  @override
+  String get servicesComplaintSatisfaction => 'رضا العملاء';
+
+  @override
+  String get servicesComplaintApproved => 'رضا معتمد';
+
+  @override
+  String get servicesComplaintSearchHint =>
+      'بحث برقم الشكوى أو اسم العميل أو المزود...';
+
+  @override
+  String get servicesComplaintFilterAll => 'الكل';
+
+  @override
+  String get servicesComplaintFilterInvestigating => 'قيد الفحص';
+
+  @override
+  String get servicesComplaintFilterWaiting => 'بانتظار الرد';
+
+  @override
+  String get servicesComplaintFilterClosed => 'تم الحل';
+
+  @override
+  String get servicesComplaintNoResults =>
+      'لا توجد شكاوى تطابق البحث أو المرشح.';
+
+  @override
+  String servicesComplaintAgeMinutes(int count) {
+    return 'منذ $count دقيقة';
+  }
+
+  @override
+  String servicesComplaintAgeHours(int count) {
+    return 'منذ $count ساعتين';
+  }
+
+  @override
+  String get servicesComplaintClient => 'العميل الشاكي';
+
+  @override
+  String get servicesComplaintProvider => 'المزود المشكو ضده';
+
+  @override
+  String get servicesComplaintClientOne => 'د. مها الدبيسي';
+
+  @override
+  String get servicesComplaintClientTwo => 'سارة العتيبي';
+
+  @override
+  String get servicesComplaintClientThree => 'العميل فهد';
+
+  @override
+  String get servicesComplaintProviderOne => 'مؤسسة التبريد المتقن';
+
+  @override
+  String get servicesComplaintProviderTwo => 'فريق الإتقان الشامل';
+
+  @override
+  String get servicesComplaintProviderThree => 'فهد الأرجحي';
+
+  @override
+  String servicesComplaintProviderId(String id) {
+    return 'طلب مرتبط: $id';
+  }
+
+  @override
+  String get servicesComplaintRiyadh => 'الرياض';
+
+  @override
+  String get servicesComplaintSubjectOne => 'صيانة مكيفات سبليت وتبريد';
+
+  @override
+  String get servicesComplaintDescriptionOne =>
+      'تسرب مياه مستمر من الوحدة الداخلية بعد الصيانة. تمت مراجعة البلاغ وتحديد موعد للفحص الميداني للتأكد من جودة تنفيذ الضمان.';
+
+  @override
+  String get servicesComplaintSubjectTwo => 'تجديدات كهربائية وإعدادات ذكية';
+
+  @override
+  String get servicesComplaintDescriptionTwo =>
+      'تجاوز الموعد المحدد للزيارة الميدانية ساعة كاملة دون تقديم اعتذار أو إشعار مسبق بتأخر الفني.';
+
+  @override
+  String get servicesComplaintSubjectThree => 'نقل وتركيب أثاث غرفة نوم';
+
+  @override
+  String get servicesComplaintDescriptionThree =>
+      'تمت معالجة الطلب واعتماده بعد تأكيد العميل استلام الخدمة.';
+
+  @override
+  String get servicesComplaintLocationOne => 'حي النرجس، الرياض';
+
+  @override
+  String get servicesComplaintLocationTwo => 'حي الملقا، الرياض';
+
+  @override
+  String get servicesComplaintLocationThree => 'حي الياسمين، الرياض';
+
+  @override
+  String get servicesComplaintPriceOne => '280';
+
+  @override
+  String get servicesComplaintPriceTwo => '450';
+
+  @override
+  String get servicesComplaintPriceThree => '1,200';
+
+  @override
+  String get servicesComplaintClosedToday => 'أغلقت اليوم 11:30 ص';
+
+  @override
+  String get servicesComplaintUnderReview => 'قيد فحص المشرف';
+
+  @override
+  String get servicesComplaintWaitingProvider => 'بانتظار إفادة المزود';
+
+  @override
+  String get servicesComplaintClosed => 'تم الحل والإغلاق';
+
+  @override
+  String get servicesComplaintInvestigateAndResolve =>
+      'معاينة وبدء التحقيق والحل';
+
+  @override
+  String get servicesComplaintContactParties => 'تواصل مع الطرفين';
+
+  @override
+  String servicesComplaintGroupChatTitle(String id) {
+    return 'محادثة الشكوى $id';
+  }
+
+  @override
+  String get servicesComplaintReassign => 'إعادة إسناد فوري';
+
+  @override
+  String get servicesComplaintEscalate => 'تصعيد لرئيس المشرفين';
+
+  @override
+  String get servicesComplaintShowResolution => 'عرض محضر الصلح';
+
+  @override
+  String get servicesComplaintResolutionRecorded =>
+      'الإجراء الإشرافي المعتمد: تم حل المشكلة ميدانياً مع تعويض العميل عن التأخير.';
+
+  @override
+  String get servicesComplaintClosedAudit => 'سجل تدقيق مغلق غير قابل للتعديل';
+
+  @override
+  String get servicesComplaintResolutionTitle => 'جودة حل النزاعات الميدانية';
+
+  @override
+  String get servicesComplaintResolutionDescription =>
+      'يمتلك مشرف الخدمات صلاحية التصالح وجدولة زيارات التنفيذ وإجراءات الضمان، مع إمكانية إعادة الإسناد لمزود بديل.';
+
+  @override
+  String get servicesComplaintDetails => 'تفاصيل الشكوى';
+
+  @override
+  String get servicesComplaintActionConfirmation =>
+      'سيتم تسجيل الإجراء في سجل الشكوى وإشعار الأطراف المرتبطة. هل تريد المتابعة؟';
+
+  @override
+  String get servicesComplaintEscalationConfirmation =>
+      'سيتم إحالة الشكوى إلى رئيس المشرفين للمراجعة. هل تريد التصعيد؟';
+
+  @override
+  String get servicesComplaintEscalated => 'تم التصعيد';
+
+  @override
+  String servicesComplaintEscalatedNotice(String id) {
+    return 'تم تصعيد الشكوى $id إلى رئيس المشرفين.';
+  }
+
+  @override
+  String get servicesComplaintContactNotice =>
+      'تم فتح خيارات التواصل مع العميل ومزود الخدمة.';
+
+  @override
+  String get servicesComplaintActionRecorded =>
+      'تم تسجيل الإجراء وإشعار الأطراف.';
+
+  @override
+  String get servicesNoNewNotifications => 'لا توجد إشعارات جديدة.';
+
+  @override
+  String get servicesNotificationsTitle => 'الإشعارات';
+
+  @override
+  String get servicesDetailsTitle => 'معاينة وتفاصيل الطلب';
+
+  @override
+  String get servicesRequestWorkDetailsTitle => 'تفاصيل الخدمة وموقع التنفيذ';
+
+  @override
+  String get servicesRequestLocationLabel => 'عنوان الخدمة';
+
+  @override
+  String get servicesRequestPhotosTitle => 'صور الخدمة المرفقة';
+
+  @override
+  String get servicesRequestNoPhotos => 'لا توجد صور مرفقة مع هذا الطلب.';
+
+  @override
+  String get servicesRequestAssignmentTitle => 'إسناد الخدمة لمقدم خدمة';
+
+  @override
+  String get servicesRequestAssignmentDescription =>
+      'اختر مقدم خدمة متاحاً ومطابقاً لتصنيف الخدمة من قائمة مقدمي الخدمات.';
+
+  @override
+  String get servicesRequestChooseProvider => 'اختر مقدم الخدمة';
+
+  @override
+  String get servicesRequestNoMatchingProviders =>
+      'لا يوجد مقدمو خدمة متاحون لهذا التصنيف حالياً.';
+
+  @override
+  String get servicesRequestAssignProvider => 'إسناد الخدمة';
+
+  @override
+  String servicesRequestAssigned(String provider) {
+    return 'تم إسناد الخدمة إلى $provider';
+  }
+
+  @override
+  String get servicesComplaintPartiesTitle => 'طرفا النزاع والتواصل';
+
+  @override
+  String get servicesComplaintProblemTitle => 'بيان المشكلة المسجلة';
+
+  @override
+  String get servicesComplaintFiledBy => 'الطرف الشاكي';
+
+  @override
+  String get servicesComplaintServiceInfoTitle => 'بيانات الخدمة محل الشكوى';
+
+  @override
+  String get servicesComplaintPriceLabel => 'سعر الخدمة';
+
+  @override
+  String get servicesComplaintPhotosTitle => 'صور المشكلة المرفقة';
+
+  @override
+  String get servicesComplaintNoPhotos => 'لا توجد صور مرفقة للمشكلة.';
+
+  @override
+  String get servicesBackToRequests => 'العودة إلى الطلبات';
+
+  @override
+  String get servicesCallPhone => 'اتصال هاتف';
+
+  @override
+  String get servicesContactWhatsApp => 'محادثة واتساب';
+
+  @override
+  String get servicesEstimatedCost => 'التكلفة التقديرية للخدمة';
+
+  @override
+  String get servicesApprovedEstimate => 'تقدير آلي معتمد';
+
+  @override
+  String get servicesEstimatedCostTotal => 'إجمالي التكلفة المقدرة';
+
+  @override
+  String get servicesInspectionFee => 'رسوم الكشف المبدئي';
+
+  @override
+  String get servicesLaborAndPartsFee => 'تكلفة العمل وقطع الغيار';
+
+  @override
+  String get servicesRequestMoreInfoTitle =>
+      'طلب معلومات وتوضيحات إضافية من العميل';
+
+  @override
+  String get servicesRequestMoreInfoDescription =>
+      'في حال عدم وضوح بيانات الطلب أو الحاجة لمعلومات إضافية لإتمام الفحص قبل التعيين، أرسل استفساراً مباشراً للعميل.';
+
+  @override
+  String get servicesRequestMoreInfoHint =>
+      'اكتب استفسارك أو التفاصيل المطلوبة من العميل هنا...';
+
+  @override
+  String get servicesRequireExtraPhotos => 'إلزام بإرفاق صور توضيحية إضافية';
+
+  @override
+  String get servicesSendInfoRequest => 'إرسال الطلب';
+
+  @override
+  String get servicesInfoRequestRequired =>
+      'اكتب تفاصيل الاستفسار قبل الإرسال.';
+
+  @override
+  String get servicesInfoRequestSent => 'تم إرسال طلب المعلومات للعميل.';
+
+  @override
+  String get servicesEditClassification => 'تعديل التصنيف الفني للخدمة';
+
+  @override
+  String get servicesCurrentClassification => 'التصنيف الفني المعتمد حالياً';
+
+  @override
+  String get servicesApprovedClassification => 'التصنيف المعتمد للطلب';
+
+  @override
+  String get servicesExecutionPeriod => 'فترة التنفيذ المناسبة';
+
+  @override
+  String get servicesDayPeriod => 'صباحية (09:00 ص - 01:00 م)';
+
+  @override
+  String get servicesEveningPeriod => 'مسائية (04:00 م - 09:00 م)';
+
+  @override
+  String get servicesSaveClassification => 'تحديث وحفظ التصنيف';
+
+  @override
+  String get servicesClassificationSaved =>
+      'تم حفظ تصنيف الخدمة وفترة التنفيذ.';
+
+  @override
+  String get servicesContactUnavailable => 'تعذر بدء التواصل من هذا الجهاز.';
+
+  @override
+  String get servicesPublishConfirm => 'تأكيد نشر الطلب';
+
+  @override
   String get deliveryLogisticsWalletTitle => 'محفظة مناديب التوصيل واللوجستيات';
 
   @override
@@ -2541,6 +3657,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adsApprovedStatus => 'تم اعتماد الإعلان';
 
   @override
+  String get adsPremiumWaitingFinance => 'بانتظار مراجعة المشرف المالي';
+
+  @override
+  String get adsPremiumWaitingManagement =>
+      'بانتظار اعتماد الإدارة وخصم الرسوم';
+
+  @override
   String get adsHiddenStatus => 'الإعلان مخفي';
 
   @override
@@ -2634,6 +3757,190 @@ class AppLocalizationsAr extends AppLocalizations {
   String get wasalnyComplaintWaitingAction => 'بانتظار الإجراء وتحديث الأطراف';
 
   @override
+  String get wasalnyComplaintsListIntro =>
+      'اختر شكوى لمراجعة تفاصيلها وأطراف النزاع';
+
+  @override
+  String wasalnyComplaintReferenceWithId(String id) {
+    return 'الشكوى #$id';
+  }
+
+  @override
+  String get wasalnyComplaintOpenDetails => 'عرض التفاصيل';
+
+  @override
+  String get wasalnyComplaintDetailsTitle => 'تفاصيل الشكوى';
+
+  @override
+  String get wasalnyComplaintDetailsSection => 'بيانات الشكوى';
+
+  @override
+  String get wasalnyComplaintRequestSection => 'بيانات الطلب';
+
+  @override
+  String get wasalnyComplaintPartiesSection => 'أطراف النزاع';
+
+  @override
+  String get wasalnyComplaintSeller => 'البائع';
+
+  @override
+  String get wasalnyComplaintBuyer => 'المشتري';
+
+  @override
+  String get wasalnyComplaintRequest => 'رقم الطلب';
+
+  @override
+  String get wasalnyComplaintAmount => 'قيمة الصفقة';
+
+  @override
+  String get wasalnyComplaintCreatedAt => 'تاريخ تسجيل الشكوى';
+
+  @override
+  String get wasalnyComplaintResolvedStatus => 'تم الحل وديًا';
+
+  @override
+  String get wasalnyComplaintEscalatedStatus => 'مصعّدة لرئيس المشرفين';
+
+  @override
+  String get wasalnyComplaintResolveFriendly => 'تم حل الشكوى والنزاع وديًا';
+
+  @override
+  String get wasalnyComplaintEscalateHead => 'تصعيد الشكوى لرئيس المشرفين';
+
+  @override
+  String get wasalnyComplaintEscalationSheetKicker =>
+      'وحدة 03: تصعيد الشكوى للإدارة';
+
+  @override
+  String get wasalnyComplaintEscalationSheetType => 'نوع النافذة: نافذة سفلية';
+
+  @override
+  String get wasalnyComplaintEscalationSheetTitle => 'إجراء تصعيد الشكوى';
+
+  @override
+  String get wasalnyComplaintEscalationSheetSubtitle =>
+      'تصعيد الشكوى لرئيس المشرفين';
+
+  @override
+  String get wasalnyComplaintEscalationFileLabel => 'ملف الشكوى الرقابي';
+
+  @override
+  String get wasalnyComplaintEscalationPending => 'بانتظار تصعيد إداري';
+
+  @override
+  String get wasalnyComplaintEscalationHeldAmount => 'مبلغ الضمان المحتجز';
+
+  @override
+  String get wasalnyComplaintEscalationNoHeldAmount => 'لا يوجد مبلغ محتجز';
+
+  @override
+  String get wasalnyComplaintEscalationPolicyTitle =>
+      'صلاحيات وضوابط اللجنة الرقابية';
+
+  @override
+  String get wasalnyComplaintEscalationPolicyBody =>
+      'يتم رفع الشكوى لرئيس المشرفين لمراجعة الوقائع والأدلة المسجلة، واعتماد الإجراء الإداري المناسب وفق سياسات المنصة. لا يؤدي التصعيد إلى تغيير حالة المبلغ المحتجز.';
+
+  @override
+  String get wasalnyComplaintEscalationAuditTrail => 'سجل النافذة موثق';
+
+  @override
+  String get wasalnyComplaintEscalationEvidenceTitle =>
+      'ملخص الشكوى والأدلة المسجلة';
+
+  @override
+  String get wasalnyComplaintEscalationVerifiedLabel => 'بيانات موثقة';
+
+  @override
+  String get wasalnyComplaintEscalationNoWarranty =>
+      'لا توجد بيانات ضمان ميداني مسجلة.';
+
+  @override
+  String get wasalnyComplaintEscalationConfirm =>
+      'تأكيد رفع تصعيد الشكوى رسمياً';
+
+  @override
+  String get wasalnyComplaintBackToList => 'العودة لقائمة الشكاوى';
+
+  @override
+  String get wasalnyComplaintCallSeller => 'اتصال بالبائع';
+
+  @override
+  String get wasalnyComplaintCallBuyer => 'اتصال بالمشتري';
+
+  @override
+  String get wasalnyComplaintResolvedMessage => 'تم تسجيل حل الشكوى وديًا';
+
+  @override
+  String get wasalnyComplaintEscalatedMessage =>
+      'تم تصعيد الشكوى لرئيس المشرفين';
+
+  @override
+  String get wasalnyComplaintCallFailed => 'تعذر بدء الاتصال من هذا الجهاز';
+
+  @override
+  String get wasalnyComplaintsLoadError => 'تعذر تحميل الشكاوى';
+
+  @override
+  String get wasalnyComplaintsRetry => 'إعادة المحاولة';
+
+  @override
+  String get wasalnyComplaintPartyUnavailable => 'غير مرتبط بطرف';
+
+  @override
+  String get wasalnyComplaintItem => 'السلعة';
+
+  @override
+  String get wasalnyComplaintDealCode => 'رقم الصفقة';
+
+  @override
+  String get wasalnyComplaintWarranty => 'الضمان الميداني';
+
+  @override
+  String get wasalnyComplaintResolveNote =>
+      'تم الاتفاق بين البائع والمشتري على حل ودي';
+
+  @override
+  String get wasalnyComplaintResolveFailed => 'تعذر تسجيل الحل الودي';
+
+  @override
+  String get wasalnyComplaintEscalationReason =>
+      'تتطلب الشكوى مراجعة رئيس المشرفين';
+
+  @override
+  String get wasalnyComplaintEscalationFailed => 'تعذر تصعيد الشكوى';
+
+  @override
+  String get wasalnyComplaintActionTakenStatus => 'تم اتخاذ إجراء';
+
+  @override
+  String get wasalnyAuditComplaintResolved => 'حل شكوى وديًا';
+
+  @override
+  String get wasalnyAuditComplaintEscalated => 'تصعيد شكوى لرئيس المشرفين';
+
+  @override
+  String get wasalnyAuditAdApproved => 'اعتماد إعلان وصلني';
+
+  @override
+  String get wasalnyAuditAdHidden => 'إخفاء إعلان وصلني';
+
+  @override
+  String get wasalnyAuditAdRejected => 'رفض إعلان وصلني';
+
+  @override
+  String get wasalnyAuditAdSuspended => 'تعليق إعلان وصلني';
+
+  @override
+  String get wasalnyAuditAdEditRequested => 'طلب تعديل إعلان وصلني';
+
+  @override
+  String get wasalnyAuditContactRevealed => 'إظهار بيانات تواصل طلب';
+
+  @override
+  String get wasalnyAuditContactHidden => 'إخفاء بيانات تواصل طلب';
+
+  @override
   String get wasalnyNotificationsTitle => 'إشعارات وصلني';
 
   @override
@@ -2656,6 +3963,75 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get wasalnyNotificationInspectionDescription =>
       'تم تسجيل نتيجة فحص شحنة الطلب W-1038.';
+
+  @override
+  String get wasalnyPromotionSendToFinance => 'إرسال للمشرف المالي';
+
+  @override
+  String get wasalnyPromotionSentToFinance =>
+      'تم إرسال طلب الترويج للمشرف المالي للمراجعة.';
+
+  @override
+  String get wasalnyPromotionFinancePending =>
+      'لا يزال طلب الترويج بانتظار موافقة المشرف المالي.';
+
+  @override
+  String get wasalnyPromotionFinanceRequestType => 'طلب ترويج منتج';
+
+  @override
+  String wasalnyPromotionFinanceApprovalConfirmation(
+      Object amount, Object beneficiary) {
+    return 'هل تريد اعتماد ترويج $beneficiary بمبلغ $amount وإحالته للإدارة لتنفيذ الخصم؟';
+  }
+
+  @override
+  String get wasalnyPromotionFinanceApproved =>
+      'تم اعتماد طلب الترويج وإحالته للإدارة لتنفيذ الخصم.';
+
+  @override
+  String get wasalnyPromotionFinanceRejected =>
+      'تم رفض طلب الترويج وإشعار مشرف وصلني بسبب الرفض.';
+
+  @override
+  String get wasalnyComplaintChatParty => 'دردشة مع الطرفين';
+
+  @override
+  String get wasalnyRequestsMonthlyLimitTitle => 'اكتمل الحد الشهري';
+
+  @override
+  String get wasalnyRequestsMonthlyLimitMessage =>
+      'تم استخدام طلبَي إظهار البيانات لهذا المشتري هذا الشهر. يلزم الاشتراك في التطبيق لإظهار بيانات إضافية.';
+
+  @override
+  String get wasalnyPremiumCustomer => 'عميل مميز';
+
+  @override
+  String get wasalnyPremiumAdChoiceTitle => 'هل الإعلان ضمن الباقة؟';
+
+  @override
+  String get wasalnyPremiumAdChoiceMessage =>
+      'هذا العميل مميز. هل يُحتسب الإعلان ضمن باقته أم يُعامل كإعلان ترويجي مدفوع؟';
+
+  @override
+  String get wasalnyPremiumAdIncluded => 'ضمن الباقة';
+
+  @override
+  String get wasalnyPremiumAdPaid => 'إعلان ترويجي مدفوع';
+
+  @override
+  String get wasalnyHeadInboxTitle => 'تصعيدات وصلني';
+
+  @override
+  String get wasalnyNotificationSourceFinance => 'المشرف المالي';
+
+  @override
+  String get wasalnyNotificationSourceChief => 'رئيس المشرفين';
+
+  @override
+  String get wasalnyNotificationSourceWasalny => 'حساب وصلني';
+
+  @override
+  String get wasalnyNotificationEmpty => 'لا توجد إشعارات جديدة.';
 
   @override
   String get wasalnyPromotionTitle => 'طلبات ترويج منتجات وصلني';
@@ -2681,7 +4057,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get wasalnyRequestsAll => 'الكل';
 
   @override
+  String get wasalnyRequestsAwaitingApproval => 'بانتظار الموافقة';
+
+  @override
   String get wasalnyRequestsCommunication => 'جاري التواصل';
+
+  @override
+  String get wasalnyRequestsUnderReview => 'قيد المراجعة';
 
   @override
   String get wasalnyRequestsSold => 'تم البيع';
@@ -3967,6 +5349,14 @@ class AppLocalizationsAr extends AppLocalizations {
       'الاستجابة المباشرة ضمن نطاق 15 كم';
 
   @override
+  String get productProfilePreferenceLocalOnlyNotice =>
+      'تُحفظ هذه الإعدادات على هذا الجهاز فقط؛ إرسال الإشعارات غير متصل حالياً.';
+
+  @override
+  String get productProfilePreferenceLoadError =>
+      'تعذّر تحميل الإعدادات المحفوظة. اضغط لإعادة المحاولة.';
+
+  @override
   String get productProfileReviewed => 'الصفقات المفحوصة';
 
   @override
@@ -4549,7 +5939,63 @@ class AppLocalizationsAr extends AppLocalizations {
       'إشعار فوري عند رفع إعلان أو تأهيله';
 
   @override
+  String get merchantProfileLocalOnlyNotice =>
+      'تُحفظ التغييرات على هذا الجهاز فقط؛ إرسال الإشعارات غير متصل حالياً.';
+
+  @override
+  String get merchantProfileLocalAuditNotice =>
+      'يعرض هذا السجل المحلي تغييرات الملف الشخصي على هذا الجهاز فقط، وليس سجل تدقيق على الخادم.';
+
+  @override
+  String get merchantProfileNoLocalActivity =>
+      'لا توجد تغييرات محلية مسجلة على الملف الشخصي بعد.';
+
+  @override
+  String get merchantProfilePreferenceUpdated => 'تم تغيير تفضيل الملف الشخصي';
+
+  @override
+  String get merchantProfileEnabled => 'مُفعّل';
+
+  @override
+  String get merchantProfileDisabled => 'مُعطّل';
+
+  @override
+  String get merchantProfileLoadError =>
+      'تعذّر تحميل إعدادات الملف الشخصي المحفوظة.';
+
+  @override
+  String get merchantProfileSaveError =>
+      'تعذّر حفظ هذا الإعداد على الجهاز. حاول مرة أخرى.';
+
+  @override
+  String get merchantProfileRetry => 'إعادة المحاولة';
+
+  @override
   String get merchantProfileSecurityAudit => 'الأمان والتدقيق الإداري';
+
+  @override
+  String get merchantProfileChangeSettings => 'تغيير الإعدادات';
+
+  @override
+  String get merchantAuditSuspended => 'تعليق التاجر';
+
+  @override
+  String get merchantAuditUnsuspended => 'فك تعليق التاجر';
+
+  @override
+  String get merchantAuditFinancialSubmitted => 'إحالة طلب مالي للمشرف المالي';
+
+  @override
+  String get merchantAuditFinancialRejected => 'رفض طلب مالي';
+
+  @override
+  String get merchantAuditAdModerated => 'مراجعة إعلان تاجر';
+
+  @override
+  String get merchantAuditCommissionUpdated => 'تحديث عمولة التاجر';
+
+  @override
+  String get merchantAuditLoadError => 'تعذر تحميل سجل العمليات الرقابية.';
 
   @override
   String get merchantProfileViewAll => 'السجل الشامل';
@@ -5142,4 +6588,397 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get supervisedMerchantsBadge => 'مشرف التجار';
+
+  @override
+  String get servicesSupervisorTitle => 'مشرف الخدمات';
+
+  @override
+  String get servicesSupervisorBadge => 'مشرف الخدمات · SRV-01';
+
+  @override
+  String get serviceProvidersTab => 'مقدمو الخدمات';
+
+  @override
+  String get servicesAccountTab => 'حسابي';
+
+  @override
+  String serviceProvidersCount(int count) {
+    return '$count مقدمي خدمة';
+  }
+
+  @override
+  String get serviceProviderProfileTitle => 'الملف والسجل المهني للمزود';
+
+  @override
+  String get serviceProviderAvailableForWork =>
+      'متاح ومستعد لإسناد المهام الفورية';
+
+  @override
+  String get serviceProviderVerified => 'موثق';
+
+  @override
+  String get serviceProviderRegistryNumber => 'رقم السجل التجاري';
+
+  @override
+  String get serviceProviderViewProfileAndHistory => 'عرض ملف المقدم وسجله';
+
+  @override
+  String get serviceProviderPerformanceTitle => 'مؤشرات الأداء التشغيلي (KPIs)';
+
+  @override
+  String get serviceProviderUpdatedNow => 'تحديث مباشر';
+
+  @override
+  String get serviceProviderCompletedTasks => 'المهام المنجزة';
+
+  @override
+  String get serviceProviderTaskCompletionRate => 'نسبة الإنجاز 99.1%';
+
+  @override
+  String get serviceProviderOverallRating => 'التقييم العام';
+
+  @override
+  String get serviceProviderRatingOutOfFive => 'من 5.0 · 162 تقييماً';
+
+  @override
+  String get serviceProviderOnTimeRate => 'الالتزام بالمواعيد';
+
+  @override
+  String get serviceProviderPunctualityDetail => 'انضباط وجودة في الميدان';
+
+  @override
+  String get serviceProviderResponseSpeed => 'سرعة الاستجابة';
+
+  @override
+  String get serviceProviderMinutes => 'دقيقة';
+
+  @override
+  String get serviceProviderSpecialtiesTitle => 'التخصصات والاعتمادات الرسمية';
+
+  @override
+  String get serviceProviderSpecialtyAirConditioning =>
+      'صيانة مكيفات سبليت ومركزي وتحديثات دكت احترافية';
+
+  @override
+  String get serviceProviderSpecialtyAppliances =>
+      'شحن وتفريغ واختبار غاز تبريد R410A وفق المعايير';
+
+  @override
+  String get serviceProviderSpecialtyElectrical =>
+      'غسيل دوري مضغوط وصيانة وقائية للمجمعات السكنية';
+
+  @override
+  String get serviceProviderPlanTitle => 'الامتياز المهني المعتمد';
+
+  @override
+  String get serviceProviderPlanDescription =>
+      'خضوعات أمنية وتدريب عملي على جودة الخدمة';
+
+  @override
+  String get serviceProviderPlanTier => '6 فنيين';
+
+  @override
+  String get serviceProviderRecentTasksTitle =>
+      'سجل أحدث المهام والعمليات المنجزة';
+
+  @override
+  String get serviceProviderFullHistory => 'السجل الكامل';
+
+  @override
+  String get serviceProviderViewFullHistory => 'عرض السجل الكامل';
+
+  @override
+  String get serviceProviderTaskAreaOne => 'حي الملقا';
+
+  @override
+  String get serviceProviderTaskAreaTwo => 'حي الياسمين';
+
+  @override
+  String get serviceProviderTaskAreaThree => 'حي الصحافة';
+
+  @override
+  String get serviceProviderTaskTitleOne => 'صيانة مكيف كونسيلد مركزي';
+
+  @override
+  String get serviceProviderTaskTitleTwo => 'فحص وتعبئة غاز فريون لمبنى تجاري';
+
+  @override
+  String get serviceProviderTaskTitleThree => 'فك وتركيب 4 وحدات سبليت جديدة';
+
+  @override
+  String get serviceProviderTaskDetailOne =>
+      'دقة متناهية وسرعة فائقة، مع إنهاء الفحص قبل الوقت المحدد.';
+
+  @override
+  String get serviceProviderTaskDetailTwo =>
+      'تم التأكد من سلامة التبريد قبل تسليم الموقع.';
+
+  @override
+  String get serviceProviderTaskDetailThree =>
+      'اختبار عزل المواسير بعد التركيب.';
+
+  @override
+  String get serviceProviderTaskCompleted => 'مكتمل ومعتمد';
+
+  @override
+  String get serviceProviderHistoryEntryOne =>
+      'صيانة مكيف كونسيلد مركزي · حي الملقا · 5.0';
+
+  @override
+  String get serviceProviderHistoryEntryTwo =>
+      'فحص وتعبئة غاز فريون · حي الياسمين · 4.8';
+
+  @override
+  String get serviceProviderHistoryEntryThree =>
+      'فك وتركيب وحدات سبليت · حي الصحافة · مكتمل';
+
+  @override
+  String get serviceProviderHistoryEntryFour =>
+      'صيانة دورية لوحدات التكييف · حي النرجس · 5.0';
+
+  @override
+  String get serviceProviderHistoryEntryFive =>
+      'فحص تمديدات الكهرباء · حي الورود · 4.9';
+
+  @override
+  String get servicesComplaintFilters => 'مرشحات الشكاوى';
+
+  @override
+  String get servicesComplaintRequireCompensation => 'إلزام المزود بالتعويض';
+
+  @override
+  String get servicesComplaintAlreadyClosed =>
+      'الشكوى مغلقة؛ يمكنك مراجعة محضر الحل فقط.';
+
+  @override
+  String get servicesComplaintFiltersHint =>
+      'استخدم مرشحات الحالة أو اكتب رقم الشكوى واسم العميل أو المزود.';
+
+  @override
+  String get merchantFeaturedBadge => 'تاجر مميز';
+
+  @override
+  String get merchantStandardBadge => 'تاجر عادي';
+
+  @override
+  String get merchantSuspendedSection => 'التجار المعلقون';
+
+  @override
+  String get merchantUnsuspendAction => 'فك التعليق';
+
+  @override
+  String get merchantUnsuspendConfirm =>
+      'هل تريد إعادة تفعيل هذا التاجر وإزالته من قائمة التجار المعلقين؟';
+
+  @override
+  String get merchantUnsuspendSuccess =>
+      'تم فك تعليق التاجر وإعادته إلى قائمة التجار.';
+
+  @override
+  String get merchantSuspendSuccess =>
+      'تم تعليق التاجر وإضافته إلى قائمة التجار المعلقين.';
+
+  @override
+  String get merchantSuspensionSaveError =>
+      'تعذر حفظ تغيير حالة التاجر. حاول مرة أخرى.';
+
+  @override
+  String get merchantFinanceStatusTitle => 'حالة طلب المشرف المالي';
+
+  @override
+  String get merchantFinanceViewStatus => 'عرض حالة الطلب';
+
+  @override
+  String get merchantFinanceStatusPending => 'قيد مراجعة المشرف المالي';
+
+  @override
+  String get merchantFinanceStatusApproved => 'تمت الموافقة';
+
+  @override
+  String get merchantFinanceStatusRejected => 'تم الرفض';
+
+  @override
+  String get merchantFinanceStatusOnHold => 'معلق / قيد التحقق';
+
+  @override
+  String get merchantFinanceRequestTitle => 'تفاصيل العملية';
+
+  @override
+  String get merchantFinanceAmountLabel => 'المبلغ';
+
+  @override
+  String get merchantFinanceDateLabel => 'تاريخ الطلب';
+
+  @override
+  String get merchantFinanceStatusLabel => 'الحالة';
+
+  @override
+  String get merchantFinanceNoteLabel => 'ملاحظة الطلب';
+
+  @override
+  String get merchantLinkHasCommercialRegister => 'لدى التاجر سجل تجاري';
+
+  @override
+  String get merchantLinkLocalScopeNotice =>
+      'عند عدم وجود سجل، استخدم رقم الهاتف الموثق. يحفظ النموذج الطلب على هذا الجهاز فقط ضمن الحساب المسجل؛ الإسناد المشترك الآمن يتطلب ربطاً بالخادم.';
+
+  @override
+  String get merchantLinkValidationError =>
+      'أدخل اسم التاجر ورقم هاتف صحيحاً ورقم السجل عند انطباقه.';
+
+  @override
+  String get merchantLinkSessionRequired =>
+      'سجل الدخول مجدداً قبل إرسال طلب ربط التاجر.';
+
+  @override
+  String get merchantLinkSavedLocally =>
+      'تم حفظ طلب الربط محلياً. لم يُرسل للتاجر أو للمنصة.';
+
+  @override
+  String get merchantLinkSaveFailed => 'تعذر حفظ طلب الربط.';
+
+  @override
+  String get merchantLinkSaving => 'جارٍ حفظ الطلب...';
+
+  @override
+  String get adsArchiveTitle => 'أرشيف الإعلانات';
+
+  @override
+  String get adsReviewQueueTab => 'قائمة المراجعة';
+
+  @override
+  String get adsPremium => 'مميز';
+
+  @override
+  String get adsRegular => 'عادي';
+
+  @override
+  String get adsSaveFailed => 'تعذر حفظ القرار. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get adsLoadFailed => 'تعذر تحميل قرارات الإعلانات المحفوظة.';
+
+  @override
+  String get adsFrozenStatus => 'مجمد';
+
+  @override
+  String get adsFreezeAction => 'تجميد الإعلان';
+
+  @override
+  String get adsUnfreezeAction => 'استعادة الإعلان';
+
+  @override
+  String get finRequestLocalWorkflowNotice =>
+      'تُحفظ الطلبات محلياً وتُدرج لمراجعة المشرف المالي في هذه النسخة التجريبية. لا يتم خصم مبالغ أو إرسال إشعارات فعلية للتاجر.';
+
+  @override
+  String get finRequestSentConfirmation => 'تم إرسال الطلب إلى المشرف المالي.';
+
+  @override
+  String get finRequestActionFailed =>
+      'تعذر إكمال الإجراء. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get finRequestRejectTitle => 'رفض طلب التاجر';
+
+  @override
+  String get finRequestRejectReason => 'أدخل سبب الرفض ليظهر للتاجر';
+
+  @override
+  String get finRequestRejectAction => 'رفض الطلب';
+
+  @override
+  String get finRequestRejected => 'مرفوض';
+
+  @override
+  String get finRequestRejectionSaved => 'تم حفظ سبب الرفض.';
+
+  @override
+  String get financeWalletRequestSubmitted =>
+      'أُرسل الطلب إلى المشرف المالي للمراجعة. لم يتم أي تحويل.';
+
+  @override
+  String get financeRequestsInProgressTab => 'قيد الإجراء';
+
+  @override
+  String get financeRequestsArchiveTab => 'الأرشيف';
+
+  @override
+  String get financeRequestsArchiveSearchHint =>
+      'ابحث برقم الطلب أو المستفيد أو مصدر الطلب';
+
+  @override
+  String get financeRequestsArchiveEmpty =>
+      'ستظهر الطلبات المعتمدة والمرفوضة هنا.';
+
+  @override
+  String get financeRequestsArchiveNoResults =>
+      'لا توجد طلبات مؤرشفة تطابق البحث أو التصفية.';
+
+  @override
+  String get financeRequestsInProgressEmpty =>
+      'لا توجد طلبات بانتظار المراجعة.';
+
+  @override
+  String get financeRequestRefreshFailed =>
+      'تم حفظ القرار، لكن تعذر تحديث قائمة الطلبات.';
+
+  @override
+  String get financeRequestListFailed =>
+      'تعذر تحميل الطلبات المالية. اسحب لأسفل لإعادة المحاولة.';
+
+  @override
+  String get financeRecordApproval => 'تسجيل الموافقة';
+
+  @override
+  String get financeApproveOnlyConfirmation =>
+      'هل تسجل الموافقة على هذا الطلب؟ لن يؤدي ذلك إلى تحويل الأموال. المبلغ:';
+
+  @override
+  String get withdrawalDetailsSourceAccount => 'الحساب مصدر الطلب';
+
+  @override
+  String get withdrawalDetailsOperationType => 'نوع العملية';
+
+  @override
+  String get financeOperationWithdrawal => 'سحب';
+
+  @override
+  String get financeOperationDeposit => 'إيداع';
+
+  @override
+  String get financeWalletRequestTitle => 'طلب عملية محفظة';
+
+  @override
+  String get financeWalletAmountLabel => 'المبلغ';
+
+  @override
+  String get financeWalletInvalidWithdrawalAmount =>
+      'أدخل مبلغ سحب بين 100 و8,450 ر.س.';
+
+  @override
+  String get financeWalletInvalidDetails =>
+      'أدخل مبلغاً صحيحاً بين 100 و20,000 ر.س وحدد وجهة الدفع.';
+
+  @override
+  String get financeWalletConfirmDepositTitle => 'تأكيد طلب الإيداع';
+
+  @override
+  String get financeWalletConfirmDepositAction => 'تأكيد طلب الإيداع';
+
+  @override
+  String get financeWalletSubmitRequest => 'إرسال الطلب للمراجعة المالية';
+
+  @override
+  String get financeWalletOperationNote =>
+      'يجب أن يوافق المشرف المالي على الطلب. تُسجل الموافقة في التطبيق ولا تتحرك الأموال قبل تكامل خدمة الدفع.';
+
+  @override
+  String get merchantInfoAdRejected => 'مرفوض';
+
+  @override
+  String get merchantInfoAdFrozen => 'مجمد';
+
+  @override
+  String get merchantInfoAdHidden => 'مخفي';
 }

@@ -41,6 +41,7 @@ class MerchantsMockDataSource implements MerchantsDataSource {
       crNumber: '1010482910',
       logoIcon: Icons.directions_car,
       status: MerchantStatus.active,
+      isFeatured: true,
       adsCount: 42,
       adsCountLabel: '42 إعلان',
       adsCountLabelEn: '42 Ads',
@@ -78,6 +79,43 @@ class MerchantsMockDataSource implements MerchantsDataSource {
           reference: 'AD-99134',
           price: '495,000',
           status: MerchantAdvertisementStatus.underReview,
+        ),
+      ],
+      allAdvertisements: [
+        MerchantAdvertisement(
+          title: 'تويوتا لاندكروزر 2023',
+          titleEn: '2023 Toyota Land Cruiser',
+          reference: 'AD-99120',
+          price: '310,000',
+          status: MerchantAdvertisementStatus.approved,
+        ),
+        MerchantAdvertisement(
+          title: 'لكزس LX600 برستيج',
+          titleEn: 'Lexus LX600 Prestige',
+          reference: 'AD-99134',
+          price: '495,000',
+          status: MerchantAdvertisementStatus.approved,
+        ),
+        MerchantAdvertisement(
+          title: 'مرسيدس E300 AMG',
+          titleEn: 'Mercedes E300 AMG',
+          reference: 'AD-94820',
+          price: '245,000',
+          status: MerchantAdvertisementStatus.rejected,
+        ),
+        MerchantAdvertisement(
+          title: 'جيب جراند شيروكي',
+          titleEn: 'Jeep Grand Cherokee',
+          reference: 'AD-94018',
+          price: '178,000',
+          status: MerchantAdvertisementStatus.frozen,
+        ),
+        MerchantAdvertisement(
+          title: 'نيسان باترول 2022',
+          titleEn: '2022 Nissan Patrol',
+          reference: 'AD-93642',
+          price: '220,000',
+          status: MerchantAdvertisementStatus.hidden,
         ),
       ],
     ),
@@ -223,6 +261,7 @@ class MerchantsMockDataSource implements MerchantsDataSource {
       crNumber: '1010482910',
       logoIcon: Icons.directions_car,
       status: MerchantStatus.activeVerified,
+      isFeatured: true,
       statusTagText: 'نشط وموثق',
       statusTagTextEn: 'Active & Verified',
       location: 'حي القادسية',
@@ -1032,8 +1071,9 @@ class MerchantsMockDataSource implements MerchantsDataSource {
             m.categoryEn.toLowerCase().contains(q);
         final matchLocation = (m.location ?? '').toLowerCase().contains(q) ||
             (m.locationEn ?? '').toLowerCase().contains(q);
-        final matchDelegate = (m.delegateName ?? '').toLowerCase().contains(q) ||
-            (m.delegateNameEn ?? '').toLowerCase().contains(q);
+        final matchDelegate =
+            (m.delegateName ?? '').toLowerCase().contains(q) ||
+                (m.delegateNameEn ?? '').toLowerCase().contains(q);
         return matchName ||
             matchCr ||
             matchCode ||

@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/utils/currency_formatter.dart';
+import '../../domain/repositories/finance_repository.dart';
 import '../../domain/entities/withdrawal_request_entity.dart';
 import '../../domain/usecases/get_merchant_withdrawals_usecase.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../core/widgets/finance_dialogs.dart';
+import '../../../merchants/data/merchant_advertisement_local_store.dart';
+import '../../../merchants/domain/entities/merchant_entity.dart';
+import '../../../wasalny_supervisor/data/wasalny_local_event_store.dart';
 import '../widgets/finance_navigation.dart';
 import '../widgets/withdrawal_request_details_sheet.dart';
 import '../utils/finance_localizer.dart';
@@ -23,46 +28,74 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
   List<WithdrawalRequestEntity> _requests = [];
   bool _isLoading = true;
   String _selectedFilter = 'الكل'; // تغيير الفلتر الافتراضي
+  final Set<String> _processingRequests = {};
+
+  bool _isPromotionRequest(WithdrawalRequestEntity request) =>
+      request.operationType == FinancialOperationType.promotion;
+  bool _showArchive = false;
+
+  String _promotionRecipient(WithdrawalRequestEntity request) =>
+      request.sourceOfFunds?.contains('وصلني') == true ||
+              request.sourceAccount?.startsWith('wasalny-') == true
+          ? 'wasalny'
+          : 'products';
 
   // دوال الفلترة والحساب الديناميكي
-  List<WithdrawalRequestEntity> get _filteredRequests {
-    if (_selectedFilter == 'التجار') {
-      return _requests
-          .where((r) => r.beneficiaryType == BeneficiaryType.merchant)
-          .toList();
-    } else if (_selectedFilter == 'المستخدمين') {
-      return _requests
-          .where((r) => r.beneficiaryType != BeneficiaryType.merchant)
-          .toList();
-    }
-    return _requests; // الكل
-  }
+  List<WithdrawalRequestEntity> get _categoryRequests =>
+      switch (_selectedFilter) {
+        'التجار' => _requests
+            .where((r) => r.beneficiaryType == BeneficiaryType.merchant)
+            .toList(),
+        'المستخدمين' => _requests
+            .where((r) => r.beneficiaryType != BeneficiaryType.merchant)
+            .toList(),
+        _ => _requests,
+      };
 
-  int get _pendingCount => _filteredRequests
-      .where((r) => r.status != RequestStatus.underInvestigation)
-      .length;
-  int get _frozenCount => _filteredRequests
-      .where((r) => r.status == RequestStatus.underInvestigation)
+  List<WithdrawalRequestEntity> get _filteredRequests => _categoryRequests
+      .where((request) => _showArchive
+          ? request.status != RequestStatus.pending
+          : request.status == RequestStatus.pending)
+      .toList(growable: false);
+
+  int get _pendingCount =>
+      _categoryRequests.where((r) => r.status == RequestStatus.pending).length;
+  int get _frozenCount => _categoryRequests
+      .where((r) =>
+          r.status == RequestStatus.underInvestigation ||
+          r.status == RequestStatus.frozen)
       .length;
 
   double get _totalPendingAmount {
-    return _filteredRequests
-        .where((r) => r.status != RequestStatus.underInvestigation)
+    return _categoryRequests
+        .where((r) => r.status == RequestStatus.pending)
         .fold(0.0, (sum, req) => sum + req.netAmount);
   }
 
   int _countFor(String type) {
     if (type == 'التجار') {
       return _requests
-          .where((r) => r.beneficiaryType == BeneficiaryType.merchant)
+          .where((r) =>
+              r.beneficiaryType == BeneficiaryType.merchant &&
+              (_showArchive
+                  ? r.status != RequestStatus.pending
+                  : r.status == RequestStatus.pending))
           .length;
     }
     if (type == 'المستخدمين') {
       return _requests
-          .where((r) => r.beneficiaryType != BeneficiaryType.merchant)
+          .where((r) =>
+              r.beneficiaryType != BeneficiaryType.merchant &&
+              (_showArchive
+                  ? r.status != RequestStatus.pending
+                  : r.status == RequestStatus.pending))
           .length;
     }
-    return _requests.length;
+    return _requests
+        .where((r) => _showArchive
+            ? r.status != RequestStatus.pending
+            : r.status == RequestStatus.pending)
+        .length;
   }
 
   @override
@@ -80,6 +113,238 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
         _isLoading = false;
       }),
     );
+  }
+
+  Future<void> _notifyPromotionDecision(
+    WithdrawalRequestEntity request, {
+    required bool approved,
+    String? reason,
+  }) async {
+    try {
+      await WasalnyLocalEventStore().publish(
+        WasalnyLocalEvent(
+          id: 'finance-${approved ? 'approved' : 'rejected'}-${request.id}',
+          recipient: _promotionRecipient(request),
+          source: 'finance',
+          titleAr: approved ? 'تم اعتماد طلب الترويج' : 'تم رفض طلب الترويج',
+          titleEn: approved
+              ? 'Promotion request approved'
+              : 'Promotion request rejected',
+          messageAr: approved
+              ? 'اعتمد المشرف المالي طلب الترويج ${request.beneficiaryName} وأحاله للإدارة للخصم.'
+              : 'رفض المشرف المالي طلب الترويج ${request.beneficiaryName}: ${reason ?? ''}',
+          messageEn: approved
+              ? 'Finance approved ${request.beneficiaryName}\'s promotion and forwarded it to management for deduction.'
+              : 'Finance rejected ${request.beneficiaryName}\'s promotion: ${reason ?? ''}',
+          createdAt: DateTime.now(),
+        ),
+      );
+    } catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'finance requests',
+          context: ErrorDescription('while notifying Wasalny of a decision'),
+        ),
+      );
+      if (mounted) {
+        AppSnackBar.showError(
+          context,
+          AppLocalizations.of(context)!.productAuditSaveError,
+        );
+      }
+    }
+  }
+
+  Future<void> _syncPremiumAdvertisementStatus(
+    WithdrawalRequestEntity request,
+    MerchantAdvertisementStatus status,
+  ) async {
+    const prefix = 'AD-FEE-';
+    final sourceAccount = request.sourceAccount;
+    final source = sourceAccount != null && sourceAccount.startsWith(prefix)
+        ? sourceAccount.substring(prefix.length)
+        : RegExp(r'(?:AD-FEE-)?(AD-\d+)')
+            .firstMatch(request.sourceOfFunds ?? '')
+            ?.group(1);
+    if (source == null) return;
+    try {
+      await MerchantAdvertisementLocalStore.saveStatus(
+        reference: source,
+        status: status,
+      );
+    } catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'premium advertisement finance decision',
+        ),
+      );
+      if (mounted) {
+        AppSnackBar.showError(
+          context,
+          AppLocalizations.of(context)!.merchantAuditLoadError,
+        );
+      }
+    }
+  }
+
+  void _replaceRequest(WithdrawalRequestEntity updated) {
+    setState(() {
+      final index = _requests.indexWhere((request) => request.id == updated.id);
+      if (index != -1) _requests[index] = updated;
+    });
+  }
+
+  Future<void> _approveRequest(
+    AppLocalizations l10n,
+    WithdrawalRequestEntity request,
+  ) async {
+    if (_processingRequests.contains(request.id)) return;
+    setState(() => _processingRequests.add(request.id));
+    try {
+      final result =
+          await sl<FinanceRepository>().approveMerchantFinancialRequest(
+        request.id,
+      );
+      if (!mounted) return;
+      final failure = result.fold((failure) => failure, (_) => null);
+      if (failure != null) {
+        AppSnackBar.showError(context, failure.message);
+        return;
+      }
+      await _syncPremiumAdvertisementStatus(
+        request,
+        MerchantAdvertisementStatus.awaitingManagement,
+      );
+      if (_isPromotionRequest(request)) {
+        await _notifyPromotionDecision(request, approved: true);
+      }
+      if (!mounted) return;
+      _replaceRequest(request.copyWith(status: RequestStatus.approved));
+      AppSnackBar.showSuccess(context, l10n.financeRequestApproved);
+    } catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'merchant financial request approval',
+        ),
+      );
+      if (mounted) {
+        AppSnackBar.showError(context, l10n.finRequestActionFailed);
+      }
+    } finally {
+      if (mounted) setState(() => _processingRequests.remove(request.id));
+    }
+  }
+
+  Future<void> _rejectRequest(
+    AppLocalizations l10n,
+    WithdrawalRequestEntity request,
+  ) async {
+    final isArabic = l10n.localeName.startsWith('ar');
+    final reason = await FinanceDialogs.showRejectionDialog(
+      context,
+      title: isArabic ? 'رفض طلب السحب' : 'Reject Withdrawal',
+    );
+    if (reason == null ||
+        !mounted ||
+        _processingRequests.contains(request.id)) {
+      return;
+    }
+    setState(() => _processingRequests.add(request.id));
+    try {
+      final result = await sl<FinanceRepository>()
+          .rejectMerchantFinancialRequest(request.id, reason);
+      if (!mounted) return;
+      final failure = result.fold((failure) => failure, (_) => null);
+      if (failure != null) {
+        AppSnackBar.showError(context, failure.message);
+        return;
+      }
+      await _syncPremiumAdvertisementStatus(
+        request,
+        MerchantAdvertisementStatus.rejected,
+      );
+      if (_isPromotionRequest(request)) {
+        await _notifyPromotionDecision(
+          request,
+          approved: false,
+          reason: reason,
+        );
+      }
+      if (!mounted) return;
+      _replaceRequest(
+        request.copyWith(
+          status: RequestStatus.rejected,
+          alertNotice: reason,
+        ),
+      );
+      AppSnackBar.showError(context, l10n.financeRequestRejected);
+    } catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'merchant financial request rejection',
+        ),
+      );
+      if (mounted) {
+        AppSnackBar.showError(context, l10n.finRequestActionFailed);
+      }
+    } finally {
+      if (mounted) setState(() => _processingRequests.remove(request.id));
+    }
+  }
+
+  Future<void> _freezeRequest(
+    AppLocalizations l10n,
+    WithdrawalRequestEntity request,
+  ) async {
+    if (_processingRequests.contains(request.id)) return;
+    final confirmed = await FinanceDialogs.showFreezeDialog(
+      context,
+      requestTitle: FinanceLocalizer.localizeWithdrawalText(
+        context,
+        request.beneficiaryName,
+      ),
+    );
+    if (!confirmed || !mounted) return;
+    setState(() => _processingRequests.add(request.id));
+    final reason = l10n.temporarilySuspendedForAudit;
+    try {
+      final result = await sl<FinanceRepository>()
+          .freezeMerchantFinancialRequest(request.id, reason);
+      if (!mounted) return;
+      final failure = result.fold((failure) => failure, (_) => null);
+      if (failure != null) {
+        AppSnackBar.showError(context, failure.message);
+        return;
+      }
+      _replaceRequest(
+        request.copyWith(
+          status: RequestStatus.underInvestigation,
+          alertNotice: reason,
+        ),
+      );
+      AppSnackBar.showWarning(context, l10n.financeRequestFrozen);
+    } catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'merchant financial request freeze',
+        ),
+      );
+      if (mounted) {
+        AppSnackBar.showError(context, l10n.finRequestActionFailed);
+      }
+    } finally {
+      if (mounted) setState(() => _processingRequests.remove(request.id));
+    }
   }
 
   @override
@@ -184,6 +449,20 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                       const SizedBox(height: 20),
 
                       // 4. Filters
+                      Row(
+                        children: [
+                          _buildQueueChip(
+                            l10n.financeRequestsInProgressTab,
+                            false,
+                          ),
+                          const SizedBox(width: 8),
+                          _buildQueueChip(
+                            l10n.financeRequestsArchiveTab,
+                            true,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
                       Wrap(
                         spacing: 8,
                         runSpacing: 8,
@@ -196,80 +475,95 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                       const SizedBox(height: 20),
 
                       // 5. List of requests
-                      ..._filteredRequests
-                          .map((req) => _buildWithdrawalCard(context, req)),
+                      if (_filteredRequests.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 32),
+                          child: Center(
+                            child: Text(
+                              _showArchive
+                                  ? l10n.financeRequestsArchiveEmpty
+                                  : l10n.financeRequestsInProgressEmpty,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        )
+                      else
+                        ..._filteredRequests.map(
+                          (req) => _buildWithdrawalCard(context, req),
+                        ),
                     ],
                   ),
 
                   // 6. Bottom Sticky Bar
-                  Positioned(
-                    bottom: 16,
-                    left: 16,
-                    right: 16,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 12),
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryDark,
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                              color:
-                                  AppColors.primaryDark.withValues(alpha: 0.3),
-                              blurRadius: 10,
-                              offset: const Offset(0, 4)),
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.15),
-                                borderRadius: BorderRadius.circular(10)),
-                            child: const Icon(Icons.calculate,
-                                color: Colors.white, size: 24),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                  if (!_showArchive)
+                    Positioned(
+                      bottom: 16,
+                      left: 16,
+                      right: 16,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryDark,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                                color: AppColors.primaryDark
+                                    .withValues(alpha: 0.3),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4)),
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.15),
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: const Icon(Icons.calculate,
+                                  color: Colors.white, size: 24),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(l10n.totalAwaitingApproval,
+                                      style: const TextStyle(
+                                          color: Colors.white70, fontSize: 10)),
+                                  Text(
+                                      '${CurrencyFormatter.format(_totalPendingAmount, includeCurrency: false)} ${l10n.currencyEgy}',
+                                      style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold)),
+                                ],
+                              ),
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text(l10n.totalAwaitingApproval,
+                                Text(l10n.remainingForReview,
                                     style: const TextStyle(
-                                        color: Colors.white70, fontSize: 10)),
-                                Text(
-                                    '${CurrencyFormatter.format(_totalPendingAmount, includeCurrency: false)} ${l10n.currencyEgy}',
+                                        color: Colors.white70,
+                                        fontSize: 10,
+                                        height: 1.2),
+                                    textAlign: TextAlign.center),
+                                const SizedBox(height: 2),
+                                Text('$_pendingCount ${l10n.ordersUnit}',
                                     style: const TextStyle(
                                         color: Colors.white,
-                                        fontSize: 18,
+                                        fontSize: 12,
                                         fontWeight: FontWeight.bold)),
                               ],
                             ),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(l10n.remainingForReview,
-                                  style: const TextStyle(
-                                      color: Colors.white70,
-                                      fontSize: 10,
-                                      height: 1.2),
-                                  textAlign: TextAlign.center),
-                              const SizedBox(height: 2),
-                              Text('$_pendingCount ${l10n.ordersUnit}',
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold)),
-                            ],
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
                 ],
               ),
       ),
@@ -311,6 +605,20 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildQueueChip(String label, bool archive) {
+    final selected = _showArchive == archive;
+    return ChoiceChip(
+      label: Text(label),
+      selected: selected,
+      onSelected: (_) => setState(() => _showArchive = archive),
+      selectedColor: AppColors.primaryDark,
+      labelStyle: TextStyle(
+        color: selected ? Colors.white : AppColors.textSecondary,
+        fontWeight: selected ? FontWeight.bold : FontWeight.normal,
       ),
     );
   }
@@ -381,8 +689,27 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
       BuildContext context, WithdrawalRequestEntity req) {
     final l10n = AppLocalizations.of(context)!;
 
-    bool isDanger = req.status == RequestStatus.underInvestigation;
+    bool isDanger = req.status == RequestStatus.underInvestigation ||
+        req.status == RequestStatus.frozen;
     bool isReady = req.isInstantTransferReady;
+    final statusLabel = switch (req.status) {
+      RequestStatus.pending =>
+        isReady ? l10n.readyForInstantDisbursement : l10n.underReviewStatus,
+      RequestStatus.underInvestigation ||
+      RequestStatus.frozen =>
+        l10n.temporarilySuspendedBadge,
+      RequestStatus.approved => l10n.financeRequestApprovedBadge,
+      RequestStatus.rejected => l10n.financeRequestRejectedBadge,
+    };
+    final statusColor = switch (req.status) {
+      RequestStatus.pending =>
+        isReady ? AppColors.primaryDark : AppColors.textSecondary,
+      RequestStatus.underInvestigation ||
+      RequestStatus.frozen =>
+        AppColors.danger,
+      RequestStatus.approved => AppColors.success,
+      RequestStatus.rejected => AppColors.danger,
+    };
 
     Color mainColor = isDanger ? AppColors.danger : AppColors.primaryDark;
     Color lightBgColor = isDanger
@@ -501,32 +828,27 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                   ],
                 ),
               ),
-              if (!isDanger)
-                Flexible(
-                  child: Container(
-                    margin: const EdgeInsets.only(right: 8),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: isReady
-                          ? Colors.blue.shade100
-                          : const Color(0xFFF1F5F9),
-                      borderRadius: BorderRadius.circular(20),
+              Flexible(
+                child: Container(
+                  margin: const EdgeInsets.only(right: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: statusColor.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    statusLabel,
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                      color: statusColor,
                     ),
-                    child: Text(
-                      isReady
-                          ? l10n.readyForInstantDisbursement
-                          : l10n.underReviewStatus,
-                      style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                          color:
-                              isReady ? AppColors.primaryDark : Colors.black87),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
+              ),
             ],
           ),
 
@@ -837,145 +1159,107 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
             icon: const Icon(Icons.receipt_long_outlined, size: 18),
             label: Text(l10n.withdrawalRequestDetails),
           ),
-          const SizedBox(height: 16),
-
-          // Action Buttons
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryDark,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  elevation: 0,
-                ),
-                icon: const Icon(Icons.check_circle_outline, size: 18),
-                onPressed: () async {
-                  final isArabic = l10n.localeName.startsWith('ar');
-                  final confirmed = await FinanceDialogs.showApprovalDialog(
-                    context,
-                    title: isArabic
-                        ? 'اعتماد طلب السحب'
-                        : 'Approve Withdrawal Request',
-                    description: isArabic
-                        ? 'هل تريد اعتماد طلب سحب ${req.beneficiaryName} بقيمة ${CurrencyFormatter.format(req.netAmount)} وإرساله للإدارة للموافقة؟'
-                        : 'Do you want to approve the withdrawal request for ${FinanceLocalizer.localizeWithdrawalText(context, req.beneficiaryName)} (${CurrencyFormatter.format(req.netAmount)}) and send it to management?',
-                  );
-                  if (confirmed && mounted && context.mounted) {
-                    setState(() {
-                      _requests.removeWhere((r) => r.id == req.id);
-                    });
-                    AppSnackBar.showSuccess(
-                      context,
-                      isArabic
-                          ? 'تم اعتماد طلب السحب بنجاح وإرساله للإدارة للموافقة عليه'
-                          : 'Withdrawal request approved and sent to management',
-                    );
-                  }
-                },
-                label: Text(
-                  isReady
-                      ? l10n.approveAndIssueBankOrder
-                      : l10n.approveAndSendToAdmin,
-                  style: const TextStyle(
-                      fontSize: 13, fontWeight: FontWeight.bold),
-                ),
-              ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: AppColors.danger,
-                        side: const BorderSide(color: AppColors.danger),
-                        padding: const EdgeInsets.symmetric(vertical: 11),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
-                      ),
-                      icon: const Icon(Icons.cancel_outlined, size: 16),
-                      onPressed: () async {
-                        final isArabic = l10n.localeName.startsWith('ar');
-                        final reason = await FinanceDialogs.showRejectionDialog(
-                          context,
-                          title:
-                              isArabic ? 'رفض طلب السحب' : 'Reject Withdrawal',
-                        );
-                        if (reason != null && mounted && context.mounted) {
-                          setState(() {
-                            _requests.removeWhere((r) => r.id == req.id);
-                          });
-                          AppSnackBar.showError(
+          if (req.status == RequestStatus.pending) ...[
+            const SizedBox(height: 16),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primaryDark,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                    elevation: 0,
+                  ),
+                  icon: const Icon(Icons.check_circle_outline, size: 18),
+                  onPressed: _processingRequests.contains(req.id)
+                      ? null
+                      : () async {
+                          final isArabic = l10n.localeName.startsWith('ar');
+                          final confirmed =
+                              await FinanceDialogs.showApprovalDialog(
                             context,
-                            isArabic
-                                ? 'تم رفض الطلب وإرسال سبب الرفض لرئيس المشرفين للمراجعة'
-                                : 'Request rejected and submitted to Head Supervisor',
+                            title: _isPromotionRequest(req)
+                                ? l10n.productPromotionRequests
+                                : isArabic
+                                    ? 'اعتماد طلب السحب'
+                                    : 'Approve Withdrawal Request',
+                            description: _isPromotionRequest(req)
+                                ? l10n
+                                    .wasalnyPromotionFinanceApprovalConfirmation(
+                                    req.beneficiaryName,
+                                    CurrencyFormatter.format(req.netAmount),
+                                  )
+                                : isArabic
+                                    ? 'هل تريد اعتماد طلب سحب ${req.beneficiaryName} بقيمة ${CurrencyFormatter.format(req.netAmount)} وإرساله للإدارة للموافقة؟'
+                                    : 'Do you want to approve the withdrawal request for ${FinanceLocalizer.localizeWithdrawalText(context, req.beneficiaryName)} (${CurrencyFormatter.format(req.netAmount)}) and send it to management?',
                           );
-                        }
-                      },
-                      label: Text(
-                        l10n.localeName.startsWith('ar')
-                            ? 'رفض الطلب'
-                            : 'Reject',
-                        style: const TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.bold),
+                          if (confirmed && mounted && context.mounted) {
+                            await _approveRequest(l10n, req);
+                          }
+                        },
+                  label: Text(
+                    isReady
+                        ? l10n.approveAndIssueBankOrder
+                        : l10n.approveAndSendToAdmin,
+                    style: const TextStyle(
+                        fontSize: 13, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: AppColors.danger,
+                          side: const BorderSide(color: AppColors.danger),
+                          padding: const EdgeInsets.symmetric(vertical: 11),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                        ),
+                        icon: const Icon(Icons.cancel_outlined, size: 16),
+                        onPressed: _processingRequests.contains(req.id)
+                            ? null
+                            : () => _rejectRequest(l10n, req),
+                        label: Text(
+                          l10n.localeName.startsWith('ar')
+                              ? 'رفض الطلب'
+                              : 'Reject',
+                          style: const TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.orange.shade800,
-                        backgroundColor: Colors.orange.shade50,
-                        side: BorderSide(color: Colors.orange.shade200),
-                        padding: const EdgeInsets.symmetric(vertical: 11),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
-                      ),
-                      icon: const Icon(Icons.pause_circle_outline, size: 16),
-                      onPressed: () async {
-                        final isArabic = l10n.localeName.startsWith('ar');
-                        final confirmed = await FinanceDialogs.showFreezeDialog(
-                          context,
-                          requestTitle: FinanceLocalizer.localizeWithdrawalText(
-                              context, req.beneficiaryName),
-                        );
-                        if (confirmed && mounted && context.mounted) {
-                          setState(() {
-                            final idx =
-                                _requests.indexWhere((r) => r.id == req.id);
-                            if (idx != -1) {
-                              _requests[idx] = req.copyWith(
-                                status: RequestStatus.underInvestigation,
-                                alertNotice: isArabic
-                                    ? 'تم تجميد الطلب احترازياً بقرار المشرف المالي'
-                                    : 'Precautionarily frozen by finance supervisor',
-                              );
-                            }
-                          });
-                          AppSnackBar.showWarning(
-                            context,
-                            isArabic
-                                ? 'تم تجميد الطلب ونقله إلى قائمة التدقيق الرقابي'
-                                : 'Request frozen and moved to audit inspection',
-                          );
-                        }
-                      },
-                      label: Text(
-                        l10n.freezeRequestTemporarily,
-                        style: const TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.bold),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.orange.shade800,
+                          backgroundColor: Colors.orange.shade50,
+                          side: BorderSide(color: Colors.orange.shade200),
+                          padding: const EdgeInsets.symmetric(vertical: 11),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                        ),
+                        icon: const Icon(Icons.pause_circle_outline, size: 16),
+                        onPressed: _processingRequests.contains(req.id)
+                            ? null
+                            : () => _freezeRequest(l10n, req),
+                        label: Text(
+                          l10n.freezeRequestTemporarily,
+                          style: const TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+                  ],
+                ),
+              ],
+            ),
+          ],
         ],
       ),
     );

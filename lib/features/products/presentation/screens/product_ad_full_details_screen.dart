@@ -64,6 +64,7 @@ class _ProductAdFullDetailsScreenState
     final title = widget.isArabic ? product.titleAr : product.titleEn;
     final merchant =
         widget.isArabic ? product.merchantNameAr : product.merchantNameEn;
+    final isPending = product.status == ProductReviewStatus.pending;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7F9),
@@ -117,7 +118,8 @@ class _ProductAdFullDetailsScreenState
           _finalDecisionNotice(l10n),
         ],
       ),
-      bottomNavigationBar: SafeArea(
+      bottomNavigationBar: isPending
+          ? SafeArea(
         minimum: const EdgeInsets.fromLTRB(16, 8, 16, 12),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -195,7 +197,8 @@ class _ProductAdFullDetailsScreenState
             ),
           ],
         ),
-      ),
+      )
+          : null,
     );
   }
 

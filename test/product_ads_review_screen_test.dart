@@ -270,6 +270,59 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('non-pending product details hide moderation actions',
+      (tester) async {
+    tester.view.physicalSize = const Size(390, 1000);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    const product = ProductReview(
+      id: 'approved-product',
+      reference: 'AD-98204',
+      titleAr: 'ساعة آبل معتمدة',
+      titleEn: 'Approved Apple Watch',
+      merchantNameAr: 'سعد المنصور',
+      merchantNameEn: 'Saad Al-Mansour',
+      category: ProductCategory.electronics,
+      imageKind: ProductImageKind.watch,
+      photoCount: 4,
+      receivedMinutesAgo: 15,
+      priceAr: '3,200 ر.س',
+      priceEn: 'SAR 3,200',
+      status: ProductReviewStatus.approved,
+    );
+
+    await tester.pumpWidget(
+      MaterialApp(
+        locale: const Locale('ar'),
+        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        home: ProductReviewDetailsScreen(
+          product: product,
+          isArabic: true,
+          onSubmit: (_, __) async {},
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('ساعة آبل معتمدة'), findsOneWidget);
+    expect(find.text('اعتماد ونشر فوراً'), findsNothing);
+
+    await tester.tap(find.text('عرض تفاصيل الإعلان الكاملة'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ProductAdFullDetailsScreen), findsOneWidget);
+    expect(find.text('ساعة آبل معتمدة'), findsOneWidget);
+    expect(find.text('اعتماد ونشر فوراً'), findsNothing);
+    expect(find.text('رفض'), findsNothing);
+    expect(find.text('تعليق'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('review screen is localized in English without layout errors',
       (tester) async {
     tester.view.physicalSize = const Size(360, 900);

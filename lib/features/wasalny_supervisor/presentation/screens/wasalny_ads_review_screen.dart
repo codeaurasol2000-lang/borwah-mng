@@ -5,7 +5,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/di/injection_container.dart';
+import '../../../../features/finance/domain/entities/withdrawal_request_entity.dart';
+import '../../../../features/finance/domain/repositories/finance_repository.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../data/wasalny_local_event_store.dart';
 import '../../domain/entities/wasalny_ad.dart';
 import '../controllers/wasalny_ads_cubit.dart';
 import 'wasalny_ad_details_screen.dart';
@@ -126,11 +130,7 @@ class _WasalnyAdsReviewScreenState extends State<WasalnyAdsReviewScreen> {
                   ad: ad,
                   isArabic: isArabic,
                   l10n: l10n,
-                  onApprove: () => _decide(
-                    ad,
-                    WasalnyAdStatus.approved,
-                    l10n,
-                  ),
+                  onApprove: () => _approveAd(ad, l10n),
                   onHide: () => _askReason(
                     ad,
                     WasalnyAdStatus.hidden,
@@ -221,13 +221,118 @@ class _WasalnyAdsReviewScreenState extends State<WasalnyAdsReviewScreen> {
           isArabic: isArabic,
           onAction: (status) async {
             if (status == WasalnyAdStatus.approved) {
-              return _decide(ad, status, l10n);
+              return _approveAd(ad, l10n);
             }
             return _askReason(ad, status, l10n);
           },
         ),
       ),
     );
+  }
+
+  Future<bool> _approveAd(WasalnyAd ad, AppLocalizations l10n) async {
+    if (!ad.isSellerPremium) {
+      return _decide(ad, WasalnyAdStatus.approved, l10n);
+    }
+
+    if (ad.decisionNote == 'premium-paid-promotion') {
+      final result = await sl<FinanceRepository>().getMerchantWithdrawals();
+      final approved = result.fold(
+        (failure) => throw StateError(failure.message),
+        (requests) => requests.any(
+          (request) =>
+              request.sourceAccount == ad.id &&
+              request.operationType == FinancialOperationType.promotion &&
+              request.status == RequestStatus.approved,
+        ),
+      );
+      if (!approved) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(l10n.wasalnyPromotionFinancePending)),
+          );
+        }
+        return false;
+      }
+      return _decide(ad, WasalnyAdStatus.approved, l10n);
+    }
+
+    final paidPromotion = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.wasalnyPremiumAdChoiceTitle),
+        content: Text(l10n.wasalnyPremiumAdChoiceMessage),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: Text(l10n.wasalnyPremiumAdIncluded),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: Text(l10n.wasalnyPremiumAdPaid),
+          ),
+        ],
+      ),
+    );
+    if (!mounted || paidPromotion == null) return false;
+    if (!paidPromotion) {
+      return await _decide(
+        ad,
+        WasalnyAdStatus.approved,
+        l10n,
+        note: l10n.wasalnyPremiumAdIncluded,
+      );
+    }
+
+    try {
+      final result = await sl<FinanceRepository>().submitMerchantFinancialRequest(
+        beneficiaryName: ad.sellerNameAr,
+        requestTitle: 'ترويج مدفوع لإعلان وصلني ${ad.reference} - باقة أسبوع',
+        sourceAccount: ad.id,
+        amount: 120,
+        beneficiaryType: BeneficiaryType.user,
+        operationType: FinancialOperationType.promotion,
+      );
+      final financialRequest = result.fold(
+        (failure) => throw StateError(failure.message),
+        (request) => request,
+      );
+      await WasalnyLocalEventStore().publish(
+        WasalnyLocalEvent(
+          id: 'wasalny-ad-finance-${financialRequest.id}',
+          recipient: 'finance',
+          source: 'wasalny',
+          titleAr: 'طلب ترويج إعلان وصلني',
+          titleEn: 'Wasalny ad promotion request',
+          messageAr:
+              'الإعلان ${ad.reference} للعميل ${ad.sellerNameAr} - 120 ر.س. بانتظار مراجعة المالية.',
+          messageEn:
+              'Ad ${ad.reference} for ${ad.sellerNameEn} - 120 SAR awaits finance review.',
+          createdAt: DateTime.now(),
+        ),
+      );
+      return await _decide(
+        ad,
+        WasalnyAdStatus.awaitingApproval,
+        l10n,
+        note: 'premium-paid-promotion',
+      );
+    } catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'Wasalny ad review',
+          context: ErrorDescription('while submitting a premium ad promotion'),
+        ),
+      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.productAuditSaveError)),
+        );
+      }
+      return false;
+    }
   }
 
   Future<bool> _decide(
@@ -425,18 +530,20 @@ class _WasalnyAdCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                _Pill(
-                  label: statusLabel,
-                  color: ad.status == WasalnyAdStatus.rejected ||
-                          ad.status == WasalnyAdStatus.suspended ||
-                          ad.status == WasalnyAdStatus.editRequested
-                      ? AppColors.textSecondary
-                      : AppColors.primaryDark,
-                  background: ad.status == WasalnyAdStatus.rejected ||
-                          ad.status == WasalnyAdStatus.suspended ||
-                          ad.status == WasalnyAdStatus.editRequested
-                      ? const Color(0xFFE9EAEC)
-                      : const Color(0xFFD7E5FF),
+                Flexible(
+                  child: _Pill(
+                    label: statusLabel,
+                    color: ad.status == WasalnyAdStatus.rejected ||
+                            ad.status == WasalnyAdStatus.suspended ||
+                            ad.status == WasalnyAdStatus.editRequested
+                        ? AppColors.textSecondary
+                        : AppColors.primaryDark,
+                    background: ad.status == WasalnyAdStatus.rejected ||
+                            ad.status == WasalnyAdStatus.suspended ||
+                            ad.status == WasalnyAdStatus.editRequested
+                        ? const Color(0xFFE9EAEC)
+                        : const Color(0xFFD7E5FF),
+                  ),
                 ),
                 const Spacer(),
                 _Pill(
@@ -472,6 +579,10 @@ class _WasalnyAdCard extends StatelessWidget {
                           fontSize: 11,
                         ),
                       ),
+                      if (ad.isSellerPremium) ...[
+                        const SizedBox(height: 5),
+                        _PremiumCustomerBadge(l10n: l10n),
+                      ],
                       const SizedBox(height: 14),
                       Row(
                         children: [
@@ -695,6 +806,36 @@ class _Pill extends StatelessWidget {
             fontSize: 9,
             fontWeight: FontWeight.bold,
           ),
+        ),
+      );
+}
+
+class _PremiumCustomerBadge extends StatelessWidget {
+  final AppLocalizations l10n;
+
+  const _PremiumCustomerBadge({required this.l10n});
+
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFFF1CC),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.workspace_premium, size: 13, color: Color(0xFF9A6B00)),
+            const SizedBox(width: 4),
+            Text(
+              l10n.wasalnyPremiumCustomer,
+              style: const TextStyle(
+                color: Color(0xFF805800),
+                fontSize: 9,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
         ),
       );
 }

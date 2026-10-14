@@ -8,7 +8,15 @@ enum MerchantStatus {
   temporarilySuspended // معلق مؤقتاً
 }
 
-enum MerchantAdvertisementStatus { approved, underReview }
+enum MerchantAdvertisementStatus {
+  approved,
+  awaitingFinance,
+  awaitingManagement,
+  underReview,
+  rejected,
+  frozen,
+  hidden,
+}
 
 class MerchantAdvertisement {
   final String title;
@@ -40,6 +48,7 @@ class MerchantEntity {
   final String? logoUrl;
   final IconData? logoIcon;
   final MerchantStatus status;
+  final bool isFeatured;
   final String? statusTagText;
   final String? statusTagTextEn;
   final String? location;
@@ -78,6 +87,7 @@ class MerchantEntity {
   final String? violationNotice;
   final String? violationNoticeEn;
   final List<MerchantAdvertisement> recentAdvertisements;
+  final List<MerchantAdvertisement> allAdvertisements;
 
   const MerchantEntity({
     required this.id,
@@ -91,6 +101,7 @@ class MerchantEntity {
     this.logoUrl,
     this.logoIcon,
     required this.status,
+    this.isFeatured = false,
     this.statusTagText,
     this.statusTagTextEn,
     this.location,
@@ -129,6 +140,7 @@ class MerchantEntity {
     this.violationNotice,
     this.violationNoticeEn,
     this.recentAdvertisements = const [],
+    this.allAdvertisements = const [],
   });
 
   String getCode() => code ?? id;
@@ -138,10 +150,12 @@ class MerchantEntity {
       isArabic ? (location ?? '') : (locationEn ?? location ?? '');
   String getDelegateName(bool isArabic) =>
       isArabic ? (delegateName ?? '') : (delegateNameEn ?? delegateName ?? '');
-  String getStatusTagText(bool isArabic) =>
-      isArabic ? (statusTagText ?? '') : (statusTagTextEn ?? statusTagText ?? '');
-  String getDeliveryStatus(bool isArabic) =>
-      isArabic ? (deliveryStatus ?? '') : (deliveryStatusEn ?? deliveryStatus ?? '');
+  String getStatusTagText(bool isArabic) => isArabic
+      ? (statusTagText ?? '')
+      : (statusTagTextEn ?? statusTagText ?? '');
+  String getDeliveryStatus(bool isArabic) => isArabic
+      ? (deliveryStatus ?? '')
+      : (deliveryStatusEn ?? deliveryStatus ?? '');
   String? getFinancialWithdrawalAlert(bool isArabic) => isArabic
       ? financialWithdrawalAlert
       : (financialWithdrawalAlertEn ?? financialWithdrawalAlert);

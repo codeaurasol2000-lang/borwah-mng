@@ -16,6 +16,8 @@ class LoginScreen extends StatefulWidget {
   final VoidCallback? onMerchantLogin;
   final VoidCallback? onProductLogin;
   final VoidCallback? onWasalnyLogin;
+  final VoidCallback? onServicesLogin;
+  final VoidCallback? onHeadSupervisorLogin;
 
   const LoginScreen({
     super.key,
@@ -23,6 +25,8 @@ class LoginScreen extends StatefulWidget {
     this.onMerchantLogin,
     this.onProductLogin,
     this.onWasalnyLogin,
+    this.onServicesLogin,
+    this.onHeadSupervisorLogin,
   });
 
   @override
@@ -52,7 +56,10 @@ class _LoginScreenState extends State<LoginScreen> {
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthSuccess) {
-          if (state.user.role == UserRole.financialSupervisor) {
+          if (state.user.role == UserRole.headOfSupervisors &&
+              widget.onHeadSupervisorLogin != null) {
+            widget.onHeadSupervisorLogin!();
+          } else if (state.user.role == UserRole.financialSupervisor) {
             widget.onFinancialLogin();
           } else if (state.user.role == UserRole.merchantSupervisor &&
               widget.onMerchantLogin != null) {
@@ -63,6 +70,9 @@ class _LoginScreenState extends State<LoginScreen> {
           } else if (state.user.role == UserRole.wasalnySupervisor &&
               widget.onWasalnyLogin != null) {
             widget.onWasalnyLogin!();
+          } else if (state.user.role == UserRole.servicesSupervisor &&
+              widget.onServicesLogin != null) {
+            widget.onServicesLogin!();
           } else {
             AppSnackBar.showInfo(context, _workspacePendingMessage(state.user));
           }

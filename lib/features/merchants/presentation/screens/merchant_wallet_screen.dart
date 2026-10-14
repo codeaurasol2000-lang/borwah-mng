@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/di/injection_container.dart';
 import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../finance/domain/entities/withdrawal_request_entity.dart';
+import '../../../finance/domain/repositories/finance_repository.dart';
+import '../../../finance/presentation/utils/financial_request_notifications.dart';
+import '../../../finance/presentation/widgets/withdrawal_request_details_sheet.dart';
 
 enum _WalletTransferMethod { instapay, wallet, bank }
 
@@ -17,11 +22,145 @@ class _MerchantWalletScreenState extends State<MerchantWalletScreen> {
   final TextEditingController _amountController =
       TextEditingController(text: '8450');
   _WalletTransferMethod _method = _WalletTransferMethod.instapay;
+  FinancialOperationType _operationType = FinancialOperationType.withdrawal;
+  bool _isSubmitting = false;
+  bool _isLoadingRequests = true;
+  bool _requestsLoadFailed = false;
+  List<WithdrawalRequestEntity> _financialRequests = const [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFinancialRequests();
+  }
 
   @override
   void dispose() {
     _amountController.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadFinancialRequests() async {
+    if (mounted) {
+      setState(() => _isLoadingRequests = true);
+    }
+    try {
+      final result = await sl<FinanceRepository>().getSupervisorWithdrawals();
+      if (!mounted) return;
+      result.fold(
+        (failure) {
+          FlutterError.reportError(
+            FlutterErrorDetails(
+              exception: StateError(failure.message),
+              library: 'merchant wallet',
+              context: ErrorDescription('while loading finance request status'),
+            ),
+          );
+          setState(() {
+            _isLoadingRequests = false;
+            _requestsLoadFailed = true;
+          });
+        },
+        (requests) => setState(() {
+          _financialRequests = requests
+              .where((request) => request.sourceAccount == 'merchant')
+              .toList(growable: false);
+          _isLoadingRequests = false;
+          _requestsLoadFailed = false;
+        }),
+      );
+    } on Object catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'merchant wallet',
+          context: ErrorDescription('while loading finance request status'),
+        ),
+      );
+      if (mounted) {
+        setState(() {
+          _isLoadingRequests = false;
+          _requestsLoadFailed = true;
+        });
+      }
+    }
+  }
+
+  Future<void> _requestWithdrawal() async {
+    if (_isSubmitting) return;
+    final l10n = AppLocalizations.of(context)!;
+    final amount = double.tryParse(_amountController.text.trim());
+    final maxAmount =
+        _operationType == FinancialOperationType.withdrawal ? 8450 : 20000;
+    if (amount == null ||
+        !amount.isFinite ||
+        amount < 100 ||
+        amount > maxAmount) {
+      AppSnackBar.showError(
+        context,
+        _operationType == FinancialOperationType.withdrawal
+            ? l10n.financeWalletInvalidWithdrawalAmount
+            : l10n.financeWalletInvalidDepositAmount,
+      );
+      return;
+    }
+
+    setState(() => _isSubmitting = true);
+    try {
+      final transferAddress = switch (_method) {
+        _WalletTransferMethod.bank => l10n.merchantWalletIbanValue,
+        _WalletTransferMethod.wallet => l10n.merchantWalletPhoneValue,
+        _WalletTransferMethod.instapay => l10n.merchantWalletInstantAddress,
+      };
+      final result = await sl<FinanceRepository>().submitSupervisorWithdrawal(
+        beneficiaryName: l10n.merchantWalletAccountName,
+        beneficiaryRole: 'مشرف حساب التجار',
+        sourceAccount: 'merchant',
+        amount: amount,
+        operationType: _operationType,
+        bankName: switch (_method) {
+          _WalletTransferMethod.bank => l10n.merchantWalletBankTransfer,
+          _WalletTransferMethod.wallet => l10n.merchantWalletDigitalWallet,
+          _WalletTransferMethod.instapay => l10n.merchantWalletInstantTransfer,
+        },
+        iban: transferAddress,
+        transferMethod: switch (_method) {
+          _WalletTransferMethod.bank => l10n.merchantWalletBankTransfer,
+          _WalletTransferMethod.wallet => l10n.merchantWalletDigitalWallet,
+          _WalletTransferMethod.instapay => l10n.merchantWalletInstantTransfer,
+        },
+      );
+      if (!mounted) return;
+      final request = result.fold(
+        (failure) {
+          AppSnackBar.showError(context, failure.message);
+          return null;
+        },
+        (request) => request,
+      );
+      if (request != null) {
+        await notifyFinanceOfSupervisorRequest(request);
+        await _loadFinancialRequests();
+        if (mounted) {
+          AppSnackBar.showSuccess(context, l10n.financeWalletRequestSubmitted);
+        }
+      }
+    } catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'merchant wallet',
+          context: ErrorDescription('while submitting a withdrawal request'),
+        ),
+      );
+      if (mounted) {
+        AppSnackBar.showError(context, l10n.financeWalletRequestFailed);
+      }
+    } finally {
+      if (mounted) setState(() => _isSubmitting = false);
+    }
   }
 
   @override
@@ -67,13 +206,96 @@ class _MerchantWalletScreenState extends State<MerchantWalletScreen> {
             const SizedBox(height: 22),
             _buildWithdrawalForm(l10n),
             const SizedBox(height: 22),
+            _buildFinancialRequestHistory(l10n),
+            const SizedBox(height: 22),
             _buildBonus(l10n),
             const SizedBox(height: 22),
-            _buildTransactions(l10n),
             const SizedBox(height: 18),
             _buildAuditFooter(l10n),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildFinancialRequestHistory(AppLocalizations l10n) {
+    final isArabic = l10n.localeName.startsWith('ar');
+    String statusLabel(RequestStatus status) => switch (status) {
+          RequestStatus.pending => l10n.withdrawalDetailsStatusPending,
+          RequestStatus.underInvestigation =>
+            l10n.withdrawalDetailsStatusInvestigation,
+          RequestStatus.approved => l10n.withdrawalDetailsStatusApproved,
+          RequestStatus.frozen => l10n.withdrawalDetailsStatusFrozen,
+          RequestStatus.rejected => l10n.withdrawalDetailsStatusRejected,
+        };
+
+    return _card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _sectionHeader(
+            l10n.merchantWalletTransactionHistory,
+            Icons.sync_alt_outlined,
+          ),
+          const SizedBox(height: 12),
+          if (_isLoadingRequests)
+            const Center(child: CircularProgressIndicator())
+          else if (_requestsLoadFailed)
+            TextButton.icon(
+              onPressed: _loadFinancialRequests,
+              icon: const Icon(Icons.refresh),
+              label: Text(l10n.financeWalletHistoryLoadError),
+            )
+          else if (_financialRequests.isEmpty)
+            Text(
+              l10n.financeWalletNoRequests,
+              style: const TextStyle(
+                color: AppColors.textSecondary,
+                fontSize: 12,
+              ),
+            )
+          else
+            for (final request in _financialRequests)
+              Material(
+                color: Colors.white,
+                child: ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(
+                    request.operationType == FinancialOperationType.withdrawal
+                        ? l10n.financeOperationWithdrawal
+                        : l10n.financeOperationDeposit,
+                    style: const TextStyle(fontWeight: FontWeight.w700),
+                  ),
+                  subtitle: Text(
+                    '${request.requestNumber} · ${statusLabel(request.status)}'
+                    '${request.alertNotice == null ? '' : '\n${request.alertNotice}'}',
+                    textDirection:
+                        isArabic ? TextDirection.rtl : TextDirection.ltr,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  trailing: Text(
+                    '${request.netAmount.toStringAsFixed(2)} ${l10n.finRequestCurrency}',
+                    textAlign: TextAlign.end,
+                    style: const TextStyle(
+                      color: AppColors.primaryDark,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 11,
+                    ),
+                  ),
+                  onTap: () =>
+                      showWithdrawalRequestDetailsSheet(context, request),
+                ),
+              ),
+          Align(
+            alignment: AlignmentDirectional.centerEnd,
+            child: IconButton(
+              tooltip: l10n.refreshBalances,
+              onPressed: _isLoadingRequests ? null : _loadFinancialRequests,
+              icon: const Icon(Icons.refresh),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -243,7 +465,7 @@ class _MerchantWalletScreenState extends State<MerchantWalletScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _sectionHeader(
-            l10n.merchantWalletWithdrawTitle,
+            l10n.financeWalletRequestTitle,
             Icons.currency_exchange,
             trailing: l10n.merchantWalletNoTransferFees,
           ),
@@ -251,8 +473,49 @@ class _MerchantWalletScreenState extends State<MerchantWalletScreen> {
           Row(
             children: [
               Expanded(
+                child: ChoiceChip(
+                  key: const ValueKey('merchant_wallet_withdrawal'),
+                  label: Text(l10n.financeOperationWithdrawal),
+                  selected: _operationType == FinancialOperationType.withdrawal,
+                  onSelected: _isSubmitting
+                      ? null
+                      : (_) => setState(
+                            () => _operationType =
+                                FinancialOperationType.withdrawal,
+                          ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: ChoiceChip(
+                  key: const ValueKey('merchant_wallet_deposit'),
+                  label: Text(l10n.financeOperationDeposit),
+                  selected: _operationType == FinancialOperationType.deposit,
+                  onSelected: _isSubmitting
+                      ? null
+                      : (_) => setState(
+                            () =>
+                                _operationType = FinancialOperationType.deposit,
+                          ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            l10n.financeWalletOperationNote,
+            style: const TextStyle(
+              color: AppColors.textSecondary,
+              fontSize: 10,
+              height: 1.4,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
                 child: Text(
-                  l10n.merchantWalletRequestedAmount,
+                  l10n.financeWalletAmountLabel,
                   textAlign: TextAlign.end,
                   style: const TextStyle(
                       color: AppColors.textSecondary, fontSize: 10),
@@ -373,9 +636,17 @@ class _MerchantWalletScreenState extends State<MerchantWalletScreen> {
           SizedBox(
             height: 48,
             child: ElevatedButton.icon(
-              onPressed: () => _showUnavailable(l10n),
-              icon: const Icon(Icons.currency_exchange, size: 18),
-              label: Text(l10n.merchantWalletConfirmWithdrawal),
+              onPressed: _isSubmitting ? null : _requestWithdrawal,
+              icon: _isSubmitting
+                  ? const SizedBox.square(
+                      dimension: 18,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
+                  : const Icon(Icons.currency_exchange, size: 18),
+              label: Text(l10n.financeWalletSubmitRequest),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primaryDark,
                 foregroundColor: Colors.white,
@@ -510,106 +781,6 @@ class _MerchantWalletScreenState extends State<MerchantWalletScreen> {
     );
   }
 
-  Widget _buildTransactions(AppLocalizations l10n) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: Text(
-                l10n.merchantWalletTransactionHistory,
-                textAlign: TextAlign.end,
-                style: const TextStyle(
-                  color: AppColors.primaryDark,
-                  fontSize: 13,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            const SizedBox(width: 7),
-            const Icon(Icons.history, color: AppColors.info, size: 17),
-          ],
-        ),
-        const SizedBox(height: 8),
-        _transaction(
-          icon: Icons.account_balance_outlined,
-          title: l10n.merchantWalletTransactionBank,
-          date: l10n.merchantWalletTransactionDateOne,
-          amount: l10n.merchantWalletTransactionAmountOne,
-          l10n: l10n,
-        ),
-        const SizedBox(height: 7),
-        _transaction(
-          icon: Icons.bolt,
-          title: l10n.merchantWalletTransactionInstant,
-          date: l10n.merchantWalletTransactionDateTwo,
-          amount: l10n.merchantWalletTransactionAmountTwo,
-          l10n: l10n,
-        ),
-      ],
-    );
-  }
-
-  Widget _transaction({
-    required IconData icon,
-    required String title,
-    required String date,
-    required String amount,
-    required AppLocalizations l10n,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(13),
-        border: Border.all(color: AppColors.cardBorder),
-      ),
-      child: Row(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(amount,
-                  style: const TextStyle(
-                      color: AppColors.primaryDark,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold)),
-              Text(l10n.finRequestCurrency,
-                  style: const TextStyle(
-                      color: AppColors.textSecondary, fontSize: 8)),
-            ],
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.end,
-                    style: const TextStyle(
-                        color: AppColors.primaryDark, fontSize: 10)),
-                Text(date,
-                    style: const TextStyle(
-                        color: AppColors.textMuted, fontSize: 9)),
-              ],
-            ),
-          ),
-          const SizedBox(width: 8),
-          _pill(l10n.merchantWalletCompleted, const Color(0xFFE8EAED)),
-          const SizedBox(width: 8),
-          CircleAvatar(
-            radius: 18,
-            backgroundColor: const Color(0xFFF0F2F4),
-            child: Icon(icon, color: AppColors.primaryDark, size: 18),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildAuditFooter(AppLocalizations l10n) {
     return Column(
       children: [
@@ -682,9 +853,5 @@ class _MerchantWalletScreenState extends State<MerchantWalletScreen> {
       ),
       child: child,
     );
-  }
-
-  void _showUnavailable(AppLocalizations l10n) {
-    AppSnackBar.showInfo(context, l10n.merchantWalletActionUnavailable);
   }
 }

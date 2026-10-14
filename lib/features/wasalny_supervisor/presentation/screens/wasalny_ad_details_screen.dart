@@ -27,6 +27,17 @@ class WasalnyAdDetailsScreen extends StatelessWidget {
     final title = isArabic ? ad.titleAr : ad.titleEn;
     final seller = isArabic ? ad.sellerNameAr : ad.sellerNameEn;
     final description = isArabic ? ad.descriptionAr : ad.descriptionEn;
+    final canTakeAction = ad.status == WasalnyAdStatus.pending ||
+        ad.status == WasalnyAdStatus.awaitingApproval;
+    final statusLabel = switch (ad.status) {
+      WasalnyAdStatus.pending => l10n.wasalnyAdsPendingStatus,
+      WasalnyAdStatus.approved => l10n.wasalnyAdsApprovedStatus,
+      WasalnyAdStatus.hidden => l10n.wasalnyAdsHiddenStatus,
+      WasalnyAdStatus.rejected => l10n.wasalnyAdsRejectedStatus,
+      WasalnyAdStatus.awaitingApproval => l10n.wasalnyAdsAwaitingApprovalStatus,
+      WasalnyAdStatus.suspended => l10n.wasalnyAdsSuspendedStatus,
+      WasalnyAdStatus.editRequested => l10n.wasalnyAdsEditRequestedStatus,
+    };
 
     return Directionality(
       textDirection: isArabic ? ui.TextDirection.rtl : ui.TextDirection.ltr,
@@ -58,12 +69,15 @@ class WasalnyAdDetailsScreen extends StatelessWidget {
         body: ListView(
           padding: const EdgeInsets.fromLTRB(16, 4, 16, 18),
           children: [
-            _PermissionBanner(text: l10n.wasalnyAdDetailsPermission),
+            _PermissionBanner(
+              text: canTakeAction ? l10n.wasalnyAdDetailsPermission : statusLabel,
+            ),
             const SizedBox(height: 12),
             _SellerCard(
               ad: ad,
               seller: seller,
               l10n: l10n,
+              showContactActions: canTakeAction,
               onChat: () => _openChat(context, seller),
               onCall: () => _callSeller(context, ad, l10n),
             ),
@@ -156,47 +170,50 @@ class WasalnyAdDetailsScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 16),
-            _DetailActionButton(
-              key: const ValueKey('chat-or-call-action-button'),
-              label: l10n.wasalnyChatOrCallSeller,
-              icon: Icons.forum_outlined,
-              background: const Color(0xFF1E293B),
-              foreground: Colors.white,
-              onPressed: () => _showContactOptions(context, ad, seller, l10n),
-            ),
-            const SizedBox(height: 8),
-            _DetailActionButton(
-              label: l10n.wasalnyAdDetailsApprove,
-              icon: Icons.check_circle_outline,
-              background: AppColors.primaryDark,
-              foreground: Colors.white,
-              onPressed: () => _submit(context, WasalnyAdStatus.approved),
-            ),
-            const SizedBox(height: 8),
-            _DetailActionButton(
-              label: l10n.wasalnyAdDetailsRequestEdit,
-              icon: Icons.edit_note_outlined,
-              background: AppColors.primaryDark,
-              foreground: Colors.white,
-              onPressed: () => _submit(context, WasalnyAdStatus.editRequested),
-            ),
-            const SizedBox(height: 8),
-            _DetailActionButton(
-              label: l10n.wasalnyAdDetailsSuspend,
-              icon: Icons.pause_circle_outline,
-              background: AppColors.primaryDark,
-              foreground: Colors.white,
-              onPressed: () => _submit(context, WasalnyAdStatus.suspended),
-            ),
-            const SizedBox(height: 8),
-            _DetailActionButton(
-              label: l10n.wasalnyAdDetailsReject,
-              icon: Icons.cancel_outlined,
-              background: const Color(0xFFFFDAD6),
-              foreground: AppColors.dangerDark,
-              onPressed: () => _submit(context, WasalnyAdStatus.rejected),
-            ),
+            if (canTakeAction) ...[
+              const SizedBox(height: 16),
+              _DetailActionButton(
+                key: const ValueKey('chat-or-call-action-button'),
+                label: l10n.wasalnyChatOrCallSeller,
+                icon: Icons.forum_outlined,
+                background: const Color(0xFF1E293B),
+                foreground: Colors.white,
+                onPressed: () =>
+                    _showContactOptions(context, ad, seller, l10n),
+              ),
+              const SizedBox(height: 8),
+              _DetailActionButton(
+                label: l10n.wasalnyAdDetailsApprove,
+                icon: Icons.check_circle_outline,
+                background: AppColors.primaryDark,
+                foreground: Colors.white,
+                onPressed: () => _submit(context, WasalnyAdStatus.approved),
+              ),
+              const SizedBox(height: 8),
+              _DetailActionButton(
+                label: l10n.wasalnyAdDetailsRequestEdit,
+                icon: Icons.edit_note_outlined,
+                background: AppColors.primaryDark,
+                foreground: Colors.white,
+                onPressed: () => _submit(context, WasalnyAdStatus.editRequested),
+              ),
+              const SizedBox(height: 8),
+              _DetailActionButton(
+                label: l10n.wasalnyAdDetailsSuspend,
+                icon: Icons.pause_circle_outline,
+                background: AppColors.primaryDark,
+                foreground: Colors.white,
+                onPressed: () => _submit(context, WasalnyAdStatus.suspended),
+              ),
+              const SizedBox(height: 8),
+              _DetailActionButton(
+                label: l10n.wasalnyAdDetailsReject,
+                icon: Icons.cancel_outlined,
+                background: const Color(0xFFFFDAD6),
+                foreground: AppColors.dangerDark,
+                onPressed: () => _submit(context, WasalnyAdStatus.rejected),
+              ),
+            ],
           ],
         ),
       ),
@@ -512,6 +529,7 @@ class _SellerCard extends StatelessWidget {
   final WasalnyAd ad;
   final String seller;
   final AppLocalizations l10n;
+  final bool showContactActions;
   final VoidCallback onChat;
   final VoidCallback onCall;
 
@@ -519,6 +537,7 @@ class _SellerCard extends StatelessWidget {
     required this.ad,
     required this.seller,
     required this.l10n,
+    required this.showContactActions,
     required this.onChat,
     required this.onCall,
   });
@@ -565,6 +584,27 @@ class _SellerCard extends StatelessWidget {
                           fontSize: 10,
                         ),
                       ),
+                      if (ad.isSellerPremium) ...[
+                        const SizedBox(height: 6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFFF1CC),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            l10n.wasalnyPremiumCustomer,
+                            style: const TextStyle(
+                              color: Color(0xFF805800),
+                              fontSize: 9,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),
@@ -588,65 +628,67 @@ class _SellerCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
-            const Divider(height: 1, color: Color(0xFFDDE1E5)),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                Expanded(
-                  child: FilledButton.icon(
-                    key: const ValueKey('chat-with-seller-button'),
-                    onPressed: onChat,
-                    icon: const Icon(Icons.chat_bubble_outline, size: 16),
-                    label: Text(
-                      l10n.wasalnyChatWithSeller,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
+            if (showContactActions) ...[
+              const SizedBox(height: 12),
+              const Divider(height: 1, color: Color(0xFFDDE1E5)),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: FilledButton.icon(
+                      key: const ValueKey('chat-with-seller-button'),
+                      onPressed: onChat,
+                      icon: const Icon(Icons.chat_bubble_outline, size: 16),
+                      label: Text(
+                        l10n.wasalnyChatWithSeller,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    style: FilledButton.styleFrom(
-                      backgroundColor: AppColors.primaryDark,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 11),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: OutlinedButton.icon(
-                    key: const ValueKey('call-seller-button'),
-                    onPressed: onCall,
-                    icon: const Icon(Icons.phone_outlined, size: 16),
-                    label: Text(
-                      l10n.wasalnyCallSeller,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: AppColors.primaryDark,
-                      backgroundColor: Colors.white,
-                      side: const BorderSide(color: Color(0xFFCFD5DB)),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 11),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: AppColors.primaryDark,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 11),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      key: const ValueKey('call-seller-button'),
+                      onPressed: onCall,
+                      icon: const Icon(Icons.phone_outlined, size: 16),
+                      label: Text(
+                        l10n.wasalnyCallSeller,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: AppColors.primaryDark,
+                        backgroundColor: Colors.white,
+                        side: const BorderSide(color: Color(0xFFCFD5DB)),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 11),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ],
         ),
       );

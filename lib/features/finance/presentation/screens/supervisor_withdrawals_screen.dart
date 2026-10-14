@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:dartz/dartz.dart' as dartz;
+
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/di/injection_container.dart';
+import '../../../../core/errors/failures.dart';
 import '../../../../core/utils/currency_formatter.dart';
+import '../../domain/repositories/finance_repository.dart';
 import '../../domain/entities/withdrawal_request_entity.dart';
 import '../../domain/usecases/get_supervisor_withdrawals_usecase.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../core/widgets/finance_dialogs.dart';
+import '../../../wasalny_supervisor/data/wasalny_local_event_store.dart';
 import '../widgets/finance_navigation.dart';
 import '../widgets/withdrawal_request_details_sheet.dart';
 import '../utils/finance_localizer.dart';
@@ -23,46 +28,65 @@ class _SupervisorWithdrawalsScreenState
     extends State<SupervisorWithdrawalsScreen> {
   List<WithdrawalRequestEntity> _requests = [];
   bool _isLoading = true;
+  String? _processingRequestId;
   String _selectedFilter = 'الكل';
+  bool _showArchive = false;
 
-  List<WithdrawalRequestEntity> get _filteredRequests {
-    if (_selectedFilter == 'المشرفين') {
-      return _requests
-          .where((r) => r.beneficiaryType == BeneficiaryType.supervisor)
-          .toList();
-    } else if (_selectedFilter == 'مقدمي الخدمة') {
-      return _requests
-          .where((r) => r.beneficiaryType == BeneficiaryType.serviceProvider)
-          .toList();
-    }
-    return _requests; // الكل
-  }
+  List<WithdrawalRequestEntity> get _categoryRequests =>
+      switch (_selectedFilter) {
+        'المشرفين' => _requests
+            .where((r) => r.beneficiaryType == BeneficiaryType.supervisor)
+            .toList(),
+        'مقدمي الخدمة' => _requests
+            .where((r) => r.beneficiaryType == BeneficiaryType.serviceProvider)
+            .toList(),
+        _ => _requests,
+      };
 
-  int get _pendingCount => _filteredRequests
-      .where((r) => r.status != RequestStatus.underInvestigation)
-      .length;
-  int get _frozenCount => _filteredRequests
-      .where((r) => r.status == RequestStatus.underInvestigation)
+  List<WithdrawalRequestEntity> get _filteredRequests => _categoryRequests
+      .where((request) => _showArchive
+          ? request.status != RequestStatus.pending
+          : request.status == RequestStatus.pending)
+      .toList(growable: false);
+
+  int get _pendingCount =>
+      _categoryRequests.where((r) => r.status == RequestStatus.pending).length;
+  int get _frozenCount => _categoryRequests
+      .where((r) =>
+          r.status == RequestStatus.underInvestigation ||
+          r.status == RequestStatus.frozen)
       .length;
 
   double get _totalPendingAmount {
-    return _filteredRequests
-        .where((r) => r.status != RequestStatus.underInvestigation)
+    return _categoryRequests
+        .where((r) => r.status == RequestStatus.pending)
         .fold(0.0, (sum, req) => sum + req.netAmount);
   }
 
   int _countFor(String type) {
     if (type == 'المشرفين') {
       return _requests
-          .where((r) => r.beneficiaryType == BeneficiaryType.supervisor)
+          .where((r) =>
+              r.beneficiaryType == BeneficiaryType.supervisor &&
+              (_showArchive
+                  ? r.status != RequestStatus.pending
+                  : r.status == RequestStatus.pending))
           .length;
     }
     if (type == 'مقدمي الخدمة') {
       return _requests
-          .where((r) => r.beneficiaryType == BeneficiaryType.serviceProvider)
+          .where((r) =>
+              r.beneficiaryType == BeneficiaryType.serviceProvider &&
+              (_showArchive
+                  ? r.status != RequestStatus.pending
+                  : r.status == RequestStatus.pending))
           .length;
     }
-    return _requests.length;
+    return _requests
+        .where((r) => _showArchive
+            ? r.status != RequestStatus.pending
+            : r.status == RequestStatus.pending)
+        .length;
   }
 
   @override
@@ -80,6 +104,117 @@ class _SupervisorWithdrawalsScreenState
         _isLoading = false;
       }),
     );
+  }
+
+  Future<void> _saveDecision({
+    required WithdrawalRequestEntity request,
+    required RequestStatus decisionStatus,
+    required Future<dartz.Either<Failure, void>> Function() save,
+    required String successMessage,
+    String? reason,
+  }) async {
+    setState(() => _processingRequestId = request.id);
+    try {
+      final result = await save();
+      if (!mounted) return;
+      if (result.isLeft()) {
+        setState(() => _processingRequestId = null);
+        AppSnackBar.showError(
+          context,
+          AppLocalizations.of(context)!.financeRequestDecisionFailed,
+        );
+        return;
+      }
+
+      await _publishDecision(
+        request,
+        decisionStatus: decisionStatus,
+        reason: reason,
+      );
+      setState(() => _processingRequestId = null);
+      await _loadData();
+      if (mounted) AppSnackBar.showSuccess(context, successMessage);
+    } catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'finance supervisor withdrawals',
+          context:
+              ErrorDescription('while saving a financial request decision'),
+        ),
+      );
+      if (!mounted) return;
+      setState(() => _processingRequestId = null);
+      AppSnackBar.showError(
+        context,
+        AppLocalizations.of(context)!.financeRequestDecisionFailed,
+      );
+    }
+  }
+
+  Future<void> _publishDecision(
+    WithdrawalRequestEntity request, {
+    required RequestStatus decisionStatus,
+    String? reason,
+  }) async {
+    final source = switch (request.sourceAccount) {
+      'product' => 'products',
+      'merchant' ||
+      'products' ||
+      'services' ||
+      'wasalny' =>
+        request.sourceAccount!,
+      _ => null,
+    };
+    if (source == null) return;
+
+    final approved = decisionStatus == RequestStatus.approved;
+    final rejected = decisionStatus == RequestStatus.rejected;
+    final titleAr = approved
+        ? 'تمت الموافقة على طلبك المالي'
+        : rejected
+            ? 'تم رفض طلبك المالي'
+            : 'تم تعليق طلبك المالي للمراجعة';
+    final titleEn = approved
+        ? 'Your financial request was approved'
+        : rejected
+            ? 'Your financial request was rejected'
+            : 'Your financial request was placed under review';
+    final messageAr = approved
+        ? 'تم اعتماد الطلب ${request.requestNumber}. يتطلب تنفيذ التحويل أو إضافة الرصيد تكامل خدمة الدفع.'
+        : rejected
+            ? 'تم رفض الطلب ${request.requestNumber}. السبب: ${reason ?? ''}'
+            : 'تم تعليق الطلب ${request.requestNumber} للمراجعة الإضافية.';
+    final messageEn = approved
+        ? 'Request ${request.requestNumber} was approved. Transfer execution or balance posting still requires payment-service integration.'
+        : rejected
+            ? 'Request ${request.requestNumber} was rejected. Reason: ${reason ?? ''}'
+            : 'Request ${request.requestNumber} was placed under additional review.';
+
+    try {
+      await WasalnyLocalEventStore().publish(
+        WasalnyLocalEvent(
+          id: 'finance-${decisionStatus.name}-${request.id}',
+          recipient: source,
+          source: 'finance',
+          titleAr: titleAr,
+          titleEn: titleEn,
+          messageAr: messageAr,
+          messageEn: messageEn,
+          createdAt: DateTime.now(),
+        ),
+      );
+    } catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'finance supervisor withdrawals',
+          context: ErrorDescription('while publishing a decision notice'),
+        ),
+      );
+    }
   }
 
   @override
@@ -188,6 +323,20 @@ class _SupervisorWithdrawalsScreenState
                       // 4. Filters
                       Wrap(
                         spacing: 8,
+                        children: [
+                          _buildQueueChip(
+                            l10n.financeRequestsInProgressTab,
+                            false,
+                          ),
+                          _buildQueueChip(
+                            l10n.financeRequestsArchiveTab,
+                            true,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      Wrap(
+                        spacing: 8,
                         runSpacing: 8,
                         children: [
                           _buildFilterChip('الكل'),
@@ -200,124 +349,142 @@ class _SupervisorWithdrawalsScreenState
                       const SizedBox(height: 20),
 
                       // 5. List of requests
-                      ..._filteredRequests
-                          .map((req) => _buildWithdrawalCard(context, req)),
+                      if (_filteredRequests.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 32),
+                          child: Center(
+                            child: Text(
+                              _showArchive
+                                  ? l10n.financeRequestsArchiveEmpty
+                                  : l10n.financeRequestsInProgressEmpty,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        )
+                      else
+                        ..._filteredRequests.map(
+                          (req) => _buildWithdrawalCard(context, req),
+                        ),
                     ],
                   ),
 
                   // 6. Bottom Sticky Bar
-                  Positioned(
-                    bottom: 16,
-                    left: 16,
-                    right: 16,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 12),
-                          decoration: BoxDecoration(
-                            color: AppColors.primaryDark,
-                            borderRadius: BorderRadius.circular(16),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: AppColors.primaryDark
-                                      .withValues(alpha: 0.3),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 4)),
-                            ],
-                          ),
-                          child: Row(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                    color: Colors.white.withValues(alpha: 0.15),
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: const Icon(Icons.calculate,
-                                    color: Colors.white, size: 24),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                  if (!_showArchive)
+                    Positioned(
+                      bottom: 16,
+                      left: 16,
+                      right: 16,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 12),
+                            decoration: BoxDecoration(
+                              color: AppColors.primaryDark,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: AppColors.primaryDark
+                                        .withValues(alpha: 0.3),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4)),
+                              ],
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                      color:
+                                          Colors.white.withValues(alpha: 0.15),
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: const Icon(Icons.calculate,
+                                      color: Colors.white, size: 24),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(l10n.totalAwaitingApproval,
+                                          style: const TextStyle(
+                                              color: Colors.white70,
+                                              fontSize: 10)),
+                                      Text(
+                                          '${CurrencyFormatter.format(_totalPendingAmount, includeCurrency: false)} ${l10n.currencyEgy}',
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold)),
+                                    ],
+                                  ),
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Text(l10n.totalAwaitingApproval,
+                                    Text(l10n.remainingForReview,
                                         style: const TextStyle(
                                             color: Colors.white70,
-                                            fontSize: 10)),
-                                    Text(
-                                        '${CurrencyFormatter.format(_totalPendingAmount, includeCurrency: false)} ${l10n.currencyEgy}',
+                                            fontSize: 10,
+                                            height: 1.2),
+                                        textAlign: TextAlign.center),
+                                    const SizedBox(height: 2),
+                                    Text('$_pendingCount ${l10n.ordersUnit}',
                                         style: const TextStyle(
                                             color: Colors.white,
-                                            fontSize: 18,
+                                            fontSize: 12,
                                             fontWeight: FontWeight.bold)),
                                   ],
                                 ),
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(l10n.remainingForReview,
-                                      style: const TextStyle(
-                                          color: Colors.white70,
-                                          fontSize: 10,
-                                          height: 1.2),
-                                      textAlign: TextAlign.center),
-                                  const SizedBox(height: 2),
-                                  Text('$_pendingCount ${l10n.ordersUnit}',
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold)),
-                                ],
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 12),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 8, horizontal: 12),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(color: Colors.grey.shade300),
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.03),
-                                  blurRadius: 4,
-                                  offset: const Offset(0, 2)),
-                            ],
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(Icons.shield_outlined,
-                                  color: Colors.blue.shade700, size: 24),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(l10n.samaComplianceNotice,
-                                        style: const TextStyle(
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.bold,
-                                            color: AppColors.primaryDark)),
-                                  ],
+                          const SizedBox(height: 12),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 8, horizontal: 12),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(color: Colors.grey.shade300),
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.03),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 2)),
+                              ],
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(Icons.shield_outlined,
+                                    color: Colors.blue.shade700, size: 24),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(l10n.samaComplianceNotice,
+                                          style: const TextStyle(
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.bold,
+                                              color: AppColors.primaryDark)),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              const Text('v3.4.1',
-                                  style: TextStyle(
-                                      fontSize: 10, color: Colors.blue)),
-                            ],
+                                const Text('v3.4.1',
+                                    style: TextStyle(
+                                        fontSize: 10, color: Colors.blue)),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
                 ],
               ),
       ),
@@ -362,6 +529,20 @@ class _SupervisorWithdrawalsScreenState
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildQueueChip(String label, bool archive) {
+    final selected = _showArchive == archive;
+    return ChoiceChip(
+      label: Text(label),
+      selected: selected,
+      onSelected: (_) => setState(() => _showArchive = archive),
+      selectedColor: AppColors.primaryDark,
+      labelStyle: TextStyle(
+        color: selected ? Colors.white : AppColors.textSecondary,
+        fontWeight: selected ? FontWeight.bold : FontWeight.normal,
       ),
     );
   }
@@ -438,8 +619,28 @@ class _SupervisorWithdrawalsScreenState
       BuildContext context, WithdrawalRequestEntity req) {
     final l10n = AppLocalizations.of(context)!;
 
-    bool isDanger = req.status == RequestStatus.underInvestigation;
+    bool isDanger = req.status == RequestStatus.underInvestigation ||
+        req.status == RequestStatus.frozen ||
+        req.status == RequestStatus.rejected;
     bool isReady = req.isInstantTransferReady;
+    final statusLabel = switch (req.status) {
+      RequestStatus.pending => isReady
+          ? l10n.readyForInstantDisbursement
+          : l10n.awaitingDisbursementBadge,
+      RequestStatus.underInvestigation ||
+      RequestStatus.frozen =>
+        l10n.temporarilySuspendedBadge,
+      RequestStatus.approved => l10n.financeRequestApprovedBadge,
+      RequestStatus.rejected => l10n.financeRequestRejectedBadge,
+    };
+    final statusColor = switch (req.status) {
+      RequestStatus.pending => isReady ? AppColors.primaryDark : Colors.black87,
+      RequestStatus.underInvestigation ||
+      RequestStatus.frozen ||
+      RequestStatus.rejected =>
+        AppColors.danger,
+      RequestStatus.approved => AppColors.primaryDark,
+    };
 
     Color mainColor = isDanger ? AppColors.danger : AppColors.primaryDark;
     Color lightBgColor = isDanger
@@ -574,43 +775,33 @@ class _SupervisorWithdrawalsScreenState
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: isDanger
-                        ? AppColors.dangerLight
-                        : (isReady
-                            ? Colors.blue.shade50
-                            : const Color(0xFFF1F5F9)),
+                    color: statusColor.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      if (isReady)
+                      if (req.status == RequestStatus.pending && isReady)
                         const Icon(Icons.flash_on,
                             color: AppColors.primaryDark, size: 12),
                       if (isDanger)
                         const Icon(Icons.warning_amber,
                             color: AppColors.danger, size: 12),
-                      if (!isReady && !isDanger)
+                      if (req.status == RequestStatus.pending &&
+                          !isReady &&
+                          !isDanger)
                         const Icon(Icons.circle,
                             color: AppColors.primaryDark, size: 8),
                       const SizedBox(width: 4),
                       Flexible(
                         child: Text(
-                          isDanger
-                              ? l10n.temporarilySuspendedBadge
-                              : (isReady
-                                  ? l10n.readyForInstantDisbursement
-                                  : l10n.awaitingDisbursementBadge),
+                          statusLabel,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.bold,
-                              color: isDanger
-                                  ? AppColors.danger
-                                  : (isReady
-                                      ? AppColors.primaryDark
-                                      : Colors.black87)),
+                              color: statusColor),
                         ),
                       ),
                     ],
@@ -930,145 +1121,152 @@ class _SupervisorWithdrawalsScreenState
             icon: const Icon(Icons.receipt_long_outlined, size: 18),
             label: Text(l10n.withdrawalRequestDetails),
           ),
-          const SizedBox(height: 16),
-
-          // Action Buttons
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryDark,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  elevation: 0,
-                ),
-                icon: const Icon(Icons.check_circle_outline, size: 18),
-                onPressed: () async {
-                  final isArabic = l10n.localeName.startsWith('ar');
-                  final confirmed = await FinanceDialogs.showApprovalDialog(
-                    context,
-                    title: isArabic
-                        ? 'اعتماد طلب السحب'
-                        : 'Approve Withdrawal Request',
-                    description: isArabic
-                        ? 'هل تريد اعتماد طلب سحب ${req.beneficiaryName} بقيمة ${CurrencyFormatter.format(req.netAmount)} وإرساله للإدارة للموافقة؟'
-                        : 'Do you want to approve the withdrawal request for ${FinanceLocalizer.localizeWithdrawalText(context, req.beneficiaryName)} (${CurrencyFormatter.format(req.netAmount)}) and send it to management?',
-                  );
-                  if (confirmed && mounted && context.mounted) {
-                    setState(() {
-                      _requests.removeWhere((r) => r.id == req.id);
-                    });
-                    AppSnackBar.showSuccess(
-                      context,
-                      isArabic
-                          ? 'تم اعتماد طلب السحب بنجاح وإرساله للإدارة للموافقة عليه'
-                          : 'Withdrawal request approved and sent to management',
-                    );
-                  }
-                },
-                label: Text(
-                  isReady
-                      ? l10n.approveAndIssueBankOrder
-                      : l10n.approveAndSendToAdmin,
-                  style: const TextStyle(
-                      fontSize: 13, fontWeight: FontWeight.bold),
-                ),
-              ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: AppColors.danger,
-                        side: const BorderSide(color: AppColors.danger),
-                        padding: const EdgeInsets.symmetric(vertical: 11),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
-                      ),
-                      icon: const Icon(Icons.cancel_outlined, size: 16),
-                      onPressed: () async {
-                        final isArabic = l10n.localeName.startsWith('ar');
-                        final reason = await FinanceDialogs.showRejectionDialog(
-                          context,
-                          title:
-                              isArabic ? 'رفض طلب السحب' : 'Reject Withdrawal',
-                        );
-                        if (reason != null && mounted && context.mounted) {
-                          setState(() {
-                            _requests.removeWhere((r) => r.id == req.id);
-                          });
-                          AppSnackBar.showError(
+          if (req.status == RequestStatus.pending) ...[
+            const SizedBox(height: 16),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primaryDark,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                    elevation: 0,
+                  ),
+                  icon: const Icon(Icons.check_circle_outline, size: 18),
+                  onPressed: req.status != RequestStatus.pending ||
+                          _processingRequestId == req.id
+                      ? null
+                      : () async {
+                          final operation = switch (req.operationType) {
+                            FinancialOperationType.withdrawal =>
+                              l10n.financeWalletWithdrawal,
+                            FinancialOperationType.deposit =>
+                              l10n.financeWalletDeposit,
+                            FinancialOperationType.promotion =>
+                              l10n.wasalnyPromotionFinanceRequestType,
+                          };
+                          final confirmed =
+                              await FinanceDialogs.showApprovalDialog(
                             context,
-                            isArabic
-                                ? 'تم رفض الطلب وإرسال سبب الرفض لرئيس المشرفين للمراجعة'
-                                : 'Request rejected and submitted to Head Supervisor',
+                            title: l10n.financeRequestApprovalTitle,
+                            description:
+                                l10n.financeRequestApprovalConfirmation(
+                              operation,
+                              FinanceLocalizer.localizeWithdrawalText(
+                                context,
+                                req.beneficiaryName,
+                              ),
+                              CurrencyFormatter.format(req.netAmount),
+                            ),
                           );
-                        }
-                      },
-                      label: Text(
-                        l10n.localeName.startsWith('ar')
-                            ? 'رفض الطلب'
-                            : 'Reject',
-                        style: const TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.bold),
+                          if (confirmed && mounted && context.mounted) {
+                            await _saveDecision(
+                              request: req,
+                              decisionStatus: RequestStatus.approved,
+                              save: () => sl<FinanceRepository>()
+                                  .approveWithdrawal(req.id),
+                              successMessage: l10n.financeRequestApproved,
+                            );
+                          }
+                        },
+                  label: Text(
+                    l10n.financeRequestApprovalTitle,
+                    style: const TextStyle(
+                        fontSize: 13, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: AppColors.danger,
+                          side: const BorderSide(color: AppColors.danger),
+                          padding: const EdgeInsets.symmetric(vertical: 11),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                        ),
+                        icon: const Icon(Icons.cancel_outlined, size: 16),
+                        onPressed: req.status != RequestStatus.pending ||
+                                _processingRequestId == req.id
+                            ? null
+                            : () async {
+                                final reason =
+                                    await FinanceDialogs.showRejectionDialog(
+                                  context,
+                                  title: l10n.financeWalletWithdrawal,
+                                );
+                                if (reason != null &&
+                                    mounted &&
+                                    context.mounted) {
+                                  await _saveDecision(
+                                    request: req,
+                                    decisionStatus: RequestStatus.rejected,
+                                    save: () => sl<FinanceRepository>()
+                                        .rejectWithdrawal(req.id, reason),
+                                    successMessage: l10n.financeRequestRejected,
+                                    reason: reason,
+                                  );
+                                }
+                              },
+                        label: Text(
+                          l10n.localeName.startsWith('ar')
+                              ? 'رفض الطلب'
+                              : 'Reject',
+                          style: const TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.orange.shade800,
-                        backgroundColor: Colors.orange.shade50,
-                        side: BorderSide(color: Colors.orange.shade200),
-                        padding: const EdgeInsets.symmetric(vertical: 11),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
-                      ),
-                      icon: const Icon(Icons.pause_circle_outline, size: 16),
-                      onPressed: () async {
-                        final isArabic = l10n.localeName.startsWith('ar');
-                        final confirmed = await FinanceDialogs.showFreezeDialog(
-                          context,
-                          requestTitle: FinanceLocalizer.localizeWithdrawalText(
-                              context, req.beneficiaryName),
-                        );
-                        if (confirmed && mounted && context.mounted) {
-                          setState(() {
-                            final idx =
-                                _requests.indexWhere((r) => r.id == req.id);
-                            if (idx != -1) {
-                              _requests[idx] = req.copyWith(
-                                status: RequestStatus.underInvestigation,
-                                alertNotice: isArabic
-                                    ? 'تم تجميد الطلب احترازياً بقرار المشرف المالي'
-                                    : 'Precautionarily frozen by finance supervisor',
-                              );
-                            }
-                          });
-                          AppSnackBar.showWarning(
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.orange.shade800,
+                          backgroundColor: Colors.orange.shade50,
+                          side: BorderSide(color: Colors.orange.shade200),
+                          padding: const EdgeInsets.symmetric(vertical: 11),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                        ),
+                        icon: const Icon(Icons.pause_circle_outline, size: 16),
+                        onPressed: () async {
+                          final confirmed =
+                              await FinanceDialogs.showFreezeDialog(
                             context,
-                            isArabic
-                                ? 'تم تجميد الطلب ونقله إلى قائمة التدقيق الرقابي'
-                                : 'Request frozen and moved to audit inspection',
+                            requestTitle:
+                                FinanceLocalizer.localizeWithdrawalText(
+                                    context, req.beneficiaryName),
                           );
-                        }
-                      },
-                      label: Text(
-                        l10n.freezeRequestTemporarily,
-                        style: const TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.bold),
+                          if (confirmed && mounted && context.mounted) {
+                            await _saveDecision(
+                              request: req,
+                              decisionStatus: RequestStatus.frozen,
+                              save: () =>
+                                  sl<FinanceRepository>().freezeWithdrawal(
+                                req.id,
+                                l10n.temporarilySuspendedForAudit,
+                              ),
+                              successMessage: l10n.financeRequestFrozen,
+                            );
+                          }
+                        },
+                        label: Text(
+                          l10n.freezeRequestTemporarily,
+                          style: const TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+                  ],
+                ),
+              ],
+            ),
+          ],
         ],
       ),
     );

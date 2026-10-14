@@ -1,13 +1,27 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../data/merchant_advertisement_local_store.dart';
+import '../../data/merchant_supervisor_local_store.dart';
+import '../../domain/entities/merchant_entity.dart';
+import 'merchant_financial_request_events.dart';
 import 'advertisement_review_details_screen.dart';
 
 enum _AdCategory { vehicles, electronics, realEstate }
 
-enum _AdStatus { pending, approved, rejected }
+enum _AdStatus {
+  pending,
+  awaitingFinance,
+  awaitingManagement,
+  approved,
+  rejected,
+  suspended,
+}
 
 enum _AdRejectionReason { price, misleading, photos, policy }
 
@@ -19,6 +33,8 @@ class _AdRecord {
   final int imageCount;
   final int receivedMinutesAgo;
   final bool hasMarketPriceBadge;
+  final bool isPremium;
+  final double premiumFee;
 
   const _AdRecord({
     required this.id,
@@ -28,6 +44,8 @@ class _AdRecord {
     required this.imageCount,
     required this.receivedMinutesAgo,
     this.hasMarketPriceBadge = false,
+    this.isPremium = false,
+    this.premiumFee = 0,
   });
 }
 
@@ -49,6 +67,8 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
       imageCount: 8,
       receivedMinutesAgo: 25,
       hasMarketPriceBadge: true,
+      isPremium: true,
+      premiumFee: 500,
     ),
     _AdRecord(
       id: 2,
@@ -71,15 +91,347 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
   final Map<int, ({_AdRejectionReason reason, String guidance})> _rejections =
       {};
   final Set<int> _hiddenAds = {};
+  bool _showArchive = false;
+  bool _isLoadingActions = true;
+  Object? _loadError;
   String _searchQuery = '';
   _AdCategory? _categoryFilter;
   bool _newestFirst = true;
 
+  static const _savedActionsKey = 'merchant_supervisor_ad_actions_v1';
+  static const _financialRequestsKey =
+      'merchant_supervisor_financial_requests_v1';
+
+  @override
+  void initState() {
+    super.initState();
+    MerchantAdvertisementLocalStore.version.addListener(
+      _refreshSharedStatuses,
+    );
+    _loadSavedActions().then((_) => _refreshSharedStatuses());
+  }
+
   @override
   void dispose() {
+    MerchantAdvertisementLocalStore.version.removeListener(
+      _refreshSharedStatuses,
+    );
     _searchController.dispose();
     super.dispose();
   }
+
+  Future<void> _refreshSharedStatuses() async {
+    try {
+      final statuses = await MerchantAdvertisementLocalStore.loadStatuses();
+      if (!mounted) return;
+      setState(() {
+        for (final ad in _ads) {
+          final status = statuses[_adReference(ad)];
+          if (status != null) _statuses[ad.id] = _localStatusFor(status);
+          if (status == MerchantAdvertisementStatus.hidden) {
+            _hiddenAds.add(ad.id);
+          } else {
+            _hiddenAds.remove(ad.id);
+          }
+        }
+      });
+    } catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'merchant advertisement status refresh',
+        ),
+      );
+      if (mounted) {
+        _showMessage(
+          AppLocalizations.of(context)!,
+          AppLocalizations.of(context)!.adsLoadFailed,
+        );
+      }
+    }
+  }
+
+  _AdStatus _localStatusFor(MerchantAdvertisementStatus status) =>
+      switch (status) {
+        MerchantAdvertisementStatus.approved => _AdStatus.approved,
+        MerchantAdvertisementStatus.awaitingFinance =>
+          _AdStatus.awaitingFinance,
+        MerchantAdvertisementStatus.awaitingManagement =>
+          _AdStatus.awaitingManagement,
+        MerchantAdvertisementStatus.underReview => _AdStatus.pending,
+        MerchantAdvertisementStatus.rejected => _AdStatus.rejected,
+        MerchantAdvertisementStatus.frozen => _AdStatus.suspended,
+        MerchantAdvertisementStatus.hidden => _AdStatus.pending,
+      };
+
+  MerchantAdvertisementStatus _sharedStatusFor(
+    _AdStatus status, {
+    required bool hidden,
+  }) {
+    if (hidden) return MerchantAdvertisementStatus.hidden;
+    return switch (status) {
+      _AdStatus.pending => MerchantAdvertisementStatus.underReview,
+      _AdStatus.awaitingFinance => MerchantAdvertisementStatus.awaitingFinance,
+      _AdStatus.awaitingManagement =>
+        MerchantAdvertisementStatus.awaitingManagement,
+      _AdStatus.approved => MerchantAdvertisementStatus.approved,
+      _AdStatus.rejected => MerchantAdvertisementStatus.rejected,
+      _AdStatus.suspended => MerchantAdvertisementStatus.frozen,
+    };
+  }
+
+  Future<void> _loadSavedActions() async {
+    try {
+      final preferences = await SharedPreferences.getInstance();
+      final saved = preferences.getString(_savedActionsKey);
+      if (saved == null) {
+        if (mounted) setState(() => _isLoadingActions = false);
+        return;
+      }
+
+      final decoded = jsonDecode(saved);
+      if (decoded is! Map<String, dynamic>) {
+        throw const FormatException(
+          'Saved advertisement actions are invalid.',
+        );
+      }
+      final statusEntries = decoded['statuses'];
+      final hiddenEntries = decoded['hidden'];
+      final rejectionEntries = decoded['rejections'] ?? <String, dynamic>{};
+      if (statusEntries is! Map<String, dynamic> ||
+          hiddenEntries is! List ||
+          rejectionEntries is! Map<String, dynamic>) {
+        throw const FormatException(
+          'Saved advertisement action fields are invalid.',
+        );
+      }
+
+      final statuses = <int, _AdStatus>{};
+      for (final entry in statusEntries.entries) {
+        final id = int.tryParse(entry.key);
+        final statusName = entry.value;
+        if (id == null || statusName is! String) {
+          throw const FormatException(
+            'Saved advertisement status is invalid.',
+          );
+        }
+        statuses[id] = _AdStatus.values.byName(statusName);
+      }
+      final hidden = hiddenEntries.map((value) {
+        if (value is! int) {
+          throw const FormatException('Saved hidden advertisement is invalid.');
+        }
+        return value;
+      }).toSet();
+      final rejections =
+          <int, ({_AdRejectionReason reason, String guidance})>{};
+      for (final entry in rejectionEntries.entries) {
+        final id = int.tryParse(entry.key);
+        final value = entry.value;
+        if (id == null ||
+            value is! Map<String, dynamic> ||
+            value['reason'] is! String ||
+            value['guidance'] is! String) {
+          throw const FormatException(
+            'Saved advertisement rejection is invalid.',
+          );
+        }
+        rejections[id] = (
+          reason: _AdRejectionReason.values.byName(value['reason'] as String),
+          guidance: value['guidance'] as String,
+        );
+      }
+      if (!mounted) return;
+      setState(() {
+        _statuses.addAll(statuses);
+        _hiddenAds.addAll(hidden);
+        _rejections.addAll(rejections);
+        _isLoadingActions = false;
+      });
+    } catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'merchant advertisement review',
+        ),
+      );
+      if (mounted) {
+        setState(() {
+          _loadError = error;
+          _isLoadingActions = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _persistActions() async {
+    final preferences = await SharedPreferences.getInstance();
+    final saved = await preferences.setString(
+      _savedActionsKey,
+      jsonEncode({
+        'statuses': _statuses.map(
+          (id, status) => MapEntry(id.toString(), status.name),
+        ),
+        'hidden': _hiddenAds.toList(),
+        'rejections': _rejections.map(
+          (id, rejection) => MapEntry(id.toString(), {
+            'reason': rejection.reason.name,
+            'guidance': rejection.guidance,
+          }),
+        ),
+      }),
+    );
+    if (!saved) throw StateError('Could not save advertisement actions.');
+  }
+
+  Future<void> _setAdState(
+    AppLocalizations l10n,
+    _AdRecord ad, {
+    _AdStatus? status,
+    bool? hidden,
+    ({_AdRejectionReason reason, String guidance})? rejection,
+  }) async {
+    final previousStatus = _statuses[ad.id];
+    final wasHidden = _hiddenAds.contains(ad.id);
+    final previousRejection = _rejections[ad.id];
+    setState(() {
+      if (status != null) _statuses[ad.id] = status;
+      if (hidden == true) _hiddenAds.add(ad.id);
+      if (hidden == false) _hiddenAds.remove(ad.id);
+      if (rejection != null) _rejections[ad.id] = rejection;
+    });
+    try {
+      await _persistActions();
+      await MerchantAdvertisementLocalStore.saveStatus(
+        reference: _adReference(ad),
+        status: _sharedStatusFor(
+          status ?? _statuses[ad.id] ?? _AdStatus.pending,
+          hidden: hidden ?? _hiddenAds.contains(ad.id),
+        ),
+      );
+      try {
+        final resultLabel = switch (status) {
+          _AdStatus.approved => l10n.adsApprovedStatus,
+          _AdStatus.awaitingFinance => l10n.adsPremiumWaitingFinance,
+          _AdStatus.awaitingManagement => l10n.adsPremiumWaitingManagement,
+          _AdStatus.rejected => l10n.adsRejectedStatus,
+          _AdStatus.suspended => l10n.adsFrozenStatus,
+          _AdStatus.pending ||
+          null =>
+            hidden == true ? l10n.adsHiddenStatus : l10n.adsReviewHidden,
+        };
+        await MerchantSupervisorLocalStore.recordAction(
+          action: l10n.merchantAuditAdModerated,
+          subject: _adTitle(l10n, ad),
+          details: [
+            resultLabel,
+            if (rejection?.guidance.isNotEmpty ?? false) rejection!.guidance,
+          ].join(' · '),
+        );
+      } on Object catch (error, stackTrace) {
+        FlutterError.reportError(
+          FlutterErrorDetails(
+            exception: error,
+            stack: stackTrace,
+            library: 'merchant advertisement audit',
+          ),
+        );
+        if (mounted) _showMessage(l10n, l10n.merchantAuditLoadError);
+      }
+    } catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'merchant advertisement review',
+        ),
+      );
+      if (mounted) {
+        setState(() {
+          if (previousStatus == null) {
+            _statuses.remove(ad.id);
+          } else {
+            _statuses[ad.id] = previousStatus;
+          }
+          if (wasHidden) {
+            _hiddenAds.add(ad.id);
+          } else {
+            _hiddenAds.remove(ad.id);
+          }
+          if (previousRejection == null) {
+            _rejections.remove(ad.id);
+          } else {
+            _rejections[ad.id] = previousRejection;
+          }
+        });
+        _showMessage(l10n, l10n.adsSaveFailed);
+      }
+    }
+  }
+
+  Future<void> _approveAd(AppLocalizations l10n, _AdRecord ad) async {
+    if (_statuses[ad.id] == _AdStatus.awaitingFinance ||
+        _statuses[ad.id] == _AdStatus.awaitingManagement) {
+      _showMessage(
+        l10n,
+        _statuses[ad.id] == _AdStatus.awaitingFinance
+            ? l10n.adsPremiumWaitingFinance
+            : l10n.adsPremiumWaitingManagement,
+      );
+      return;
+    }
+    if (ad.isPremium) {
+      final preferences = await SharedPreferences.getInstance();
+      final stored = preferences.getString(_financialRequestsKey);
+      final requests =
+          stored == null ? <dynamic>[] : jsonDecode(stored) as List<dynamic>;
+      final requestId = 'AD-FEE-${_adReference(ad)}';
+      if (!requests.any(
+        (request) => request is Map && request['id'] == requestId,
+      )) {
+        requests.add({
+          'id': requestId,
+          'type': 'packageFees',
+          'merchantName': _merchantName(l10n, ad),
+          'merchantNameEn': _merchantNameEn(ad),
+          'title': l10n.localeName.startsWith('ar')
+              ? 'رسوم الإعلان المميز ${_adReference(ad)}'
+              : 'Premium advertisement fee - ${_adReference(ad)}',
+          'titleAr': 'رسوم الإعلان المميز ${_adReference(ad)}',
+          'titleEn': 'Premium advertisement fee - ${_adReference(ad)}',
+          'amount': ad.premiumFee,
+          'createdAt': DateTime.now().toIso8601String(),
+        });
+        final saved = await preferences.setString(
+          _financialRequestsKey,
+          jsonEncode(requests),
+        );
+        if (!saved) {
+          throw StateError('Could not queue premium advertisement fee.');
+        }
+        merchantFinancialRequestsVersion.value++;
+      }
+      await _setAdState(l10n, ad, status: _AdStatus.awaitingFinance);
+      if (!mounted) return;
+      _showMessage(l10n, l10n.adsPremiumWaitingFinance);
+      return;
+    }
+    await _setAdState(l10n, ad, status: _AdStatus.approved);
+    if (!mounted) return;
+    _showMessage(l10n, l10n.adsApprovedStatus);
+  }
+
+  String _merchantNameEn(_AdRecord ad) => switch (ad.id) {
+        1 => 'Al-Ufuq Car Trading Est.',
+        2 => 'Al-Safwa Electronics Store',
+        _ => 'Al-Yamama Contracting & Real Estate Co.',
+      };
+
+  bool _isArchived(_AdRecord ad) =>
+      _hiddenAds.contains(ad.id) ||
+      (_statuses[ad.id] ?? _AdStatus.pending) != _AdStatus.pending;
 
   String _merchantName(AppLocalizations l10n, _AdRecord ad) => switch (ad.id) {
         1 => l10n.adsCarMerchant,
@@ -121,6 +473,7 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
   List<_AdRecord> _filteredAds(AppLocalizations l10n) {
     final query = _searchQuery.trim().toLowerCase();
     final ads = _ads.where((ad) {
+      if (_isArchived(ad) != _showArchive) return false;
       final matchesCategory =
           _categoryFilter == null || ad.category == _categoryFilter;
       final matchesQuery = query.isEmpty ||
@@ -145,17 +498,37 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
         children: [
+          if (_isLoadingActions)
+            const LinearProgressIndicator()
+          else if (_loadError != null)
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Text(l10n.adsLoadFailed),
+            ),
           _buildSummary(l10n),
           const SizedBox(height: 14),
           _buildSearch(l10n),
           const SizedBox(height: 12),
           _buildCategoryFilters(l10n),
+          const SizedBox(height: 12),
+          SegmentedButton<bool>(
+            segments: [
+              ButtonSegment(
+                value: false,
+                label: Text(l10n.adsReviewQueueTab),
+              ),
+              ButtonSegment(value: true, label: Text(l10n.adsArchiveTitle)),
+            ],
+            selected: {_showArchive},
+            onSelectionChanged: (selection) =>
+                setState(() => _showArchive = selection.first),
+          ),
           const SizedBox(height: 18),
           Row(
             children: [
               Expanded(
                 child: Text(
-                  l10n.adsPendingHeading,
+                  _showArchive ? l10n.adsArchiveTitle : l10n.adsPendingHeading,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
@@ -530,6 +903,16 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
                           fontSize: 9,
                         ),
                       ),
+                      const SizedBox(height: 4),
+                      _smallBadge(
+                        ad.isPremium ? l10n.adsPremium : l10n.adsRegular,
+                        ad.isPremium
+                            ? const Color(0xFFFFE8B2)
+                            : const Color(0xFFE8EAED),
+                        ad.isPremium
+                            ? const Color(0xFF8A4B08)
+                            : AppColors.textSecondary,
+                      ),
                     ],
                   ),
                 ),
@@ -640,14 +1023,13 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
           imageColor: ad.imageColor,
           facts: details.facts,
           checklist: details.checklist,
-          onApprove: () {
+          onApprove: () async {
             Navigator.of(context).pop();
-            setState(() => _statuses[ad.id] = _AdStatus.approved);
-            _showMessage(l10n, l10n.adsApprovedStatus);
+            await _approveAd(l10n, ad);
           },
-          onHide: () {
+          onHide: () async {
             Navigator.of(context).pop();
-            setState(() => _hiddenAds.add(ad.id));
+            await _setAdState(l10n, ad, hidden: true);
             _showMessage(l10n, l10n.adsHiddenStatus);
           },
           onReject: () {
@@ -769,18 +1151,29 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
     bool isHidden,
     _AdStatus status,
   ) {
-    final label = status == _AdStatus.approved
-        ? l10n.adsApprovedStatus
-        : status == _AdStatus.rejected
-            ? l10n.adsRejectedStatus
-            : isHidden
-                ? l10n.adsHiddenStatus
-                : l10n.adsReviewHidden;
-    final color = status == _AdStatus.approved
-        ? AppColors.successDark
-        : status == _AdStatus.rejected
-            ? AppColors.danger
-            : AppColors.textSecondary;
+    final label = status == _AdStatus.suspended
+        ? l10n.adsFrozenStatus
+        : status == _AdStatus.approved
+            ? l10n.adsApprovedStatus
+            : status == _AdStatus.awaitingFinance
+                ? l10n.adsPremiumWaitingFinance
+                : status == _AdStatus.awaitingManagement
+                    ? l10n.adsPremiumWaitingManagement
+                    : status == _AdStatus.rejected
+                        ? l10n.adsRejectedStatus
+                        : isHidden
+                            ? l10n.adsHiddenStatus
+                            : l10n.adsReviewHidden;
+    final color = status == _AdStatus.suspended
+        ? const Color(0xFFAC6900)
+        : status == _AdStatus.approved
+            ? AppColors.successDark
+            : status == _AdStatus.awaitingFinance ||
+                    status == _AdStatus.awaitingManagement
+                ? AppColors.info
+                : status == _AdStatus.rejected
+                    ? AppColors.danger
+                    : AppColors.textSecondary;
     final age = ad.receivedMinutesAgo >= 120
         ? l10n.adsHoursAgo
         : l10n.adsMinutesAgo('${ad.receivedMinutesAgo}');
@@ -1005,6 +1398,18 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
     bool isHidden,
     _AdStatus status,
   ) {
+    if (status == _AdStatus.awaitingFinance ||
+        status == _AdStatus.awaitingManagement) {
+      return _actionButton(
+        label: status == _AdStatus.awaitingFinance
+            ? l10n.adsPremiumWaitingFinance
+            : l10n.adsPremiumWaitingManagement,
+        icon: Icons.hourglass_top,
+        background: const Color(0xFFEAF0FF),
+        foreground: AppColors.info,
+        onPressed: null,
+      );
+    }
     return Column(
       children: [
         Row(
@@ -1017,14 +1422,8 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
                     : Icons.visibility_off_outlined,
                 background: const Color(0xFFF0F1F3),
                 foreground: AppColors.textSecondary,
-                onPressed: () {
-                  setState(() {
-                    if (isHidden) {
-                      _hiddenAds.remove(ad.id);
-                    } else {
-                      _hiddenAds.add(ad.id);
-                    }
-                  });
+                onPressed: () async {
+                  await _setAdState(l10n, ad, hidden: !isHidden);
                   _showMessage(
                     l10n,
                     isHidden ? l10n.adsReviewHidden : l10n.adsHiddenStatus,
@@ -1036,11 +1435,21 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
             Expanded(
               flex: 2,
               child: _actionButton(
-                label: l10n.adsReviewAndApprove,
-                icon: Icons.fact_check_outlined,
+                label: status == _AdStatus.suspended
+                    ? l10n.adsUnfreezeAction
+                    : l10n.adsFreezeAction,
+                icon: status == _AdStatus.suspended
+                    ? Icons.play_circle_outline
+                    : Icons.pause_circle_outline,
                 background: const Color(0xFFF0F1F3),
                 foreground: AppColors.primaryDark,
-                onPressed: () => _openAdDetails(l10n, ad),
+                onPressed: () => _setAdState(
+                  l10n,
+                  ad,
+                  status: status == _AdStatus.suspended
+                      ? _AdStatus.pending
+                      : _AdStatus.suspended,
+                ),
               ),
             ),
           ],
@@ -1066,10 +1475,7 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
                 icon: Icons.check,
                 background: AppColors.primaryDark,
                 foreground: Colors.white,
-                onPressed: () {
-                  setState(() => _statuses[ad.id] = _AdStatus.approved);
-                  _showMessage(l10n, l10n.adsApprovedStatus);
-                },
+                onPressed: () => _approveAd(l10n, ad),
               ),
             ),
           ],
@@ -1083,7 +1489,7 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
     required IconData icon,
     required Color background,
     required Color foreground,
-    required VoidCallback onPressed,
+    required VoidCallback? onPressed,
   }) {
     return SizedBox(
       height: 42,
@@ -1433,10 +1839,13 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
     );
     if (rejection == null || !mounted) return;
 
-    setState(() {
-      _statuses[ad.id] = _AdStatus.rejected;
-      _rejections[ad.id] = rejection;
-    });
+    await _setAdState(
+      l10n,
+      ad,
+      status: _AdStatus.rejected,
+      rejection: rejection,
+    );
+    if (!mounted) return;
     _showMessage(l10n, l10n.adsRejectedStatus);
   }
 

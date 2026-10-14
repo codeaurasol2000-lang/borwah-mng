@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+
+import '../../core/widgets/local_event_inbox_screen.dart';
 import '../../l10n/app_localizations.dart';
 
 import '../../features/finance/presentation/screens/audit_screen.dart';
@@ -92,6 +94,20 @@ class _FinanceTabsShellState extends State<FinanceTabsShell> {
                     builder: (_) => ProfileScreen(onLogout: widget.onLogout),
                   ),
                 ),
+                additionalActions: [
+                  IconButton(
+                    tooltip: l10n.productNotificationsTitle,
+                    onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => LocalEventInboxScreen(
+                          recipient: 'finance',
+                          title: l10n.productNotificationsTitle,
+                        ),
+                      ),
+                    ),
+                    icon: const Icon(Icons.notifications_none_outlined),
+                  ),
+                ],
               ),
             ),
           ),

@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../services_supervisor/presentation/screens/services_supervisor_wallet_screen.dart';
 import '../../domain/entities/product_supervisor_audit_entry.dart';
 import '../../domain/repositories/product_supervisor_audit_repository.dart';
 import 'product_supervisor_audit_screen.dart';
 import 'product_supervisor_support_screen.dart';
-import 'product_supervisor_wallet_screen.dart';
 
 class ProductSupervisorProfileScreen extends StatefulWidget {
   final VoidCallback onLogout;
   final List<Widget> additionalOperations;
+  final String auditActionKeyPrefix;
 
   const ProductSupervisorProfileScreen({
     super.key,
     required this.onLogout,
     this.additionalOperations = const [],
+    this.auditActionKeyPrefix = '',
   });
 
   @override
@@ -28,6 +31,47 @@ class _ProductSupervisorProfileScreenState
     extends State<ProductSupervisorProfileScreen> {
   bool _fieldAvailability = true;
   bool _urgentNotifications = true;
+  bool _preferencesLoaded = false;
+  bool _isSavingPreference = false;
+  Object? _preferencesLoadError;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPreferences();
+  }
+
+  String _preferenceKey(String name) =>
+      'product_supervisor_profile_preferences_v1_'
+      '${widget.auditActionKeyPrefix}$name';
+
+  Future<void> _loadPreferences() async {
+    try {
+      final preferences = await SharedPreferences.getInstance();
+      final fieldAvailability =
+          preferences.getBool(_preferenceKey('fieldAvailability')) ?? true;
+      final urgentNotifications =
+          preferences.getBool(_preferenceKey('urgentNotifications')) ?? true;
+      if (!mounted) return;
+      setState(() {
+        _fieldAvailability = fieldAvailability;
+        _urgentNotifications = urgentNotifications;
+        _preferencesLoaded = true;
+        _preferencesLoadError = null;
+      });
+    } on Object catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'product supervisor profile',
+          context: ErrorDescription('while loading local profile preferences'),
+        ),
+      );
+      if (!mounted) return;
+      setState(() => _preferencesLoadError = error);
+    }
+  }
 
   void _openPage(Widget page) {
     Navigator.of(context).push(
@@ -40,21 +84,59 @@ class _ProductSupervisorProfileScreenState
     required String actionKey,
     required String subject,
     required String details,
+    required String preferenceKey,
     required ValueChanged<bool> updateValue,
   }) async {
+    if (!_preferencesLoaded || _isSavingPreference) return;
+    setState(() => _isSavingPreference = true);
+    SharedPreferences? preferences;
+    bool? previousValue;
+    var preferenceSaved = false;
     try {
+      preferences = await SharedPreferences.getInstance();
+      final key = _preferenceKey(preferenceKey);
+      previousValue = preferences.getBool(key);
+      preferenceSaved = await preferences.setBool(key, value);
+      if (!preferenceSaved) {
+        throw StateError('Could not save the profile preference locally.');
+      }
       await sl<ProductSupervisorAuditRepository>().recordEntry(
         ProductSupervisorAuditEntry(
           id: DateTime.now().microsecondsSinceEpoch.toString(),
-          actionKey: actionKey,
+          actionKey: '${widget.auditActionKeyPrefix}$actionKey',
           subject: subject,
           details: details,
           occurredAt: DateTime.now(),
         ),
       );
       if (!mounted) return;
-      setState(() => updateValue(value));
+      setState(() {
+        updateValue(value);
+        _isSavingPreference = false;
+      });
     } catch (error, stackTrace) {
+      if (preferenceSaved && preferences != null) {
+        try {
+          final key = _preferenceKey(preferenceKey);
+          final restored = previousValue == null
+              ? await preferences.remove(key)
+              : await preferences.setBool(key, previousValue);
+          if (!restored) {
+            throw StateError('Could not restore the saved profile preference.');
+          }
+        } on Object catch (rollbackError, rollbackStackTrace) {
+          FlutterError.reportError(
+            FlutterErrorDetails(
+              exception: rollbackError,
+              stack: rollbackStackTrace,
+              library: 'product supervisor profile',
+              context: ErrorDescription(
+                'while restoring a profile preference after an audit failure',
+              ),
+            ),
+          );
+        }
+      }
       FlutterError.reportError(
         FlutterErrorDetails(
           exception: error,
@@ -64,6 +146,7 @@ class _ProductSupervisorProfileScreenState
         ),
       );
       if (!mounted) return;
+      setState(() => _isSavingPreference = false);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(AppLocalizations.of(context)!.productAuditSaveError),
@@ -115,6 +198,22 @@ class _ProductSupervisorProfileScreenState
             ),
             const SizedBox(height: 8),
             _buildOperationsCard(l10n),
+            Padding(
+              padding: const EdgeInsetsDirectional.only(top: 7),
+              child: Text(
+                l10n.productProfilePreferenceLocalOnlyNotice,
+                style: const TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 10,
+                ),
+              ),
+            ),
+            if (_preferencesLoadError != null)
+              TextButton.icon(
+                onPressed: _loadPreferences,
+                icon: const Icon(Icons.refresh),
+                label: Text(l10n.productProfilePreferenceLoadError),
+              ),
             const SizedBox(height: 18),
             SizedBox(
               height: 50,
@@ -298,16 +397,25 @@ class _ProductSupervisorProfileScreenState
                   ),
                 ),
                 Switch.adaptive(
-                  value: _fieldAvailability,
-                  onChanged: (value) => _updateAuditedPreference(
-                    value: value,
-                    actionKey: 'profile_field_availability_changed',
-                    subject: l10n.productProfileFieldAvailability,
-                    details: value
-                        ? l10n.productAuditEnabled
-                        : l10n.productAuditDisabled,
-                    updateValue: (enabled) => _fieldAvailability = enabled,
+                  key: const ValueKey(
+                    'product_profile_field_availability_toggle',
                   ),
+                  value: _fieldAvailability,
+                  onChanged: _preferencesLoaded &&
+                          _preferencesLoadError == null &&
+                          !_isSavingPreference
+                      ? (value) => _updateAuditedPreference(
+                            value: value,
+                            actionKey: 'profile_field_availability_changed',
+                            subject: l10n.productProfileFieldAvailability,
+                            details: value
+                                ? l10n.productAuditEnabled
+                                : l10n.productAuditDisabled,
+                            preferenceKey: 'fieldAvailability',
+                            updateValue: (enabled) =>
+                                _fieldAvailability = enabled,
+                          )
+                      : null,
                   activeTrackColor: const Color(0xFF52C5A1),
                 ),
               ],
@@ -587,7 +695,13 @@ class _ProductSupervisorProfileScreenState
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
-        onTap: () => _openPage(const ProductSupervisorWalletScreen()),
+        onTap: () => _openPage(
+          ServicesSupervisorWalletScreen(
+            owner: widget.auditActionKeyPrefix.startsWith('wasalny_')
+                ? SupervisorWalletOwner.wasalny
+                : SupervisorWalletOwner.product,
+          ),
+        ),
         child: Container(
           padding: const EdgeInsets.all(15),
           decoration: _cardDecoration(),
@@ -661,20 +775,35 @@ class _ProductSupervisorProfileScreenState
             title: l10n.productProfileUrgentAlerts,
             subtitle: l10n.productProfileUrgentAlertsSubtitle,
             value: _urgentNotifications,
-            onChanged: (value) => _updateAuditedPreference(
-              value: value,
-              actionKey: 'profile_urgent_notifications_changed',
-              subject: l10n.productProfileUrgentAlerts,
-              details:
-                  value ? l10n.productAuditEnabled : l10n.productAuditDisabled,
-              updateValue: (enabled) => _urgentNotifications = enabled,
+            toggleKey: const ValueKey(
+              'product_profile_urgent_notifications_toggle',
             ),
+            onChanged: _preferencesLoaded &&
+                    _preferencesLoadError == null &&
+                    !_isSavingPreference
+                ? (value) => _updateAuditedPreference(
+                      value: value,
+                      actionKey: 'profile_urgent_notifications_changed',
+                      subject: l10n.productProfileUrgentAlerts,
+                      details: value
+                          ? l10n.productAuditEnabled
+                          : l10n.productAuditDisabled,
+                      preferenceKey: 'urgentNotifications',
+                      updateValue: (enabled) => _urgentNotifications = enabled,
+                    )
+                : null,
           ),
           _operationLink(
             icon: Icons.history,
             title: l10n.productAuditHistoryTitle,
             subtitle: l10n.productAuditHistorySubtitle,
-            onTap: () => _openPage(const ProductSupervisorAuditScreen()),
+            onTap: () => _openPage(
+              ProductSupervisorAuditScreen(
+                actionKeyPrefix: widget.auditActionKeyPrefix.isEmpty
+                    ? null
+                    : widget.auditActionKeyPrefix,
+              ),
+            ),
           ),
           _operationLink(
             icon: Icons.support_agent,
@@ -694,7 +823,8 @@ class _ProductSupervisorProfileScreenState
     required String title,
     required String subtitle,
     required bool value,
-    required ValueChanged<bool> onChanged,
+    required ValueChanged<bool>? onChanged,
+    required Key toggleKey,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
@@ -729,6 +859,7 @@ class _ProductSupervisorProfileScreenState
           ),
           const SizedBox(width: 6),
           Switch.adaptive(
+            key: toggleKey,
             value: value,
             onChanged: onChanged,
             activeTrackColor: const Color(0xFF52C5A1),

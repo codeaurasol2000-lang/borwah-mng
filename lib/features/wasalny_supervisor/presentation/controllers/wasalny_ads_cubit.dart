@@ -1,5 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/foundation.dart';
 
+import '../../data/wasalny_local_event_store.dart';
+import '../../../products/domain/entities/product_supervisor_audit_entry.dart';
+import '../../../products/domain/repositories/product_supervisor_audit_repository.dart';
 import '../../domain/entities/wasalny_ad.dart';
 import '../../domain/usecases/get_wasalny_ads_usecase.dart';
 import '../../domain/usecases/update_wasalny_ad_status_usecase.dart';
@@ -27,16 +31,46 @@ class WasalnyAdsLoaded extends WasalnyAdsState {
 class WasalnyAdsCubit extends Cubit<WasalnyAdsState> {
   final GetWasalnyAdsUseCase getAds;
   final UpdateWasalnyAdStatusUseCase updateAdStatus;
+  final ProductSupervisorAuditRepository? auditRepository;
 
   WasalnyAdsCubit({
     required this.getAds,
     required this.updateAdStatus,
+    this.auditRepository,
   }) : super(const WasalnyAdsLoading());
 
   Future<void> loadAds() async {
     emit(const WasalnyAdsLoading());
     try {
-      emit(WasalnyAdsLoaded(await getAds()));
+      final ads = await getAds();
+      for (final ad in ads.where((item) =>
+          item.status == WasalnyAdStatus.pending ||
+          item.status == WasalnyAdStatus.awaitingApproval)) {
+        try {
+          await WasalnyLocalEventStore().publish(
+            WasalnyLocalEvent(
+              id: 'wasalny-new-ad-${ad.id}',
+              recipient: 'wasalny',
+              source: 'wasalny',
+              titleAr: 'إعلان وصلني جديد بانتظار المراجعة',
+              titleEn: 'New Wasalny ad awaiting review',
+              messageAr: '${ad.titleAr} من ${ad.sellerNameAr}',
+              messageEn: '${ad.titleEn} by ${ad.sellerNameEn}',
+              createdAt: ad.submittedAt,
+            ),
+          );
+        } catch (error, stackTrace) {
+          FlutterError.reportError(
+            FlutterErrorDetails(
+              exception: error,
+              stack: stackTrace,
+              library: 'Wasalny ads',
+              context: ErrorDescription('while publishing a new-ad notification'),
+            ),
+          );
+        }
+      }
+      emit(WasalnyAdsLoaded(ads));
     } catch (error) {
       emit(WasalnyAdsLoadFailure(error));
     }
@@ -54,6 +88,19 @@ class WasalnyAdsCubit extends Cubit<WasalnyAdsState> {
         id: id,
         status: status,
         decisionNote: decisionNote,
+      );
+      final now = DateTime.now();
+      await auditRepository?.recordEntry(
+        ProductSupervisorAuditEntry(
+          id: now.microsecondsSinceEpoch.toString(),
+          actionKey: 'wasalny_ad_${status.name}',
+          subject: updated.titleAr,
+          details: [
+            updated.reference,
+            if (decisionNote?.isNotEmpty == true) decisionNote!,
+          ].join(' • '),
+          occurredAt: now,
+        ),
       );
       emit(
         WasalnyAdsLoaded([

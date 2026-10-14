@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:barwah_app/core/di/injection_container.dart' as di;
 import 'package:barwah_app/features/merchants/data/datasources/merchants_mock_data_source.dart';
 import 'package:barwah_app/features/merchants/data/repositories/merchants_repository_impl.dart';
+import 'package:barwah_app/features/merchants/domain/entities/merchant_entity.dart';
 import 'package:barwah_app/features/merchants/domain/usecases/get_merchants_usecase.dart';
 import 'package:barwah_app/features/merchants/domain/usecases/get_supervisor_stats_usecase.dart';
 import 'package:barwah_app/features/merchants/presentation/controllers/merchants_cubit.dart';
@@ -280,6 +282,7 @@ void main() {
 
   testWidgets('Temporary suspension opens a localized bottom sheet',
       (tester) async {
+    SharedPreferences.setMockInitialValues({});
     tester.view.physicalSize = const Size(390, 1200);
     tester.view.devicePixelRatio = 1;
     addTearDown(() {
@@ -322,11 +325,29 @@ void main() {
 
     await tester.tap(find.text('تأكيد التعليق المؤقت وإشعار التاجر'));
     await tester.pumpAndSettle();
-    expect(find.text('هذا الإجراء غير متاح حالياً'), findsOneWidget);
-    expect(find.text('إجراء تعليق متجر'), findsOneWidget);
-    await tester.tap(find.text('إلغاء والعودة لملف التاجر'));
-    await tester.pumpAndSettle();
+    expect(find.text('تم تعليق التاجر وإضافته إلى قائمة التجار المعلقين.'),
+        findsOneWidget);
     expect(find.text('إجراء تعليق متجر'), findsNothing);
+    expect(find.text('فك التعليق'), findsOneWidget);
     expect(tester.takeException(), isNull);
+  });
+
+  test('Merchant advertisement history includes all recorded statuses',
+      () async {
+    final merchant = (await MerchantsMockDataSource().getMerchants()).first;
+    expect(merchant.allAdvertisements, hasLength(5));
+    expect(
+      merchant.allAdvertisements.map((ad) => ad.reference),
+      containsAll(['AD-99120', 'AD-94820', 'AD-94018', 'AD-93642']),
+    );
+    expect(
+      merchant.allAdvertisements.map((ad) => ad.status),
+      containsAll([
+        MerchantAdvertisementStatus.approved,
+        MerchantAdvertisementStatus.rejected,
+        MerchantAdvertisementStatus.frozen,
+        MerchantAdvertisementStatus.hidden,
+      ]),
+    );
   });
 }

@@ -3,12 +3,14 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../core/constants/app_colors.dart';
+import '../../core/di/injection_container.dart';
 import '../../features/finance/presentation/widgets/finance_navigation.dart';
 import '../../features/wasalny_supervisor/data/datasources/wasalny_ads_mock_data_source.dart';
 import '../../features/wasalny_supervisor/data/repositories/wasalny_ads_repository_impl.dart';
 import '../../features/wasalny_supervisor/domain/usecases/get_wasalny_ads_usecase.dart';
 import '../../features/wasalny_supervisor/domain/usecases/update_wasalny_ad_status_usecase.dart';
 import '../../features/wasalny_supervisor/presentation/controllers/wasalny_ads_cubit.dart';
+import '../../features/wasalny_supervisor/presentation/controllers/wasalny_complaints_cubit.dart';
 import '../../features/wasalny_supervisor/presentation/screens/wasalny_ads_review_screen.dart';
 import '../../features/wasalny_supervisor/presentation/screens/wasalny_requests_screen.dart';
 import '../../features/wasalny_supervisor/presentation/screens/wasalny_complaints_screen.dart';
@@ -82,11 +84,17 @@ class _WasalnySupervisorTabsShellState
     final pages = [
       ProductSupervisorProfileScreen(
         onLogout: widget.onLogout,
+        auditActionKeyPrefix: 'wasalny_',
         additionalOperations: [
           _AccountShortcut(
             icon: Icons.report_gmailerrorred_outlined,
             title: l10n.wasalnyAccountFollowComplaint,
-            onTap: () => _openPage(const WasalnyComplaintsScreen()),
+            onTap: () => _openPage(
+              BlocProvider(
+                create: (_) => sl<WasalnyComplaintsCubit>()..loadComplaints(),
+                child: const WasalnyComplaintsScreen(),
+              ),
+            ),
           ),
           _AccountShortcut(
             icon: Icons.bar_chart_outlined,
@@ -101,6 +109,7 @@ class _WasalnySupervisorTabsShellState
         create: (_) => WasalnyAdsCubit(
           getAds: GetWasalnyAdsUseCase(repository: _repository),
           updateAdStatus: UpdateWasalnyAdStatusUseCase(repository: _repository),
+          auditRepository: sl(),
         )..loadAds(),
         child: const WasalnyAdsReviewScreen(),
       ),

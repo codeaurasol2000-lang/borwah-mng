@@ -116,6 +116,22 @@ class _WithdrawalRequestDetailsSheet extends StatelessWidget {
                         value: request.beneficiaryRole,
                       ),
                       _DetailRow(
+                        label: l10n.financeOperationType,
+                        value: switch (request.operationType) {
+                          FinancialOperationType.withdrawal =>
+                            l10n.financeWalletWithdrawal,
+                          FinancialOperationType.deposit =>
+                            l10n.financeWalletDeposit,
+                          FinancialOperationType.promotion =>
+                            l10n.wasalnyPromotionFinanceRequestType,
+                        },
+                      ),
+                      if (request.sourceAccount?.isNotEmpty ?? false)
+                        _DetailRow(
+                          label: l10n.financeSourceAccount,
+                          value: request.sourceAccount!,
+                        ),
+                      _DetailRow(
                         label: l10n.withdrawalDetailsGrossAmount,
                         value: CurrencyFormatter.format(request.grossAmount),
                       ),

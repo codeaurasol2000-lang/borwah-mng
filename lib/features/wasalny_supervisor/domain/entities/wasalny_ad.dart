@@ -26,6 +26,7 @@ class WasalnyAd {
   final String descriptionEn;
   final int photoCount;
   final String sellerPhone;
+  final bool isSellerPremium;
 
   const WasalnyAd({
     required this.id,
@@ -45,12 +46,14 @@ class WasalnyAd {
     this.descriptionEn = '',
     this.photoCount = 4,
     this.sellerPhone = '050 000 1042',
+    this.isSellerPremium = false,
   });
 
   WasalnyAd copyWith({
     WasalnyAdStatus? status,
     String? decisionNote,
     String? sellerPhone,
+    bool? isSellerPremium,
   }) {
     return WasalnyAd(
       id: id,
@@ -70,6 +73,7 @@ class WasalnyAd {
       descriptionEn: descriptionEn,
       photoCount: photoCount,
       sellerPhone: sellerPhone ?? this.sellerPhone,
+      isSellerPremium: isSellerPremium ?? this.isSellerPremium,
     );
   }
 }

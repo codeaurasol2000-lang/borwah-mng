@@ -1,8 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../auth/presentation/controllers/auth_cubit.dart';
+import '../../../auth/presentation/controllers/auth_state.dart';
 import '../controllers/merchants_cubit.dart';
 import '../controllers/merchants_state.dart';
 import 'merchant_details_screen.dart';
@@ -38,147 +43,246 @@ class _MerchantsDashboardScreenState extends State<MerchantsDashboardScreen> {
     final nameController = TextEditingController();
     final crController = TextEditingController();
     final phoneController = TextEditingController();
+    var hasCommercialRegister = true;
+    var isSaving = false;
 
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (sheetContext) {
-        return Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-          ),
-          padding: EdgeInsets.only(
-            left: 20,
-            right: 20,
-            top: 20,
-            bottom: MediaQuery.of(sheetContext).viewInsets.bottom + 24,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Center(
-                child: Container(
-                  width: 44,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(8),
+        return StatefulBuilder(
+          builder: (sheetContext, setSheetState) => Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+            ),
+            padding: EdgeInsets.only(
+              left: 20,
+              right: 20,
+              top: 20,
+              bottom: MediaQuery.of(sheetContext).viewInsets.bottom + 24,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Center(
+                  child: Container(
+                    width: 44,
+                    height: 4,
                     decoration: BoxDecoration(
-                      color: AppColors.primaryDark.withValues(alpha: 0.08),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Icon(
-                      Icons.storefront_outlined,
-                      color: AppColors.primaryDark,
-                      size: 22,
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(2),
                     ),
                   ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          l10n.addNewMerchantToSupervision,
-                          style: const TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.primaryDark,
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryDark.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Icon(
+                        Icons.storefront_outlined,
+                        color: AppColors.primaryDark,
+                        size: 22,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n.addNewMerchantToSupervision,
+                            style: const TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.primaryDark,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          l10n.supervisedAreaLabel,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
+                          const SizedBox(height: 2),
+                          Text(
+                            l10n.supervisedAreaLabel,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey[600],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                TextField(
+                  controller: nameController,
+                  decoration: InputDecoration(
+                    labelText: l10n.merchantNameField,
+                    hintText: 'مثال: شركة الرواد للتجارة',
+                    prefixIcon: const Icon(Icons.business_outlined, size: 20),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              TextField(
-                controller: nameController,
-                decoration: InputDecoration(
-                  labelText: l10n.merchantNameField,
-                  hintText: 'مثال: شركة الرواد للتجارة',
-                  prefixIcon: const Icon(Icons.business_outlined, size: 20),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: crController,
+                  keyboardType: TextInputType.number,
+                  enabled: hasCommercialRegister,
+                  decoration: InputDecoration(
+                    labelText: l10n.merchantCrField,
+                    hintText: '1010XXXXXX',
+                    prefixIcon: const Icon(Icons.badge_outlined, size: 20),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 12),
-              TextField(
-                controller: crController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: l10n.merchantCrField,
-                  hintText: '1010XXXXXX',
-                  prefixIcon: const Icon(Icons.badge_outlined, size: 20),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                CheckboxListTile(
+                  contentPadding: EdgeInsets.zero,
+                  value: hasCommercialRegister,
+                  title: Text(l10n.merchantLinkHasCommercialRegister),
+                  onChanged: (value) => setSheetState(
+                    () => hasCommercialRegister = value ?? true,
                   ),
                 ),
-              ),
-              const SizedBox(height: 12),
-              TextField(
-                controller: phoneController,
-                keyboardType: TextInputType.phone,
-                decoration: InputDecoration(
-                  labelText: l10n.merchantPhoneField,
-                  hintText: '+966 5X XXX XXXX',
-                  prefixIcon: const Icon(Icons.phone_outlined, size: 20),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                if (!hasCommercialRegister)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Text(
+                      l10n.merchantLinkLocalScopeNotice,
+                      style: const TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 11,
+                      ),
+                    ),
+                  ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: phoneController,
+                  keyboardType: TextInputType.phone,
+                  decoration: InputDecoration(
+                    labelText: l10n.merchantPhoneField,
+                    hintText: '+966 5X XXX XXXX',
+                    prefixIcon: const Icon(Icons.phone_outlined, size: 20),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(sheetContext).pop();
-                  AppSnackBar.showSuccess(
-                    context,
-                    'تم إرسال طلب ضم التاجر لنطاق إشرافك بنجاح',
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryDark,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: isSaving
+                      ? null
+                      : () async {
+                          final currentName = nameController.text.trim();
+                          final currentPhone = phoneController.text.trim();
+                          final digits = currentPhone.replaceAll(
+                            RegExp(r'[^0-9]'),
+                            '',
+                          );
+                          final currentCr = crController.text.trim();
+                          if (currentName.isEmpty ||
+                              digits.length < 9 ||
+                              (hasCommercialRegister && currentCr.isEmpty)) {
+                            AppSnackBar.showError(
+                              context,
+                              l10n.merchantLinkValidationError,
+                            );
+                            return;
+                          }
+                          final authState = context.read<AuthCubit>().state;
+                          if (authState is! AuthSuccess) {
+                            AppSnackBar.showError(
+                              context,
+                              l10n.merchantLinkSessionRequired,
+                            );
+                            return;
+                          }
+                          setSheetState(() => isSaving = true);
+                          try {
+                            final preferences =
+                                await SharedPreferences.getInstance();
+                            final key =
+                                'merchant_link_requests_${authState.user.id}';
+                            final existing = preferences.getString(key);
+                            final records = existing == null
+                                ? <dynamic>[]
+                                : jsonDecode(existing) as List<dynamic>;
+                            records.add({
+                              'merchantName': currentName,
+                              'commercialRegistration':
+                                  hasCommercialRegister ? currentCr : null,
+                              'phone': currentPhone,
+                              'createdAt': DateTime.now().toIso8601String(),
+                            });
+                            final saved = await preferences.setString(
+                              key,
+                              jsonEncode(records),
+                            );
+                            if (!saved) {
+                              throw StateError(
+                                'Could not save the merchant link request.',
+                              );
+                            }
+                            if (!sheetContext.mounted) return;
+                            Navigator.of(sheetContext).pop();
+                            AppSnackBar.showInfo(
+                              context,
+                              l10n.merchantLinkSavedLocally,
+                            );
+                          } catch (error, stackTrace) {
+                            FlutterError.reportError(
+                              FlutterErrorDetails(
+                                exception: error,
+                                stack: stackTrace,
+                                library: 'merchant supervision link request',
+                              ),
+                            );
+                            if (sheetContext.mounted) {
+                              setSheetState(() => isSaving = false);
+                              AppSnackBar.showError(
+                                context,
+                                l10n.merchantLinkSaveFailed,
+                              );
+                            }
+                          }
+                        },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primaryDark,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 0,
                   ),
-                  elevation: 0,
-                ),
-                child: Text(
-                  l10n.addNewMerchantToSupervision,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
+                  child: Text(
+                    isSaving
+                        ? l10n.merchantLinkSaving
+                        : l10n.addNewMerchantToSupervision,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
-    );
+    ).whenComplete(() {
+      nameController.dispose();
+      crController.dispose();
+      phoneController.dispose();
+    });
   }
 
   @override

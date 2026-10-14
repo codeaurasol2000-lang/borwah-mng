@@ -85,35 +85,35 @@ class _ProductReviewDetailsScreenState
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SizedBox(
-              width: double.infinity,
-              height: 54,
-              child: FilledButton.icon(
-                onPressed: isPending
-                    ? () => widget.onSubmit(
-                          product,
-                          ProductReviewStatus.approved,
-                        )
-                    : null,
-                icon: const Icon(Icons.verified_outlined, size: 20),
-                label: Text(
-                  l10n.productApproveAndPublishNow,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
+            if (isPending) ...[
+              SizedBox(
+                width: double.infinity,
+                height: 54,
+                child: FilledButton.icon(
+                  onPressed: () => widget.onSubmit(
+                    product,
+                    ProductReviewStatus.approved,
                   ),
-                ),
-                style: FilledButton.styleFrom(
-                  backgroundColor: AppColors.primaryDark,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
+                  icon: const Icon(Icons.verified_outlined, size: 20),
+                  label: Text(
+                    l10n.productApproveAndPublishNow,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
                   ),
-                  elevation: 3,
+                  style: FilledButton.styleFrom(
+                    backgroundColor: AppColors.primaryDark,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    elevation: 3,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 8),
+              const SizedBox(height: 8),
+            ],
             SizedBox(
               width: double.infinity,
               height: 46,

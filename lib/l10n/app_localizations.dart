@@ -632,6 +632,2035 @@ abstract class AppLocalizations {
   /// **'مستحقات فنيين معتمدين ومزودي الخدمات'**
   String get servicesMaintenanceWalletDesc;
 
+  /// No description provided for @servicesSupervisorRoleBadge.
+  ///
+  /// In ar, this message translates to:
+  /// **'مشرف الخدمات'**
+  String get servicesSupervisorRoleBadge;
+
+  /// No description provided for @servicesSupervisorBadgeCode.
+  ///
+  /// In ar, this message translates to:
+  /// **'#SRV-01'**
+  String get servicesSupervisorBadgeCode;
+
+  /// No description provided for @servicesSupervisorAccountName.
+  ///
+  /// In ar, this message translates to:
+  /// **'مشرف الخدمات'**
+  String get servicesSupervisorAccountName;
+
+  /// No description provided for @servicesProfileTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الملف الشخصي'**
+  String get servicesProfileTitle;
+
+  /// No description provided for @servicesProfileName.
+  ///
+  /// In ar, this message translates to:
+  /// **'م. عبد العزيز بن خالد السالم'**
+  String get servicesProfileName;
+
+  /// No description provided for @servicesProfileIdentity.
+  ///
+  /// In ar, this message translates to:
+  /// **'مشرف ميداني أول · إدارة الخدمات'**
+  String get servicesProfileIdentity;
+
+  /// No description provided for @servicesProfileCoverage.
+  ///
+  /// In ar, this message translates to:
+  /// **'النطاق: الرياض والمناطق المجاورة'**
+  String get servicesProfileCoverage;
+
+  /// No description provided for @servicesProfileAvailability.
+  ///
+  /// In ar, this message translates to:
+  /// **'على رأس العمل - متاح للمناوبة'**
+  String get servicesProfileAvailability;
+
+  /// No description provided for @servicesProfileCompletedTasks.
+  ///
+  /// In ar, this message translates to:
+  /// **'الطلبات المنجزة'**
+  String get servicesProfileCompletedTasks;
+
+  /// No description provided for @servicesProfileFieldTasks.
+  ///
+  /// In ar, this message translates to:
+  /// **'مهمة موثقة ميدانياً'**
+  String get servicesProfileFieldTasks;
+
+  /// No description provided for @servicesProfilePerformanceRating.
+  ///
+  /// In ar, this message translates to:
+  /// **'تقييم الأداء'**
+  String get servicesProfilePerformanceRating;
+
+  /// No description provided for @servicesProfileRatingDetail.
+  ///
+  /// In ar, this message translates to:
+  /// **'ممتاز · وفق آخر 120 مهمة'**
+  String get servicesProfileRatingDetail;
+
+  /// No description provided for @servicesProfileAssignmentTime.
+  ///
+  /// In ar, this message translates to:
+  /// **'متوسط زمن الإسناد'**
+  String get servicesProfileAssignmentTime;
+
+  /// No description provided for @servicesProfileMinutes.
+  ///
+  /// In ar, this message translates to:
+  /// **'دقيقة'**
+  String get servicesProfileMinutes;
+
+  /// No description provided for @servicesProfileComplaintResolution.
+  ///
+  /// In ar, this message translates to:
+  /// **'حل ومتابعة البلاغات'**
+  String get servicesProfileComplaintResolution;
+
+  /// No description provided for @servicesProfileResolutionDetail.
+  ///
+  /// In ar, this message translates to:
+  /// **'ضمن المعدل العام'**
+  String get servicesProfileResolutionDetail;
+
+  /// No description provided for @servicesProfileDemoMetricsNotice.
+  ///
+  /// In ar, this message translates to:
+  /// **'بيانات الملف ومؤشرات الأداء والأرصدة المعروضة تجريبية حتى ربط الحساب بمصدر بيانات معتمد.'**
+  String get servicesProfileDemoMetricsNotice;
+
+  /// No description provided for @servicesProfileLoadError.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر تحميل بيانات الملف المحفوظة على هذا الجهاز.'**
+  String get servicesProfileLoadError;
+
+  /// No description provided for @servicesProfileWalletTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'محفظة المستحقات والعمولات'**
+  String get servicesProfileWalletTitle;
+
+  /// No description provided for @servicesProfileWalletDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'إدارة المستحقات وسحب الأرباح حسب النظام'**
+  String get servicesProfileWalletDescription;
+
+  /// No description provided for @servicesProfileAvailableBalance.
+  ///
+  /// In ar, this message translates to:
+  /// **'الرصيد المتاح للسحب'**
+  String get servicesProfileAvailableBalance;
+
+  /// No description provided for @servicesProfilePendingDues.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيد التسوية والمراجعة'**
+  String get servicesProfilePendingDues;
+
+  /// No description provided for @servicesProfileCurrency.
+  ///
+  /// In ar, this message translates to:
+  /// **'ر.س'**
+  String get servicesProfileCurrency;
+
+  /// No description provided for @servicesProfileOpenWallet.
+  ///
+  /// In ar, this message translates to:
+  /// **'فتح المحفظة وسحب الرصيد'**
+  String get servicesProfileOpenWallet;
+
+  /// No description provided for @servicesProfileWalletDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'يمكنك مراجعة الرصيد المتاح والمستحقات قيد التسوية من صفحة المحفظة.'**
+  String get servicesProfileWalletDetails;
+
+  /// No description provided for @servicesAccountEditProfile.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعدادات الحساب والتنبيهات'**
+  String get servicesAccountEditProfile;
+
+  /// No description provided for @servicesAccountName.
+  ///
+  /// In ar, this message translates to:
+  /// **'الاسم'**
+  String get servicesAccountName;
+
+  /// No description provided for @servicesAccountPhone.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم الهاتف'**
+  String get servicesAccountPhone;
+
+  /// No description provided for @servicesAccountCoverage.
+  ///
+  /// In ar, this message translates to:
+  /// **'نطاق التغطية'**
+  String get servicesAccountCoverage;
+
+  /// No description provided for @servicesAccountSave.
+  ///
+  /// In ar, this message translates to:
+  /// **'حفظ'**
+  String get servicesAccountSave;
+
+  /// No description provided for @servicesAccountSaved.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم حفظ التغييرات على هذا الجهاز'**
+  String get servicesAccountSaved;
+
+  /// No description provided for @servicesAccountSaveError.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر حفظ التغييرات: {error}'**
+  String servicesAccountSaveError(Object error);
+
+  /// No description provided for @servicesAccountLoadError.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر تحميل بيانات الحساب المحلية.'**
+  String get servicesAccountLoadError;
+
+  /// No description provided for @servicesAccountRetry.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعادة المحاولة'**
+  String get servicesAccountRetry;
+
+  /// No description provided for @servicesAccountNameRequired.
+  ///
+  /// In ar, this message translates to:
+  /// **'يرجى إدخال الاسم.'**
+  String get servicesAccountNameRequired;
+
+  /// No description provided for @servicesAccountLocalOnly.
+  ///
+  /// In ar, this message translates to:
+  /// **'هذه البيانات محفوظة على هذا الجهاز فقط ولا تُحدّث الحساب على الخادم.'**
+  String get servicesAccountLocalOnly;
+
+  /// No description provided for @servicesAccountNotificationsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تفضيلات التنبيهات'**
+  String get servicesAccountNotificationsTitle;
+
+  /// No description provided for @servicesAccountAssignmentAlerts.
+  ///
+  /// In ar, this message translates to:
+  /// **'تنبيهات إسناد الخدمات'**
+  String get servicesAccountAssignmentAlerts;
+
+  /// No description provided for @servicesAccountComplaintAlerts.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحديثات الشكاوى'**
+  String get servicesAccountComplaintAlerts;
+
+  /// No description provided for @servicesAccountSystemAlerts.
+  ///
+  /// In ar, this message translates to:
+  /// **'التنبيهات الإدارية'**
+  String get servicesAccountSystemAlerts;
+
+  /// No description provided for @servicesAccountPreferencesLocalOnly.
+  ///
+  /// In ar, this message translates to:
+  /// **'التفضيلات محفوظة محليًا؛ لم يتم ربطها بخدمة إشعارات.'**
+  String get servicesAccountPreferencesLocalOnly;
+
+  /// No description provided for @servicesAccountWalletTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'المحفظة والعمليات المالية'**
+  String get servicesAccountWalletTitle;
+
+  /// No description provided for @servicesAccountWalletUnavailable.
+  ///
+  /// In ar, this message translates to:
+  /// **'المحفظة غير متصلة'**
+  String get servicesAccountWalletUnavailable;
+
+  /// No description provided for @servicesAccountWalletUnavailableDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'يلزم ربط خدمة مالية معتمدة لعرض الرصيد أو إرسال طلبات السحب. لا تُجرى معاملات من هذه النسخة.'**
+  String get servicesAccountWalletUnavailableDetails;
+
+  /// No description provided for @servicesAccountActivityTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجل نشاط الحساب'**
+  String get servicesAccountActivityTitle;
+
+  /// No description provided for @servicesAccountNoActivity.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد أنشطة محفوظة حتى الآن.'**
+  String get servicesAccountNoActivity;
+
+  /// No description provided for @servicesAccountActivityLocalOnly.
+  ///
+  /// In ar, this message translates to:
+  /// **'السجل محلي على هذا الجهاز، وليس سجل تدقيق مركزيًا.'**
+  String get servicesAccountActivityLocalOnly;
+
+  /// No description provided for @servicesAccountActivityProfileUpdated.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تعديل بيانات الملف'**
+  String get servicesAccountActivityProfileUpdated;
+
+  /// No description provided for @servicesAccountActivityPreferencesUpdated.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تعديل تفضيلات التنبيهات'**
+  String get servicesAccountActivityPreferencesUpdated;
+
+  /// No description provided for @servicesAccountActivityOther.
+  ///
+  /// In ar, this message translates to:
+  /// **'نشاط الحساب'**
+  String get servicesAccountActivityOther;
+
+  /// No description provided for @servicesAccountLogoutTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تسجيل الخروج'**
+  String get servicesAccountLogoutTitle;
+
+  /// No description provided for @servicesAccountLogoutMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'هل تريد تسجيل الخروج من حساب مشرف الخدمات؟'**
+  String get servicesAccountLogoutMessage;
+
+  /// No description provided for @servicesWalletBack.
+  ///
+  /// In ar, this message translates to:
+  /// **'العودة'**
+  String get servicesWalletBack;
+
+  /// No description provided for @servicesWalletTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'محفظتي والعمليات المالية'**
+  String get servicesWalletTitle;
+
+  /// No description provided for @servicesWalletSummaryTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملخص المحفظة'**
+  String get servicesWalletSummaryTitle;
+
+  /// No description provided for @servicesWalletLiveUpdate.
+  ///
+  /// In ar, this message translates to:
+  /// **'بيانات تجريبية'**
+  String get servicesWalletLiveUpdate;
+
+  /// No description provided for @servicesWalletTotalBalance.
+  ///
+  /// In ar, this message translates to:
+  /// **'إجمالي الرصيد'**
+  String get servicesWalletTotalBalance;
+
+  /// No description provided for @servicesWalletAvailable.
+  ///
+  /// In ar, this message translates to:
+  /// **'الرصيد المتاح'**
+  String get servicesWalletAvailable;
+
+  /// No description provided for @servicesWalletReadyForTransfer.
+  ///
+  /// In ar, this message translates to:
+  /// **'جاهز للتحويل'**
+  String get servicesWalletReadyForTransfer;
+
+  /// No description provided for @servicesWalletPending.
+  ///
+  /// In ar, this message translates to:
+  /// **'مستحقات معلقة'**
+  String get servicesWalletPending;
+
+  /// No description provided for @servicesWalletExpectedThisWeek.
+  ///
+  /// In ar, this message translates to:
+  /// **'متوقعة هذا الأسبوع'**
+  String get servicesWalletExpectedThisWeek;
+
+  /// No description provided for @servicesWalletMonthlyCommissions.
+  ///
+  /// In ar, this message translates to:
+  /// **'عمولات الشهر الحالي'**
+  String get servicesWalletMonthlyCommissions;
+
+  /// No description provided for @servicesWalletWithdrawalTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب سحب رصيد'**
+  String get servicesWalletWithdrawalTitle;
+
+  /// No description provided for @servicesWalletAmountLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'المبلغ المراد سحبه'**
+  String get servicesWalletAmountLabel;
+
+  /// No description provided for @servicesWalletMaxAmount.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحد الأقصى'**
+  String get servicesWalletMaxAmount;
+
+  /// No description provided for @servicesWalletMethodTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر طريقة التحويل'**
+  String get servicesWalletMethodTitle;
+
+  /// No description provided for @servicesWalletInstapay.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحويل عبر إنستاباي'**
+  String get servicesWalletInstapay;
+
+  /// No description provided for @servicesWalletInstapayDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحويل فوري إلى الحساب'**
+  String get servicesWalletInstapayDetails;
+
+  /// No description provided for @servicesWalletInstapayId.
+  ///
+  /// In ar, this message translates to:
+  /// **'معرّف إنستاباي'**
+  String get servicesWalletInstapayId;
+
+  /// No description provided for @servicesWalletMobileWallet.
+  ///
+  /// In ar, this message translates to:
+  /// **'محفظة هاتفية'**
+  String get servicesWalletMobileWallet;
+
+  /// No description provided for @servicesWalletMobileWalletDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحويل إلى رقم الهاتف'**
+  String get servicesWalletMobileWalletDetails;
+
+  /// No description provided for @servicesWalletMobileNumber.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم الهاتف'**
+  String get servicesWalletMobileNumber;
+
+  /// No description provided for @servicesWalletBank.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحويل بنكي'**
+  String get servicesWalletBank;
+
+  /// No description provided for @servicesWalletBankDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'إيداع إلى الحساب البنكي'**
+  String get servicesWalletBankDetails;
+
+  /// No description provided for @servicesWalletBankAccount.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم الحساب البنكي'**
+  String get servicesWalletBankAccount;
+
+  /// No description provided for @servicesWalletReviewNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'يتم تسجيل الطلبات لمراجعة المشرف المالي. لن يتم التحويل أو الإيداع قبل الموافقة وتكامل خدمة الدفع.'**
+  String get servicesWalletReviewNote;
+
+  /// No description provided for @servicesWalletSubmit.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال طلب السحب'**
+  String get servicesWalletSubmit;
+
+  /// No description provided for @financeWalletWithdrawal.
+  ///
+  /// In ar, this message translates to:
+  /// **'سحب'**
+  String get financeWalletWithdrawal;
+
+  /// No description provided for @financeWalletDeposit.
+  ///
+  /// In ar, this message translates to:
+  /// **'إيداع'**
+  String get financeWalletDeposit;
+
+  /// No description provided for @financeWalletDepositTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب إيداع في المحفظة'**
+  String get financeWalletDepositTitle;
+
+  /// No description provided for @financeWalletSubmitDeposit.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال طلب إيداع'**
+  String get financeWalletSubmitDeposit;
+
+  /// No description provided for @financeWalletWithdrawalNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيظل الطلب قيد المراجعة ولن يتم تحويل أي أموال حتى موافقة المشرف المالي.'**
+  String get financeWalletWithdrawalNote;
+
+  /// No description provided for @financeWalletDepositNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'لن تتم إضافة المبلغ إلى رصيدك حتى موافقة المشرف المالي.'**
+  String get financeWalletDepositNote;
+
+  /// No description provided for @financeWalletConfirmWithdrawal.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد طلب السحب'**
+  String get financeWalletConfirmWithdrawal;
+
+  /// No description provided for @financeWalletConfirmDeposit.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد طلب الإيداع'**
+  String get financeWalletConfirmDeposit;
+
+  /// No description provided for @financeWalletConfirmWithdrawalMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'هل تريد إرسال طلب سحب بقيمة {amount} {currency} إلى المشرف المالي؟'**
+  String financeWalletConfirmWithdrawalMessage(Object amount, Object currency);
+
+  /// No description provided for @financeWalletConfirmDepositMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'هل تريد إرسال طلب إيداع بقيمة {amount} {currency} إلى المشرف المالي؟'**
+  String financeWalletConfirmDepositMessage(Object amount, Object currency);
+
+  /// No description provided for @financeWalletInvalidDepositAmount.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل مبلغًا صحيحًا أكبر من صفر.'**
+  String get financeWalletInvalidDepositAmount;
+
+  /// No description provided for @financeWalletWithdrawalRequestSent.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إرسال طلب السحب إلى المشرف المالي، والطلب قيد المراجعة.'**
+  String get financeWalletWithdrawalRequestSent;
+
+  /// No description provided for @financeWalletDepositRequestSent.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إرسال طلب الإيداع إلى المشرف المالي، والطلب قيد المراجعة.'**
+  String get financeWalletDepositRequestSent;
+
+  /// No description provided for @financeWalletRequestFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر إرسال الطلب المالي. حاول مرة أخرى.'**
+  String get financeWalletRequestFailed;
+
+  /// No description provided for @financeWalletHistoryLoadError.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر تحميل طلباتك المالية. اضغط لإعادة المحاولة.'**
+  String get financeWalletHistoryLoadError;
+
+  /// No description provided for @financeWalletNoRequests.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم ترسل أي طلبات مالية حتى الآن.'**
+  String get financeWalletNoRequests;
+
+  /// No description provided for @financeWalletPendingNotification.
+  ///
+  /// In ar, this message translates to:
+  /// **'لديك {count} طلبات مالية جديدة من المشرفين بانتظار المراجعة.'**
+  String financeWalletPendingNotification(Object count);
+
+  /// No description provided for @financeOperationType.
+  ///
+  /// In ar, this message translates to:
+  /// **'نوع العملية'**
+  String get financeOperationType;
+
+  /// No description provided for @financeSourceAccount.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحساب صاحب الطلب'**
+  String get financeSourceAccount;
+
+  /// No description provided for @financeRequestApprovalTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'اعتماد الطلب المالي'**
+  String get financeRequestApprovalTitle;
+
+  /// No description provided for @financeRequestRejectionTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'رفض الطلب المالي'**
+  String get financeRequestRejectionTitle;
+
+  /// No description provided for @financeRequestApprovalConfirmation.
+  ///
+  /// In ar, this message translates to:
+  /// **'هل تريد اعتماد طلب {operation} الخاص بـ {name} بقيمة {amount}؟'**
+  String financeRequestApprovalConfirmation(
+      Object operation, Object name, Object amount);
+
+  /// No description provided for @financeRequestApproved.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم اعتماد الطلب. يتطلب تنفيذ التحويل أو إضافة الرصيد تكامل خدمة الدفع.'**
+  String get financeRequestApproved;
+
+  /// No description provided for @financeRequestApprovedBadge.
+  ///
+  /// In ar, this message translates to:
+  /// **'معتمد'**
+  String get financeRequestApprovedBadge;
+
+  /// No description provided for @financeRequestRejected.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم رفض الطلب المالي.'**
+  String get financeRequestRejected;
+
+  /// No description provided for @financeRequestRejectedBadge.
+  ///
+  /// In ar, this message translates to:
+  /// **'مرفوض'**
+  String get financeRequestRejectedBadge;
+
+  /// No description provided for @financeRequestFrozen.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تجميد الطلب المالي للتحقيق.'**
+  String get financeRequestFrozen;
+
+  /// No description provided for @financeRequestDecisionFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر حفظ القرار، ولم يتم تغيير الطلب.'**
+  String get financeRequestDecisionFailed;
+
+  /// No description provided for @servicesWalletHistoryTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجل العمليات المالية'**
+  String get servicesWalletHistoryTitle;
+
+  /// No description provided for @servicesWalletFullStatement.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض الكل'**
+  String get servicesWalletFullStatement;
+
+  /// No description provided for @servicesWalletStatementNotice.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجل الطلبات محفوظ على هذا الجهاز فقط وغير متزامن مع خادم أو خدمة مالية.'**
+  String get servicesWalletStatementNotice;
+
+  /// No description provided for @servicesWalletHistoryInstapay.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحويل إنستاباي'**
+  String get servicesWalletHistoryInstapay;
+
+  /// No description provided for @servicesWalletHistoryOneDate.
+  ///
+  /// In ar, this message translates to:
+  /// **'اليوم · 10:30 ص'**
+  String get servicesWalletHistoryOneDate;
+
+  /// No description provided for @servicesWalletStatusCompleted.
+  ///
+  /// In ar, this message translates to:
+  /// **'مكتمل'**
+  String get servicesWalletStatusCompleted;
+
+  /// No description provided for @servicesWalletHistoryBank.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحويل بنكي'**
+  String get servicesWalletHistoryBank;
+
+  /// No description provided for @servicesWalletHistoryTwoDate.
+  ///
+  /// In ar, this message translates to:
+  /// **'أمس · 02:15 م'**
+  String get servicesWalletHistoryTwoDate;
+
+  /// No description provided for @servicesWalletHistoryReview.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب سحب'**
+  String get servicesWalletHistoryReview;
+
+  /// No description provided for @servicesWalletHistoryThreeDate.
+  ///
+  /// In ar, this message translates to:
+  /// **'18 مايو 2025 · 11:20 ص'**
+  String get servicesWalletHistoryThreeDate;
+
+  /// No description provided for @servicesWalletHistoryNewRequest.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب سحب جديد'**
+  String get servicesWalletHistoryNewRequest;
+
+  /// No description provided for @servicesWalletHistoryJustNow.
+  ///
+  /// In ar, this message translates to:
+  /// **'الآن'**
+  String get servicesWalletHistoryJustNow;
+
+  /// No description provided for @servicesWalletStatusReview.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيد المراجعة'**
+  String get servicesWalletStatusReview;
+
+  /// No description provided for @servicesWalletComplianceTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تنويه رقابي'**
+  String get servicesWalletComplianceTitle;
+
+  /// No description provided for @servicesWalletComplianceBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأرصدة المعروضة تجريبية. تُحفظ الطلبات محليًا لموافقة المشرف المالي؛ ولا يحدث تحويل أو إيداع فعلي أو إشعار فوري أو إرسال إلى خادم.'**
+  String get servicesWalletComplianceBody;
+
+  /// No description provided for @servicesWalletAmountError.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل مبلغًا أكبر من صفر ولا يتجاوز الرصيد المتاح.'**
+  String get servicesWalletAmountError;
+
+  /// No description provided for @servicesWalletDestinationError.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل بيانات الوجهة قبل إرسال الطلب.'**
+  String get servicesWalletDestinationError;
+
+  /// No description provided for @servicesWalletConfirmTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد طلب السحب'**
+  String get servicesWalletConfirmTitle;
+
+  /// No description provided for @servicesWalletConfirmMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'هل تريد إضافة طلب سحب بقيمة {amount} {currency} إلى السجل التجريبي؟'**
+  String servicesWalletConfirmMessage(Object amount, Object currency);
+
+  /// No description provided for @servicesWalletRequestSent.
+  ///
+  /// In ar, this message translates to:
+  /// **'أُضيف الطلب إلى السجل التجريبي فقط، ولم يُرسل إلى جهة مالية.'**
+  String get servicesWalletRequestSent;
+
+  /// No description provided for @servicesProfileAdministrationTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'البيانات الإدارية والاعتمادات'**
+  String get servicesProfileAdministrationTitle;
+
+  /// No description provided for @servicesProfileDelegationTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'التفويض المهني واعتماد الإشراف'**
+  String get servicesProfileDelegationTitle;
+
+  /// No description provided for @servicesProfileDelegationDetail.
+  ///
+  /// In ar, this message translates to:
+  /// **'ساري المفعول حتى 1447/06/30 هـ'**
+  String get servicesProfileDelegationDetail;
+
+  /// No description provided for @servicesProfileActive.
+  ///
+  /// In ar, this message translates to:
+  /// **'مفعل'**
+  String get servicesProfileActive;
+
+  /// No description provided for @servicesProfileNotificationsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تنبيهات البلاغات الفورية'**
+  String get servicesProfileNotificationsTitle;
+
+  /// No description provided for @servicesProfileNotificationsDetail.
+  ///
+  /// In ar, this message translates to:
+  /// **'إشعار فوري للمهام ذات الأولوية العالية'**
+  String get servicesProfileNotificationsDetail;
+
+  /// No description provided for @servicesProfileEnabled.
+  ///
+  /// In ar, this message translates to:
+  /// **'مفعل'**
+  String get servicesProfileEnabled;
+
+  /// No description provided for @servicesProfileAuditTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجل نشاطات المشرف والتدقيق'**
+  String get servicesProfileAuditTitle;
+
+  /// No description provided for @servicesProfileAuditDetail.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجل الإجراءات ومراجعات التشغيل الميدانية'**
+  String get servicesProfileAuditDetail;
+
+  /// No description provided for @servicesProfileLogout.
+  ///
+  /// In ar, this message translates to:
+  /// **'تسجيل الخروج من الجلسة الإشرافية'**
+  String get servicesProfileLogout;
+
+  /// No description provided for @servicesProfileFooter.
+  ///
+  /// In ar, this message translates to:
+  /// **'بوابة إدارة الخدمات الميدانية · الإصدار 2.4.1'**
+  String get servicesProfileFooter;
+
+  /// No description provided for @servicesReviewTab.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيد المراجعة'**
+  String get servicesReviewTab;
+
+  /// No description provided for @servicesProvidersTab.
+  ///
+  /// In ar, this message translates to:
+  /// **'مقدمو الخدمة'**
+  String get servicesProvidersTab;
+
+  /// No description provided for @servicesComplaintsTab.
+  ///
+  /// In ar, this message translates to:
+  /// **'الشكاوى'**
+  String get servicesComplaintsTab;
+
+  /// No description provided for @servicesReviewTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلبات الخدمات قيد المراجعة'**
+  String get servicesReviewTitle;
+
+  /// No description provided for @servicesReviewSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'فحص الطلبات والتحقق من الأعمال الفنية وإسناد التشغيل'**
+  String get servicesReviewSubtitle;
+
+  /// No description provided for @servicesNewRequestsCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count} جديدة'**
+  String servicesNewRequestsCount(Object count);
+
+  /// No description provided for @servicesCompletedToday.
+  ///
+  /// In ar, this message translates to:
+  /// **'المعتمد اليوم'**
+  String get servicesCompletedToday;
+
+  /// No description provided for @servicesAwaitingDecision.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار القرار'**
+  String get servicesAwaitingDecision;
+
+  /// No description provided for @servicesFilterAll.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكل'**
+  String get servicesFilterAll;
+
+  /// No description provided for @servicesFilterMaintenance.
+  ///
+  /// In ar, this message translates to:
+  /// **'صيانة وأجهزة'**
+  String get servicesFilterMaintenance;
+
+  /// No description provided for @servicesFilterElectrical.
+  ///
+  /// In ar, this message translates to:
+  /// **'كهرباء وتمديدات'**
+  String get servicesFilterElectrical;
+
+  /// No description provided for @servicesFilterMoving.
+  ///
+  /// In ar, this message translates to:
+  /// **'نقل وترتيب'**
+  String get servicesFilterMoving;
+
+  /// No description provided for @servicesRequestsEmpty.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد طلبات مطابقة لهذا التصنيف.'**
+  String get servicesRequestsEmpty;
+
+  /// No description provided for @servicesUnderReview.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيد المراجعة'**
+  String get servicesUnderReview;
+
+  /// No description provided for @servicesUrgent.
+  ///
+  /// In ar, this message translates to:
+  /// **'عاجل'**
+  String get servicesUrgent;
+
+  /// No description provided for @servicesVerifiedProvider.
+  ///
+  /// In ar, this message translates to:
+  /// **'فني موثق'**
+  String get servicesVerifiedProvider;
+
+  /// No description provided for @servicesWorkDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'بيان الأعمال المطلوبة:'**
+  String get servicesWorkDescription;
+
+  /// No description provided for @servicesCurrency.
+  ///
+  /// In ar, this message translates to:
+  /// **'ر.س'**
+  String get servicesCurrency;
+
+  /// No description provided for @servicesUrgentNotice.
+  ///
+  /// In ar, this message translates to:
+  /// **'تنبيه تأخير ميداني: يرجى مراجعة الموعد والتواصل مع مزود الخدمة.'**
+  String get servicesUrgentNotice;
+
+  /// No description provided for @servicesApproveAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'قبول الطلب'**
+  String get servicesApproveAction;
+
+  /// No description provided for @servicesRejectAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'رفض الطلب'**
+  String get servicesRejectAction;
+
+  /// No description provided for @servicesViewDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'معاينة تفاصيل الطلب الفنية'**
+  String get servicesViewDetails;
+
+  /// No description provided for @servicesApproveTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'هل أنت متأكد من قبول الطلب؟'**
+  String get servicesApproveTitle;
+
+  /// No description provided for @servicesRejectTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'رفض طلب الخدمة'**
+  String get servicesRejectTitle;
+
+  /// No description provided for @servicesApproveMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيتم قبول الطلب وإزالته من قائمة المراجعة الحالية.'**
+  String get servicesApproveMessage;
+
+  /// No description provided for @servicesRejectMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيتم رفض الطلب وإزالته من قائمة المراجعة الحالية.'**
+  String get servicesRejectMessage;
+
+  /// No description provided for @servicesRequestApproved.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تحديث حالة الطلب في قائمة المراجعة.'**
+  String get servicesRequestApproved;
+
+  /// No description provided for @servicesRequestRejected.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم رفض الطلب.'**
+  String get servicesRequestRejected;
+
+  /// No description provided for @servicesRequestRejectedWithReason.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم رفض الطلب. السبب: {reason}'**
+  String servicesRequestRejectedWithReason(String reason);
+
+  /// No description provided for @servicesFeaturedRequest.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعلان مميز'**
+  String get servicesFeaturedRequest;
+
+  /// No description provided for @servicesCommentAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعليق'**
+  String get servicesCommentAction;
+
+  /// No description provided for @servicesCommentTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إضافة تعليق على الطلب'**
+  String get servicesCommentTitle;
+
+  /// No description provided for @servicesCommentHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب تعليقك أو ملاحظاتك على الطلب...'**
+  String get servicesCommentHint;
+
+  /// No description provided for @servicesCommentSave.
+  ///
+  /// In ar, this message translates to:
+  /// **'حفظ التعليق'**
+  String get servicesCommentSave;
+
+  /// No description provided for @servicesCommentSaved.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم حفظ التعليق على الطلب.'**
+  String get servicesCommentSaved;
+
+  /// No description provided for @servicesDecisionProvider.
+  ///
+  /// In ar, this message translates to:
+  /// **'مقدم الخدمة'**
+  String get servicesDecisionProvider;
+
+  /// No description provided for @servicesDecisionDiagnosticFee.
+  ///
+  /// In ar, this message translates to:
+  /// **'التكلفة المقدرة'**
+  String get servicesDecisionDiagnosticFee;
+
+  /// No description provided for @servicesApprovalNotification.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيتم إشعار العميل ومقدم الخدمة بقبول الطلب وإتاحته للتنفيذ.'**
+  String get servicesApprovalNotification;
+
+  /// No description provided for @servicesApproveConfirmPublish.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد النشر والقبول'**
+  String get servicesApproveConfirmPublish;
+
+  /// No description provided for @servicesRejectionQuickReasons.
+  ///
+  /// In ar, this message translates to:
+  /// **'نماذج أسباب سريعة'**
+  String get servicesRejectionQuickReasons;
+
+  /// No description provided for @servicesRejectionReasonScope.
+  ///
+  /// In ar, this message translates to:
+  /// **'خارج النطاق الجغرافي'**
+  String get servicesRejectionReasonScope;
+
+  /// No description provided for @servicesRejectionReasonDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'بيانات العمل غير مكتملة'**
+  String get servicesRejectionReasonDetails;
+
+  /// No description provided for @servicesRejectionReasonTerms.
+  ///
+  /// In ar, this message translates to:
+  /// **'مخالفة شروط الخدمة'**
+  String get servicesRejectionReasonTerms;
+
+  /// No description provided for @servicesRejectionReasonLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'سبب الرفض الإلزامي'**
+  String get servicesRejectionReasonLabel;
+
+  /// No description provided for @servicesRejectionReasonHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب سبب الرفض بالتفصيل...'**
+  String get servicesRejectionReasonHint;
+
+  /// No description provided for @servicesRejectionAuditNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيتم تسجيل سبب الرفض وإشعار العميل به مع توثيق الإجراء في سجل الطلب.'**
+  String get servicesRejectionAuditNote;
+
+  /// No description provided for @servicesRejectConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد رفض الطلب'**
+  String get servicesRejectConfirm;
+
+  /// No description provided for @servicesProvidersComingSoon.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيتم تجهيز صفحة إدارة واعتماد مقدمي الخدمة في المرحلة التالية.'**
+  String get servicesProvidersComingSoon;
+
+  /// No description provided for @servicesProvidersPortalBadge.
+  ///
+  /// In ar, this message translates to:
+  /// **'بوابة الإسناد والفرز الميداني'**
+  String get servicesProvidersPortalBadge;
+
+  /// No description provided for @servicesProvidersTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'مقدمو الخدمات المتاحين'**
+  String get servicesProvidersTitle;
+
+  /// No description provided for @servicesProvidersSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'قاعدة بيانات مزودي الخدمة المعتمدين والموثوقين والمهيئين للمطابقة والإسناد المباشر'**
+  String get servicesProvidersSubtitle;
+
+  /// No description provided for @servicesCertifiedProviders.
+  ///
+  /// In ar, this message translates to:
+  /// **'مزود معتمد'**
+  String get servicesCertifiedProviders;
+
+  /// No description provided for @servicesAvailableNow.
+  ///
+  /// In ar, this message translates to:
+  /// **'متاح الآن'**
+  String get servicesAvailableNow;
+
+  /// No description provided for @servicesCommitmentRate.
+  ///
+  /// In ar, this message translates to:
+  /// **'نسبة الالتزام'**
+  String get servicesCommitmentRate;
+
+  /// No description provided for @servicesProvidersSearchHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابحث بالاسم، السجل التجاري، التخصص أو الحي...'**
+  String get servicesProvidersSearchHint;
+
+  /// No description provided for @servicesProvidersClearSearch.
+  ///
+  /// In ar, this message translates to:
+  /// **'مسح البحث'**
+  String get servicesProvidersClearSearch;
+
+  /// No description provided for @servicesProvidersFilterPlumbing.
+  ///
+  /// In ar, this message translates to:
+  /// **'سباكة'**
+  String get servicesProvidersFilterPlumbing;
+
+  /// No description provided for @servicesProvidersEmpty.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يوجد مقدمو خدمة يطابقون البحث أو التصنيف المحدد.'**
+  String get servicesProvidersEmpty;
+
+  /// No description provided for @servicesProvidersAvailable.
+  ///
+  /// In ar, this message translates to:
+  /// **'متاح فوراً'**
+  String get servicesProvidersAvailable;
+
+  /// No description provided for @servicesProvidersBusy.
+  ///
+  /// In ar, this message translates to:
+  /// **'في مهمة حالياً'**
+  String get servicesProvidersBusy;
+
+  /// No description provided for @servicesProvidersCommercialRegister.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجل تجاري موثق'**
+  String get servicesProvidersCommercialRegister;
+
+  /// No description provided for @servicesProvidersLicense.
+  ///
+  /// In ar, this message translates to:
+  /// **'ترخيص مهني معتمد'**
+  String get servicesProvidersLicense;
+
+  /// No description provided for @servicesProvidersServiceTerms.
+  ///
+  /// In ar, this message translates to:
+  /// **'استجابة خلال 15 دقيقة'**
+  String get servicesProvidersServiceTerms;
+
+  /// No description provided for @servicesProvidersExecutionWindow.
+  ///
+  /// In ar, this message translates to:
+  /// **'متاح بعد ساعتين (03:30 م تقريباً)'**
+  String get servicesProvidersExecutionWindow;
+
+  /// No description provided for @servicesProvidersTasksCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count} مهمة منجزة'**
+  String servicesProvidersTasksCount(Object count);
+
+  /// No description provided for @servicesProvidersCommitment.
+  ///
+  /// In ar, this message translates to:
+  /// **'التزام {rate}'**
+  String servicesProvidersCommitment(Object rate);
+
+  /// No description provided for @servicesProvidersViewProfile.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض ملف مقدم الخدمة وسجله'**
+  String get servicesProvidersViewProfile;
+
+  /// No description provided for @servicesProvidersGovernanceTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'حوكمة بيانات وسجلات المزودين'**
+  String get servicesProvidersGovernanceTitle;
+
+  /// No description provided for @servicesProvidersGovernanceMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'صلاحية المشرف الميداني تقتصر على الفرز والمطابقة وإسناد الطلبات. تعديل السجلات الثابتة أو اعتماد مزودين جدد يتطلب تفويضاً إلكترونياً لإدارة شؤون المزودين والتراخيص المركزية.'**
+  String get servicesProvidersGovernanceMessage;
+
+  /// No description provided for @servicesProvidersSpecialty.
+  ///
+  /// In ar, this message translates to:
+  /// **'التخصص الفني'**
+  String get servicesProvidersSpecialty;
+
+  /// No description provided for @servicesProvidersRegisteredSkills.
+  ///
+  /// In ar, this message translates to:
+  /// **'المهارات المسجلة'**
+  String get servicesProvidersRegisteredSkills;
+
+  /// No description provided for @servicesProvidersCoverage.
+  ///
+  /// In ar, this message translates to:
+  /// **'نطاق التغطية'**
+  String get servicesProvidersCoverage;
+
+  /// No description provided for @servicesProvidersRating.
+  ///
+  /// In ar, this message translates to:
+  /// **'تقييم العملاء'**
+  String get servicesProvidersRating;
+
+  /// No description provided for @servicesProvidersCompletedTasks.
+  ///
+  /// In ar, this message translates to:
+  /// **'المهام المكتملة'**
+  String get servicesProvidersCompletedTasks;
+
+  /// No description provided for @servicesProvidersSampleProfileNotice.
+  ///
+  /// In ar, this message translates to:
+  /// **'بيانات الملف والسجل المعروض تجريبية وتحتاج ربطها ببيانات مزودي الخدمة.'**
+  String get servicesProvidersSampleProfileNotice;
+
+  /// No description provided for @servicesProviderProfileTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الملف والسجل المهني للمزود'**
+  String get servicesProviderProfileTitle;
+
+  /// No description provided for @servicesProviderProfileRegistryNumber.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم المزود'**
+  String get servicesProviderProfileRegistryNumber;
+
+  /// No description provided for @servicesProviderProfileVerified.
+  ///
+  /// In ar, this message translates to:
+  /// **'بيانات المزود واعتماداته موثقة'**
+  String get servicesProviderProfileVerified;
+
+  /// No description provided for @servicesProviderProfileFeatured.
+  ///
+  /// In ar, this message translates to:
+  /// **'مزود مميز'**
+  String get servicesProviderProfileFeatured;
+
+  /// No description provided for @servicesProviderProfileNeedsReview.
+  ///
+  /// In ar, this message translates to:
+  /// **'يحتاج إلى مراجعة'**
+  String get servicesProviderProfileNeedsReview;
+
+  /// No description provided for @servicesProviderProfileCall.
+  ///
+  /// In ar, this message translates to:
+  /// **'اتصال'**
+  String get servicesProviderProfileCall;
+
+  /// No description provided for @servicesProviderProfileChat.
+  ///
+  /// In ar, this message translates to:
+  /// **'محادثة'**
+  String get servicesProviderProfileChat;
+
+  /// No description provided for @servicesProviderProfileCallUnavailable.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر بدء الاتصال من هذا الجهاز.'**
+  String get servicesProviderProfileCallUnavailable;
+
+  /// No description provided for @servicesProviderProfileCertifications.
+  ///
+  /// In ar, this message translates to:
+  /// **'التراخيص والاعتمادات'**
+  String get servicesProviderProfileCertifications;
+
+  /// No description provided for @servicesProviderProfileSpecialties.
+  ///
+  /// In ar, this message translates to:
+  /// **'التخصصات وفرق العمل'**
+  String get servicesProviderProfileSpecialties;
+
+  /// No description provided for @servicesProviderProfileFieldTeam.
+  ///
+  /// In ar, this message translates to:
+  /// **'فريق العمل الميداني'**
+  String get servicesProviderProfileFieldTeam;
+
+  /// No description provided for @servicesProviderProfileApprovedTeam.
+  ///
+  /// In ar, this message translates to:
+  /// **'فريق معتمد ومتاح للإسناد'**
+  String get servicesProviderProfileApprovedTeam;
+
+  /// No description provided for @servicesProviderProfileRecentTasks.
+  ///
+  /// In ar, this message translates to:
+  /// **'أحدث المهام والعمليات المنجزة'**
+  String get servicesProviderProfileRecentTasks;
+
+  /// No description provided for @servicesProviderProfileTaskDetail.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تنفيذ الخدمة ومراجعتها من العميل.'**
+  String get servicesProviderProfileTaskDetail;
+
+  /// No description provided for @servicesProviderProfileTaskCompleted.
+  ///
+  /// In ar, this message translates to:
+  /// **'مكتمل'**
+  String get servicesProviderProfileTaskCompleted;
+
+  /// No description provided for @servicesProviderProfileTaskRecord.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض السجل'**
+  String get servicesProviderProfileTaskRecord;
+
+  /// No description provided for @servicesProviderProfileCompletedTasksDetail.
+  ///
+  /// In ar, this message translates to:
+  /// **'مهمة موثقة'**
+  String get servicesProviderProfileCompletedTasksDetail;
+
+  /// No description provided for @servicesProviderProfileRatingDetail.
+  ///
+  /// In ar, this message translates to:
+  /// **'تقييم العملاء'**
+  String get servicesProviderProfileRatingDetail;
+
+  /// No description provided for @servicesProviderProfileCommitmentDetail.
+  ///
+  /// In ar, this message translates to:
+  /// **'نسبة الالتزام بالمواعيد'**
+  String get servicesProviderProfileCommitmentDetail;
+
+  /// No description provided for @servicesProviderProfileResponseTime.
+  ///
+  /// In ar, this message translates to:
+  /// **'سرعة الاستجابة'**
+  String get servicesProviderProfileResponseTime;
+
+  /// No description provided for @servicesProviderProfileMinutes.
+  ///
+  /// In ar, this message translates to:
+  /// **'دقيقة'**
+  String get servicesProviderProfileMinutes;
+
+  /// No description provided for @servicesChatsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'محادثات الخدمات'**
+  String get servicesChatsTitle;
+
+  /// No description provided for @servicesComplaintsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'شكاوى وبلاغات الخدمات'**
+  String get servicesComplaintsTitle;
+
+  /// No description provided for @servicesComplaintsSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'معالجة النزاعات الميدانية وضمان جودة التنفيذ وإجراءات الضمان'**
+  String get servicesComplaintsSubtitle;
+
+  /// No description provided for @servicesComplaintActive.
+  ///
+  /// In ar, this message translates to:
+  /// **'الشكاوى النشطة'**
+  String get servicesComplaintActive;
+
+  /// No description provided for @servicesComplaintUrgent.
+  ///
+  /// In ar, this message translates to:
+  /// **'عاجلة'**
+  String get servicesComplaintUrgent;
+
+  /// No description provided for @servicesComplaintPriorityMedium.
+  ///
+  /// In ar, this message translates to:
+  /// **'متوسطة الأولوية'**
+  String get servicesComplaintPriorityMedium;
+
+  /// No description provided for @servicesComplaintResolutionTime.
+  ///
+  /// In ar, this message translates to:
+  /// **'معدل الحل'**
+  String get servicesComplaintResolutionTime;
+
+  /// No description provided for @servicesComplaintMinutes.
+  ///
+  /// In ar, this message translates to:
+  /// **'دقيقة'**
+  String get servicesComplaintMinutes;
+
+  /// No description provided for @servicesComplaintSatisfaction.
+  ///
+  /// In ar, this message translates to:
+  /// **'رضا العملاء'**
+  String get servicesComplaintSatisfaction;
+
+  /// No description provided for @servicesComplaintApproved.
+  ///
+  /// In ar, this message translates to:
+  /// **'رضا معتمد'**
+  String get servicesComplaintApproved;
+
+  /// No description provided for @servicesComplaintSearchHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'بحث برقم الشكوى أو اسم العميل أو المزود...'**
+  String get servicesComplaintSearchHint;
+
+  /// No description provided for @servicesComplaintFilterAll.
+  ///
+  /// In ar, this message translates to:
+  /// **'الكل'**
+  String get servicesComplaintFilterAll;
+
+  /// No description provided for @servicesComplaintFilterInvestigating.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيد الفحص'**
+  String get servicesComplaintFilterInvestigating;
+
+  /// No description provided for @servicesComplaintFilterWaiting.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار الرد'**
+  String get servicesComplaintFilterWaiting;
+
+  /// No description provided for @servicesComplaintFilterClosed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم الحل'**
+  String get servicesComplaintFilterClosed;
+
+  /// No description provided for @servicesComplaintNoResults.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد شكاوى تطابق البحث أو المرشح.'**
+  String get servicesComplaintNoResults;
+
+  /// No description provided for @servicesComplaintAgeMinutes.
+  ///
+  /// In ar, this message translates to:
+  /// **'منذ {count} دقيقة'**
+  String servicesComplaintAgeMinutes(int count);
+
+  /// No description provided for @servicesComplaintAgeHours.
+  ///
+  /// In ar, this message translates to:
+  /// **'منذ {count} ساعتين'**
+  String servicesComplaintAgeHours(int count);
+
+  /// No description provided for @servicesComplaintClient.
+  ///
+  /// In ar, this message translates to:
+  /// **'العميل الشاكي'**
+  String get servicesComplaintClient;
+
+  /// No description provided for @servicesComplaintProvider.
+  ///
+  /// In ar, this message translates to:
+  /// **'المزود المشكو ضده'**
+  String get servicesComplaintProvider;
+
+  /// No description provided for @servicesComplaintClientOne.
+  ///
+  /// In ar, this message translates to:
+  /// **'د. مها الدبيسي'**
+  String get servicesComplaintClientOne;
+
+  /// No description provided for @servicesComplaintClientTwo.
+  ///
+  /// In ar, this message translates to:
+  /// **'سارة العتيبي'**
+  String get servicesComplaintClientTwo;
+
+  /// No description provided for @servicesComplaintClientThree.
+  ///
+  /// In ar, this message translates to:
+  /// **'العميل فهد'**
+  String get servicesComplaintClientThree;
+
+  /// No description provided for @servicesComplaintProviderOne.
+  ///
+  /// In ar, this message translates to:
+  /// **'مؤسسة التبريد المتقن'**
+  String get servicesComplaintProviderOne;
+
+  /// No description provided for @servicesComplaintProviderTwo.
+  ///
+  /// In ar, this message translates to:
+  /// **'فريق الإتقان الشامل'**
+  String get servicesComplaintProviderTwo;
+
+  /// No description provided for @servicesComplaintProviderThree.
+  ///
+  /// In ar, this message translates to:
+  /// **'فهد الأرجحي'**
+  String get servicesComplaintProviderThree;
+
+  /// No description provided for @servicesComplaintProviderId.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب مرتبط: {id}'**
+  String servicesComplaintProviderId(String id);
+
+  /// No description provided for @servicesComplaintRiyadh.
+  ///
+  /// In ar, this message translates to:
+  /// **'الرياض'**
+  String get servicesComplaintRiyadh;
+
+  /// No description provided for @servicesComplaintSubjectOne.
+  ///
+  /// In ar, this message translates to:
+  /// **'صيانة مكيفات سبليت وتبريد'**
+  String get servicesComplaintSubjectOne;
+
+  /// No description provided for @servicesComplaintDescriptionOne.
+  ///
+  /// In ar, this message translates to:
+  /// **'تسرب مياه مستمر من الوحدة الداخلية بعد الصيانة. تمت مراجعة البلاغ وتحديد موعد للفحص الميداني للتأكد من جودة تنفيذ الضمان.'**
+  String get servicesComplaintDescriptionOne;
+
+  /// No description provided for @servicesComplaintSubjectTwo.
+  ///
+  /// In ar, this message translates to:
+  /// **'تجديدات كهربائية وإعدادات ذكية'**
+  String get servicesComplaintSubjectTwo;
+
+  /// No description provided for @servicesComplaintDescriptionTwo.
+  ///
+  /// In ar, this message translates to:
+  /// **'تجاوز الموعد المحدد للزيارة الميدانية ساعة كاملة دون تقديم اعتذار أو إشعار مسبق بتأخر الفني.'**
+  String get servicesComplaintDescriptionTwo;
+
+  /// No description provided for @servicesComplaintSubjectThree.
+  ///
+  /// In ar, this message translates to:
+  /// **'نقل وتركيب أثاث غرفة نوم'**
+  String get servicesComplaintSubjectThree;
+
+  /// No description provided for @servicesComplaintDescriptionThree.
+  ///
+  /// In ar, this message translates to:
+  /// **'تمت معالجة الطلب واعتماده بعد تأكيد العميل استلام الخدمة.'**
+  String get servicesComplaintDescriptionThree;
+
+  /// No description provided for @servicesComplaintLocationOne.
+  ///
+  /// In ar, this message translates to:
+  /// **'حي النرجس، الرياض'**
+  String get servicesComplaintLocationOne;
+
+  /// No description provided for @servicesComplaintLocationTwo.
+  ///
+  /// In ar, this message translates to:
+  /// **'حي الملقا، الرياض'**
+  String get servicesComplaintLocationTwo;
+
+  /// No description provided for @servicesComplaintLocationThree.
+  ///
+  /// In ar, this message translates to:
+  /// **'حي الياسمين، الرياض'**
+  String get servicesComplaintLocationThree;
+
+  /// No description provided for @servicesComplaintPriceOne.
+  ///
+  /// In ar, this message translates to:
+  /// **'280'**
+  String get servicesComplaintPriceOne;
+
+  /// No description provided for @servicesComplaintPriceTwo.
+  ///
+  /// In ar, this message translates to:
+  /// **'450'**
+  String get servicesComplaintPriceTwo;
+
+  /// No description provided for @servicesComplaintPriceThree.
+  ///
+  /// In ar, this message translates to:
+  /// **'1,200'**
+  String get servicesComplaintPriceThree;
+
+  /// No description provided for @servicesComplaintClosedToday.
+  ///
+  /// In ar, this message translates to:
+  /// **'أغلقت اليوم 11:30 ص'**
+  String get servicesComplaintClosedToday;
+
+  /// No description provided for @servicesComplaintUnderReview.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيد فحص المشرف'**
+  String get servicesComplaintUnderReview;
+
+  /// No description provided for @servicesComplaintWaitingProvider.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار إفادة المزود'**
+  String get servicesComplaintWaitingProvider;
+
+  /// No description provided for @servicesComplaintClosed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم الحل والإغلاق'**
+  String get servicesComplaintClosed;
+
+  /// No description provided for @servicesComplaintInvestigateAndResolve.
+  ///
+  /// In ar, this message translates to:
+  /// **'معاينة وبدء التحقيق والحل'**
+  String get servicesComplaintInvestigateAndResolve;
+
+  /// No description provided for @servicesComplaintContactParties.
+  ///
+  /// In ar, this message translates to:
+  /// **'تواصل مع الطرفين'**
+  String get servicesComplaintContactParties;
+
+  /// No description provided for @servicesComplaintGroupChatTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'محادثة الشكوى {id}'**
+  String servicesComplaintGroupChatTitle(String id);
+
+  /// No description provided for @servicesComplaintReassign.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعادة إسناد فوري'**
+  String get servicesComplaintReassign;
+
+  /// No description provided for @servicesComplaintEscalate.
+  ///
+  /// In ar, this message translates to:
+  /// **'تصعيد لرئيس المشرفين'**
+  String get servicesComplaintEscalate;
+
+  /// No description provided for @servicesComplaintShowResolution.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض محضر الصلح'**
+  String get servicesComplaintShowResolution;
+
+  /// No description provided for @servicesComplaintResolutionRecorded.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإجراء الإشرافي المعتمد: تم حل المشكلة ميدانياً مع تعويض العميل عن التأخير.'**
+  String get servicesComplaintResolutionRecorded;
+
+  /// No description provided for @servicesComplaintClosedAudit.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجل تدقيق مغلق غير قابل للتعديل'**
+  String get servicesComplaintClosedAudit;
+
+  /// No description provided for @servicesComplaintResolutionTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'جودة حل النزاعات الميدانية'**
+  String get servicesComplaintResolutionTitle;
+
+  /// No description provided for @servicesComplaintResolutionDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'يمتلك مشرف الخدمات صلاحية التصالح وجدولة زيارات التنفيذ وإجراءات الضمان، مع إمكانية إعادة الإسناد لمزود بديل.'**
+  String get servicesComplaintResolutionDescription;
+
+  /// No description provided for @servicesComplaintDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'تفاصيل الشكوى'**
+  String get servicesComplaintDetails;
+
+  /// No description provided for @servicesComplaintActionConfirmation.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيتم تسجيل الإجراء في سجل الشكوى وإشعار الأطراف المرتبطة. هل تريد المتابعة؟'**
+  String get servicesComplaintActionConfirmation;
+
+  /// No description provided for @servicesComplaintEscalationConfirmation.
+  ///
+  /// In ar, this message translates to:
+  /// **'سيتم إحالة الشكوى إلى رئيس المشرفين للمراجعة. هل تريد التصعيد؟'**
+  String get servicesComplaintEscalationConfirmation;
+
+  /// No description provided for @servicesComplaintEscalated.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم التصعيد'**
+  String get servicesComplaintEscalated;
+
+  /// No description provided for @servicesComplaintEscalatedNotice.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تصعيد الشكوى {id} إلى رئيس المشرفين.'**
+  String servicesComplaintEscalatedNotice(String id);
+
+  /// No description provided for @servicesComplaintContactNotice.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم فتح خيارات التواصل مع العميل ومزود الخدمة.'**
+  String get servicesComplaintContactNotice;
+
+  /// No description provided for @servicesComplaintActionRecorded.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تسجيل الإجراء وإشعار الأطراف.'**
+  String get servicesComplaintActionRecorded;
+
+  /// No description provided for @servicesNoNewNotifications.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد إشعارات جديدة.'**
+  String get servicesNoNewNotifications;
+
+  /// No description provided for @servicesNotificationsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الإشعارات'**
+  String get servicesNotificationsTitle;
+
+  /// No description provided for @servicesDetailsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'معاينة وتفاصيل الطلب'**
+  String get servicesDetailsTitle;
+
+  /// No description provided for @servicesRequestWorkDetailsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تفاصيل الخدمة وموقع التنفيذ'**
+  String get servicesRequestWorkDetailsTitle;
+
+  /// No description provided for @servicesRequestLocationLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'عنوان الخدمة'**
+  String get servicesRequestLocationLabel;
+
+  /// No description provided for @servicesRequestPhotosTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'صور الخدمة المرفقة'**
+  String get servicesRequestPhotosTitle;
+
+  /// No description provided for @servicesRequestNoPhotos.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد صور مرفقة مع هذا الطلب.'**
+  String get servicesRequestNoPhotos;
+
+  /// No description provided for @servicesRequestAssignmentTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إسناد الخدمة لمقدم خدمة'**
+  String get servicesRequestAssignmentTitle;
+
+  /// No description provided for @servicesRequestAssignmentDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر مقدم خدمة متاحاً ومطابقاً لتصنيف الخدمة من قائمة مقدمي الخدمات.'**
+  String get servicesRequestAssignmentDescription;
+
+  /// No description provided for @servicesRequestChooseProvider.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر مقدم الخدمة'**
+  String get servicesRequestChooseProvider;
+
+  /// No description provided for @servicesRequestNoMatchingProviders.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يوجد مقدمو خدمة متاحون لهذا التصنيف حالياً.'**
+  String get servicesRequestNoMatchingProviders;
+
+  /// No description provided for @servicesRequestAssignProvider.
+  ///
+  /// In ar, this message translates to:
+  /// **'إسناد الخدمة'**
+  String get servicesRequestAssignProvider;
+
+  /// No description provided for @servicesRequestAssigned.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إسناد الخدمة إلى {provider}'**
+  String servicesRequestAssigned(String provider);
+
+  /// No description provided for @servicesComplaintPartiesTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'طرفا النزاع والتواصل'**
+  String get servicesComplaintPartiesTitle;
+
+  /// No description provided for @servicesComplaintProblemTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'بيان المشكلة المسجلة'**
+  String get servicesComplaintProblemTitle;
+
+  /// No description provided for @servicesComplaintFiledBy.
+  ///
+  /// In ar, this message translates to:
+  /// **'الطرف الشاكي'**
+  String get servicesComplaintFiledBy;
+
+  /// No description provided for @servicesComplaintServiceInfoTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'بيانات الخدمة محل الشكوى'**
+  String get servicesComplaintServiceInfoTitle;
+
+  /// No description provided for @servicesComplaintPriceLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'سعر الخدمة'**
+  String get servicesComplaintPriceLabel;
+
+  /// No description provided for @servicesComplaintPhotosTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'صور المشكلة المرفقة'**
+  String get servicesComplaintPhotosTitle;
+
+  /// No description provided for @servicesComplaintNoPhotos.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد صور مرفقة للمشكلة.'**
+  String get servicesComplaintNoPhotos;
+
+  /// No description provided for @servicesBackToRequests.
+  ///
+  /// In ar, this message translates to:
+  /// **'العودة إلى الطلبات'**
+  String get servicesBackToRequests;
+
+  /// No description provided for @servicesCallPhone.
+  ///
+  /// In ar, this message translates to:
+  /// **'اتصال هاتف'**
+  String get servicesCallPhone;
+
+  /// No description provided for @servicesContactWhatsApp.
+  ///
+  /// In ar, this message translates to:
+  /// **'محادثة واتساب'**
+  String get servicesContactWhatsApp;
+
+  /// No description provided for @servicesEstimatedCost.
+  ///
+  /// In ar, this message translates to:
+  /// **'التكلفة التقديرية للخدمة'**
+  String get servicesEstimatedCost;
+
+  /// No description provided for @servicesApprovedEstimate.
+  ///
+  /// In ar, this message translates to:
+  /// **'تقدير آلي معتمد'**
+  String get servicesApprovedEstimate;
+
+  /// No description provided for @servicesEstimatedCostTotal.
+  ///
+  /// In ar, this message translates to:
+  /// **'إجمالي التكلفة المقدرة'**
+  String get servicesEstimatedCostTotal;
+
+  /// No description provided for @servicesInspectionFee.
+  ///
+  /// In ar, this message translates to:
+  /// **'رسوم الكشف المبدئي'**
+  String get servicesInspectionFee;
+
+  /// No description provided for @servicesLaborAndPartsFee.
+  ///
+  /// In ar, this message translates to:
+  /// **'تكلفة العمل وقطع الغيار'**
+  String get servicesLaborAndPartsFee;
+
+  /// No description provided for @servicesRequestMoreInfoTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب معلومات وتوضيحات إضافية من العميل'**
+  String get servicesRequestMoreInfoTitle;
+
+  /// No description provided for @servicesRequestMoreInfoDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'في حال عدم وضوح بيانات الطلب أو الحاجة لمعلومات إضافية لإتمام الفحص قبل التعيين، أرسل استفساراً مباشراً للعميل.'**
+  String get servicesRequestMoreInfoDescription;
+
+  /// No description provided for @servicesRequestMoreInfoHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب استفسارك أو التفاصيل المطلوبة من العميل هنا...'**
+  String get servicesRequestMoreInfoHint;
+
+  /// No description provided for @servicesRequireExtraPhotos.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلزام بإرفاق صور توضيحية إضافية'**
+  String get servicesRequireExtraPhotos;
+
+  /// No description provided for @servicesSendInfoRequest.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال الطلب'**
+  String get servicesSendInfoRequest;
+
+  /// No description provided for @servicesInfoRequestRequired.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتب تفاصيل الاستفسار قبل الإرسال.'**
+  String get servicesInfoRequestRequired;
+
+  /// No description provided for @servicesInfoRequestSent.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إرسال طلب المعلومات للعميل.'**
+  String get servicesInfoRequestSent;
+
+  /// No description provided for @servicesEditClassification.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعديل التصنيف الفني للخدمة'**
+  String get servicesEditClassification;
+
+  /// No description provided for @servicesCurrentClassification.
+  ///
+  /// In ar, this message translates to:
+  /// **'التصنيف الفني المعتمد حالياً'**
+  String get servicesCurrentClassification;
+
+  /// No description provided for @servicesApprovedClassification.
+  ///
+  /// In ar, this message translates to:
+  /// **'التصنيف المعتمد للطلب'**
+  String get servicesApprovedClassification;
+
+  /// No description provided for @servicesExecutionPeriod.
+  ///
+  /// In ar, this message translates to:
+  /// **'فترة التنفيذ المناسبة'**
+  String get servicesExecutionPeriod;
+
+  /// No description provided for @servicesDayPeriod.
+  ///
+  /// In ar, this message translates to:
+  /// **'صباحية (09:00 ص - 01:00 م)'**
+  String get servicesDayPeriod;
+
+  /// No description provided for @servicesEveningPeriod.
+  ///
+  /// In ar, this message translates to:
+  /// **'مسائية (04:00 م - 09:00 م)'**
+  String get servicesEveningPeriod;
+
+  /// No description provided for @servicesSaveClassification.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحديث وحفظ التصنيف'**
+  String get servicesSaveClassification;
+
+  /// No description provided for @servicesClassificationSaved.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم حفظ تصنيف الخدمة وفترة التنفيذ.'**
+  String get servicesClassificationSaved;
+
+  /// No description provided for @servicesContactUnavailable.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر بدء التواصل من هذا الجهاز.'**
+  String get servicesContactUnavailable;
+
+  /// No description provided for @servicesPublishConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد نشر الطلب'**
+  String get servicesPublishConfirm;
+
   /// No description provided for @deliveryLogisticsWalletTitle.
   ///
   /// In ar, this message translates to:
@@ -4868,6 +6897,18 @@ abstract class AppLocalizations {
   /// **'تم اعتماد الإعلان'**
   String get adsApprovedStatus;
 
+  /// No description provided for @adsPremiumWaitingFinance.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار مراجعة المشرف المالي'**
+  String get adsPremiumWaitingFinance;
+
+  /// No description provided for @adsPremiumWaitingManagement.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار اعتماد الإدارة وخصم الرسوم'**
+  String get adsPremiumWaitingManagement;
+
   /// No description provided for @adsHiddenStatus.
   ///
   /// In ar, this message translates to:
@@ -5048,6 +7089,348 @@ abstract class AppLocalizations {
   /// **'بانتظار الإجراء وتحديث الأطراف'**
   String get wasalnyComplaintWaitingAction;
 
+  /// No description provided for @wasalnyComplaintsListIntro.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر شكوى لمراجعة تفاصيلها وأطراف النزاع'**
+  String get wasalnyComplaintsListIntro;
+
+  /// No description provided for @wasalnyComplaintReferenceWithId.
+  ///
+  /// In ar, this message translates to:
+  /// **'الشكوى #{id}'**
+  String wasalnyComplaintReferenceWithId(String id);
+
+  /// No description provided for @wasalnyComplaintOpenDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض التفاصيل'**
+  String get wasalnyComplaintOpenDetails;
+
+  /// No description provided for @wasalnyComplaintDetailsTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تفاصيل الشكوى'**
+  String get wasalnyComplaintDetailsTitle;
+
+  /// No description provided for @wasalnyComplaintDetailsSection.
+  ///
+  /// In ar, this message translates to:
+  /// **'بيانات الشكوى'**
+  String get wasalnyComplaintDetailsSection;
+
+  /// No description provided for @wasalnyComplaintRequestSection.
+  ///
+  /// In ar, this message translates to:
+  /// **'بيانات الطلب'**
+  String get wasalnyComplaintRequestSection;
+
+  /// No description provided for @wasalnyComplaintPartiesSection.
+  ///
+  /// In ar, this message translates to:
+  /// **'أطراف النزاع'**
+  String get wasalnyComplaintPartiesSection;
+
+  /// No description provided for @wasalnyComplaintSeller.
+  ///
+  /// In ar, this message translates to:
+  /// **'البائع'**
+  String get wasalnyComplaintSeller;
+
+  /// No description provided for @wasalnyComplaintBuyer.
+  ///
+  /// In ar, this message translates to:
+  /// **'المشتري'**
+  String get wasalnyComplaintBuyer;
+
+  /// No description provided for @wasalnyComplaintRequest.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم الطلب'**
+  String get wasalnyComplaintRequest;
+
+  /// No description provided for @wasalnyComplaintAmount.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيمة الصفقة'**
+  String get wasalnyComplaintAmount;
+
+  /// No description provided for @wasalnyComplaintCreatedAt.
+  ///
+  /// In ar, this message translates to:
+  /// **'تاريخ تسجيل الشكوى'**
+  String get wasalnyComplaintCreatedAt;
+
+  /// No description provided for @wasalnyComplaintResolvedStatus.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم الحل وديًا'**
+  String get wasalnyComplaintResolvedStatus;
+
+  /// No description provided for @wasalnyComplaintEscalatedStatus.
+  ///
+  /// In ar, this message translates to:
+  /// **'مصعّدة لرئيس المشرفين'**
+  String get wasalnyComplaintEscalatedStatus;
+
+  /// No description provided for @wasalnyComplaintResolveFriendly.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم حل الشكوى والنزاع وديًا'**
+  String get wasalnyComplaintResolveFriendly;
+
+  /// No description provided for @wasalnyComplaintEscalateHead.
+  ///
+  /// In ar, this message translates to:
+  /// **'تصعيد الشكوى لرئيس المشرفين'**
+  String get wasalnyComplaintEscalateHead;
+
+  /// No description provided for @wasalnyComplaintEscalationSheetKicker.
+  ///
+  /// In ar, this message translates to:
+  /// **'وحدة 03: تصعيد الشكوى للإدارة'**
+  String get wasalnyComplaintEscalationSheetKicker;
+
+  /// No description provided for @wasalnyComplaintEscalationSheetType.
+  ///
+  /// In ar, this message translates to:
+  /// **'نوع النافذة: نافذة سفلية'**
+  String get wasalnyComplaintEscalationSheetType;
+
+  /// No description provided for @wasalnyComplaintEscalationSheetTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إجراء تصعيد الشكوى'**
+  String get wasalnyComplaintEscalationSheetTitle;
+
+  /// No description provided for @wasalnyComplaintEscalationSheetSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تصعيد الشكوى لرئيس المشرفين'**
+  String get wasalnyComplaintEscalationSheetSubtitle;
+
+  /// No description provided for @wasalnyComplaintEscalationFileLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملف الشكوى الرقابي'**
+  String get wasalnyComplaintEscalationFileLabel;
+
+  /// No description provided for @wasalnyComplaintEscalationPending.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار تصعيد إداري'**
+  String get wasalnyComplaintEscalationPending;
+
+  /// No description provided for @wasalnyComplaintEscalationHeldAmount.
+  ///
+  /// In ar, this message translates to:
+  /// **'مبلغ الضمان المحتجز'**
+  String get wasalnyComplaintEscalationHeldAmount;
+
+  /// No description provided for @wasalnyComplaintEscalationNoHeldAmount.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يوجد مبلغ محتجز'**
+  String get wasalnyComplaintEscalationNoHeldAmount;
+
+  /// No description provided for @wasalnyComplaintEscalationPolicyTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'صلاحيات وضوابط اللجنة الرقابية'**
+  String get wasalnyComplaintEscalationPolicyTitle;
+
+  /// No description provided for @wasalnyComplaintEscalationPolicyBody.
+  ///
+  /// In ar, this message translates to:
+  /// **'يتم رفع الشكوى لرئيس المشرفين لمراجعة الوقائع والأدلة المسجلة، واعتماد الإجراء الإداري المناسب وفق سياسات المنصة. لا يؤدي التصعيد إلى تغيير حالة المبلغ المحتجز.'**
+  String get wasalnyComplaintEscalationPolicyBody;
+
+  /// No description provided for @wasalnyComplaintEscalationAuditTrail.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجل النافذة موثق'**
+  String get wasalnyComplaintEscalationAuditTrail;
+
+  /// No description provided for @wasalnyComplaintEscalationEvidenceTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملخص الشكوى والأدلة المسجلة'**
+  String get wasalnyComplaintEscalationEvidenceTitle;
+
+  /// No description provided for @wasalnyComplaintEscalationVerifiedLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'بيانات موثقة'**
+  String get wasalnyComplaintEscalationVerifiedLabel;
+
+  /// No description provided for @wasalnyComplaintEscalationNoWarranty.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد بيانات ضمان ميداني مسجلة.'**
+  String get wasalnyComplaintEscalationNoWarranty;
+
+  /// No description provided for @wasalnyComplaintEscalationConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد رفع تصعيد الشكوى رسمياً'**
+  String get wasalnyComplaintEscalationConfirm;
+
+  /// No description provided for @wasalnyComplaintBackToList.
+  ///
+  /// In ar, this message translates to:
+  /// **'العودة لقائمة الشكاوى'**
+  String get wasalnyComplaintBackToList;
+
+  /// No description provided for @wasalnyComplaintCallSeller.
+  ///
+  /// In ar, this message translates to:
+  /// **'اتصال بالبائع'**
+  String get wasalnyComplaintCallSeller;
+
+  /// No description provided for @wasalnyComplaintCallBuyer.
+  ///
+  /// In ar, this message translates to:
+  /// **'اتصال بالمشتري'**
+  String get wasalnyComplaintCallBuyer;
+
+  /// No description provided for @wasalnyComplaintResolvedMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تسجيل حل الشكوى وديًا'**
+  String get wasalnyComplaintResolvedMessage;
+
+  /// No description provided for @wasalnyComplaintEscalatedMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تصعيد الشكوى لرئيس المشرفين'**
+  String get wasalnyComplaintEscalatedMessage;
+
+  /// No description provided for @wasalnyComplaintCallFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر بدء الاتصال من هذا الجهاز'**
+  String get wasalnyComplaintCallFailed;
+
+  /// No description provided for @wasalnyComplaintsLoadError.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر تحميل الشكاوى'**
+  String get wasalnyComplaintsLoadError;
+
+  /// No description provided for @wasalnyComplaintsRetry.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعادة المحاولة'**
+  String get wasalnyComplaintsRetry;
+
+  /// No description provided for @wasalnyComplaintPartyUnavailable.
+  ///
+  /// In ar, this message translates to:
+  /// **'غير مرتبط بطرف'**
+  String get wasalnyComplaintPartyUnavailable;
+
+  /// No description provided for @wasalnyComplaintItem.
+  ///
+  /// In ar, this message translates to:
+  /// **'السلعة'**
+  String get wasalnyComplaintItem;
+
+  /// No description provided for @wasalnyComplaintDealCode.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم الصفقة'**
+  String get wasalnyComplaintDealCode;
+
+  /// No description provided for @wasalnyComplaintWarranty.
+  ///
+  /// In ar, this message translates to:
+  /// **'الضمان الميداني'**
+  String get wasalnyComplaintWarranty;
+
+  /// No description provided for @wasalnyComplaintResolveNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم الاتفاق بين البائع والمشتري على حل ودي'**
+  String get wasalnyComplaintResolveNote;
+
+  /// No description provided for @wasalnyComplaintResolveFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر تسجيل الحل الودي'**
+  String get wasalnyComplaintResolveFailed;
+
+  /// No description provided for @wasalnyComplaintEscalationReason.
+  ///
+  /// In ar, this message translates to:
+  /// **'تتطلب الشكوى مراجعة رئيس المشرفين'**
+  String get wasalnyComplaintEscalationReason;
+
+  /// No description provided for @wasalnyComplaintEscalationFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر تصعيد الشكوى'**
+  String get wasalnyComplaintEscalationFailed;
+
+  /// No description provided for @wasalnyComplaintActionTakenStatus.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم اتخاذ إجراء'**
+  String get wasalnyComplaintActionTakenStatus;
+
+  /// No description provided for @wasalnyAuditComplaintResolved.
+  ///
+  /// In ar, this message translates to:
+  /// **'حل شكوى وديًا'**
+  String get wasalnyAuditComplaintResolved;
+
+  /// No description provided for @wasalnyAuditComplaintEscalated.
+  ///
+  /// In ar, this message translates to:
+  /// **'تصعيد شكوى لرئيس المشرفين'**
+  String get wasalnyAuditComplaintEscalated;
+
+  /// No description provided for @wasalnyAuditAdApproved.
+  ///
+  /// In ar, this message translates to:
+  /// **'اعتماد إعلان وصلني'**
+  String get wasalnyAuditAdApproved;
+
+  /// No description provided for @wasalnyAuditAdHidden.
+  ///
+  /// In ar, this message translates to:
+  /// **'إخفاء إعلان وصلني'**
+  String get wasalnyAuditAdHidden;
+
+  /// No description provided for @wasalnyAuditAdRejected.
+  ///
+  /// In ar, this message translates to:
+  /// **'رفض إعلان وصلني'**
+  String get wasalnyAuditAdRejected;
+
+  /// No description provided for @wasalnyAuditAdSuspended.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعليق إعلان وصلني'**
+  String get wasalnyAuditAdSuspended;
+
+  /// No description provided for @wasalnyAuditAdEditRequested.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب تعديل إعلان وصلني'**
+  String get wasalnyAuditAdEditRequested;
+
+  /// No description provided for @wasalnyAuditContactRevealed.
+  ///
+  /// In ar, this message translates to:
+  /// **'إظهار بيانات تواصل طلب'**
+  String get wasalnyAuditContactRevealed;
+
+  /// No description provided for @wasalnyAuditContactHidden.
+  ///
+  /// In ar, this message translates to:
+  /// **'إخفاء بيانات تواصل طلب'**
+  String get wasalnyAuditContactHidden;
+
   /// No description provided for @wasalnyNotificationsTitle.
   ///
   /// In ar, this message translates to:
@@ -5089,6 +7472,127 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'تم تسجيل نتيجة فحص شحنة الطلب W-1038.'**
   String get wasalnyNotificationInspectionDescription;
+
+  /// No description provided for @wasalnyPromotionSendToFinance.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال للمشرف المالي'**
+  String get wasalnyPromotionSendToFinance;
+
+  /// No description provided for @wasalnyPromotionSentToFinance.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إرسال طلب الترويج للمشرف المالي للمراجعة.'**
+  String get wasalnyPromotionSentToFinance;
+
+  /// No description provided for @wasalnyPromotionFinancePending.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا يزال طلب الترويج بانتظار موافقة المشرف المالي.'**
+  String get wasalnyPromotionFinancePending;
+
+  /// No description provided for @wasalnyPromotionFinanceRequestType.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب ترويج منتج'**
+  String get wasalnyPromotionFinanceRequestType;
+
+  /// No description provided for @wasalnyPromotionFinanceApprovalConfirmation.
+  ///
+  /// In ar, this message translates to:
+  /// **'هل تريد اعتماد ترويج {beneficiary} بمبلغ {amount} وإحالته للإدارة لتنفيذ الخصم؟'**
+  String wasalnyPromotionFinanceApprovalConfirmation(
+      Object amount, Object beneficiary);
+
+  /// No description provided for @wasalnyPromotionFinanceApproved.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم اعتماد طلب الترويج وإحالته للإدارة لتنفيذ الخصم.'**
+  String get wasalnyPromotionFinanceApproved;
+
+  /// No description provided for @wasalnyPromotionFinanceRejected.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم رفض طلب الترويج وإشعار مشرف وصلني بسبب الرفض.'**
+  String get wasalnyPromotionFinanceRejected;
+
+  /// No description provided for @wasalnyComplaintChatParty.
+  ///
+  /// In ar, this message translates to:
+  /// **'دردشة مع الطرفين'**
+  String get wasalnyComplaintChatParty;
+
+  /// No description provided for @wasalnyRequestsMonthlyLimitTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'اكتمل الحد الشهري'**
+  String get wasalnyRequestsMonthlyLimitTitle;
+
+  /// No description provided for @wasalnyRequestsMonthlyLimitMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم استخدام طلبَي إظهار البيانات لهذا المشتري هذا الشهر. يلزم الاشتراك في التطبيق لإظهار بيانات إضافية.'**
+  String get wasalnyRequestsMonthlyLimitMessage;
+
+  /// No description provided for @wasalnyPremiumCustomer.
+  ///
+  /// In ar, this message translates to:
+  /// **'عميل مميز'**
+  String get wasalnyPremiumCustomer;
+
+  /// No description provided for @wasalnyPremiumAdChoiceTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'هل الإعلان ضمن الباقة؟'**
+  String get wasalnyPremiumAdChoiceTitle;
+
+  /// No description provided for @wasalnyPremiumAdChoiceMessage.
+  ///
+  /// In ar, this message translates to:
+  /// **'هذا العميل مميز. هل يُحتسب الإعلان ضمن باقته أم يُعامل كإعلان ترويجي مدفوع؟'**
+  String get wasalnyPremiumAdChoiceMessage;
+
+  /// No description provided for @wasalnyPremiumAdIncluded.
+  ///
+  /// In ar, this message translates to:
+  /// **'ضمن الباقة'**
+  String get wasalnyPremiumAdIncluded;
+
+  /// No description provided for @wasalnyPremiumAdPaid.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعلان ترويجي مدفوع'**
+  String get wasalnyPremiumAdPaid;
+
+  /// No description provided for @wasalnyHeadInboxTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تصعيدات وصلني'**
+  String get wasalnyHeadInboxTitle;
+
+  /// No description provided for @wasalnyNotificationSourceFinance.
+  ///
+  /// In ar, this message translates to:
+  /// **'المشرف المالي'**
+  String get wasalnyNotificationSourceFinance;
+
+  /// No description provided for @wasalnyNotificationSourceChief.
+  ///
+  /// In ar, this message translates to:
+  /// **'رئيس المشرفين'**
+  String get wasalnyNotificationSourceChief;
+
+  /// No description provided for @wasalnyNotificationSourceWasalny.
+  ///
+  /// In ar, this message translates to:
+  /// **'حساب وصلني'**
+  String get wasalnyNotificationSourceWasalny;
+
+  /// No description provided for @wasalnyNotificationEmpty.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد إشعارات جديدة.'**
+  String get wasalnyNotificationEmpty;
 
   /// No description provided for @wasalnyPromotionTitle.
   ///
@@ -5132,11 +7636,23 @@ abstract class AppLocalizations {
   /// **'الكل'**
   String get wasalnyRequestsAll;
 
+  /// No description provided for @wasalnyRequestsAwaitingApproval.
+  ///
+  /// In ar, this message translates to:
+  /// **'بانتظار الموافقة'**
+  String get wasalnyRequestsAwaitingApproval;
+
   /// No description provided for @wasalnyRequestsCommunication.
   ///
   /// In ar, this message translates to:
   /// **'جاري التواصل'**
   String get wasalnyRequestsCommunication;
+
+  /// No description provided for @wasalnyRequestsUnderReview.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيد المراجعة'**
+  String get wasalnyRequestsUnderReview;
 
   /// No description provided for @wasalnyRequestsSold.
   ///
@@ -7520,6 +10036,18 @@ abstract class AppLocalizations {
   /// **'الاستجابة المباشرة ضمن نطاق 15 كم'**
   String get productProfileFieldAvailabilityHint;
 
+  /// No description provided for @productProfilePreferenceLocalOnlyNotice.
+  ///
+  /// In ar, this message translates to:
+  /// **'تُحفظ هذه الإعدادات على هذا الجهاز فقط؛ إرسال الإشعارات غير متصل حالياً.'**
+  String get productProfilePreferenceLocalOnlyNotice;
+
+  /// No description provided for @productProfilePreferenceLoadError.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر تحميل الإعدادات المحفوظة. اضغط لإعادة المحاولة.'**
+  String get productProfilePreferenceLoadError;
+
   /// No description provided for @productProfileReviewed.
   ///
   /// In ar, this message translates to:
@@ -8606,11 +11134,113 @@ abstract class AppLocalizations {
   /// **'إشعار فوري عند رفع إعلان أو تأهيله'**
   String get merchantProfileNotificationsSubtitle;
 
+  /// No description provided for @merchantProfileLocalOnlyNotice.
+  ///
+  /// In ar, this message translates to:
+  /// **'تُحفظ التغييرات على هذا الجهاز فقط؛ إرسال الإشعارات غير متصل حالياً.'**
+  String get merchantProfileLocalOnlyNotice;
+
+  /// No description provided for @merchantProfileLocalAuditNotice.
+  ///
+  /// In ar, this message translates to:
+  /// **'يعرض هذا السجل المحلي تغييرات الملف الشخصي على هذا الجهاز فقط، وليس سجل تدقيق على الخادم.'**
+  String get merchantProfileLocalAuditNotice;
+
+  /// No description provided for @merchantProfileNoLocalActivity.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد تغييرات محلية مسجلة على الملف الشخصي بعد.'**
+  String get merchantProfileNoLocalActivity;
+
+  /// No description provided for @merchantProfilePreferenceUpdated.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تغيير تفضيل الملف الشخصي'**
+  String get merchantProfilePreferenceUpdated;
+
+  /// No description provided for @merchantProfileEnabled.
+  ///
+  /// In ar, this message translates to:
+  /// **'مُفعّل'**
+  String get merchantProfileEnabled;
+
+  /// No description provided for @merchantProfileDisabled.
+  ///
+  /// In ar, this message translates to:
+  /// **'مُعطّل'**
+  String get merchantProfileDisabled;
+
+  /// No description provided for @merchantProfileLoadError.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر تحميل إعدادات الملف الشخصي المحفوظة.'**
+  String get merchantProfileLoadError;
+
+  /// No description provided for @merchantProfileSaveError.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذّر حفظ هذا الإعداد على الجهاز. حاول مرة أخرى.'**
+  String get merchantProfileSaveError;
+
+  /// No description provided for @merchantProfileRetry.
+  ///
+  /// In ar, this message translates to:
+  /// **'إعادة المحاولة'**
+  String get merchantProfileRetry;
+
   /// No description provided for @merchantProfileSecurityAudit.
   ///
   /// In ar, this message translates to:
   /// **'الأمان والتدقيق الإداري'**
   String get merchantProfileSecurityAudit;
+
+  /// No description provided for @merchantProfileChangeSettings.
+  ///
+  /// In ar, this message translates to:
+  /// **'تغيير الإعدادات'**
+  String get merchantProfileChangeSettings;
+
+  /// No description provided for @merchantAuditSuspended.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعليق التاجر'**
+  String get merchantAuditSuspended;
+
+  /// No description provided for @merchantAuditUnsuspended.
+  ///
+  /// In ar, this message translates to:
+  /// **'فك تعليق التاجر'**
+  String get merchantAuditUnsuspended;
+
+  /// No description provided for @merchantAuditFinancialSubmitted.
+  ///
+  /// In ar, this message translates to:
+  /// **'إحالة طلب مالي للمشرف المالي'**
+  String get merchantAuditFinancialSubmitted;
+
+  /// No description provided for @merchantAuditFinancialRejected.
+  ///
+  /// In ar, this message translates to:
+  /// **'رفض طلب مالي'**
+  String get merchantAuditFinancialRejected;
+
+  /// No description provided for @merchantAuditAdModerated.
+  ///
+  /// In ar, this message translates to:
+  /// **'مراجعة إعلان تاجر'**
+  String get merchantAuditAdModerated;
+
+  /// No description provided for @merchantAuditCommissionUpdated.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحديث عمولة التاجر'**
+  String get merchantAuditCommissionUpdated;
+
+  /// No description provided for @merchantAuditLoadError.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر تحميل سجل العمليات الرقابية.'**
+  String get merchantAuditLoadError;
 
   /// No description provided for @merchantProfileViewAll.
   ///
@@ -9685,6 +12315,714 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'مشرف التجار'**
   String get supervisedMerchantsBadge;
+
+  /// No description provided for @servicesSupervisorTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'مشرف الخدمات'**
+  String get servicesSupervisorTitle;
+
+  /// No description provided for @servicesSupervisorBadge.
+  ///
+  /// In ar, this message translates to:
+  /// **'مشرف الخدمات · SRV-01'**
+  String get servicesSupervisorBadge;
+
+  /// No description provided for @serviceProvidersTab.
+  ///
+  /// In ar, this message translates to:
+  /// **'مقدمو الخدمات'**
+  String get serviceProvidersTab;
+
+  /// No description provided for @servicesAccountTab.
+  ///
+  /// In ar, this message translates to:
+  /// **'حسابي'**
+  String get servicesAccountTab;
+
+  /// No description provided for @serviceProvidersCount.
+  ///
+  /// In ar, this message translates to:
+  /// **'{count} مقدمي خدمة'**
+  String serviceProvidersCount(int count);
+
+  /// No description provided for @serviceProviderProfileTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الملف والسجل المهني للمزود'**
+  String get serviceProviderProfileTitle;
+
+  /// No description provided for @serviceProviderAvailableForWork.
+  ///
+  /// In ar, this message translates to:
+  /// **'متاح ومستعد لإسناد المهام الفورية'**
+  String get serviceProviderAvailableForWork;
+
+  /// No description provided for @serviceProviderVerified.
+  ///
+  /// In ar, this message translates to:
+  /// **'موثق'**
+  String get serviceProviderVerified;
+
+  /// No description provided for @serviceProviderRegistryNumber.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم السجل التجاري'**
+  String get serviceProviderRegistryNumber;
+
+  /// No description provided for @serviceProviderViewProfileAndHistory.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض ملف المقدم وسجله'**
+  String get serviceProviderViewProfileAndHistory;
+
+  /// No description provided for @serviceProviderPerformanceTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'مؤشرات الأداء التشغيلي (KPIs)'**
+  String get serviceProviderPerformanceTitle;
+
+  /// No description provided for @serviceProviderUpdatedNow.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحديث مباشر'**
+  String get serviceProviderUpdatedNow;
+
+  /// No description provided for @serviceProviderCompletedTasks.
+  ///
+  /// In ar, this message translates to:
+  /// **'المهام المنجزة'**
+  String get serviceProviderCompletedTasks;
+
+  /// No description provided for @serviceProviderTaskCompletionRate.
+  ///
+  /// In ar, this message translates to:
+  /// **'نسبة الإنجاز 99.1%'**
+  String get serviceProviderTaskCompletionRate;
+
+  /// No description provided for @serviceProviderOverallRating.
+  ///
+  /// In ar, this message translates to:
+  /// **'التقييم العام'**
+  String get serviceProviderOverallRating;
+
+  /// No description provided for @serviceProviderRatingOutOfFive.
+  ///
+  /// In ar, this message translates to:
+  /// **'من 5.0 · 162 تقييماً'**
+  String get serviceProviderRatingOutOfFive;
+
+  /// No description provided for @serviceProviderOnTimeRate.
+  ///
+  /// In ar, this message translates to:
+  /// **'الالتزام بالمواعيد'**
+  String get serviceProviderOnTimeRate;
+
+  /// No description provided for @serviceProviderPunctualityDetail.
+  ///
+  /// In ar, this message translates to:
+  /// **'انضباط وجودة في الميدان'**
+  String get serviceProviderPunctualityDetail;
+
+  /// No description provided for @serviceProviderResponseSpeed.
+  ///
+  /// In ar, this message translates to:
+  /// **'سرعة الاستجابة'**
+  String get serviceProviderResponseSpeed;
+
+  /// No description provided for @serviceProviderMinutes.
+  ///
+  /// In ar, this message translates to:
+  /// **'دقيقة'**
+  String get serviceProviderMinutes;
+
+  /// No description provided for @serviceProviderSpecialtiesTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'التخصصات والاعتمادات الرسمية'**
+  String get serviceProviderSpecialtiesTitle;
+
+  /// No description provided for @serviceProviderSpecialtyAirConditioning.
+  ///
+  /// In ar, this message translates to:
+  /// **'صيانة مكيفات سبليت ومركزي وتحديثات دكت احترافية'**
+  String get serviceProviderSpecialtyAirConditioning;
+
+  /// No description provided for @serviceProviderSpecialtyAppliances.
+  ///
+  /// In ar, this message translates to:
+  /// **'شحن وتفريغ واختبار غاز تبريد R410A وفق المعايير'**
+  String get serviceProviderSpecialtyAppliances;
+
+  /// No description provided for @serviceProviderSpecialtyElectrical.
+  ///
+  /// In ar, this message translates to:
+  /// **'غسيل دوري مضغوط وصيانة وقائية للمجمعات السكنية'**
+  String get serviceProviderSpecialtyElectrical;
+
+  /// No description provided for @serviceProviderPlanTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'الامتياز المهني المعتمد'**
+  String get serviceProviderPlanTitle;
+
+  /// No description provided for @serviceProviderPlanDescription.
+  ///
+  /// In ar, this message translates to:
+  /// **'خضوعات أمنية وتدريب عملي على جودة الخدمة'**
+  String get serviceProviderPlanDescription;
+
+  /// No description provided for @serviceProviderPlanTier.
+  ///
+  /// In ar, this message translates to:
+  /// **'6 فنيين'**
+  String get serviceProviderPlanTier;
+
+  /// No description provided for @serviceProviderRecentTasksTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجل أحدث المهام والعمليات المنجزة'**
+  String get serviceProviderRecentTasksTitle;
+
+  /// No description provided for @serviceProviderFullHistory.
+  ///
+  /// In ar, this message translates to:
+  /// **'السجل الكامل'**
+  String get serviceProviderFullHistory;
+
+  /// No description provided for @serviceProviderViewFullHistory.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض السجل الكامل'**
+  String get serviceProviderViewFullHistory;
+
+  /// No description provided for @serviceProviderTaskAreaOne.
+  ///
+  /// In ar, this message translates to:
+  /// **'حي الملقا'**
+  String get serviceProviderTaskAreaOne;
+
+  /// No description provided for @serviceProviderTaskAreaTwo.
+  ///
+  /// In ar, this message translates to:
+  /// **'حي الياسمين'**
+  String get serviceProviderTaskAreaTwo;
+
+  /// No description provided for @serviceProviderTaskAreaThree.
+  ///
+  /// In ar, this message translates to:
+  /// **'حي الصحافة'**
+  String get serviceProviderTaskAreaThree;
+
+  /// No description provided for @serviceProviderTaskTitleOne.
+  ///
+  /// In ar, this message translates to:
+  /// **'صيانة مكيف كونسيلد مركزي'**
+  String get serviceProviderTaskTitleOne;
+
+  /// No description provided for @serviceProviderTaskTitleTwo.
+  ///
+  /// In ar, this message translates to:
+  /// **'فحص وتعبئة غاز فريون لمبنى تجاري'**
+  String get serviceProviderTaskTitleTwo;
+
+  /// No description provided for @serviceProviderTaskTitleThree.
+  ///
+  /// In ar, this message translates to:
+  /// **'فك وتركيب 4 وحدات سبليت جديدة'**
+  String get serviceProviderTaskTitleThree;
+
+  /// No description provided for @serviceProviderTaskDetailOne.
+  ///
+  /// In ar, this message translates to:
+  /// **'دقة متناهية وسرعة فائقة، مع إنهاء الفحص قبل الوقت المحدد.'**
+  String get serviceProviderTaskDetailOne;
+
+  /// No description provided for @serviceProviderTaskDetailTwo.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم التأكد من سلامة التبريد قبل تسليم الموقع.'**
+  String get serviceProviderTaskDetailTwo;
+
+  /// No description provided for @serviceProviderTaskDetailThree.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختبار عزل المواسير بعد التركيب.'**
+  String get serviceProviderTaskDetailThree;
+
+  /// No description provided for @serviceProviderTaskCompleted.
+  ///
+  /// In ar, this message translates to:
+  /// **'مكتمل ومعتمد'**
+  String get serviceProviderTaskCompleted;
+
+  /// No description provided for @serviceProviderHistoryEntryOne.
+  ///
+  /// In ar, this message translates to:
+  /// **'صيانة مكيف كونسيلد مركزي · حي الملقا · 5.0'**
+  String get serviceProviderHistoryEntryOne;
+
+  /// No description provided for @serviceProviderHistoryEntryTwo.
+  ///
+  /// In ar, this message translates to:
+  /// **'فحص وتعبئة غاز فريون · حي الياسمين · 4.8'**
+  String get serviceProviderHistoryEntryTwo;
+
+  /// No description provided for @serviceProviderHistoryEntryThree.
+  ///
+  /// In ar, this message translates to:
+  /// **'فك وتركيب وحدات سبليت · حي الصحافة · مكتمل'**
+  String get serviceProviderHistoryEntryThree;
+
+  /// No description provided for @serviceProviderHistoryEntryFour.
+  ///
+  /// In ar, this message translates to:
+  /// **'صيانة دورية لوحدات التكييف · حي النرجس · 5.0'**
+  String get serviceProviderHistoryEntryFour;
+
+  /// No description provided for @serviceProviderHistoryEntryFive.
+  ///
+  /// In ar, this message translates to:
+  /// **'فحص تمديدات الكهرباء · حي الورود · 4.9'**
+  String get serviceProviderHistoryEntryFive;
+
+  /// No description provided for @servicesComplaintFilters.
+  ///
+  /// In ar, this message translates to:
+  /// **'مرشحات الشكاوى'**
+  String get servicesComplaintFilters;
+
+  /// No description provided for @servicesComplaintRequireCompensation.
+  ///
+  /// In ar, this message translates to:
+  /// **'إلزام المزود بالتعويض'**
+  String get servicesComplaintRequireCompensation;
+
+  /// No description provided for @servicesComplaintAlreadyClosed.
+  ///
+  /// In ar, this message translates to:
+  /// **'الشكوى مغلقة؛ يمكنك مراجعة محضر الحل فقط.'**
+  String get servicesComplaintAlreadyClosed;
+
+  /// No description provided for @servicesComplaintFiltersHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'استخدم مرشحات الحالة أو اكتب رقم الشكوى واسم العميل أو المزود.'**
+  String get servicesComplaintFiltersHint;
+
+  /// No description provided for @merchantFeaturedBadge.
+  ///
+  /// In ar, this message translates to:
+  /// **'تاجر مميز'**
+  String get merchantFeaturedBadge;
+
+  /// No description provided for @merchantStandardBadge.
+  ///
+  /// In ar, this message translates to:
+  /// **'تاجر عادي'**
+  String get merchantStandardBadge;
+
+  /// No description provided for @merchantSuspendedSection.
+  ///
+  /// In ar, this message translates to:
+  /// **'التجار المعلقون'**
+  String get merchantSuspendedSection;
+
+  /// No description provided for @merchantUnsuspendAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'فك التعليق'**
+  String get merchantUnsuspendAction;
+
+  /// No description provided for @merchantUnsuspendConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'هل تريد إعادة تفعيل هذا التاجر وإزالته من قائمة التجار المعلقين؟'**
+  String get merchantUnsuspendConfirm;
+
+  /// No description provided for @merchantUnsuspendSuccess.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم فك تعليق التاجر وإعادته إلى قائمة التجار.'**
+  String get merchantUnsuspendSuccess;
+
+  /// No description provided for @merchantSuspendSuccess.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم تعليق التاجر وإضافته إلى قائمة التجار المعلقين.'**
+  String get merchantSuspendSuccess;
+
+  /// No description provided for @merchantSuspensionSaveError.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر حفظ تغيير حالة التاجر. حاول مرة أخرى.'**
+  String get merchantSuspensionSaveError;
+
+  /// No description provided for @merchantFinanceStatusTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'حالة طلب المشرف المالي'**
+  String get merchantFinanceStatusTitle;
+
+  /// No description provided for @merchantFinanceViewStatus.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض حالة الطلب'**
+  String get merchantFinanceViewStatus;
+
+  /// No description provided for @merchantFinanceStatusPending.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيد مراجعة المشرف المالي'**
+  String get merchantFinanceStatusPending;
+
+  /// No description provided for @merchantFinanceStatusApproved.
+  ///
+  /// In ar, this message translates to:
+  /// **'تمت الموافقة'**
+  String get merchantFinanceStatusApproved;
+
+  /// No description provided for @merchantFinanceStatusRejected.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم الرفض'**
+  String get merchantFinanceStatusRejected;
+
+  /// No description provided for @merchantFinanceStatusOnHold.
+  ///
+  /// In ar, this message translates to:
+  /// **'معلق / قيد التحقق'**
+  String get merchantFinanceStatusOnHold;
+
+  /// No description provided for @merchantFinanceRequestTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تفاصيل العملية'**
+  String get merchantFinanceRequestTitle;
+
+  /// No description provided for @merchantFinanceAmountLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'المبلغ'**
+  String get merchantFinanceAmountLabel;
+
+  /// No description provided for @merchantFinanceDateLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'تاريخ الطلب'**
+  String get merchantFinanceDateLabel;
+
+  /// No description provided for @merchantFinanceStatusLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحالة'**
+  String get merchantFinanceStatusLabel;
+
+  /// No description provided for @merchantFinanceNoteLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'ملاحظة الطلب'**
+  String get merchantFinanceNoteLabel;
+
+  /// No description provided for @merchantLinkHasCommercialRegister.
+  ///
+  /// In ar, this message translates to:
+  /// **'لدى التاجر سجل تجاري'**
+  String get merchantLinkHasCommercialRegister;
+
+  /// No description provided for @merchantLinkLocalScopeNotice.
+  ///
+  /// In ar, this message translates to:
+  /// **'عند عدم وجود سجل، استخدم رقم الهاتف الموثق. يحفظ النموذج الطلب على هذا الجهاز فقط ضمن الحساب المسجل؛ الإسناد المشترك الآمن يتطلب ربطاً بالخادم.'**
+  String get merchantLinkLocalScopeNotice;
+
+  /// No description provided for @merchantLinkValidationError.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل اسم التاجر ورقم هاتف صحيحاً ورقم السجل عند انطباقه.'**
+  String get merchantLinkValidationError;
+
+  /// No description provided for @merchantLinkSessionRequired.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجل الدخول مجدداً قبل إرسال طلب ربط التاجر.'**
+  String get merchantLinkSessionRequired;
+
+  /// No description provided for @merchantLinkSavedLocally.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم حفظ طلب الربط محلياً. لم يُرسل للتاجر أو للمنصة.'**
+  String get merchantLinkSavedLocally;
+
+  /// No description provided for @merchantLinkSaveFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر حفظ طلب الربط.'**
+  String get merchantLinkSaveFailed;
+
+  /// No description provided for @merchantLinkSaving.
+  ///
+  /// In ar, this message translates to:
+  /// **'جارٍ حفظ الطلب...'**
+  String get merchantLinkSaving;
+
+  /// No description provided for @adsArchiveTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'أرشيف الإعلانات'**
+  String get adsArchiveTitle;
+
+  /// No description provided for @adsReviewQueueTab.
+  ///
+  /// In ar, this message translates to:
+  /// **'قائمة المراجعة'**
+  String get adsReviewQueueTab;
+
+  /// No description provided for @adsPremium.
+  ///
+  /// In ar, this message translates to:
+  /// **'مميز'**
+  String get adsPremium;
+
+  /// No description provided for @adsRegular.
+  ///
+  /// In ar, this message translates to:
+  /// **'عادي'**
+  String get adsRegular;
+
+  /// No description provided for @adsSaveFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر حفظ القرار. يرجى المحاولة مرة أخرى.'**
+  String get adsSaveFailed;
+
+  /// No description provided for @adsLoadFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر تحميل قرارات الإعلانات المحفوظة.'**
+  String get adsLoadFailed;
+
+  /// No description provided for @adsFrozenStatus.
+  ///
+  /// In ar, this message translates to:
+  /// **'مجمد'**
+  String get adsFrozenStatus;
+
+  /// No description provided for @adsFreezeAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'تجميد الإعلان'**
+  String get adsFreezeAction;
+
+  /// No description provided for @adsUnfreezeAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'استعادة الإعلان'**
+  String get adsUnfreezeAction;
+
+  /// No description provided for @finRequestLocalWorkflowNotice.
+  ///
+  /// In ar, this message translates to:
+  /// **'تُحفظ الطلبات محلياً وتُدرج لمراجعة المشرف المالي في هذه النسخة التجريبية. لا يتم خصم مبالغ أو إرسال إشعارات فعلية للتاجر.'**
+  String get finRequestLocalWorkflowNotice;
+
+  /// No description provided for @finRequestSentConfirmation.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم إرسال الطلب إلى المشرف المالي.'**
+  String get finRequestSentConfirmation;
+
+  /// No description provided for @finRequestActionFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر إكمال الإجراء. يرجى المحاولة مرة أخرى.'**
+  String get finRequestActionFailed;
+
+  /// No description provided for @finRequestRejectTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'رفض طلب التاجر'**
+  String get finRequestRejectTitle;
+
+  /// No description provided for @finRequestRejectReason.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل سبب الرفض ليظهر للتاجر'**
+  String get finRequestRejectReason;
+
+  /// No description provided for @finRequestRejectAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'رفض الطلب'**
+  String get finRequestRejectAction;
+
+  /// No description provided for @finRequestRejected.
+  ///
+  /// In ar, this message translates to:
+  /// **'مرفوض'**
+  String get finRequestRejected;
+
+  /// No description provided for @finRequestRejectionSaved.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم حفظ سبب الرفض.'**
+  String get finRequestRejectionSaved;
+
+  /// No description provided for @financeWalletRequestSubmitted.
+  ///
+  /// In ar, this message translates to:
+  /// **'أُرسل الطلب إلى المشرف المالي للمراجعة. لم يتم أي تحويل.'**
+  String get financeWalletRequestSubmitted;
+
+  /// No description provided for @financeRequestsInProgressTab.
+  ///
+  /// In ar, this message translates to:
+  /// **'قيد الإجراء'**
+  String get financeRequestsInProgressTab;
+
+  /// No description provided for @financeRequestsArchiveTab.
+  ///
+  /// In ar, this message translates to:
+  /// **'الأرشيف'**
+  String get financeRequestsArchiveTab;
+
+  /// No description provided for @financeRequestsArchiveSearchHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابحث برقم الطلب أو المستفيد أو مصدر الطلب'**
+  String get financeRequestsArchiveSearchHint;
+
+  /// No description provided for @financeRequestsArchiveEmpty.
+  ///
+  /// In ar, this message translates to:
+  /// **'ستظهر الطلبات المعتمدة والمرفوضة هنا.'**
+  String get financeRequestsArchiveEmpty;
+
+  /// No description provided for @financeRequestsArchiveNoResults.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد طلبات مؤرشفة تطابق البحث أو التصفية.'**
+  String get financeRequestsArchiveNoResults;
+
+  /// No description provided for @financeRequestsInProgressEmpty.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد طلبات بانتظار المراجعة.'**
+  String get financeRequestsInProgressEmpty;
+
+  /// No description provided for @financeRequestRefreshFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم حفظ القرار، لكن تعذر تحديث قائمة الطلبات.'**
+  String get financeRequestRefreshFailed;
+
+  /// No description provided for @financeRequestListFailed.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعذر تحميل الطلبات المالية. اسحب لأسفل لإعادة المحاولة.'**
+  String get financeRequestListFailed;
+
+  /// No description provided for @financeRecordApproval.
+  ///
+  /// In ar, this message translates to:
+  /// **'تسجيل الموافقة'**
+  String get financeRecordApproval;
+
+  /// No description provided for @financeApproveOnlyConfirmation.
+  ///
+  /// In ar, this message translates to:
+  /// **'هل تسجل الموافقة على هذا الطلب؟ لن يؤدي ذلك إلى تحويل الأموال. المبلغ:'**
+  String get financeApproveOnlyConfirmation;
+
+  /// No description provided for @withdrawalDetailsSourceAccount.
+  ///
+  /// In ar, this message translates to:
+  /// **'الحساب مصدر الطلب'**
+  String get withdrawalDetailsSourceAccount;
+
+  /// No description provided for @withdrawalDetailsOperationType.
+  ///
+  /// In ar, this message translates to:
+  /// **'نوع العملية'**
+  String get withdrawalDetailsOperationType;
+
+  /// No description provided for @financeOperationWithdrawal.
+  ///
+  /// In ar, this message translates to:
+  /// **'سحب'**
+  String get financeOperationWithdrawal;
+
+  /// No description provided for @financeOperationDeposit.
+  ///
+  /// In ar, this message translates to:
+  /// **'إيداع'**
+  String get financeOperationDeposit;
+
+  /// No description provided for @financeWalletRequestTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلب عملية محفظة'**
+  String get financeWalletRequestTitle;
+
+  /// No description provided for @financeWalletAmountLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'المبلغ'**
+  String get financeWalletAmountLabel;
+
+  /// No description provided for @financeWalletInvalidWithdrawalAmount.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل مبلغ سحب بين 100 و8,450 ر.س.'**
+  String get financeWalletInvalidWithdrawalAmount;
+
+  /// No description provided for @financeWalletInvalidDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل مبلغاً صحيحاً بين 100 و20,000 ر.س وحدد وجهة الدفع.'**
+  String get financeWalletInvalidDetails;
+
+  /// No description provided for @financeWalletConfirmDepositTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد طلب الإيداع'**
+  String get financeWalletConfirmDepositTitle;
+
+  /// No description provided for @financeWalletConfirmDepositAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'تأكيد طلب الإيداع'**
+  String get financeWalletConfirmDepositAction;
+
+  /// No description provided for @financeWalletSubmitRequest.
+  ///
+  /// In ar, this message translates to:
+  /// **'إرسال الطلب للمراجعة المالية'**
+  String get financeWalletSubmitRequest;
+
+  /// No description provided for @financeWalletOperationNote.
+  ///
+  /// In ar, this message translates to:
+  /// **'يجب أن يوافق المشرف المالي على الطلب. تُسجل الموافقة في التطبيق ولا تتحرك الأموال قبل تكامل خدمة الدفع.'**
+  String get financeWalletOperationNote;
+
+  /// No description provided for @merchantInfoAdRejected.
+  ///
+  /// In ar, this message translates to:
+  /// **'مرفوض'**
+  String get merchantInfoAdRejected;
+
+  /// No description provided for @merchantInfoAdFrozen.
+  ///
+  /// In ar, this message translates to:
+  /// **'مجمد'**
+  String get merchantInfoAdFrozen;
+
+  /// No description provided for @merchantInfoAdHidden.
+  ///
+  /// In ar, this message translates to:
+  /// **'مخفي'**
+  String get merchantInfoAdHidden;
 }
 
 class _AppLocalizationsDelegate

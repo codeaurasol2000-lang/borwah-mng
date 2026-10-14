@@ -7,6 +7,7 @@ import 'package:barwah_app/features/merchants/presentation/screens/merchant_prof
 import 'package:barwah_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Widget _localizedApp(Widget home, {Locale locale = const Locale('en')}) {
   return MaterialApp(
@@ -55,6 +56,7 @@ void main() {
 
   testWidgets('profile merchant metric invokes its navigation callback',
       (tester) async {
+    SharedPreferences.setMockInitialValues({});
     var tapped = false;
     await tester.pumpWidget(_localizedApp(
       MerchantProfileScreen(

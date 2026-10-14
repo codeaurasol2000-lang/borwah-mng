@@ -19,6 +19,8 @@ class MerchantCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final isArabic = l10n.localeName.startsWith('ar');
+    final isSuspended = merchant.isSuspended ||
+        merchant.status == MerchantStatus.temporarilySuspended;
 
     return GestureDetector(
       onTap: onTap,
@@ -124,7 +126,44 @@ class MerchantCard extends StatelessWidget {
 
                   const SizedBox(width: 10),
 
-                  _buildStatusPill(l10n),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      _buildStatusPill(l10n),
+                      if (merchant.isFeatured) ...[
+                        const SizedBox(height: 5),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 7,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFFF4CC),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.star,
+                                size: 11,
+                                color: Color(0xFF9A6700),
+                              ),
+                              const SizedBox(width: 3),
+                              Text(
+                                l10n.merchantFeaturedBadge,
+                                style: const TextStyle(
+                                  color: Color(0xFF805800),
+                                  fontSize: 9,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -146,11 +185,11 @@ class MerchantCard extends StatelessWidget {
                       child: Row(
                         children: [
                           Icon(
-                            merchant.isSuspended
+                            isSuspended
                                 ? Icons.calendar_today_outlined
                                 : Icons.access_time,
                             size: 13,
-                            color: merchant.isSuspended
+                            color: isSuspended
                                 ? AppColors.textSecondary
                                 : AppColors.textMuted,
                           ),
@@ -162,7 +201,7 @@ class MerchantCard extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 fontSize: 10,
-                                color: merchant.isSuspended
+                                color: isSuspended
                                     ? AppColors.textSecondary
                                     : AppColors.textSecondary,
                               ),
@@ -191,7 +230,7 @@ class MerchantCard extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.bold,
-                                color: merchant.isSuspended
+                                color: isSuspended
                                     ? AppColors.danger
                                     : AppColors.textPrimary,
                               ),
@@ -202,7 +241,7 @@ class MerchantCard extends StatelessWidget {
                         Icon(
                           merchant.adsIcon,
                           size: 18,
-                          color: merchant.isSuspended
+                          color: isSuspended
                               ? AppColors.danger
                               : AppColors.textSecondary,
                         ),
@@ -252,7 +291,7 @@ class MerchantCard extends StatelessWidget {
                         merchant.footerStatusIcon,
                         size: 14,
                         color: merchant.footerStatusColor ??
-                            (merchant.isSuspended
+                            (isSuspended
                                 ? AppColors.danger
                                 : AppColors.textSecondary),
                       ),
@@ -266,7 +305,7 @@ class MerchantCard extends StatelessWidget {
                             fontSize: 10,
                             fontWeight: FontWeight.w500,
                             color: merchant.footerStatusColor ??
-                                (merchant.isSuspended
+                                (isSuspended
                                     ? AppColors.danger
                                     : AppColors.textSecondary),
                           ),

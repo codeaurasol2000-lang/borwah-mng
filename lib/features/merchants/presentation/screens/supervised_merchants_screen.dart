@@ -5,6 +5,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../data/merchant_supervisor_local_store.dart';
 import '../../domain/entities/merchant_entity.dart';
 import '../../domain/entities/supervisor_stats_entity.dart';
 import '../controllers/merchants_cubit.dart';
@@ -37,12 +38,46 @@ class _SupervisedMerchantsContentState
   final TextEditingController _searchController = TextEditingController();
   bool _showAllRemaining = false;
   int _selectedChipIndex = 0;
+  Map<String, bool> _suspensionOverrides = const {};
+
+  @override
+  void initState() {
+    super.initState();
+    MerchantSupervisorLocalStore.revision.addListener(_onSuspensionChanged);
+    _loadSuspensionOverrides();
+  }
 
   @override
   void dispose() {
+    MerchantSupervisorLocalStore.revision.removeListener(_onSuspensionChanged);
     _searchController.dispose();
     super.dispose();
   }
+
+  void _onSuspensionChanged() {
+    _loadSuspensionOverrides();
+  }
+
+  Future<void> _loadSuspensionOverrides() async {
+    try {
+      final overrides =
+          await MerchantSupervisorLocalStore.getSuspensionOverrides();
+      if (mounted) setState(() => _suspensionOverrides = overrides);
+    } on Object catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'merchant suspension status',
+        ),
+      );
+    }
+  }
+
+  bool _isSuspended(MerchantEntity merchant) =>
+      _suspensionOverrides[merchant.id] ??
+      (merchant.isSuspended ||
+          merchant.status == MerchantStatus.temporarilySuspended);
 
   void _onChipSelected(int index, MerchantsCubit cubit) {
     setState(() {
@@ -54,11 +89,59 @@ class _SupervisedMerchantsContentState
       status = MerchantStatus.activeVerified;
     } else if (index == 2) {
       status = MerchantStatus.underAudit;
-    } else if (index == 3) {
-      status = MerchantStatus.temporarilySuspended;
     }
 
     cubit.setFilterStatus(status, index);
+  }
+
+  Future<void> _liftSuspension(
+    BuildContext context,
+    MerchantEntity merchant,
+    AppLocalizations l10n,
+  ) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.merchantUnsuspendAction),
+        content: Text(l10n.merchantUnsuspendConfirm),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(l10n.cancelAction),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text(l10n.merchantUnsuspendAction),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !context.mounted) return;
+
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+    try {
+      await MerchantSupervisorLocalStore.setMerchantSuspended(
+        merchantId: merchant.id,
+        merchantName: merchant.getName(isArabic),
+        isSuspended: false,
+        action: l10n.merchantAuditUnsuspended,
+        details: l10n.merchantUnsuspendSuccess,
+      );
+      if (context.mounted) {
+        AppSnackBar.showSuccess(context, l10n.merchantUnsuspendSuccess);
+      }
+    } on Object catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'merchant suspension status',
+        ),
+      );
+      if (context.mounted) {
+        AppSnackBar.showError(context, l10n.merchantSuspensionSaveError);
+      }
+    }
   }
 
   void _showAddMerchantSheet(BuildContext context) {
@@ -337,7 +420,12 @@ class _SupervisedMerchantsContentState
           }
 
           final stats = state.stats;
-          final merchants = state.filteredMerchants;
+          final isSuspendedFilter = _selectedChipIndex == 3;
+          final merchants = state.filteredMerchants
+              .where((merchant) => isSuspendedFilter
+                  ? _isSuspended(merchant)
+                  : _suspensionOverrides[merchant.id] != true)
+              .toList(growable: false);
 
           final isAllFilterActive =
               _selectedChipIndex == 0 && _searchController.text.trim().isEmpty;
@@ -375,8 +463,29 @@ class _SupervisedMerchantsContentState
                       const SizedBox(height: 12),
 
                       // Filter Chips Row
-                      _buildFilterChipsRow(context, stats, cubit, l10n),
+                      _buildFilterChipsRow(
+                        context,
+                        stats,
+                        cubit,
+                        l10n,
+                        suspendedCount:
+                            state.allMerchants.where(_isSuspended).length,
+                      ),
                       const SizedBox(height: 14),
+                      if (isSuspendedFilter) ...[
+                        Align(
+                          alignment: AlignmentDirectional.centerStart,
+                          child: Text(
+                            l10n.merchantSuspendedSection,
+                            style: const TextStyle(
+                              color: AppColors.primaryDark,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                      ],
 
                       // Sort & Result Count Header
                       _buildSortHeader(context, merchants.length, l10n),
@@ -389,7 +498,12 @@ class _SupervisedMerchantsContentState
                         for (final merchant in displayedMerchants)
                           Padding(
                             padding: const EdgeInsets.only(bottom: 14),
-                            child: _buildMerchantCard(context, merchant, l10n),
+                            child: _buildMerchantCard(
+                              context,
+                              merchant,
+                              l10n,
+                              isSuspended: _isSuspended(merchant),
+                            ),
                           ),
                         if (isAllFilterActive && !_showAllRemaining)
                           Padding(
@@ -795,7 +909,8 @@ class _SupervisedMerchantsContentState
   }
 
   Widget _buildFilterChipsRow(BuildContext context, SupervisorStatsEntity stats,
-      MerchantsCubit cubit, AppLocalizations l10n) {
+      MerchantsCubit cubit, AppLocalizations l10n,
+      {required int suspendedCount}) {
     final chips = [
       {'label': l10n.filterAllWithCount(stats.totalCount), 'color': null},
       {
@@ -807,7 +922,7 @@ class _SupervisedMerchantsContentState
         'color': const Color(0xFFF59E0B)
       },
       {
-        'label': l10n.filterSuspendedWithCount(stats.suspendedCount),
+        'label': l10n.filterSuspendedWithCount(suspendedCount),
         'color': const Color(0xFFEF4444)
       },
     ];
@@ -962,10 +1077,12 @@ class _SupervisedMerchantsContentState
   }
 
   Widget _buildMerchantCard(
-      BuildContext context, MerchantEntity merchant, AppLocalizations l10n) {
+    BuildContext context,
+    MerchantEntity merchant,
+    AppLocalizations l10n, {
+    required bool isSuspended,
+  }) {
     final isArabic = Localizations.localeOf(context).languageCode == 'ar';
-    final isSuspended = merchant.isSuspended ||
-        merchant.status == MerchantStatus.temporarilySuspended;
     final hasFinancialAlert = merchant.financialWithdrawalAlert != null;
     final hasSupervisoryNote = merchant.violationNotice != null && !isSuspended;
 
@@ -1022,6 +1139,11 @@ class _SupervisedMerchantsContentState
               fontSize: 15.5,
               fontWeight: FontWeight.bold,
             ),
+          ),
+          const SizedBox(height: 6),
+          Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: _merchantTierBadge(l10n, merchant.isFeatured),
           ),
           const SizedBox(height: 4),
           Text(
@@ -1184,6 +1306,27 @@ class _SupervisedMerchantsContentState
               children: [
                 Expanded(
                   child: OutlinedButton(
+                    onPressed: () => _liftSuspension(context, merchant, l10n),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: AppColors.successDark,
+                      side: const BorderSide(color: Color(0xFFBBE8D1)),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: Text(
+                      l10n.merchantUnsuspendAction,
+                      style: const TextStyle(
+                        fontSize: 12.5,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: OutlinedButton(
                     onPressed: () => _showSummonDialog(context, merchant),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: const Color(0xFFB45309),
@@ -1202,29 +1345,29 @@ class _SupervisedMerchantsContentState
                     ),
                   ),
                 ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () =>
-                        _showReviewViolationDialog(context, merchant),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: const Color(0xFFDC2626),
-                      side: const BorderSide(color: Color(0xFFFECACA)),
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: Text(
-                      l10n.reviewViolationAndUnfreeze,
-                      style: const TextStyle(
-                        fontSize: 12.5,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+              ],
+            ),
+            const SizedBox(height: 7),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton(
+                onPressed: () => _showReviewViolationDialog(context, merchant),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: const Color(0xFFDC2626),
+                  side: const BorderSide(color: Color(0xFFFECACA)),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-              ],
+                child: Text(
+                  l10n.reviewViolationAndUnfreeze,
+                  style: const TextStyle(
+                    fontSize: 12.5,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             ),
             const SizedBox(height: 8),
           ],
@@ -1257,8 +1400,10 @@ class _SupervisedMerchantsContentState
                   onPressed: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (_) =>
-                            MerchantDetailsScreen(merchant: merchant),
+                        builder: (_) => MerchantDetailsScreen(
+                          merchant: merchant,
+                          isLocallySuspended: _suspensionOverrides[merchant.id],
+                        ),
                       ),
                     );
                   },
@@ -1281,6 +1426,39 @@ class _SupervisedMerchantsContentState
                 ),
               ),
             ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _merchantTierBadge(AppLocalizations l10n, bool isFeatured) {
+    final color =
+        isFeatured ? const Color(0xFF9A6700) : AppColors.textSecondary;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: isFeatured ? const Color(0xFFFFF4CC) : const Color(0xFFF1F3F5),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            isFeatured ? Icons.star : Icons.storefront_outlined,
+            size: 12,
+            color: color,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            isFeatured
+                ? l10n.merchantFeaturedBadge
+                : l10n.merchantStandardBadge,
+            style: TextStyle(
+              color: color,
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ],
       ),

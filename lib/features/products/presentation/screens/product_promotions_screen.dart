@@ -5,7 +5,11 @@ import 'package:intl/intl.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/di/injection_container.dart';
+import '../../../../features/finance/domain/entities/withdrawal_request_entity.dart';
+import '../../../../features/finance/domain/repositories/finance_repository.dart';
+import '../../../../features/wasalny_supervisor/data/wasalny_local_event_store.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../data/product_promotion_local_store.dart';
 import '../../domain/entities/product_promotion_request.dart';
 import '../../domain/entities/product_supervisor_audit_entry.dart';
 import '../../domain/repositories/product_supervisor_audit_repository.dart';
@@ -26,14 +30,137 @@ class ProductPromotionsScreen extends StatefulWidget {
 }
 
 class _ProductPromotionsScreenState extends State<ProductPromotionsScreen> {
+  final ProductPromotionLocalStore _localStore = ProductPromotionLocalStore();
   late List<ProductPromotionRequest> _requests;
   _PromotionFilter _filter = _PromotionFilter.all;
   bool _isSaving = false;
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
     _requests = _sampleRequests();
+    _loadRequests();
+  }
+
+  String get _accountKey => widget.isWasalny ? 'wasalny' : 'products';
+
+  Future<void> _loadRequests() async {
+    try {
+      final requests = await _localStore.load(
+        account: _accountKey,
+        initialRequests: _sampleRequests(),
+      );
+      if (!mounted) return;
+      setState(() {
+        _requests = requests;
+        _isLoading = false;
+      });
+      await _refreshFinanceDecisions();
+      if (widget.isWasalny) await _publishNewProductEvents();
+    } catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'product promotions',
+          context: ErrorDescription('while loading saved promotion requests'),
+        ),
+      );
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _saveRequests(List<ProductPromotionRequest> requests) =>
+      _localStore.save(account: _accountKey, requests: requests);
+
+  Future<void> _publishNewProductEvents() async {
+    for (final request in _requests.where(
+      (item) => item.status == ProductPromotionStatus.pending,
+    )) {
+      try {
+        await WasalnyLocalEventStore().publish(
+          WasalnyLocalEvent(
+            id: 'wasalny-new-product-${request.id}',
+            recipient: 'wasalny',
+            source: 'wasalny',
+            titleAr: 'طلب ترويج منتج جديد',
+            titleEn: 'New product promotion request',
+            messageAr:
+                '${request.productNameAr} من ${request.merchantNameAr}',
+            messageEn:
+                '${request.productNameEn} by ${request.merchantNameEn}',
+            createdAt: request.requestedAt,
+          ),
+        );
+      } catch (error, stackTrace) {
+        FlutterError.reportError(
+          FlutterErrorDetails(
+            exception: error,
+            stack: stackTrace,
+            library: 'Wasalny promotions',
+            context: ErrorDescription('while publishing a new-product notice'),
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _refreshFinanceDecisions() async {
+    try {
+      final result = await sl<FinanceRepository>().getMerchantWithdrawals();
+      final financialRequests =
+          result.fold(
+        (failure) => throw StateError(failure.message),
+        (items) => items,
+      );
+      if (!mounted) return;
+      final financeBySource = {
+        for (final item in financialRequests)
+          if (item.operationType == FinancialOperationType.promotion &&
+              item.sourceAccount != null)
+            item.sourceAccount!: item,
+      };
+      var changed = false;
+      final updatedRequests = _requests.map((request) {
+        final decision = financeBySource[request.id];
+        if (decision?.status == RequestStatus.approved &&
+            !request.paymentConfirmedByFinance) {
+          changed = true;
+          return request.copyWith(paymentConfirmedByFinance: true);
+        }
+        if (decision?.status == RequestStatus.rejected &&
+            request.status != ProductPromotionStatus.rejected) {
+          changed = true;
+          return request.copyWith(
+            status: ProductPromotionStatus.rejected,
+            decisionNote: decision?.alertNotice,
+          );
+        }
+        return request;
+      }).toList();
+      if (changed) await _saveRequests(updatedRequests);
+      if (!mounted) return;
+      setState(() {
+        _requests = updatedRequests;
+      });
+    } catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'Wasalny promotions',
+          context: ErrorDescription('while loading finance decisions'),
+        ),
+      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.productAuditSaveError),
+          ),
+        );
+      }
+    }
   }
 
   List<ProductPromotionRequest> _sampleRequests() {
@@ -51,7 +178,7 @@ class _ProductPromotionsScreenState extends State<ProductPromotionsScreen> {
           durationDays: 7,
           price: 120,
           requestedAt: now.subtract(const Duration(minutes: 18)),
-          paymentConfirmedByFinance: true,
+          paymentConfirmedByFinance: false,
         ),
         ProductPromotionRequest(
           id: 'wasalny-promotion-2',
@@ -174,9 +301,11 @@ class _ProductPromotionsScreenState extends State<ProductPromotionsScreen> {
 
     return Directionality(
       textDirection: isArabic ? ui.TextDirection.rtl : ui.TextDirection.ltr,
-      child: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
-        children: [
+      child: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : ListView(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+              children: [
           _buildIntro(l10n),
           const SizedBox(height: 12),
           Row(
@@ -207,8 +336,8 @@ class _ProductPromotionsScreenState extends State<ProductPromotionsScreen> {
                   tint: const Color(0xFFEAF0FF),
                 ),
               ),
-            ],
-          ),
+                  ],
+                ),
           const SizedBox(height: 16),
           _buildPlanInfo(l10n),
           const SizedBox(height: 18),
@@ -265,6 +394,7 @@ class _ProductPromotionsScreenState extends State<ProductPromotionsScreen> {
                 ProductPromotionStatus.active,
                 l10n,
               ),
+              canRequestFinanceReview: true,
               onShowPaymentStatus: () => _showPaymentStatus(
                 request,
                 l10n,
@@ -392,6 +522,69 @@ class _ProductPromotionsScreenState extends State<ProductPromotionsScreen> {
     String? note,
   }) async {
     if (_isSaving) return;
+    if (status == ProductPromotionStatus.active &&
+        !request.paymentConfirmedByFinance) {
+      setState(() => _isSaving = true);
+      try {
+        final result = await sl<FinanceRepository>()
+            .submitMerchantFinancialRequest(
+          beneficiaryName: request.merchantNameAr,
+          requestTitle:
+              'طلب ترويج ${widget.isWasalny ? 'وصلني' : 'المنتجات'} '
+              '${request.adReference} لمدة ${request.durationDays} يوم',
+          sourceAccount: request.id,
+          amount: request.price.toDouble(),
+          beneficiaryType: BeneficiaryType.user,
+          operationType: FinancialOperationType.promotion,
+        );
+        final financialRequest = result.fold(
+          (failure) => throw StateError(failure.message),
+          (item) => item,
+        );
+        await WasalnyLocalEventStore().publish(
+          WasalnyLocalEvent(
+            id: 'finance-promotion-${financialRequest.id}',
+            recipient: 'finance',
+            source: _accountKey,
+            titleAr: widget.isWasalny
+                ? 'طلب ترويج وصلني جديد'
+                : 'طلب ترويج منتجات جديد',
+            titleEn: widget.isWasalny
+                ? 'New Wasalny promotion request'
+                : 'New product promotion request',
+            messageAr:
+                '${request.productNameAr} - ${request.price} ر.س. بانتظار مراجعة المشرف المالي.',
+            messageEn:
+                '${request.productNameEn} - ${request.price} SAR awaits finance review.',
+            createdAt: DateTime.now(),
+          ),
+        );
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(l10n.financeWalletRequestSubmitted),
+          ),
+        );
+        return;
+      } catch (error, stackTrace) {
+        FlutterError.reportError(
+          FlutterErrorDetails(
+            exception: error,
+            stack: stackTrace,
+            library: 'product promotions',
+            context: ErrorDescription('while sending promotion to finance'),
+          ),
+        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(l10n.productAuditSaveError)),
+          );
+        }
+        return;
+      } finally {
+        if (mounted) setState(() => _isSaving = false);
+      }
+    }
     if (status == ProductPromotionStatus.active) {
       final confirmed = await _showPaymentStatus(
         request,
@@ -408,9 +601,12 @@ class _ProductPromotionsScreenState extends State<ProductPromotionsScreen> {
       await sl<ProductSupervisorAuditRepository>().recordEntry(
         ProductSupervisorAuditEntry(
           id: DateTime.now().microsecondsSinceEpoch.toString(),
-          actionKey: status == ProductPromotionStatus.active
-              ? 'promotion_approved'
-              : 'promotion_rejected',
+          actionKey: [
+            if (widget.isWasalny) 'wasalny_',
+            status == ProductPromotionStatus.active
+                ? 'promotion_approved'
+                : 'promotion_rejected',
+          ].join(),
           subject: _title(request, l10n.localeName.startsWith('ar')),
           details: [
             request.adReference,
@@ -420,16 +616,16 @@ class _ProductPromotionsScreenState extends State<ProductPromotionsScreen> {
           occurredAt: DateTime.now(),
         ),
       );
-      if (!mounted) return;
-      setState(() {
-        _requests = _requests
+      final updatedRequests = _requests
             .map(
               (item) => item.id == request.id
                   ? item.copyWith(status: status, decisionNote: note)
                   : item,
             )
             .toList();
-      });
+      await _saveRequests(updatedRequests);
+      if (!mounted) return;
+      setState(() => _requests = updatedRequests);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -648,6 +844,7 @@ class _PromotionRequestCard extends StatelessWidget {
   final bool isSaving;
   final AppLocalizations l10n;
   final VoidCallback onApprove;
+  final bool canRequestFinanceReview;
   final VoidCallback onShowPaymentStatus;
   final VoidCallback onReject;
 
@@ -657,6 +854,7 @@ class _PromotionRequestCard extends StatelessWidget {
     required this.isSaving,
     required this.l10n,
     required this.onApprove,
+    this.canRequestFinanceReview = false,
     required this.onShowPaymentStatus,
     required this.onReject,
   });
@@ -771,13 +969,18 @@ class _PromotionRequestCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                if (request.paymentConfirmedByFinance) ...[
+                if (request.paymentConfirmedByFinance ||
+                    canRequestFinanceReview) ...[
                   const SizedBox(width: 8),
                   Expanded(
                     child: FilledButton.icon(
                       onPressed: isSaving ? null : onApprove,
                       icon: const Icon(Icons.check, size: 17),
-                      label: Text(l10n.productPromotionApprove),
+                      label: Text(
+                        request.paymentConfirmedByFinance
+                            ? l10n.productPromotionApprove
+                            : l10n.wasalnyPromotionSendToFinance,
+                      ),
                       style: FilledButton.styleFrom(
                           backgroundColor: AppColors.primaryDark),
                     ),

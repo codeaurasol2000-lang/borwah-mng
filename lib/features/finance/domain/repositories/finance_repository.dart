@@ -28,8 +28,51 @@ abstract class FinanceRepository {
     required String reason,
     String? attachmentName,
   });
-  Future<Either<Failure, List<WithdrawalRequestEntity>>> getMerchantWithdrawals();
-  Future<Either<Failure, List<WithdrawalRequestEntity>>> getSupervisorWithdrawals();
+  Future<Either<Failure, List<WithdrawalRequestEntity>>>
+      getMerchantWithdrawals();
+  Future<Either<Failure, WithdrawalRequestEntity>>
+      submitMerchantFinancialRequest({
+    required String beneficiaryName,
+    required String requestTitle,
+    required String sourceAccount,
+    required double amount,
+    BeneficiaryType beneficiaryType = BeneficiaryType.merchant,
+    FinancialOperationType operationType = FinancialOperationType.deposit,
+  });
+  Future<Either<Failure, void>> approveMerchantFinancialRequest(
+      String requestId);
+  Future<Either<Failure, void>> freezeMerchantFinancialRequest(
+    String requestId,
+    String reason,
+  );
+  Future<Either<Failure, void>> rejectMerchantFinancialRequest(
+    String requestId,
+    String reason,
+  );
+  Future<Either<Failure, List<WithdrawalRequestEntity>>>
+      getSupervisorWithdrawals();
+  Future<Either<Failure, WithdrawalRequestEntity>>
+      submitSupervisorFinancialRequest({
+    required String beneficiaryName,
+    required String beneficiaryRole,
+    required String sourceAccount,
+    required double amount,
+    required FinancialOperationType operationType,
+    required String bankName,
+    required String iban,
+    required String transferMethod,
+    required String dateText,
+  });
+  Future<Either<Failure, WithdrawalRequestEntity>> submitSupervisorWithdrawal({
+    required String beneficiaryName,
+    required String beneficiaryRole,
+    required String sourceAccount,
+    required double amount,
+    FinancialOperationType operationType = FinancialOperationType.withdrawal,
+    required String bankName,
+    required String iban,
+    required String transferMethod,
+  });
   Future<Either<Failure, List<WithdrawalRequestEntity>>> getFrozenWithdrawals();
   Future<Either<Failure, void>> restoreFrozenWithdrawal(
       String requestId, BeneficiaryType beneficiaryType);
@@ -52,5 +95,10 @@ abstract class FinanceRepository {
   Future<Either<Failure, DepartmentWalletEntity>> getDepartmentWallet(
       DepartmentType type);
   Future<Either<Failure, void>> approveWithdrawal(String requestId);
-  Future<Either<Failure, void>> freezeWithdrawal(String requestId, String reason);
+  Future<Either<Failure, void>> freezeWithdrawal(
+      String requestId, String reason);
+  Future<Either<Failure, void>> rejectWithdrawal(
+    String requestId,
+    String reason,
+  );
 }

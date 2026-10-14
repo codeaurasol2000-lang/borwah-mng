@@ -1,13 +1,40 @@
+import 'dart:convert';
+
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../domain/entities/wasalny_ad.dart';
 import 'wasalny_ads_data_source.dart';
 
 class WasalnyAdsMockDataSource implements WasalnyAdsDataSource {
   WasalnyAdsMockDataSource() : _ads = _sampleAds();
 
+  static const _storageKey = 'wasalny_ad_decisions_v1';
   final List<WasalnyAd> _ads;
 
   @override
-  Future<List<WasalnyAd>> getAds() async => List.unmodifiable(_ads);
+  Future<List<WasalnyAd>> getAds() async {
+    final preferences = await SharedPreferences.getInstance();
+    final encoded = preferences.getString(_storageKey);
+    if (encoded != null) {
+      final decoded = jsonDecode(encoded);
+      if (decoded is! Map<String, dynamic>) {
+        throw const FormatException('Invalid Wasalny ad decisions.');
+      }
+      for (var index = 0; index < _ads.length; index++) {
+        final decision = decoded[_ads[index].id];
+        if (decision is! Map<String, dynamic>) continue;
+        final statusName = decision['status'];
+        if (statusName is! String) {
+          throw const FormatException('Invalid Wasalny ad status.');
+        }
+        _ads[index] = _ads[index].copyWith(
+          status: WasalnyAdStatus.values.byName(statusName),
+          decisionNote: decision['decisionNote'] as String?,
+        );
+      }
+    }
+    return List.unmodifiable(_ads);
+  }
 
   @override
   Future<WasalnyAd> updateAdStatus({
@@ -23,7 +50,24 @@ class WasalnyAdsMockDataSource implements WasalnyAdsDataSource {
       status: status,
       decisionNote: decisionNote,
     );
+    final previous = _ads[index];
     _ads[index] = updated;
+    try {
+      final preferences = await SharedPreferences.getInstance();
+      await preferences.setString(
+        _storageKey,
+        jsonEncode({
+          for (final ad in _ads)
+            ad.id: {
+              'status': ad.status.name,
+              'decisionNote': ad.decisionNote,
+            },
+        }),
+      );
+    } catch (_) {
+      _ads[index] = previous;
+      rethrow;
+    }
     return updated;
   }
 
@@ -49,6 +93,7 @@ class WasalnyAdsMockDataSource implements WasalnyAdsDataSource {
             'Canon EOS R6 camera in near-new condition, used for a limited number of indoor shoots. No scratches or operational defects; includes the original box, charger, and battery.',
         photoCount: 4,
         sellerPhone: '050 000 1042',
+        isSellerPremium: true,
       ),
       WasalnyAd(
         id: 'wasalny-ad-2',

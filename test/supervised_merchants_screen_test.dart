@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:barwah_app/core/di/injection_container.dart' as di;
 import 'package:barwah_app/features/merchants/presentation/screens/supervised_merchants_screen.dart';
 import 'package:barwah_app/features/merchants/presentation/screens/merchant_profile_screen.dart';
@@ -80,7 +81,8 @@ void main() {
     // Card 3
     expect(find.text('مجوهرات البريق والنخبة'), findsOneWidget);
     expect(find.text('#MCH-6520'), findsOneWidget);
-    expect(find.text('طلب سحب أرباح معلق بمبلغ 42,000 ر.س يتطلب مطابقة الفواتير'),
+    expect(
+        find.text('طلب سحب أرباح معلق بمبلغ 42,000 ر.س يتطلب مطابقة الفواتير'),
         findsOneWidget);
 
     // Card 4
@@ -192,9 +194,62 @@ void main() {
     expect(find.byType(MerchantConversationScreen), findsOneWidget);
   });
 
+  testWidgets('suspending and restoring a merchant moves it in the list',
+      (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    tester.view.physicalSize = const Size(390, 1800);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+
+    await tester.pumpWidget(buildTestWidget(
+      child: const SupervisedMerchantsScreen(),
+      locale: const Locale('ar'),
+    ));
+    await tester.pumpAndSettle();
+    expect(find.text('تاجر مميز'), findsWidgets);
+    expect(find.text('تاجر عادي'), findsWidgets);
+
+    await tester.tap(find.text('عرض الملف والتحكم').first);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('تعليق مؤقت'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('تأكيد التعليق المؤقت وإشعار التاجر'));
+    await tester.pumpAndSettle();
+    expect(find.text('فك التعليق'), findsOneWidget);
+    await tester.binding.handlePopRoute();
+    await tester.pumpAndSettle();
+
+    final suspendedFilter = find.text('2 تعليق مؤقت');
+    await tester.ensureVisible(suspendedFilter);
+    await tester.tap(suspendedFilter);
+    await tester.pumpAndSettle();
+    expect(find.text('التجار المعلقون'), findsOneWidget);
+    final merchantCard = find.ancestor(
+      of: find.text('مؤسسة الأفق لتجارة السيارات'),
+      matching: find.byType(Column),
+    ).first;
+    final unsuspendButton = find.descendant(
+      of: merchantCard,
+      matching: find.text('فك التعليق'),
+    );
+    expect(unsuspendButton, findsOneWidget);
+
+    await tester.ensureVisible(unsuspendButton);
+    await tester.tap(unsuspendButton);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('فك التعليق').last);
+    await tester.pumpAndSettle();
+    expect(find.text('مؤسسة الأفق لتجارة السيارات'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets(
       'MerchantProfileScreen metric 18 stores navigates to SupervisedMerchantsScreen',
       (tester) async {
+    SharedPreferences.setMockInitialValues({});
     tester.view.physicalSize = const Size(390, 1600);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(() => tester.view.resetPhysicalSize());

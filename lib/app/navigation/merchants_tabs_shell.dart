@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../core/di/injection_container.dart';
+import '../../core/widgets/local_event_inbox_screen.dart';
 import '../../features/finance/presentation/widgets/finance_navigation.dart';
 import '../../features/merchants/presentation/controllers/merchants_cubit.dart';
 import '../../features/merchants/presentation/screens/ads_management_screen.dart';
@@ -99,6 +100,20 @@ class _MerchantsTabsShellState extends State<MerchantsTabsShell> {
                 subtitle: l10n.merchantSupervisorRoleBadge,
                 showProfileButton: _currentIndex == 0,
                 onProfilePressed: () => _selectPage(3),
+                additionalActions: [
+                  IconButton(
+                    tooltip: l10n.productNotificationsTitle,
+                    onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => LocalEventInboxScreen(
+                          recipient: 'merchant',
+                          title: l10n.productNotificationsTitle,
+                        ),
+                      ),
+                    ),
+                    icon: const Icon(Icons.notifications_none_outlined),
+                  ),
+                ],
               ),
             ),
           ),

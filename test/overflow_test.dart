@@ -14,13 +14,16 @@ import 'package:barwah_app/features/finance/presentation/screens/profile_screen.
 import 'package:barwah_app/features/finance/presentation/screens/subscriptions_screen.dart';
 import 'package:barwah_app/features/finance/presentation/screens/supervisor_withdrawals_screen.dart';
 import 'package:barwah_app/features/finance/presentation/screens/transaction_history_screen.dart';
+import 'package:barwah_app/features/finance/data/datasources/finance_remote_data_source.dart';
 import 'package:barwah_app/app/navigation/finance_tabs_shell.dart';
 import 'package:barwah_app/app/navigation/merchants_tabs_shell.dart';
 import 'package:barwah_app/features/finance/presentation/widgets/finance_navigation.dart';
 import 'package:barwah_app/features/merchants/presentation/screens/merchant_financial_requests_screen.dart';
 import 'package:barwah_app/features/merchants/presentation/screens/advertisement_review_details_screen.dart';
 import 'package:barwah_app/features/merchants/presentation/screens/ads_management_screen.dart';
-import 'package:barwah_app/features/merchants/presentation/screens/merchant_wallet_screen.dart';
+import 'package:barwah_app/features/merchants/data/merchant_advertisement_local_store.dart';
+import 'package:barwah_app/features/merchants/domain/entities/merchant_entity.dart';
+import 'package:barwah_app/features/services_supervisor/presentation/screens/services_supervisor_wallet_screen.dart';
 import 'package:barwah_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -53,6 +56,14 @@ void main() {
 
   setUp(() async {
     await AppLocaleController.instance.setLocale('en');
+    final preferences = await SharedPreferences.getInstance();
+    await preferences.remove('merchant_supervisor_ad_actions_v1');
+    await preferences.remove('merchant_supervisor_financial_actions_v1');
+    await preferences.remove('merchant_supervisor_financial_requests_v1');
+    await MerchantAdvertisementLocalStore.saveStatus(
+      reference: 'AD-94820',
+      status: MerchantAdvertisementStatus.underReview,
+    );
   });
 
   Future<void> testScreen(WidgetTester tester, Widget widget) async {
@@ -129,7 +140,7 @@ void main() {
 
     await tester.tap(find.text('Approve and publish').first);
     await tester.pumpAndSettle();
-    expect(find.text('Ad approved'), findsWidgets);
+    expect(find.text('Waiting for finance review'), findsWidgets);
     expect(tester.takeException(), isNull);
   });
 
@@ -253,7 +264,7 @@ void main() {
     await tester.tap(find.text(l10n.adsApproveAction));
     await tester.pumpAndSettle();
     expect(find.byType(AdvertisementReviewDetailsScreen), findsNothing);
-    expect(find.text(l10n.adsApprovedStatus), findsWidgets);
+    expect(find.text(l10n.adsPremiumWaitingFinance), findsWidgets);
     expect(tester.takeException(), isNull);
   });
 
@@ -443,7 +454,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Merchant financial requests are read-only and filterable',
+  testWidgets('Merchant financial requests are reviewable and filterable',
       (tester) async {
     tester.view.physicalSize = const Size(390, 1600);
     tester.view.devicePixelRatio = 1;
@@ -458,6 +469,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
+    final l10n = await AppLocalizations.delegate.load(const Locale('en'));
     await tester.tap(
       find.descendant(
         of: find.byType(FinanceBottomNavigationBar),
@@ -465,10 +477,8 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-
     expect(find.byType(MerchantFinancialRequestsScreen), findsOneWidget);
-    expect(find.text('Financial actions are restricted to the CFO'),
-        findsOneWidget);
+    expect(find.text(l10n.finRequestLocalWorkflowNotice), findsOneWidget);
     expect(find.text('Sales profit transfer request'), findsOneWidget);
     await tester.ensureVisible(find.text('Sales profit transfer request'));
     final requestIconRect =
@@ -481,11 +491,20 @@ void main() {
     );
     expect(find.text('Annual Gold package subscription fee'), findsOneWidget);
     expect(find.text('Wallet balance withdrawal request'), findsOneWidget);
+    expect(find.text(l10n.finRequestSendToFinance), findsWidgets);
     expect(
-        tester.widgetList<OutlinedButton>(find.byType(OutlinedButton)).every(
-              (button) => button.onPressed == null,
-            ),
-        isTrue);
+      tester
+          .widget<OutlinedButton>(
+            find
+                .widgetWithText(
+                  OutlinedButton,
+                  l10n.finRequestSendToFinance,
+                )
+                .first,
+          )
+          .onPressed,
+      isNotNull,
+    );
     expect(tester.takeException(), isNull);
 
     await tester.ensureVisible(find.text('Package fees'));
@@ -524,7 +543,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text(l10n.finRequestReadOnlyNotice), findsOneWidget);
+    expect(find.text(l10n.finRequestLocalWorkflowNotice), findsOneWidget);
     expect(find.text(l10n.finRequestHistoryTitle), findsOneWidget);
     await tester.ensureVisible(find.text(l10n.finRequestCarTitle));
     final requestIconRect =
@@ -569,19 +588,22 @@ void main() {
     await tester.ensureVisible(find.text('Available balance and dues'));
     await tester.tap(find.text('Available balance and dues'));
     await tester.pumpAndSettle();
-    expect(find.byType(MerchantWalletScreen), findsOneWidget);
-    expect(find.text('Your wallet'), findsOneWidget);
-    expect(find.text('12,500'), findsOneWidget);
-    expect(find.text('Choose a transfer destination'), findsOneWidget);
-    await tester.tap(find.text('Bank transfer'));
+    expect(find.byType(ServicesSupervisorWalletScreen), findsOneWidget);
+    expect(find.text('My wallet and transactions'), findsOneWidget);
+    expect(find.text('Demo data'), findsOneWidget);
+    expect(find.text('Choose a transfer method'), findsOneWidget);
+    await tester.tap(find.text('Bank transfer').first);
     await tester.pumpAndSettle();
-    expect(find.text('SA0380000000608010167519'), findsOneWidget);
-    await tester.ensureVisible(find.text('Confirm and request withdrawal'));
+    expect(find.byKey(const ValueKey('services_wallet_bank')), findsOneWidget);
+    await tester.ensureVisible(find.text('Submit withdrawal request'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Confirm and request withdrawal'));
+    await tester.tap(find.text('Submit withdrawal request'));
     await tester.pumpAndSettle();
-    expect(
-        find.text('Withdrawal requests are not available yet'), findsOneWidget);
+    expect(find.text('Confirm withdrawal request'), findsOneWidget);
+    await tester.tap(find.widgetWithText(FilledButton, 'Confirm'));
+    await tester.pumpAndSettle();
+    final l10n = await AppLocalizations.delegate.load(const Locale('en'));
+    expect(find.text(l10n.financeWalletWithdrawalRequestSent), findsOneWidget);
     await tester.pump(const Duration(seconds: 5));
     await tester.pumpAndSettle();
     await tester.pageBack();
@@ -633,9 +655,9 @@ void main() {
 
     await tester.tap(find.text(l10n.merchantProfileBalanceTitle));
     await tester.pumpAndSettle();
-    expect(find.byType(MerchantWalletScreen), findsOneWidget);
-    expect(find.text(l10n.merchantWalletTitle), findsOneWidget);
-    expect(find.text(l10n.merchantWalletConfirmWithdrawal), findsOneWidget);
+    expect(find.byType(ServicesSupervisorWalletScreen), findsOneWidget);
+    expect(find.text('محفظتي والعمليات المالية'), findsOneWidget);
+    expect(find.text('طلب سحب رصيد'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
@@ -670,6 +692,50 @@ void main() {
 
   testWidgets('Test SupervisorWithdrawalsScreen in English', (tester) async {
     await testScreen(tester, const SupervisorWithdrawalsScreen());
+  });
+
+  testWidgets(
+      'Supervisor withdrawal archive shows final statuses without decision actions',
+      (tester) async {
+    final financeDataSource = di.sl<FinanceRemoteDataSource>();
+    await financeDataSource.submitSupervisorWithdrawal(
+      beneficiaryName: 'Pending workflow test',
+      beneficiaryRole: 'Merchant account supervisor',
+      sourceAccount: 'merchant',
+      amount: 100,
+      bankName: 'Test bank',
+      iban: 'TEST-PENDING',
+      transferMethod: 'Bank transfer',
+    );
+    final decidedRequest = await financeDataSource.submitSupervisorWithdrawal(
+      beneficiaryName: 'Archived workflow test',
+      beneficiaryRole: 'Merchant account supervisor',
+      sourceAccount: 'merchant',
+      amount: 100,
+      bankName: 'Test bank',
+      iban: 'TEST-ARCHIVED',
+      transferMethod: 'Bank transfer',
+    );
+    await financeDataSource.approveWithdrawal(decidedRequest.id);
+
+    await testScreen(tester, const SupervisorWithdrawalsScreen());
+
+    final l10n = AppLocalizations.of(
+      tester.element(find.byType(SupervisorWithdrawalsScreen)),
+    )!;
+    await tester.ensureVisible(find.text(l10n.financeRequestsArchiveTab));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(l10n.financeRequestsArchiveTab));
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(find.text(l10n.financeRequestApprovedBadge));
+    await tester.pumpAndSettle();
+
+    expect(find.text(l10n.financeRequestApprovalTitle), findsNothing);
+    expect(find.text(l10n.approveAndSendToAdmin), findsNothing);
+    expect(find.text(l10n.approveAndIssueBankOrder), findsNothing);
+    expect(find.text(l10n.financeRequestApprovedBadge), findsWidgets);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('Test EditMatrixScreen in English', (tester) async {

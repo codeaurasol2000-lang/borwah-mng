@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../domain/entities/subscription_request_entity.dart';
 import '../../domain/entities/department_wallet_entity.dart';
 import '../../domain/entities/expense_request_entity.dart';
@@ -8,11 +12,21 @@ import '../models/bank_account_model.dart';
 import '../models/finance_summary_model.dart';
 import 'finance_remote_data_source.dart';
 
+int _financialRequestSequence = 0;
+
+String _newFinancialRequestId(String prefix, String timestamp) =>
+    '$prefix-$timestamp-${_financialRequestSequence++}';
+
 class FinanceMockDataSource implements FinanceRemoteDataSource {
   final List<BankAccountEditRequestEntity> _bankAccountEditRequests = [];
   final List<ExpenseRequestEntity> _expenseRequests = [];
   List<WithdrawalRequestEntity>? _merchantWithdrawalRequests;
   List<WithdrawalRequestEntity>? _supervisorWithdrawalRequests;
+  bool _supervisorRequestsLoaded = false;
+  bool _merchantRequestsLoaded = false;
+  static const _supervisorRequestsStorageKey =
+      'finance_supervisor_operations_v1';
+  static const _merchantRequestsStorageKey = 'finance_merchant_withdrawals_v1';
   final List<BankLinkRequestEntity> _bankLinkRequests = [
     const BankLinkRequestEntity(
       id: '#TRD-5501',
@@ -31,7 +45,8 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
       bankNameEn: 'Al Rajhi Bank',
       crExpiryEn: '1448/04/15 AH',
       requestTypeEn: 'New Commercial Account Link & Verification Request',
-      matchDescriptionEn: '100% Verified match between commercial and bank name',
+      matchDescriptionEn:
+          '100% Verified match between commercial and bank name',
     ),
     const BankLinkRequestEntity(
       id: '#TRD-6022',
@@ -51,8 +66,10 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
       bankNameEn: 'Saudi National Bank (SNB)',
       crExpiryEn: '1447/11/20 AH',
       requestTypeEn: 'Approved Supplier Account Link Request',
-      matchDescriptionEn: 'Minor variance in legal suffixes of the commercial name',
-      warningNoteEn: 'Variance detected between CR suffix and bank account name',
+      matchDescriptionEn:
+          'Minor variance in legal suffixes of the commercial name',
+      warningNoteEn:
+          'Variance detected between CR suffix and bank account name',
     ),
     const BankLinkRequestEntity(
       id: '#TRD-7108',
@@ -72,7 +89,8 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
       bankNameEn: 'Riyad Bank',
       crExpiryEn: '1448/01/10 AH',
       requestTypeEn: 'Freelance Service Provider Account Link Request',
-      matchDescriptionEn: 'Sole proprietorship requires a recent stamped IBAN certificate',
+      matchDescriptionEn:
+          'Sole proprietorship requires a recent stamped IBAN certificate',
       warningNoteEn: 'Attached IBAN certificate is older than 6 months',
     ),
   ];
@@ -522,7 +540,166 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
         isInstantTransferReady: false,
       ),
     ]);
+    if (!_merchantRequestsLoaded) {
+      final preferences = await SharedPreferences.getInstance();
+      final encoded = preferences.getString(_merchantRequestsStorageKey);
+      if (encoded != null) {
+        final decoded = jsonDecode(encoded);
+        if (decoded is! List<dynamic>) {
+          throw const FormatException(
+              'Invalid merchant financial request list.');
+        }
+        _merchantWithdrawalRequests = decoded.map((value) {
+          if (value is! Map<String, dynamic>) {
+            throw const FormatException('Invalid merchant financial request.');
+          }
+          return _withdrawalRequestFromJson(value);
+        }).toList(growable: true);
+      }
+      _merchantRequestsLoaded = true;
+    }
     return List.unmodifiable(_merchantWithdrawalRequests!);
+  }
+
+  @override
+  Future<WithdrawalRequestEntity> submitMerchantFinancialRequest({
+    required String beneficiaryName,
+    required String requestTitle,
+    required String sourceAccount,
+    required double amount,
+    BeneficiaryType beneficiaryType = BeneficiaryType.merchant,
+    FinancialOperationType operationType = FinancialOperationType.deposit,
+  }) async {
+    await getMerchantWithdrawals();
+    if (beneficiaryName.trim().isEmpty ||
+        requestTitle.trim().isEmpty ||
+        sourceAccount.trim().isEmpty) {
+      throw ArgumentError(
+          'All merchant financial request details are required.');
+    }
+    if (!amount.isFinite || amount <= 0) {
+      throw ArgumentError.value(amount, 'amount', 'Amount must be positive.');
+    }
+
+    for (final request in _merchantWithdrawalRequests!) {
+      if (request.sourceAccount == sourceAccount.trim() &&
+          request.sourceOfFunds == requestTitle.trim() &&
+          request.status != RequestStatus.rejected) {
+        return request;
+      }
+    }
+
+    final timestamp = DateTime.now().microsecondsSinceEpoch.toString();
+    final request = WithdrawalRequestEntity(
+      id: _newFinancialRequestId('MER-FIN', timestamp),
+      requestNumber: 'MER-FIN-${timestamp.substring(timestamp.length - 6)}',
+      beneficiaryName: beneficiaryName.trim(),
+      beneficiaryRole: beneficiaryType == BeneficiaryType.user
+          ? 'عميل وصلني'
+          : 'طلب مالي من مشرف التجار',
+      beneficiaryType: beneficiaryType,
+      grossAmount: amount,
+      platformFeePercentage: 0,
+      platformFeeAmount: 0,
+      netAmount: amount,
+      bankName: 'طلب مالي للتاجر',
+      iban: requestTitle.trim(),
+      dateText: DateTime.now().toIso8601String(),
+      status: RequestStatus.pending,
+      sourceOfFunds: requestTitle.trim(),
+      sourceAccount: sourceAccount.trim(),
+      operationType: operationType,
+    );
+    final updated = List<WithdrawalRequestEntity>.of(
+      _merchantWithdrawalRequests!,
+    )..insert(0, request);
+    await _persistMerchantRequests(updated);
+    _merchantWithdrawalRequests = updated;
+    return request;
+  }
+
+  @override
+  Future<void> approveMerchantFinancialRequest(String requestId) =>
+      _updateMerchantFinancialRequest(
+        requestId,
+        (request) => request.copyWith(status: RequestStatus.approved),
+      );
+
+  @override
+  Future<void> freezeMerchantFinancialRequest(
+    String requestId,
+    String reason,
+  ) async {
+    final normalizedReason = reason.trim();
+    if (normalizedReason.isEmpty) {
+      throw ArgumentError.value(
+        reason,
+        'reason',
+        'A freeze reason is required.',
+      );
+    }
+    await _updateMerchantFinancialRequest(
+      requestId,
+      (request) => request.copyWith(
+        status: RequestStatus.underInvestigation,
+        alertNotice: normalizedReason,
+      ),
+    );
+  }
+
+  @override
+  Future<void> rejectMerchantFinancialRequest(
+    String requestId,
+    String reason,
+  ) async {
+    if (reason.trim().isEmpty) {
+      throw ArgumentError.value(
+          reason, 'reason', 'A rejection reason is required.');
+    }
+    await _updateMerchantFinancialRequest(
+      requestId,
+      (request) => request.copyWith(
+        status: RequestStatus.rejected,
+        alertNotice: reason.trim(),
+      ),
+    );
+  }
+
+  Future<void> _updateMerchantFinancialRequest(
+    String requestId,
+    WithdrawalRequestEntity Function(WithdrawalRequestEntity) update,
+  ) async {
+    await getMerchantWithdrawals();
+    final index = _merchantWithdrawalRequests!.indexWhere(
+      (request) => request.id == requestId,
+    );
+    if (index < 0) {
+      throw StateError('Merchant financial request $requestId was not found.');
+    }
+    final current = _merchantWithdrawalRequests![index];
+    if (current.status != RequestStatus.pending) {
+      throw StateError(
+          'Only pending merchant financial requests can be updated.');
+    }
+    final updated = List<WithdrawalRequestEntity>.of(
+      _merchantWithdrawalRequests!,
+    );
+    updated[index] = update(current);
+    await _persistMerchantRequests(updated);
+    _merchantWithdrawalRequests = updated;
+  }
+
+  Future<void> _persistMerchantRequests(
+    List<WithdrawalRequestEntity> requests,
+  ) async {
+    final preferences = await SharedPreferences.getInstance();
+    final saved = await preferences.setString(
+      _merchantRequestsStorageKey,
+      jsonEncode(requests.map(_withdrawalRequestToJson).toList()),
+    );
+    if (!saved) {
+      throw StateError('Could not persist merchant financial requests.');
+    }
   }
 
   @override
@@ -588,8 +765,111 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
         isInstantTransferReady: false,
       ),
     ]);
+    if (!_supervisorRequestsLoaded) {
+      final preferences = await SharedPreferences.getInstance();
+      final encoded = preferences.getString(_supervisorRequestsStorageKey);
+      if (encoded != null) {
+        final decoded = jsonDecode(encoded);
+        if (decoded is! List<dynamic>) {
+          throw const FormatException(
+            'Invalid supervisor financial request list.',
+          );
+        }
+        _supervisorWithdrawalRequests = decoded.map((value) {
+          if (value is! Map<String, dynamic>) {
+            throw const FormatException(
+              'Invalid supervisor financial request.',
+            );
+          }
+          return _withdrawalRequestFromJson(value);
+        }).toList(growable: true);
+      }
+      _supervisorRequestsLoaded = true;
+    }
     return List.unmodifiable(_supervisorWithdrawalRequests!);
   }
+
+  @override
+  Future<WithdrawalRequestEntity> submitSupervisorFinancialRequest({
+    required String beneficiaryName,
+    required String beneficiaryRole,
+    required String sourceAccount,
+    required double amount,
+    required FinancialOperationType operationType,
+    required String bankName,
+    required String iban,
+    required String transferMethod,
+    required String dateText,
+  }) async {
+    if (beneficiaryName.trim().isEmpty ||
+        beneficiaryRole.trim().isEmpty ||
+        sourceAccount.trim().isEmpty ||
+        bankName.trim().isEmpty ||
+        iban.trim().isEmpty ||
+        transferMethod.trim().isEmpty) {
+      throw ArgumentError('All financial request details are required.');
+    }
+    if (!amount.isFinite || amount <= 0) {
+      throw ArgumentError.value(amount, 'amount', 'Amount must be positive.');
+    }
+
+    await getSupervisorWithdrawals();
+    final now = DateTime.now();
+    final id = now.microsecondsSinceEpoch.toString();
+    final request = WithdrawalRequestEntity(
+      id: _newFinancialRequestId('SUP-OP', id),
+      requestNumber: 'SUP-OP-$id',
+      beneficiaryName: beneficiaryName.trim(),
+      beneficiaryRole: beneficiaryRole.trim(),
+      beneficiaryType: BeneficiaryType.supervisor,
+      grossAmount: amount,
+      platformFeePercentage: 0,
+      platformFeeAmount: 0,
+      netAmount: amount,
+      bankName: bankName.trim(),
+      iban: iban.trim(),
+      dateText: dateText.trim(),
+      status: RequestStatus.pending,
+      sourceOfFunds: operationType == FinancialOperationType.withdrawal
+          ? 'طلب سحب رصيد المحفظة؛ بانتظار اعتماد المشرف المالي.'
+          : 'طلب إيداع في المحفظة؛ لن يضاف الرصيد قبل اعتماد المشرف المالي.',
+      transferMethod: transferMethod.trim(),
+      operationType: operationType,
+      sourceAccount: sourceAccount.trim(),
+    );
+    _supervisorWithdrawalRequests!.insert(0, request);
+    try {
+      await _persistSupervisorRequests();
+    } catch (_) {
+      _supervisorWithdrawalRequests!
+          .removeWhere((item) => item.id == request.id);
+      rethrow;
+    }
+    return request;
+  }
+
+  @override
+  Future<WithdrawalRequestEntity> submitSupervisorWithdrawal({
+    required String beneficiaryName,
+    required String beneficiaryRole,
+    required String sourceAccount,
+    required double amount,
+    FinancialOperationType operationType = FinancialOperationType.withdrawal,
+    required String bankName,
+    required String iban,
+    required String transferMethod,
+  }) =>
+      submitSupervisorFinancialRequest(
+        beneficiaryName: beneficiaryName,
+        beneficiaryRole: beneficiaryRole,
+        sourceAccount: sourceAccount,
+        amount: amount,
+        operationType: operationType,
+        bankName: bankName,
+        iban: iban,
+        transferMethod: transferMethod,
+        dateText: DateTime.now().toIso8601String(),
+      );
 
   @override
   Future<List<WithdrawalRequestEntity>> getFrozenWithdrawals() async {
@@ -615,7 +895,8 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
           request.id == requestId && request.beneficiaryType == beneficiaryType,
     );
     if (requestIndex == -1) {
-      throw ArgumentError.value(requestId, 'requestId', 'Withdrawal not found.');
+      throw ArgumentError.value(
+          requestId, 'requestId', 'Withdrawal not found.');
     }
 
     final request = requests[requestIndex];
@@ -624,6 +905,15 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
       throw StateError('Withdrawal is no longer frozen.');
     }
     requests[requestIndex] = request.copyWith(status: RequestStatus.pending);
+    if (beneficiaryType == BeneficiaryType.supervisor ||
+        beneficiaryType == BeneficiaryType.serviceProvider) {
+      try {
+        await _persistSupervisorRequests();
+      } catch (_) {
+        requests[requestIndex] = request;
+        rethrow;
+      }
+    }
   }
 
   @override
@@ -634,7 +924,8 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
   ) async {
     final normalizedReason = reason.trim();
     if (normalizedReason.isEmpty) {
-      throw ArgumentError.value(reason, 'reason', 'Rejection reason is required.');
+      throw ArgumentError.value(
+          reason, 'reason', 'Rejection reason is required.');
     }
 
     final requests = await _withdrawalListFor(beneficiaryType);
@@ -643,7 +934,8 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
           request.id == requestId && request.beneficiaryType == beneficiaryType,
     );
     if (requestIndex == -1) {
-      throw ArgumentError.value(requestId, 'requestId', 'Withdrawal not found.');
+      throw ArgumentError.value(
+          requestId, 'requestId', 'Withdrawal not found.');
     }
 
     final request = requests[requestIndex];
@@ -655,6 +947,10 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
       status: RequestStatus.rejected,
       alertNotice: normalizedReason,
     );
+    if (beneficiaryType == BeneficiaryType.supervisor ||
+        beneficiaryType == BeneficiaryType.serviceProvider) {
+      await _persistSupervisorRequests();
+    }
   }
 
   @override
@@ -682,7 +978,8 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
   Future<void> freezeBankLinkRequest(String requestId, String reason) async {
     final normalizedReason = reason.trim();
     if (normalizedReason.isEmpty) {
-      throw ArgumentError.value(reason, 'reason', 'A freeze reason is required.');
+      throw ArgumentError.value(
+          reason, 'reason', 'A freeze reason is required.');
     }
 
     final index = _pendingBankLinkRequestIndex(requestId);
@@ -840,8 +1137,170 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
   }
 
   @override
-  Future<void> approveWithdrawal(String requestId) async {}
+  Future<void> approveWithdrawal(String requestId) async {
+    await getSupervisorWithdrawals();
+    final index = _supervisorWithdrawalRequests!
+        .indexWhere((request) => request.id == requestId);
+    if (index == -1) {
+      throw ArgumentError.value(
+        requestId,
+        'requestId',
+        'Supervisor financial request not found.',
+      );
+    }
+    final request = _supervisorWithdrawalRequests![index];
+    if (request.status != RequestStatus.pending) {
+      throw StateError('Only a pending financial request can be approved.');
+    }
+    _supervisorWithdrawalRequests![index] = request.copyWith(
+      status: RequestStatus.approved,
+      alertNotice: request.operationType == FinancialOperationType.withdrawal
+          ? 'Approved by the financial supervisor. Transfer execution requires the configured payment service.'
+          : 'Deposit approved by the financial supervisor. Balance posting requires the configured payment service.',
+    );
+    try {
+      await _persistSupervisorRequests();
+    } catch (_) {
+      _supervisorWithdrawalRequests![index] = request;
+      rethrow;
+    }
+  }
 
   @override
-  Future<void> freezeWithdrawal(String requestId, String reason) async {}
+  Future<void> freezeWithdrawal(String requestId, String reason) async {
+    final normalizedReason = reason.trim();
+    if (normalizedReason.isEmpty) {
+      throw ArgumentError.value(
+          reason, 'reason', 'A freeze reason is required.');
+    }
+    await getSupervisorWithdrawals();
+    final index = _supervisorWithdrawalRequests!
+        .indexWhere((request) => request.id == requestId);
+    if (index == -1) {
+      throw ArgumentError.value(
+        requestId,
+        'requestId',
+        'Supervisor financial request not found.',
+      );
+    }
+    final request = _supervisorWithdrawalRequests![index];
+    if (request.status != RequestStatus.pending) {
+      throw StateError('Only a pending financial request can be frozen.');
+    }
+    _supervisorWithdrawalRequests![index] = request.copyWith(
+      status: RequestStatus.underInvestigation,
+      alertNotice: normalizedReason,
+    );
+    try {
+      await _persistSupervisorRequests();
+    } catch (_) {
+      _supervisorWithdrawalRequests![index] = request;
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> rejectWithdrawal(String requestId, String reason) async {
+    final normalizedReason = reason.trim();
+    if (normalizedReason.isEmpty) {
+      throw ArgumentError.value(
+          reason, 'reason', 'A rejection reason is required.');
+    }
+    await getSupervisorWithdrawals();
+    final index = _supervisorWithdrawalRequests!
+        .indexWhere((request) => request.id == requestId);
+    if (index == -1) {
+      throw ArgumentError.value(
+        requestId,
+        'requestId',
+        'Supervisor financial request not found.',
+      );
+    }
+    final request = _supervisorWithdrawalRequests![index];
+    if (request.status != RequestStatus.pending) {
+      throw StateError('Only a pending financial request can be rejected.');
+    }
+    _supervisorWithdrawalRequests![index] = request.copyWith(
+      status: RequestStatus.rejected,
+      alertNotice: normalizedReason,
+    );
+    try {
+      await _persistSupervisorRequests();
+    } catch (_) {
+      _supervisorWithdrawalRequests![index] = request;
+      rethrow;
+    }
+  }
+
+  Future<void> _persistSupervisorRequests() async {
+    final preferences = await SharedPreferences.getInstance();
+    final encoded = jsonEncode(
+      _supervisorWithdrawalRequests!
+          .map(_withdrawalRequestToJson)
+          .toList(growable: false),
+    );
+    final saved =
+        await preferences.setString(_supervisorRequestsStorageKey, encoded);
+    if (!saved) {
+      throw StateError('Could not save supervisor financial requests.');
+    }
+  }
+
+  Map<String, Object?> _withdrawalRequestToJson(
+    WithdrawalRequestEntity request,
+  ) =>
+      {
+        'id': request.id,
+        'requestNumber': request.requestNumber,
+        'beneficiaryName': request.beneficiaryName,
+        'beneficiaryRole': request.beneficiaryRole,
+        'beneficiaryType': request.beneficiaryType.name,
+        'grossAmount': request.grossAmount,
+        'platformFeePercentage': request.platformFeePercentage,
+        'platformFeeAmount': request.platformFeeAmount,
+        'netAmount': request.netAmount,
+        'bankName': request.bankName,
+        'iban': request.iban,
+        'dateText': request.dateText,
+        'status': request.status.name,
+        'auditCheckResult': request.auditCheckResult,
+        'alertNotice': request.alertNotice,
+        'isInstantTransferReady': request.isInstantTransferReady,
+        'sourceOfFunds': request.sourceOfFunds,
+        'transferMethod': request.transferMethod,
+        'operationType': request.operationType.name,
+        'sourceAccount': request.sourceAccount,
+      };
+
+  WithdrawalRequestEntity _withdrawalRequestFromJson(
+    Map<String, dynamic> json,
+  ) =>
+      WithdrawalRequestEntity(
+        id: json['id'] as String,
+        requestNumber: json['requestNumber'] as String,
+        beneficiaryName: json['beneficiaryName'] as String,
+        beneficiaryRole: json['beneficiaryRole'] as String,
+        beneficiaryType: BeneficiaryType.values.byName(
+          json['beneficiaryType'] as String,
+        ),
+        grossAmount: (json['grossAmount'] as num).toDouble(),
+        platformFeePercentage:
+            (json['platformFeePercentage'] as num).toDouble(),
+        platformFeeAmount: (json['platformFeeAmount'] as num).toDouble(),
+        netAmount: (json['netAmount'] as num).toDouble(),
+        bankName: json['bankName'] as String,
+        iban: json['iban'] as String,
+        dateText: json['dateText'] as String,
+        status: RequestStatus.values.byName(json['status'] as String),
+        auditCheckResult: json['auditCheckResult'] as String?,
+        alertNotice: json['alertNotice'] as String?,
+        isInstantTransferReady:
+            json['isInstantTransferReady'] as bool? ?? false,
+        sourceOfFunds: json['sourceOfFunds'] as String?,
+        transferMethod: json['transferMethod'] as String?,
+        operationType: FinancialOperationType.values.byName(
+          json['operationType'] as String? ?? 'withdrawal',
+        ),
+        sourceAccount: json['sourceAccount'] as String?,
+      );
 }

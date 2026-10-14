@@ -6,6 +6,8 @@ import '../core/utils/app_locale_controller.dart';
 import '../core/widgets/app_launch_splash.dart';
 import '../features/auth/presentation/controllers/auth_cubit.dart';
 import '../features/auth/presentation/screens/login_screen.dart';
+import '../features/services_supervisor/presentation/screens/services_supervisor_tabs_shell.dart';
+import '../features/wasalny_supervisor/presentation/screens/wasalny_supervisor_notifications_screen.dart';
 import '../l10n/app_localizations.dart';
 import 'navigation/finance_tabs_shell.dart';
 import 'navigation/merchants_tabs_shell.dart';
@@ -55,6 +57,22 @@ class _BarwahAppState extends State<BarwahApp> {
     );
   }
 
+  void _openServices(BuildContext context) {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute<void>(
+        builder: (_) => ServicesSupervisorTabsShell(onLogout: _logout),
+      ),
+    );
+  }
+
+  void _openHeadSupervisor(BuildContext context) {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute<void>(
+        builder: (_) => WasalnyHeadEscalationsScreen(onLogout: _logout),
+      ),
+    );
+  }
+
   void _logout() {
     final navigator = _navigatorKey.currentState;
     final context = _navigatorKey.currentContext;
@@ -75,6 +93,8 @@ class _BarwahAppState extends State<BarwahApp> {
       onMerchantLogin: () => _openMerchants(context),
       onProductLogin: () => _openProducts(context),
       onWasalnyLogin: () => _openWasalny(context),
+      onServicesLogin: () => _openServices(context),
+      onHeadSupervisorLogin: () => _openHeadSupervisor(context),
     );
   }
 

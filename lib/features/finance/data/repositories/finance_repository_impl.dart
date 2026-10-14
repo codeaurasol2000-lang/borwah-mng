@@ -73,7 +73,8 @@ class FinanceRepositoryImpl implements FinanceRepository {
   }
 
   @override
-  Future<Either<Failure, List<ExpenseRequestEntity>>> getExpenseRequests() async {
+  Future<Either<Failure, List<ExpenseRequestEntity>>>
+      getExpenseRequests() async {
     try {
       return Right(await remoteDataSource.getExpenseRequests());
     } catch (error) {
@@ -104,7 +105,8 @@ class FinanceRepositoryImpl implements FinanceRepository {
   }
 
   @override
-  Future<Either<Failure, List<WithdrawalRequestEntity>>> getMerchantWithdrawals() async {
+  Future<Either<Failure, List<WithdrawalRequestEntity>>>
+      getMerchantWithdrawals() async {
     try {
       final result = await remoteDataSource.getMerchantWithdrawals();
       return Right(result);
@@ -114,7 +116,70 @@ class FinanceRepositoryImpl implements FinanceRepository {
   }
 
   @override
-  Future<Either<Failure, List<WithdrawalRequestEntity>>> getSupervisorWithdrawals() async {
+  Future<Either<Failure, WithdrawalRequestEntity>>
+      submitMerchantFinancialRequest({
+    required String beneficiaryName,
+    required String requestTitle,
+    required String sourceAccount,
+    required double amount,
+    BeneficiaryType beneficiaryType = BeneficiaryType.merchant,
+    FinancialOperationType operationType = FinancialOperationType.deposit,
+  }) async {
+    try {
+      return Right(await remoteDataSource.submitMerchantFinancialRequest(
+        beneficiaryName: beneficiaryName,
+        requestTitle: requestTitle,
+        sourceAccount: sourceAccount,
+        amount: amount,
+        beneficiaryType: beneficiaryType,
+        operationType: operationType,
+      ));
+    } catch (error) {
+      return Left(ServerFailure(error.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> approveMerchantFinancialRequest(
+    String requestId,
+  ) async {
+    try {
+      await remoteDataSource.approveMerchantFinancialRequest(requestId);
+      return const Right(null);
+    } catch (error) {
+      return Left(ServerFailure(error.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> freezeMerchantFinancialRequest(
+    String requestId,
+    String reason,
+  ) async {
+    try {
+      await remoteDataSource.freezeMerchantFinancialRequest(requestId, reason);
+      return const Right(null);
+    } catch (error) {
+      return Left(ServerFailure(error.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> rejectMerchantFinancialRequest(
+    String requestId,
+    String reason,
+  ) async {
+    try {
+      await remoteDataSource.rejectMerchantFinancialRequest(requestId, reason);
+      return const Right(null);
+    } catch (error) {
+      return Left(ServerFailure(error.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<WithdrawalRequestEntity>>>
+      getSupervisorWithdrawals() async {
     try {
       final result = await remoteDataSource.getSupervisorWithdrawals();
       return Right(result);
@@ -124,7 +189,69 @@ class FinanceRepositoryImpl implements FinanceRepository {
   }
 
   @override
-  Future<Either<Failure, List<WithdrawalRequestEntity>>> getFrozenWithdrawals() async {
+  Future<Either<Failure, WithdrawalRequestEntity>>
+      submitSupervisorFinancialRequest({
+    required String beneficiaryName,
+    required String beneficiaryRole,
+    required String sourceAccount,
+    required double amount,
+    required FinancialOperationType operationType,
+    required String bankName,
+    required String iban,
+    required String transferMethod,
+    required String dateText,
+  }) async {
+    try {
+      return Right(await remoteDataSource.submitSupervisorFinancialRequest(
+        beneficiaryName: beneficiaryName,
+        beneficiaryRole: beneficiaryRole,
+        sourceAccount: sourceAccount,
+        amount: amount,
+        operationType: operationType,
+        bankName: bankName,
+        iban: iban,
+        transferMethod: transferMethod,
+        dateText: dateText,
+      ));
+    } on ArgumentError catch (error) {
+      return Left(ServerFailure(error.message.toString()));
+    } on StateError catch (error) {
+      return Left(ServerFailure(error.message));
+    } catch (error) {
+      return Left(ServerFailure(error.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, WithdrawalRequestEntity>> submitSupervisorWithdrawal({
+    required String beneficiaryName,
+    required String beneficiaryRole,
+    required String sourceAccount,
+    required double amount,
+    FinancialOperationType operationType = FinancialOperationType.withdrawal,
+    required String bankName,
+    required String iban,
+    required String transferMethod,
+  }) async {
+    try {
+      return Right(await remoteDataSource.submitSupervisorWithdrawal(
+        beneficiaryName: beneficiaryName,
+        beneficiaryRole: beneficiaryRole,
+        sourceAccount: sourceAccount,
+        amount: amount,
+        operationType: operationType,
+        bankName: bankName,
+        iban: iban,
+        transferMethod: transferMethod,
+      ));
+    } catch (error) {
+      return Left(ServerFailure(error.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<WithdrawalRequestEntity>>>
+      getFrozenWithdrawals() async {
     try {
       return Right(await remoteDataSource.getFrozenWithdrawals());
     } catch (error) {
@@ -185,8 +312,7 @@ class FinanceRepositoryImpl implements FinanceRepository {
   }
 
   @override
-  Future<Either<Failure, void>> requestIbanCertificate(
-      String requestId) async {
+  Future<Either<Failure, void>> requestIbanCertificate(String requestId) async {
     try {
       await remoteDataSource.requestIbanCertificate(requestId);
       return const Right(null);
@@ -246,7 +372,8 @@ class FinanceRepositoryImpl implements FinanceRepository {
   }
 
   @override
-  Future<Either<Failure, List<SubscriptionRequestEntity>>> getSubscriptions() async {
+  Future<Either<Failure, List<SubscriptionRequestEntity>>>
+      getSubscriptions() async {
     try {
       final result = await remoteDataSource.getSubscriptions();
       return Right(result);
@@ -277,7 +404,25 @@ class FinanceRepositoryImpl implements FinanceRepository {
   }
 
   @override
-  Future<Either<Failure, void>> freezeWithdrawal(String requestId, String reason) async {
+  Future<Either<Failure, void>> rejectWithdrawal(
+    String requestId,
+    String reason,
+  ) async {
+    try {
+      await remoteDataSource.rejectWithdrawal(requestId, reason);
+      return const Right(null);
+    } on ArgumentError catch (error) {
+      return Left(ServerFailure(error.message.toString()));
+    } on StateError catch (error) {
+      return Left(ServerFailure(error.message));
+    } catch (error) {
+      return Left(ServerFailure(error.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> freezeWithdrawal(
+      String requestId, String reason) async {
     try {
       await remoteDataSource.freezeWithdrawal(requestId, reason);
       return const Right(null);

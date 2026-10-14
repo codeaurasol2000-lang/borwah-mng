@@ -7,6 +7,7 @@ import 'package:barwah_app/features/products/presentation/screens/product_superv
 import 'package:barwah_app/features/products/presentation/screens/product_supervisor_chats_screen.dart';
 import 'package:barwah_app/features/products/presentation/screens/product_supervisor_notifications_screen.dart';
 import 'package:barwah_app/features/products/presentation/screens/product_supervisor_support_screen.dart';
+import 'package:barwah_app/features/wasalny_supervisor/data/wasalny_local_event_store.dart';
 import 'package:barwah_app/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -34,6 +35,18 @@ void main() {
       tester.view.resetDevicePixelRatio();
     });
 
+    await WasalnyLocalEventStore().publish(
+      WasalnyLocalEvent(
+        id: 'product-notification-test',
+        recipient: 'products',
+        source: 'finance',
+        titleAr: 'طلبات جديدة قيد المراجعة',
+        titleEn: 'New requests awaiting review',
+        messageAr: 'تم استلام طلب مالي جديد.',
+        messageEn: 'A new financial request was received.',
+        createdAt: DateTime.now(),
+      ),
+    );
     await tester.pumpWidget(
       localizedApp(const ProductSupervisorTabsShell(onLogout: _ignoreLogout)),
     );

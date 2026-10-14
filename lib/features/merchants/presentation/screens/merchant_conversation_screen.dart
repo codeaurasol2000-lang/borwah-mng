@@ -7,11 +7,13 @@ import '../../domain/entities/merchant_entity.dart';
 class MerchantConversationScreen extends StatefulWidget {
   final MerchantEntity? merchant;
   final String? conversationTitle;
+  final List<String> conversationParticipants;
 
   const MerchantConversationScreen({
     super.key,
     this.merchant,
     this.conversationTitle,
+    this.conversationParticipants = const [],
   }) : assert(merchant != null || conversationTitle != null);
 
   @override
@@ -57,12 +59,28 @@ class _MerchantConversationScreenState
               ),
               const SizedBox(width: 10),
               Expanded(
-                child: Text(
-                  widget.conversationTitle ??
-                      widget.merchant!.getName(isArabic),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      widget.conversationTitle ??
+                          widget.merchant!.getName(isArabic),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 15),
+                    ),
+                    if (widget.conversationParticipants.isNotEmpty)
+                      Text(
+                        widget.conversationParticipants.join(' • '),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: AppColors.textSecondary,
+                          fontSize: 10,
+                        ),
+                      ),
+                  ],
                 ),
               ),
             ],

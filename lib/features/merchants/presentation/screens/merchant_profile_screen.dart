@@ -1,8 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart' as intl;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/utils/app_locale_controller.dart';
 import '../../../../l10n/app_localizations.dart';
-import 'merchant_wallet_screen.dart';
+import '../../data/merchant_supervisor_local_store.dart';
+import '../../../services_supervisor/presentation/screens/services_supervisor_wallet_screen.dart';
 import 'supervised_merchants_screen.dart';
 
 class MerchantProfileScreen extends StatefulWidget {
@@ -20,8 +26,128 @@ class MerchantProfileScreen extends StatefulWidget {
 }
 
 class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
-  bool _fieldAvailability = false;
-  bool _directAdNotifications = false;
+  static const _storageKey = 'merchant_profile_data_v1';
+
+  _MerchantProfileData _data = const _MerchantProfileData();
+  List<MerchantSupervisorAuditEvent> _auditEvents = const [];
+  bool _isLoading = true;
+  bool _isSaving = false;
+  Object? _loadError;
+  Object? _auditError;
+
+  @override
+  void initState() {
+    super.initState();
+    MerchantSupervisorLocalStore.revision.addListener(_onAuditChanged);
+    _load();
+    _loadAudit();
+  }
+
+  @override
+  void dispose() {
+    MerchantSupervisorLocalStore.revision.removeListener(_onAuditChanged);
+    super.dispose();
+  }
+
+  void _onAuditChanged() {
+    _loadAudit();
+  }
+
+  Future<void> _loadAudit() async {
+    try {
+      final events = await MerchantSupervisorLocalStore.getAuditEvents();
+      if (!mounted) return;
+      setState(() {
+        _auditEvents = events;
+        _auditError = null;
+      });
+    } on Object catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'merchant supervisor audit',
+        ),
+      );
+      if (mounted) setState(() => _auditError = error);
+    }
+  }
+
+  Future<void> _load() async {
+    try {
+      final preferences = await SharedPreferences.getInstance();
+      final encoded = preferences.getString(_storageKey);
+      final loaded = encoded == null
+          ? const _MerchantProfileData()
+          : _MerchantProfileData.fromJson(
+              jsonDecode(encoded) as Map<String, dynamic>,
+            );
+      if (!mounted) return;
+      setState(() {
+        _data = loaded;
+        _isLoading = false;
+        _loadError = null;
+      });
+    } on Object catch (error) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          library: 'merchant profile',
+          context: ErrorDescription('while loading local profile preferences'),
+        ),
+      );
+      if (!mounted) return;
+      setState(() {
+        _isLoading = false;
+        _loadError = error;
+      });
+    }
+  }
+
+  Future<void> _updatePreference({
+    required String setting,
+    required bool value,
+  }) async {
+    if (_isLoading || _isSaving || _loadError != null) return;
+
+    setState(() => _isSaving = true);
+    final next = _data.withPreferenceChange(
+      setting: setting,
+      value: value,
+      occurredAt: DateTime.now(),
+    );
+    try {
+      final preferences = await SharedPreferences.getInstance();
+      final saved = await preferences.setString(
+        _storageKey,
+        jsonEncode(next.toJson()),
+      );
+      if (!saved) {
+        throw StateError('Could not save merchant profile preferences.');
+      }
+      if (!mounted) return;
+      setState(() {
+        _data = next;
+        _isSaving = false;
+      });
+      await _loadAudit();
+    } on Object catch (error) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          library: 'merchant profile',
+          context: ErrorDescription('while saving a local profile preference'),
+        ),
+      );
+      if (!mounted) return;
+      setState(() => _isSaving = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.merchantProfileSaveError),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,12 +196,58 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
             ),
             const SizedBox(height: 8),
             _buildPreferences(l10n),
+            const SizedBox(height: 8),
+            OutlinedButton.icon(
+              key: const ValueKey('merchant_profile_change_settings'),
+              onPressed: () => _showSettingsSheet(l10n),
+              icon: const Icon(Icons.tune_outlined, size: 18),
+              label: Text(l10n.merchantProfileChangeSettings),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: AppColors.primaryDark,
+                backgroundColor: Colors.white,
+                side: const BorderSide(color: AppColors.cardBorder),
+                minimumSize: const Size.fromHeight(44),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Card(
+              color: Colors.white,
+              child: ListTile(
+                leading: const Icon(Icons.language, color: AppColors.info),
+                title: Text(l10n.switchLanguage),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: AppLocaleController.instance.toggle,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsetsDirectional.only(top: 7),
+              child: Text(
+                l10n.merchantProfileLocalOnlyNotice,
+                style: const TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 10,
+                ),
+              ),
+            ),
             const SizedBox(height: 18),
             _buildSectionHeading(
               l10n.merchantProfileSecurityAudit,
               Icons.circle,
               AppColors.textMuted,
               trailing: l10n.merchantProfileViewAll,
+            ),
+            Padding(
+              padding: const EdgeInsetsDirectional.only(top: 6),
+              child: Text(
+                l10n.merchantProfileLocalAuditNotice,
+                style: const TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 10,
+                ),
+              ),
             ),
             const SizedBox(height: 8),
             _buildAuditHistory(l10n),
@@ -522,19 +694,112 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
             icon: Icons.access_time,
             title: l10n.merchantProfileAvailability,
             subtitle: l10n.merchantProfileAvailabilitySubtitle,
-            value: _fieldAvailability,
-            onChanged: (value) => setState(() => _fieldAvailability = value),
+            value: _data.fieldAvailability,
+            onChanged: _isLoading || _isSaving || _loadError != null
+                ? null
+                : (value) => _updatePreference(
+                      setting: 'fieldAvailability',
+                      value: value,
+                    ),
+            toggleKey: const ValueKey('merchant_profile_availability_toggle'),
           ),
           const Divider(height: 1, color: Color(0xFFE3E7EB)),
           _preferenceRow(
             icon: Icons.campaign_outlined,
             title: l10n.merchantProfileDirectNotifications,
             subtitle: l10n.merchantProfileNotificationsSubtitle,
-            value: _directAdNotifications,
-            onChanged: (value) =>
-                setState(() => _directAdNotifications = value),
+            value: _data.directAdNotifications,
+            onChanged: _isLoading || _isSaving || _loadError != null
+                ? null
+                : (value) => _updatePreference(
+                      setting: 'directAdNotifications',
+                      value: value,
+                    ),
+            toggleKey: const ValueKey('merchant_profile_notifications_toggle'),
           ),
+          if (_loadError != null) ...[
+            const Divider(height: 1, color: Color(0xFFE3E7EB)),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: Text(l10n.merchantProfileLoadError),
+              trailing: TextButton(
+                onPressed: _load,
+                child: Text(l10n.merchantProfileRetry),
+              ),
+            ),
+          ],
         ],
+      ),
+    );
+  }
+
+  Future<void> _showSettingsSheet(AppLocalizations l10n) {
+    return showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: Colors.transparent,
+      builder: (sheetContext) => Container(
+        height: MediaQuery.sizeOf(sheetContext).height * .78,
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
+        decoration: const BoxDecoration(
+          color: Color(0xFFF5F7F9),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: Column(
+          children: [
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: const Color(0xFFCBD2D9),
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+            const SizedBox(height: 14),
+            Row(
+              children: [
+                const Icon(Icons.tune_outlined, color: AppColors.primaryDark),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    l10n.merchantProfileChangeSettings,
+                    style: const TextStyle(
+                      color: AppColors.primaryDark,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  tooltip:
+                      MaterialLocalizations.of(sheetContext).closeButtonTooltip,
+                  onPressed: () => Navigator.of(sheetContext).pop(),
+                  icon: const Icon(Icons.close),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Expanded(
+              child: ListView(
+                children: [
+                  _buildPreferences(l10n),
+                  const SizedBox(height: 8),
+                  Card(
+                    color: Colors.white,
+                    child: ListTile(
+                      leading:
+                          const Icon(Icons.language, color: AppColors.info),
+                      title: Text(l10n.switchLanguage),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: AppLocaleController.instance.toggle,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -544,7 +809,8 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
     required String title,
     required String subtitle,
     required bool value,
-    required ValueChanged<bool> onChanged,
+    required ValueChanged<bool>? onChanged,
+    required Key toggleKey,
   }) {
     return Row(
       children: [
@@ -580,6 +846,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
         ),
         const SizedBox(width: 6),
         Switch(
+          key: toggleKey,
           value: value,
           onChanged: onChanged,
           activeTrackColor: AppColors.info,
@@ -612,35 +879,56 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                   ),
                 ),
               ),
-              Text(
-                l10n.merchantProfileToday,
-                style: const TextStyle(
-                  color: AppColors.textSecondary,
-                  fontSize: 9,
-                ),
-              ),
             ],
           ),
-          _activity(
-            icon: Icons.check_circle_outline,
-            title: l10n.merchantProfileActivityApproved,
-            subtitle: l10n.merchantProfileLicenseNumber,
-            time: '28 ${l10n.merchantProfileMinutesUnit}',
-          ),
-          const Divider(height: 1, color: Color(0xFFE3E7EB)),
-          _activity(
-            icon: Icons.edit_note_outlined,
-            title: l10n.merchantProfileActivityEdit,
-            subtitle: l10n.merchantProfileActivityEditDetails,
-            time: l10n.merchantProfileTwoHoursAgo,
-          ),
-          const Divider(height: 1, color: Color(0xFFE3E7EB)),
-          _activity(
-            icon: Icons.fact_check_outlined,
-            title: l10n.merchantProfileActivityLocation,
-            subtitle: l10n.merchantProfileActivityLocationDetails,
-            time: '10:15 ${l10n.merchantProfileMorningAbbreviation}',
-          ),
+          if (_auditError != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: Text(
+                l10n.merchantAuditLoadError,
+                style: const TextStyle(
+                  color: AppColors.danger,
+                  fontSize: 11,
+                ),
+              ),
+            ),
+          if (_data.activities.isEmpty && _auditEvents.isEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              child: Text(
+                l10n.merchantProfileNoLocalActivity,
+                style: const TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 11,
+                ),
+              ),
+            ),
+          for (final activity in _data.activities) ...[
+            const Divider(height: 1, color: Color(0xFFE3E7EB)),
+            _activity(
+              icon: Icons.settings_outlined,
+              title: l10n.merchantProfilePreferenceUpdated,
+              subtitle:
+                  '${activity.setting == 'fieldAvailability' ? l10n.merchantProfileAvailability : l10n.merchantProfileDirectNotifications} · ${activity.enabled ? l10n.merchantProfileEnabled : l10n.merchantProfileDisabled}',
+              time: intl.DateFormat.yMd(l10n.localeName)
+                  .add_jm()
+                  .format(activity.occurredAt),
+            ),
+          ],
+          for (final activity in _auditEvents.take(20)) ...[
+            const Divider(height: 1, color: Color(0xFFE3E7EB)),
+            _activity(
+              icon: Icons.fact_check_outlined,
+              title: activity.action,
+              subtitle: [
+                activity.subject,
+                if (activity.details.isNotEmpty) activity.details,
+              ].join(' · '),
+              time: intl.DateFormat.yMd(l10n.localeName)
+                  .add_jm()
+                  .format(activity.occurredAt),
+            ),
+          ],
         ],
       ),
     );
@@ -841,8 +1129,89 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
   void _openWallet() {
     Navigator.of(context).push<void>(
       MaterialPageRoute(
-        builder: (_) => const MerchantWalletScreen(),
+        builder: (_) => const ServicesSupervisorWalletScreen(
+          owner: SupervisorWalletOwner.merchant,
+        ),
       ),
     );
   }
+}
+
+class _MerchantProfileData {
+  final bool fieldAvailability;
+  final bool directAdNotifications;
+  final List<_MerchantProfileActivity> activities;
+
+  const _MerchantProfileData({
+    this.fieldAvailability = false,
+    this.directAdNotifications = false,
+    this.activities = const [],
+  });
+
+  factory _MerchantProfileData.fromJson(Map<String, dynamic> json) {
+    return _MerchantProfileData(
+      fieldAvailability: json['fieldAvailability'] as bool? ?? false,
+      directAdNotifications: json['directAdNotifications'] as bool? ?? false,
+      activities: (json['activities'] as List<dynamic>? ?? const [])
+          .map(
+            (activity) => _MerchantProfileActivity.fromJson(
+              activity as Map<String, dynamic>,
+            ),
+          )
+          .toList(growable: false),
+    );
+  }
+
+  _MerchantProfileData withPreferenceChange({
+    required String setting,
+    required bool value,
+    required DateTime occurredAt,
+  }) {
+    return _MerchantProfileData(
+      fieldAvailability:
+          setting == 'fieldAvailability' ? value : fieldAvailability,
+      directAdNotifications:
+          setting == 'directAdNotifications' ? value : directAdNotifications,
+      activities: [
+        _MerchantProfileActivity(
+          setting: setting,
+          enabled: value,
+          occurredAt: occurredAt,
+        ),
+        ...activities,
+      ].take(100).toList(growable: false),
+    );
+  }
+
+  Map<String, Object?> toJson() => {
+        'fieldAvailability': fieldAvailability,
+        'directAdNotifications': directAdNotifications,
+        'activities': activities.map((activity) => activity.toJson()).toList(),
+      };
+}
+
+class _MerchantProfileActivity {
+  final String setting;
+  final bool enabled;
+  final DateTime occurredAt;
+
+  const _MerchantProfileActivity({
+    required this.setting,
+    required this.enabled,
+    required this.occurredAt,
+  });
+
+  factory _MerchantProfileActivity.fromJson(Map<String, dynamic> json) {
+    return _MerchantProfileActivity(
+      setting: json['setting'] as String,
+      enabled: json['enabled'] as bool,
+      occurredAt: DateTime.parse(json['occurredAt'] as String),
+    );
+  }
+
+  Map<String, Object> toJson() => {
+        'setting': setting,
+        'enabled': enabled,
+        'occurredAt': occurredAt.toIso8601String(),
+      };
 }
