@@ -80,6 +80,7 @@ class WasalnyAdsCubit extends Cubit<WasalnyAdsState> {
     required String id,
     required WasalnyAdStatus status,
     String? decisionNote,
+    bool? isArchived,
   }) async {
     final current = state;
     if (current is! WasalnyAdsLoaded) return false;
@@ -88,6 +89,7 @@ class WasalnyAdsCubit extends Cubit<WasalnyAdsState> {
         id: id,
         status: status,
         decisionNote: decisionNote,
+        isArchived: isArchived,
       );
       final now = DateTime.now();
       await auditRepository?.recordEntry(

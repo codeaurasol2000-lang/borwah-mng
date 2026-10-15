@@ -12,7 +12,7 @@ class SupervisorAppBar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
     this.onNotificationTap,
     this.onProfileTap,
-    this.unreadNotificationsCount = 1,
+    this.unreadNotificationsCount = 0,
   });
 
   @override
@@ -24,7 +24,7 @@ class SupervisorAppBar extends StatelessWidget implements PreferredSizeWidget {
     final isArabic = l10n.localeName.startsWith('ar');
 
     return AppBar(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       elevation: 0.5,
       scrolledUnderElevation: 0,
       automaticallyImplyLeading: false,
@@ -46,7 +46,7 @@ class SupervisorAppBar extends StatelessWidget implements PreferredSizeWidget {
                   child: const Center(
                     child: Icon(
                       Icons.security_outlined,
-                      color: Colors.white,
+                      color: AppColors.white,
                       size: 20,
                     ),
                   ),
@@ -167,6 +167,7 @@ class SupervisorAppBar extends StatelessWidget implements PreferredSizeWidget {
                 clipBehavior: Clip.none,
                 children: [
                   IconButton(
+                    tooltip: l10n.productNotificationsTitle,
                     icon: const Icon(Icons.notifications_none_outlined,
                         size: 22, color: AppColors.textPrimary),
                     onPressed: onNotificationTap,
@@ -203,7 +204,7 @@ class SupervisorAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                   child: const Icon(
                     Icons.person_outline,
-                    color: Colors.white,
+                    color: AppColors.white,
                     size: 20,
                   ),
                 ),

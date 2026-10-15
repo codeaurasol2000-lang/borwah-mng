@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,6 +8,7 @@ import '../../core/constants/app_colors.dart';
 import '../../core/di/injection_container.dart';
 import '../../features/finance/presentation/widgets/finance_navigation.dart';
 import '../../features/wasalny_supervisor/data/datasources/wasalny_ads_mock_data_source.dart';
+import '../../features/wasalny_supervisor/data/wasalny_local_event_store.dart';
 import '../../features/wasalny_supervisor/data/repositories/wasalny_ads_repository_impl.dart';
 import '../../features/wasalny_supervisor/domain/usecases/get_wasalny_ads_usecase.dart';
 import '../../features/wasalny_supervisor/domain/usecases/update_wasalny_ad_status_usecase.dart';
@@ -16,6 +19,8 @@ import '../../features/wasalny_supervisor/presentation/screens/wasalny_requests_
 import '../../features/wasalny_supervisor/presentation/screens/wasalny_complaints_screen.dart';
 import '../../features/wasalny_supervisor/presentation/screens/wasalny_reports_screen.dart';
 import '../../features/wasalny_supervisor/presentation/screens/wasalny_supervisor_notifications_screen.dart';
+import '../../features/wasalny_supervisor/presentation/screens/wasalny_supervisor_dashboard_screen.dart';
+import '../../features/wasalny_supervisor/presentation/screens/wasalny_review_center_screen.dart';
 import '../../features/products/presentation/screens/product_supervisor_chats_screen.dart';
 import '../../features/products/presentation/screens/product_supervisor_profile_screen.dart';
 import '../../features/products/presentation/screens/product_promotions_screen.dart';
@@ -33,15 +38,28 @@ class WasalnySupervisorTabsShell extends StatefulWidget {
 
 class _WasalnySupervisorTabsShellState
     extends State<WasalnySupervisorTabsShell> {
-  late final PageController _pageController = PageController(initialPage: 3);
+  late final PageController _pageController = PageController(initialPage: 4);
   late final WasalnyAdsRepositoryImpl _repository = WasalnyAdsRepositoryImpl(
     dataSource: WasalnyAdsMockDataSource(),
   );
-  int _currentIndex = 3;
+  int _currentIndex = 4;
   bool _isBarsVisible = true;
+  int _unreadNotificationCount = 0;
+  Timer? _notificationRefreshTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshUnreadNotifications();
+    _notificationRefreshTimer = Timer.periodic(
+      const Duration(seconds: 5),
+      (_) => _refreshUnreadNotifications(),
+    );
+  }
 
   @override
   void dispose() {
+    _notificationRefreshTimer?.cancel();
     _pageController.dispose();
     super.dispose();
   }
@@ -79,6 +97,10 @@ class _WasalnySupervisorTabsShellState
         icon: Icons.pending_actions_outlined,
         label: l10n.productReviewTab,
       ),
+      FinanceNavigationItem(
+        icon: Icons.dashboard_outlined,
+        label: l10n.navHome,
+      ),
     ];
     final titles = navItems.map((item) => item.label).toList();
     final pages = [
@@ -113,11 +135,37 @@ class _WasalnySupervisorTabsShellState
         )..loadAds(),
         child: const WasalnyAdsReviewScreen(),
       ),
+      WasalnySupervisorDashboardScreen(
+        onOpenTab: _selectPage,
+        onOpenReviewCenter: () => _openPage(
+          WasalnyReviewCenterScreen(
+            onOpenAds: () {
+              Navigator.of(context).pop();
+              _selectPage(3);
+            },
+            onOpenComplaints: () {
+              Navigator.of(context).pop();
+              _openPage(
+                BlocProvider(
+                  create: (_) => sl<WasalnyComplaintsCubit>()..loadComplaints(),
+                  child: const WasalnyComplaintsScreen(),
+                ),
+              );
+            },
+          ),
+        ),
+        onOpenComplaints: () => _openPage(
+          BlocProvider(
+            create: (_) => sl<WasalnyComplaintsCubit>()..loadComplaints(),
+            child: const WasalnyComplaintsScreen(),
+          ),
+        ),
+      ),
     ];
     final topPadding = MediaQuery.of(context).padding.top;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7F9),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(_isBarsVisible ? kToolbarHeight : 0),
         child: AnimatedContainer(
@@ -134,7 +182,7 @@ class _WasalnySupervisorTabsShellState
                 subtitle: l10n.wasalnySupervisorRoleBadge,
                 showProfileButton: true,
                 onProfilePressed: () => _selectPage(0),
-                additionalActions: _currentIndex == 3
+                additionalActions: _currentIndex == 3 || _currentIndex == 4
                     ? [
                         IconButton(
                           tooltip: l10n.productChatsTitle,
@@ -144,10 +192,18 @@ class _WasalnySupervisorTabsShellState
                         ),
                         IconButton(
                           tooltip: l10n.wasalnyNotificationsTitle,
-                          onPressed: () => _openPage(
-                            const WasalnySupervisorNotificationsScreen(),
+                          onPressed: () async {
+                            await _openPage(
+                              const WasalnySupervisorNotificationsScreen(),
+                            );
+                            await _refreshUnreadNotifications();
+                          },
+                          icon: Badge(
+                            isLabelVisible: _unreadNotificationCount > 0,
+                            label: Text('$_unreadNotificationCount'),
+                            child:
+                                const Icon(Icons.notifications_none_outlined),
                           ),
-                          icon: const Icon(Icons.notifications_none_outlined),
                         ),
                       ]
                     : const [],
@@ -197,10 +253,29 @@ class _WasalnySupervisorTabsShellState
     );
   }
 
-  void _openPage(Widget page) {
-    Navigator.of(context).push(
+  Future<void> _openPage(Widget page) async {
+    await Navigator.of(context).push<void>(
       MaterialPageRoute<void>(builder: (_) => page),
     );
+  }
+
+  Future<void> _refreshUnreadNotifications() async {
+    try {
+      final events = await WasalnyLocalEventStore().getEvents('wasalny');
+      final unreadCount = events.where((event) => !event.isRead).length;
+      if (mounted && unreadCount != _unreadNotificationCount) {
+        setState(() => _unreadNotificationCount = unreadCount);
+      }
+    } catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'Wasalny supervisor notifications',
+          context: ErrorDescription('while refreshing unread count'),
+        ),
+      );
+    }
   }
 }
 
@@ -217,7 +292,7 @@ class _AccountShortcut extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Material(
-        color: Colors.white,
+        color: AppColors.white,
         child: ListTile(
           leading: Icon(icon, color: AppColors.primaryDark),
           title: Text(title),

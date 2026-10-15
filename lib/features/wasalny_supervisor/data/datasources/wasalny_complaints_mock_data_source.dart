@@ -251,4 +251,22 @@ class WasalnyComplaintsMockDataSource implements WasalnyComplaintsDataSource {
     _complaints[index] = updated;
     return updated;
   }
+
+  @override
+  Future<WasalnyComplaintModel> reopenComplaint(
+    String id, {
+    required String note,
+  }) async {
+    final index = _complaints.indexWhere((item) => item.id == id);
+    if (index == -1) throw StateError('Complaint $id not found');
+    final updated = WasalnyComplaintModel.fromEntity(
+      _complaints[index].copyWith(
+        status: WasalnyComplaintStatus.underReview,
+        actionNoteAr: 'أعيد فتح الشكوى: $note',
+        actionNoteEn: 'Complaint reopened: $note',
+      ),
+    );
+    _complaints[index] = updated;
+    return updated;
+  }
 }

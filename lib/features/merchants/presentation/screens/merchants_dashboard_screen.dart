@@ -6,11 +6,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../auth/presentation/controllers/auth_cubit.dart';
-import '../../../auth/presentation/controllers/auth_state.dart';
+import '../../data/merchant_supervisor_local_store.dart';
+import '../../domain/entities/merchant_entity.dart';
 import '../controllers/merchants_cubit.dart';
 import '../controllers/merchants_state.dart';
 import 'merchant_details_screen.dart';
+import 'merchant_review_center_screen.dart';
+import 'merchant_supervisor_notifications_screen.dart';
 import '../widgets/merchant_card.dart';
 import '../widgets/merchant_search_filter_bar.dart';
 import '../widgets/supervisor_app_bar.dart';
@@ -21,6 +23,7 @@ class MerchantsDashboardScreen extends StatefulWidget {
   final VoidCallback? onNotificationTap;
   final VoidCallback? onProfileTap;
   final VoidCallback? onLinkNewMerchant;
+  final ValueChanged<int>? onOpenReviewQueue;
 
   const MerchantsDashboardScreen({
     super.key,
@@ -28,6 +31,7 @@ class MerchantsDashboardScreen extends StatefulWidget {
     this.onNotificationTap,
     this.onProfileTap,
     this.onLinkNewMerchant,
+    this.onOpenReviewQueue,
   });
 
   @override
@@ -37,6 +41,69 @@ class MerchantsDashboardScreen extends StatefulWidget {
 
 class _MerchantsDashboardScreenState extends State<MerchantsDashboardScreen> {
   final TextEditingController _searchController = TextEditingController();
+  Map<String, bool> _suspensionOverrides = const {};
+  Map<String, MerchantSupervisorAuditEvent> _latestMerchantActions = const {};
+  int _sortMode = 0;
+
+  Future<void> _openNotifications() async {
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute<void>(
+        builder: (_) => const MerchantSupervisorNotificationsScreen(),
+      ),
+    );
+  }
+
+  List<MerchantEntity> _sortMerchants(List<MerchantEntity> merchants) {
+    final result = List<MerchantEntity>.of(merchants);
+    switch (_sortMode) {
+      case 1:
+        result.sort((a, b) => b.adsCount.compareTo(a.adsCount));
+        break;
+      case 2:
+        result.sort((a, b) => a.name.compareTo(b.name));
+        break;
+      default:
+        int priority(MerchantEntity merchant) => switch (merchant.status) {
+              MerchantStatus.temporarilySuspended => 0,
+              MerchantStatus.updateRequired => 1,
+              MerchantStatus.underAudit => 2,
+              MerchantStatus.active => 3,
+              MerchantStatus.activeVerified => 4,
+            };
+        result.sort((a, b) => priority(a).compareTo(priority(b)));
+    }
+    return result;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    MerchantSupervisorLocalStore.revision.addListener(_loadSuspensionOverrides);
+    _loadSuspensionOverrides();
+  }
+
+  Future<void> _loadSuspensionOverrides() async {
+    try {
+      final overrides =
+          await MerchantSupervisorLocalStore.getSuspensionOverrides();
+      final latestActions =
+          await MerchantSupervisorLocalStore.getLatestMerchantActions();
+      if (mounted) {
+        setState(() {
+          _suspensionOverrides = overrides;
+          _latestMerchantActions = latestActions;
+        });
+      }
+    } on Object catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'merchant dashboard suspension status',
+        ),
+      );
+    }
+  }
 
   void _showAddMerchantSheet(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -49,12 +116,12 @@ class _MerchantsDashboardScreenState extends State<MerchantsDashboardScreen> {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColors.transparent,
       builder: (sheetContext) {
         return StatefulBuilder(
           builder: (sheetContext, setSheetState) => Container(
             decoration: const BoxDecoration(
-              color: Colors.white,
+              color: AppColors.white,
               borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
             ),
             padding: EdgeInsets.only(
@@ -72,7 +139,7 @@ class _MerchantsDashboardScreenState extends State<MerchantsDashboardScreen> {
                     width: 44,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: Colors.grey[300],
+                      color: AppColors.grey300,
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -110,7 +177,7 @@ class _MerchantsDashboardScreenState extends State<MerchantsDashboardScreen> {
                             l10n.supervisedAreaLabel,
                             style: TextStyle(
                               fontSize: 12,
-                              color: Colors.grey[600],
+                              color: AppColors.grey600,
                             ),
                           ),
                         ],
@@ -197,25 +264,19 @@ class _MerchantsDashboardScreenState extends State<MerchantsDashboardScreen> {
                             );
                             return;
                           }
-                          final authState = context.read<AuthCubit>().state;
-                          if (authState is! AuthSuccess) {
-                            AppSnackBar.showError(
-                              context,
-                              l10n.merchantLinkSessionRequired,
-                            );
-                            return;
-                          }
                           setSheetState(() => isSaving = true);
                           try {
                             final preferences =
                                 await SharedPreferences.getInstance();
-                            final key =
-                                'merchant_link_requests_${authState.user.id}';
+                            const key =
+                                'merchant_supervisor_linked_merchants_v1';
                             final existing = preferences.getString(key);
                             final records = existing == null
                                 ? <dynamic>[]
                                 : jsonDecode(existing) as List<dynamic>;
                             records.add({
+                              'id':
+                                  'MER-LINK-${DateTime.now().microsecondsSinceEpoch}',
                               'merchantName': currentName,
                               'commercialRegistration':
                                   hasCommercialRegister ? currentCr : null,
@@ -233,6 +294,12 @@ class _MerchantsDashboardScreenState extends State<MerchantsDashboardScreen> {
                             }
                             if (!sheetContext.mounted) return;
                             Navigator.of(sheetContext).pop();
+                            if (context.mounted) {
+                              await context
+                                  .read<MerchantsCubit>()
+                                  .loadMerchants();
+                            }
+                            if (!context.mounted) return;
                             AppSnackBar.showInfo(
                               context,
                               l10n.merchantLinkSavedLocally,
@@ -256,7 +323,7 @@ class _MerchantsDashboardScreenState extends State<MerchantsDashboardScreen> {
                         },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryDark,
-                    foregroundColor: Colors.white,
+                    foregroundColor: AppColors.white,
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -287,6 +354,8 @@ class _MerchantsDashboardScreenState extends State<MerchantsDashboardScreen> {
 
   @override
   void dispose() {
+    MerchantSupervisorLocalStore.revision
+        .removeListener(_loadSuspensionOverrides);
     _searchController.dispose();
     super.dispose();
   }
@@ -295,11 +364,11 @@ class _MerchantsDashboardScreenState extends State<MerchantsDashboardScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+    return Scaffold(backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: widget.showAppBar
           ? SupervisorAppBar(
-              onNotificationTap: widget.onNotificationTap,
+              onNotificationTap:
+                  widget.onNotificationTap ?? _openNotifications,
               onProfileTap: widget.onProfileTap,
             )
           : null,
@@ -308,7 +377,7 @@ class _MerchantsDashboardScreenState extends State<MerchantsDashboardScreen> {
           if (state is MerchantsLoading || state is MerchantsInitial) {
             return const Center(
               child: CircularProgressIndicator(
-                color: Color(0xFF07192F),
+                color: AppColors.hexFF07192F,
               ),
             );
           }
@@ -329,10 +398,10 @@ class _MerchantsDashboardScreenState extends State<MerchantsDashboardScreen> {
                       onPressed: () =>
                           context.read<MerchantsCubit>().loadMerchants(),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF07192F),
+                        backgroundColor:  AppColors.hexFF07192F,
                       ),
                       child: const Text('إعادة المحاولة',
-                          style: TextStyle(color: Colors.white)),
+                          style: TextStyle(color: AppColors.white)),
                     ),
                   ],
                 ),
@@ -341,9 +410,10 @@ class _MerchantsDashboardScreenState extends State<MerchantsDashboardScreen> {
           }
 
           final loadedState = state as MerchantsLoaded;
+          final sortedMerchants = _sortMerchants(loadedState.filteredMerchants);
 
           return RefreshIndicator(
-            color: const Color(0xFF07192F),
+            color:  AppColors.hexFF07192F,
             onRefresh: () => context.read<MerchantsCubit>().loadMerchants(),
             child: Stack(
               children: [
@@ -351,7 +421,33 @@ class _MerchantsDashboardScreenState extends State<MerchantsDashboardScreen> {
                   padding: const EdgeInsets.fromLTRB(16, 12, 16, 90),
                   children: [
                     // 1. Supervisor Welcome & Stats Header Card
-                    SupervisorHeaderCard(stats: loadedState.stats),
+                    SupervisorHeaderCard(
+                      stats: loadedState.stats,
+                      onPendingReviewTap: () =>
+                          context.read<MerchantsCubit>().setFilterIndex(2),
+                      onApprovedTap: () =>
+                          context.read<MerchantsCubit>().setFilterIndex(1),
+                    ),
+
+                    const SizedBox(height: 12),
+                    _ReviewCenterShortcut(
+                      onTap: () => Navigator.of(context).push<void>(
+                        MaterialPageRoute<void>(
+                          builder: (_) => MerchantReviewCenterScreen(
+                            merchantAttentionCount: loadedState.allMerchants
+                                .where((merchant) =>
+                                    merchant.status == MerchantStatus.underAudit ||
+                                    merchant.status == MerchantStatus.updateRequired)
+                                .length,
+                            merchants: loadedState.allMerchants,
+                            onOpenQueue: (index) {
+                              Navigator.of(context).pop();
+                              widget.onOpenReviewQueue?.call(index);
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
 
                     const SizedBox(height: 16),
 
@@ -376,35 +472,54 @@ class _MerchantsDashboardScreenState extends State<MerchantsDashboardScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        // Recently Active sort button
-                        InkWell(
-                          onTap: () {
-                            AppSnackBar.showInfo(
-                              context,
-                              'تم ترتيب القائمة حسب الأحدث نشاطاً',
-                              duration: const Duration(seconds: 1),
-                            );
-                          },
-                          borderRadius: BorderRadius.circular(8),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 6, vertical: 4),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(Icons.swap_vert,
-                                    size: 14, color: AppColors.textSecondary),
-                                const SizedBox(width: 4),
-                                Text(
-                                  l10n.recentlyActiveSort,
-                                  style: const TextStyle(
-                                    fontSize: 10,
-                                    color: AppColors.textSecondary,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
+                        PopupMenuButton<int>(
+                          initialValue: _sortMode,
+                          onSelected: (value) => setState(() => _sortMode = value),
+                          itemBuilder: (_) => [
+                            PopupMenuItem(
+                              value: 0,
+                              child: Text(l10n.localeName.startsWith('ar')
+                                  ? 'الأولوية للمتابعة'
+                                  : 'Needs attention'),
                             ),
+                            PopupMenuItem(
+                              value: 1,
+                              child: Text(l10n.localeName.startsWith('ar')
+                                  ? 'الأكثر إعلانات'
+                                  : 'Most listings'),
+                            ),
+                            PopupMenuItem(
+                              value: 2,
+                              child: Text(l10n.localeName.startsWith('ar')
+                                  ? 'الاسم أبجديًا'
+                                  : 'Name A–Z'),
+                            ),
+                          ],
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+                            child: Row(mainAxisSize: MainAxisSize.min, children: [
+                              const Icon(Icons.swap_vert, size: 16, color: AppColors.textSecondary),
+                              const SizedBox(width: 4),
+                              Text(
+                                _sortMode == 0
+                                    ? (l10n.localeName.startsWith('ar')
+                                        ? 'الأولوية للمتابعة'
+                                        : 'Needs attention')
+                                    : _sortMode == 1
+                                        ? (l10n.localeName.startsWith('ar')
+                                            ? 'الأكثر إعلانات'
+                                            : 'Most listings')
+                                        : (l10n.localeName.startsWith('ar')
+                                            ? 'الاسم أبجديًا'
+                                            : 'Name A–Z'),
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  color: AppColors.textSecondary,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const Icon(Icons.expand_more, size: 16, color: AppColors.textSecondary),
+                            ]),
                           ),
                         ),
 
@@ -419,12 +534,12 @@ class _MerchantsDashboardScreenState extends State<MerchantsDashboardScreen> {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 8, vertical: 2),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFFE2E8F0),
+                                  color:  AppColors.hexFFE2E8F0,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: Text(
                                   l10n.storesRatio(
-                                    loadedState.filteredMerchants.length
+                                  sortedMerchants.length
                                         .toString(),
                                     loadedState.allMerchants.length.toString(),
                                   ),
@@ -457,7 +572,7 @@ class _MerchantsDashboardScreenState extends State<MerchantsDashboardScreen> {
                     const SizedBox(height: 12),
 
                     // 4. Merchants List
-                    if (loadedState.filteredMerchants.isEmpty)
+                    if (sortedMerchants.isEmpty)
                       Padding(
                         padding: const EdgeInsets.all(40.0),
                         child: Center(
@@ -478,22 +593,40 @@ class _MerchantsDashboardScreenState extends State<MerchantsDashboardScreen> {
                         ),
                       )
                     else
-                      ...loadedState.filteredMerchants.map(
+                      ...sortedMerchants.map(
                         (merchant) => MerchantCard(
                           merchant: merchant,
+                          isSuspendedOverride:
+                              _suspensionOverrides[merchant.id],
+                          recentAction:
+                              _latestMerchantActions[merchant.id]?.action,
+                          recentActionDetails:
+                              _latestMerchantActions[merchant.id]?.details,
+                          recentActionTime: _latestMerchantActions[merchant.id]
+                              ?.occurredAt
+                              .toLocal()
+                              .toString()
+                              .substring(0, 16),
                           onTap: () {
                             Navigator.of(context).push(
                               MaterialPageRoute<void>(
-                                builder: (_) =>
-                                    MerchantDetailsScreen(merchant: merchant),
+                                builder: (_) => MerchantDetailsScreen(
+                                  merchant: merchant,
+                                  isLocallySuspended:
+                                      _suspensionOverrides[merchant.id],
+                                ),
                               ),
                             );
                           },
                           onActionTap: () {
-                            AppSnackBar.showInfo(
-                              context,
-                              'إجراء: ${merchant.actionButtonText} لـ ${merchant.name}',
-                              duration: const Duration(seconds: 1),
+                            Navigator.of(context).push(
+                              MaterialPageRoute<void>(
+                                builder: (_) => MerchantDetailsScreen(
+                                  merchant: merchant,
+                                  isLocallySuspended:
+                                      _suspensionOverrides[merchant.id],
+                                ),
+                              ),
                             );
                           },
                         ),
@@ -508,17 +641,17 @@ class _MerchantsDashboardScreenState extends State<MerchantsDashboardScreen> {
                   child: ElevatedButton.icon(
                     onPressed: () => _showAddMerchantSheet(context),
                     icon: const Icon(Icons.store_mall_directory_outlined,
-                        size: 18, color: Colors.white),
+                        size: 18, color: AppColors.white),
                     label: Text(
                       l10n.linkNewMerchant,
                       style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: AppColors.white,
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF07192F),
+                      backgroundColor:  AppColors.hexFF07192F,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 20, vertical: 12),
                       shape: RoundedRectangleBorder(
@@ -532,6 +665,66 @@ class _MerchantsDashboardScreenState extends State<MerchantsDashboardScreen> {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class _ReviewCenterShortcut extends StatelessWidget {
+  final VoidCallback onTap;
+
+  const _ReviewCenterShortcut({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final isArabic = AppLocalizations.of(context)!.localeName.startsWith('ar');
+    return Material(
+      color: AppColors.white,
+      borderRadius: BorderRadius.circular(16),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: AppColors.primaryDark.withValues(alpha: .1)),
+          ),
+          child: Row(
+            children: [
+              const Icon(Icons.rule_folder_outlined,
+                  color: AppColors.primaryDark, size: 23),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      isArabic ? 'مركز متابعة الطلبات' : 'Review center',
+                      style: const TextStyle(
+                        color: AppColors.primaryDark,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      isArabic
+                          ? 'التجار والإعلانات والترقيات والطلبات المالية'
+                          : 'Merchants, ads, upgrades, and finance requests',
+                      style: const TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 11,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.arrow_forward_ios,
+                  color: AppColors.textMuted, size: 15),
+            ],
+          ),
+        ),
       ),
     );
   }

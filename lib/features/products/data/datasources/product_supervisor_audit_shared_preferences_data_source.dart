@@ -28,6 +28,7 @@ class ProductSupervisorAuditSharedPreferencesDataSource
         actionKey: value['actionKey'] as String,
         subject: value['subject'] as String,
         details: value['details'] as String,
+        actorName: value['actorName'] as String? ?? 'مشرف المنتجات',
         occurredAt: DateTime.parse(value['occurredAt'] as String),
       );
     }).toList(growable: false);
@@ -43,6 +44,7 @@ class ProductSupervisorAuditSharedPreferencesDataSource
         'actionKey': entry.actionKey,
         'subject': entry.subject,
         'details': entry.details,
+        'actorName': entry.actorName,
         'occurredAt': entry.occurredAt.toIso8601String(),
       },
       ...entries.map(
@@ -51,6 +53,7 @@ class ProductSupervisorAuditSharedPreferencesDataSource
           'actionKey': existing.actionKey,
           'subject': existing.subject,
           'details': existing.details,
+          'actorName': existing.actorName,
           'occurredAt': existing.occurredAt.toIso8601String(),
         },
       ),

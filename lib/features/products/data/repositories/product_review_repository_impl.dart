@@ -25,12 +25,14 @@ class ProductReviewRepositoryImpl implements ProductReviewRepository {
     required String id,
     required ProductReviewStatus status,
     String? decisionNote,
+    bool clearDecisionNote = false,
     bool merchantNotificationRequested = false,
   }) {
     return dataSource.changeProductReviewStatus(
       id: id,
       status: status,
       decisionNote: decisionNote,
+      clearDecisionNote: clearDecisionNote,
       merchantNotificationRequested: merchantNotificationRequested,
     );
   }

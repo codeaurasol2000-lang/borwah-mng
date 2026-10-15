@@ -10,11 +10,13 @@ class UpdateWasalnyAdStatusUseCase {
     required String id,
     required WasalnyAdStatus status,
     String? decisionNote,
+    bool? isArchived,
   }) {
     return repository.updateAdStatus(
       id: id,
       status: status,
       decisionNote: decisionNote,
+      isArchived: isArchived,
     );
   }
 }

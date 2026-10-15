@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../data/services_supervisor_activity_store.dart';
+import '../../data/services_supervisor_work_store.dart';
 import 'service_provider_catalog.dart';
 import 'services_request_details_screen.dart';
 
@@ -29,6 +31,7 @@ class _ServiceRequest {
   final List<String> photoUrls;
   final bool urgent;
   final bool featured;
+  final int ageMinutes;
 
   const _ServiceRequest({
     required this.id,
@@ -51,12 +54,13 @@ class _ServiceRequest {
     this.photoUrls = const [],
     this.urgent = false,
     this.featured = false,
+    this.ageMinutes = 0,
   });
 }
 
-const _serviceRequests = <_ServiceRequest>[
+final _serviceRequests = <_ServiceRequest>[
   _ServiceRequest(
-    id: 'SRV-3042',
+    id: ServicesSupervisorWorkStore.requestIds[0],
     serviceAr: 'صيانة مكيفات وتبريد',
     serviceEn: 'Air conditioning and cooling repair',
     providerAr: 'عبد العزيز بن فهد الحارثي',
@@ -76,9 +80,10 @@ const _serviceRequests = <_ServiceRequest>[
     icon: Icons.ac_unit_outlined,
     photoUrls: [],
     featured: true,
+    ageMinutes: ServicesSupervisorWorkStore.requestAgeMinutes['SRV-3042']!,
   ),
   _ServiceRequest(
-    id: 'SRV-3041',
+    id: ServicesSupervisorWorkStore.requestIds[1],
     serviceAr: 'كهرباء وتمديدات',
     serviceEn: 'Electrical wiring',
     providerAr: 'م. خالد الشهري',
@@ -96,10 +101,11 @@ const _serviceRequests = <_ServiceRequest>[
     phone: '+966500003041',
     category: _ServiceCategory.electrical,
     icon: Icons.electrical_services_outlined,
+    ageMinutes: ServicesSupervisorWorkStore.requestAgeMinutes['SRV-3041']!,
     photoUrls: [],
   ),
   _ServiceRequest(
-    id: 'SRV-3032',
+    id: ServicesSupervisorWorkStore.requestIds[2],
     serviceAr: 'نقل وترتيب أثاث سكن',
     serviceEn: 'Home moving and furniture setup',
     providerAr: 'شركة المسار السريع للنقل',
@@ -120,6 +126,7 @@ const _serviceRequests = <_ServiceRequest>[
     icon: Icons.local_shipping_outlined,
     photoUrls: [],
     urgent: true,
+    ageMinutes: ServicesSupervisorWorkStore.requestAgeMinutes['SRV-3032']!,
   ),
 ];
 
@@ -137,15 +144,123 @@ class _ServicesRequestsReviewScreenState
   final Set<String> _resolvedRequestIds = {};
   final Map<String, List<String>> _requestComments = {};
   final Map<String, ServiceProvider> _assignedProviders = {};
+  final Map<String, String> _rejectionReasons = {};
+  final ServicesSupervisorActivityStore _activityStore =
+      ServicesSupervisorActivityStore();
+  final ServicesSupervisorWorkStore _workStore = ServicesSupervisorWorkStore();
+  bool _isLoadingState = true;
+  Object? _stateLoadError;
+  bool _showArchive = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPersistedState();
+  }
+
+  Future<void> _loadPersistedState() async {
+    try {
+      final saved = await _workStore.loadRequests();
+      final resolved = saved['resolvedIds'];
+      final comments = saved['comments'];
+      final assigned = saved['assignedProviderIds'];
+      final rejectionReasons = saved['rejectionReasons'];
+      if (resolved is List) {
+        _resolvedRequestIds.addAll(resolved.whereType<String>());
+      }
+      if (comments is Map) {
+        for (final entry in comments.entries) {
+          if (entry.key is String && entry.value is List) {
+            _requestComments[entry.key as String] =
+                (entry.value as List).whereType<String>().toList();
+          }
+        }
+      }
+      if (assigned is Map) {
+        for (final entry in assigned.entries) {
+          ServiceProvider? provider;
+          for (final item in serviceProviders) {
+            if (item.id == entry.value) {
+              provider = item;
+              break;
+            }
+          }
+          if (entry.key is String && provider != null) {
+            _assignedProviders[entry.key as String] = provider;
+          }
+        }
+      }
+      if (rejectionReasons is Map) {
+        for (final entry in rejectionReasons.entries) {
+          if (entry.key is String && entry.value is String) {
+            _rejectionReasons[entry.key as String] = entry.value as String;
+          }
+        }
+      }
+      if (!mounted) return;
+      setState(() {
+        _isLoadingState = false;
+        _stateLoadError = null;
+      });
+    } on Object catch (error, stackTrace) {
+      FlutterError.reportError(FlutterErrorDetails(
+        exception: error,
+        stack: stackTrace,
+        library: 'services supervisor requests',
+        context: ErrorDescription('while restoring saved request state'),
+      ));
+      if (!mounted) return;
+      setState(() {
+        _isLoadingState = false;
+        _stateLoadError = error;
+      });
+    }
+  }
+
+  Future<void> _saveRequestState({
+    Set<String>? resolvedIds,
+    Map<String, List<String>>? comments,
+    Map<String, ServiceProvider>? assignedProviders,
+    Map<String, String>? rejectionReasons,
+  }) =>
+      _workStore.saveRequests(
+        resolvedIds: resolvedIds ?? _resolvedRequestIds,
+        comments: comments ?? _requestComments,
+        assignedProviderIds: {
+          for (final entry in (assignedProviders ?? _assignedProviders).entries)
+            entry.key: entry.value.id,
+        },
+        rejectionReasons: rejectionReasons ?? _rejectionReasons,
+      );
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final isArabic = l10n.localeName.startsWith('ar');
+    if (_isLoadingState) return const Center(child: CircularProgressIndicator());
+    if (_stateLoadError != null) {
+      return Center(
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          Text(isArabic ? 'تعذر استعادة الطلبات المحفوظة' : 'Could not restore saved requests'),
+          TextButton(onPressed: () => setState(() { _isLoadingState = true; _stateLoadError = null; _loadPersistedState(); }), child: Text(isArabic ? 'إعادة المحاولة' : 'Try again')),
+        ]),
+      );
+    }
     final pendingRequests = _serviceRequests
         .where((request) => !_resolvedRequestIds.contains(request.id))
-        .toList();
-    final requests = pendingRequests
+        .toList()
+      ..sort((first, second) {
+        final urgency = (second.urgent ? 1 : 0) - (first.urgent ? 1 : 0);
+        if (urgency != 0) return urgency;
+        return second.ageMinutes.compareTo(first.ageMinutes);
+      });
+    final archiveRequests = _serviceRequests
+        .where((request) => _resolvedRequestIds.contains(request.id))
+        .toList()
+      ..sort((first, second) =>
+          second.ageMinutes.compareTo(first.ageMinutes));
+    final displayedRequests = _showArchive ? archiveRequests : pendingRequests;
+    final requests = displayedRequests
         .where((request) =>
             _selectedCategory == null || request.category == _selectedCategory)
         .toList();
@@ -155,9 +270,28 @@ class _ServicesRequestsReviewScreenState
       children: [
         _buildHeading(l10n, pendingRequests.length),
         const SizedBox(height: 14),
-        _buildSummary(l10n, pendingRequests.length),
+        _buildSummary(
+          l10n,
+          pendingRequests.length,
+          _resolvedRequestIds.length,
+          isArabic,
+        ),
         const SizedBox(height: 14),
-        _buildCategoryFilters(l10n, pendingRequests),
+        Row(children: [
+          Expanded(child: ChoiceChip(
+            label: Text(isArabic ? 'قيد المراجعة (${pendingRequests.length})' : 'Pending (${pendingRequests.length})'),
+            selected: !_showArchive,
+            onSelected: (_) => setState(() { _showArchive = false; _selectedCategory = null; }),
+          )),
+          const SizedBox(width: 8),
+          Expanded(child: ChoiceChip(
+            label: Text(isArabic ? 'الأرشيف (${archiveRequests.length})' : 'Archive (${archiveRequests.length})'),
+            selected: _showArchive,
+            onSelected: (_) => setState(() { _showArchive = true; _selectedCategory = null; }),
+          )),
+        ]),
+        const SizedBox(height: 12),
+        _buildCategoryFilters(l10n, displayedRequests),
         const SizedBox(height: 14),
         if (requests.isEmpty)
           Padding(
@@ -178,6 +312,9 @@ class _ServicesRequestsReviewScreenState
               onReject: () async =>
                   _confirmDecision(request, approved: false, l10n: l10n),
               onDetails: () => _showDetails(request, isArabic, l10n),
+              isArchived: _showArchive,
+              decisionNote: _rejectionReasons[request.id],
+              onRestore: () => _restoreRequest(request, l10n),
               commentCount: _requestComments[request.id]?.length ?? 0,
               onComment: () => _addComment(request, l10n),
             ),
@@ -185,6 +322,44 @@ class _ServicesRequestsReviewScreenState
           ],
       ],
     );
+  }
+
+  Future<void> _restoreRequest(
+    _ServiceRequest request,
+    AppLocalizations l10n,
+  ) async {
+    final nextResolvedIds = {..._resolvedRequestIds}..remove(request.id);
+    final nextReasons = {..._rejectionReasons}..remove(request.id);
+    try {
+      await _saveRequestState(
+        resolvedIds: nextResolvedIds,
+        rejectionReasons: nextReasons,
+      );
+      await _activityStore.record(
+        action: 'request_reopened',
+        subject: '${request.id} • ${request.serviceAr}',
+        entityId: request.id,
+        entityType: 'service_request',
+      );
+      if (!mounted) return;
+      setState(() {
+        _resolvedRequestIds
+          ..clear()
+          ..addAll(nextResolvedIds);
+        _rejectionReasons
+          ..clear()
+          ..addAll(nextReasons);
+        _showArchive = false;
+      });
+    } on Object catch (error, stackTrace) {
+      FlutterError.reportError(FlutterErrorDetails(
+        exception: error,
+        stack: stackTrace,
+        library: 'services supervisor requests',
+        context: ErrorDescription('while restoring an archived request'),
+      ));
+      if (mounted) AppSnackBar.showError(context, l10n.localeName.startsWith('ar') ? 'تعذر إعادة فتح الطلب.' : 'Could not reopen the request.');
+    }
   }
 
   Widget _buildHeading(AppLocalizations l10n, int requestCount) {
@@ -225,11 +400,11 @@ class _ServicesRequestsReviewScreenState
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.pending_actions, color: Colors.white, size: 14),
+              const Icon(Icons.pending_actions, color: AppColors.white, size: 14),
               const SizedBox(width: 5),
               Text(
                 l10n.servicesNewRequestsCount('$requestCount'),
-                style: const TextStyle(color: Colors.white, fontSize: 10),
+                style: const TextStyle(color: AppColors.white, fontSize: 10),
               ),
             ],
           ),
@@ -238,11 +413,16 @@ class _ServicesRequestsReviewScreenState
     );
   }
 
-  Widget _buildSummary(AppLocalizations l10n, int pendingCount) {
+  Widget _buildSummary(
+    AppLocalizations l10n,
+    int pendingCount,
+    int reviewedCount,
+    bool isArabic,
+  ) {
     return Container(
       padding: const EdgeInsets.all(9),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.cardBorder),
       ),
@@ -250,8 +430,8 @@ class _ServicesRequestsReviewScreenState
         children: [
           Expanded(
             child: _SummaryMetric(
-              value: '28',
-              label: l10n.servicesCompletedToday,
+              value: '$reviewedCount',
+              label: isArabic ? 'قرارات محفوظة' : 'Saved decisions',
               icon: Icons.task_alt_outlined,
               iconColor: AppColors.info,
             ),
@@ -331,7 +511,7 @@ class _ServicesRequestsReviewScreenState
     final decision = await showModalBottomSheet<_DecisionResult>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColors.transparent,
       builder: (_) => _DecisionConfirmationSheet(
         request: request,
         approved: approved,
@@ -358,27 +538,93 @@ class _ServicesRequestsReviewScreenState
     final comment = await showModalBottomSheet<String>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColors.transparent,
       builder: (_) => _RequestCommentSheet(
         comments: _requestComments[request.id] ?? const [],
         l10n: l10n,
       ),
     );
     if (comment == null || !mounted) return;
-    setState(() {
-      _requestComments.putIfAbsent(request.id, () => []).add(comment);
-    });
+    final nextComments = {
+      for (final entry in _requestComments.entries) entry.key: [...entry.value],
+    };
+    nextComments.putIfAbsent(request.id, () => []).add(comment);
+    try {
+      await _saveRequestState(comments: nextComments);
+    } on Object catch (error, stackTrace) {
+      FlutterError.reportError(FlutterErrorDetails(exception: error, stack: stackTrace, library: 'services supervisor requests', context: ErrorDescription('while saving a request comment')));
+      if (mounted) AppSnackBar.showError(context, l10n.localeName.startsWith('ar') ? 'تعذر حفظ التعليق.' : 'Could not save the comment.');
+      return;
+    }
+    if (!mounted) return;
+    setState(() => _requestComments.addAll(nextComments));
     AppSnackBar.showSuccess(context, l10n.servicesCommentSaved);
   }
 
-  bool _applyDecision(
+  Future<bool> _applyDecision(
     _ServiceRequest request, {
     required bool approved,
     String? rejectionReason,
     required AppLocalizations l10n,
   }) {
+    return _recordDecision(
+      request,
+      approved: approved,
+      rejectionReason: rejectionReason,
+      l10n: l10n,
+    );
+  }
+
+  Future<bool> _recordDecision(
+    _ServiceRequest request, {
+    required bool approved,
+    String? rejectionReason,
+    required AppLocalizations l10n,
+  }) async {
+    final nextResolvedIds = {..._resolvedRequestIds, request.id};
+    final nextRejectionReasons = {..._rejectionReasons};
+    if (!approved && rejectionReason != null) {
+      nextRejectionReasons[request.id] = rejectionReason;
+    } else {
+      nextRejectionReasons.remove(request.id);
+    }
+    try {
+      await _saveRequestState(
+        resolvedIds: nextResolvedIds,
+        rejectionReasons: nextRejectionReasons,
+      );
+      await _activityStore.record(
+        action: approved ? 'request_approved' : 'request_rejected',
+        subject: '${request.id} • ${request.serviceAr}',
+        entityId: request.id,
+        entityType: 'service_request',
+      );
+    } on Object catch (error, stackTrace) {
+      FlutterError.reportError(FlutterErrorDetails(
+        exception: error,
+        stack: stackTrace,
+        library: 'services supervisor requests',
+        context: ErrorDescription('while recording a review decision'),
+      ));
+      if (mounted) {
+        AppSnackBar.showError(
+          context,
+          l10n.localeName.startsWith('ar')
+              ? 'تعذر تسجيل الإجراء. لم يتم تحديث الطلب.'
+              : 'Could not record the action. The request was not updated.',
+        );
+      }
+      return false;
+    }
     if (!mounted) return false;
-    setState(() => _resolvedRequestIds.add(request.id));
+    setState(() {
+      _resolvedRequestIds
+        ..clear()
+        ..addAll(nextResolvedIds);
+      _rejectionReasons
+        ..clear()
+        ..addAll(nextRejectionReasons);
+    });
     AppSnackBar.showSuccess(
       context,
       approved
@@ -413,8 +659,21 @@ class _ServicesRequestsReviewScreenState
           workFee: request.workFee,
           icon: request.icon,
           photoUrls: request.photoUrls,
-          onAssign: (provider) {
-            setState(() => _assignedProviders[request.id] = provider);
+          onAssign: (provider) async {
+            final nextAssignments = {..._assignedProviders, request.id: provider};
+            try {
+              await _saveRequestState(assignedProviders: nextAssignments);
+              await _activityStore.record(
+                action: 'request_provider_assigned',
+                subject: '${request.id} • ${provider.nameAr}',
+                entityId: request.id,
+                entityType: 'service_request',
+              );
+              if (mounted) setState(() => _assignedProviders[request.id] = provider);
+            } on Object catch (error, stackTrace) {
+              FlutterError.reportError(FlutterErrorDetails(exception: error, stack: stackTrace, library: 'services supervisor requests', context: ErrorDescription('while saving a provider assignment')));
+              if (mounted) AppSnackBar.showError(context, l10n.localeName.startsWith('ar') ? 'تعذر حفظ إسناد المزود.' : 'Could not save the provider assignment.');
+            }
           },
           assignedProvider: _assignedProviders[request.id],
           initialCategory: request.category.name,
@@ -488,7 +747,7 @@ class _DecisionConfirmationSheetState
             maxHeight: MediaQuery.sizeOf(context).height * 0.9,
           ),
           decoration: const BoxDecoration(
-            color: Colors.white,
+            color: AppColors.white,
             borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
           ),
           child: SingleChildScrollView(
@@ -553,7 +812,7 @@ class _DecisionConfirmationSheetState
         _DecisionNote(
           icon: Icons.notifications_active_outlined,
           text: l10n.servicesApprovalNotification,
-          color: const Color(0xFFEAF3FF),
+          color: AppColors.hexFFEAF3FF,
         ),
         const SizedBox(height: 16),
         SizedBox(
@@ -564,7 +823,7 @@ class _DecisionConfirmationSheetState
             label: Text(l10n.servicesApproveConfirmPublish),
             style: FilledButton.styleFrom(
               backgroundColor: AppColors.primaryDark,
-              foregroundColor: Colors.white,
+              foregroundColor: AppColors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -688,7 +947,7 @@ class _DecisionConfirmationSheetState
           decoration: InputDecoration(
             hintText: l10n.servicesRejectionReasonHint,
             filled: true,
-            fillColor: const Color(0xFFF1F3F5),
+            fillColor: AppColors.surfaceLight,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(13),
               borderSide: BorderSide.none,
@@ -699,7 +958,7 @@ class _DecisionConfirmationSheetState
         _DecisionNote(
           icon: Icons.verified_user_outlined,
           text: l10n.servicesRejectionAuditNote,
-          color: const Color(0xFFF1F3F5),
+          color: AppColors.textPrimary,
         ),
         const SizedBox(height: 14),
         SizedBox(
@@ -712,7 +971,7 @@ class _DecisionConfirmationSheetState
             label: Text(l10n.servicesRejectConfirm),
             style: FilledButton.styleFrom(
               backgroundColor: AppColors.danger,
-              foregroundColor: Colors.white,
+              foregroundColor: AppColors.white,
               disabledBackgroundColor: AppColors.danger.withValues(alpha: .4),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -762,7 +1021,7 @@ class _RequestCommentSheetState extends State<_RequestCommentSheet> {
             maxHeight: MediaQuery.sizeOf(context).height * 0.85,
           ),
           decoration: const BoxDecoration(
-            color: Colors.white,
+            color: AppColors.white,
             borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
           ),
           padding: const EdgeInsets.fromLTRB(18, 14, 18, 20),
@@ -804,7 +1063,7 @@ class _RequestCommentSheetState extends State<_RequestCommentSheet> {
                   decoration: InputDecoration(
                     hintText: l10n.servicesCommentHint,
                     filled: true,
-                    fillColor: const Color(0xFFF1F3F5),
+                    fillColor: AppColors.surfaceLight,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(13),
                       borderSide: BorderSide.none,
@@ -839,6 +1098,9 @@ class _ServiceRequestCard extends StatelessWidget {
   final VoidCallback onDetails;
   final int commentCount;
   final VoidCallback onComment;
+  final bool isArchived;
+  final String? decisionNote;
+  final VoidCallback onRestore;
 
   const _ServiceRequestCard({
     required this.request,
@@ -848,6 +1110,9 @@ class _ServiceRequestCard extends StatelessWidget {
     required this.onDetails,
     required this.commentCount,
     required this.onComment,
+    required this.isArchived,
+    required this.decisionNote,
+    required this.onRestore,
   });
 
   @override
@@ -863,12 +1128,12 @@ class _ServiceRequestCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(color: AppColors.cardBorder),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.025),
+            color: AppColors.black.withValues(alpha: 0.025),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -920,13 +1185,26 @@ class _ServiceRequestCard extends StatelessWidget {
               ),
               const SizedBox(width: 6),
               _StatusBadge(
-                label: request.urgent
-                    ? l10n.servicesUrgent
-                    : l10n.servicesUnderReview,
-                urgent: request.urgent,
+                label: isArchived
+                    ? (decisionNote == null
+                        ? l10n.servicesRequestApproved
+                        : l10n.servicesRequestRejectedWithReason(decisionNote!))
+                    : request.urgent
+                        ? l10n.servicesUrgent
+                        : l10n.servicesUnderReview,
+                urgent: isArchived ? decisionNote != null : request.urgent,
               ),
             ],
           ),
+          if (!isArchived && request.ageMinutes >= 60) ...[
+            const SizedBox(height: 8),
+            _StatusBadge(
+              label: l10n.localeName.startsWith('ar')
+                  ? 'تجاوز مدة الاستجابة المستهدفة'
+                  : 'Response SLA exceeded',
+              urgent: true,
+            ),
+          ],
           if (request.featured) ...[
             const SizedBox(height: 8),
             Align(
@@ -968,7 +1246,7 @@ class _ServiceRequestCard extends StatelessWidget {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFD9EFFF),
+                    color: AppColors.hexFFD9EFFF,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -1031,26 +1309,48 @@ class _ServiceRequestCard extends StatelessWidget {
             ),
           ],
           const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: _DecisionButton(
-                  label: l10n.servicesRejectAction,
-                  icon: Icons.cancel_outlined,
-                  onPressed: onReject,
-                  rejected: true,
-                ),
+          if (isArchived && decisionNote != null) ...[
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: AppColors.textPrimary,
+                borderRadius: BorderRadius.circular(10),
               ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: _DecisionButton(
-                  label: l10n.servicesApproveAction,
-                  icon: Icons.check_circle_outline,
-                  onPressed: onApprove,
-                ),
+              child: Text(decisionNote!, style: const TextStyle(color: AppColors.dangerDark, fontSize: 11)),
+            ),
+            const SizedBox(height: 10),
+          ],
+          if (isArchived)
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: onRestore,
+                icon: const Icon(Icons.restore),
+                label: Text(isArabic ? 'إعادة فتح الطلب' : 'Reopen request'),
               ),
-            ],
-          ),
+            )
+          else
+            Row(
+              children: [
+                Expanded(
+                  child: _DecisionButton(
+                    label: l10n.servicesRejectAction,
+                    icon: Icons.cancel_outlined,
+                    onPressed: onReject,
+                    rejected: true,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: _DecisionButton(
+                    label: l10n.servicesApproveAction,
+                    icon: Icons.check_circle_outline,
+                    onPressed: onApprove,
+                  ),
+                ),
+              ],
+            ),
           const SizedBox(height: 8),
           Row(
             children: [
@@ -1113,19 +1413,19 @@ class _FeaturedBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFF3D6),
+        color: AppColors.textPrimary,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFFF3D28B)),
+        border: Border.all(color: AppColors.textPrimary),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.stars_rounded, color: Color(0xFFB7791F), size: 14),
+          const Icon(Icons.stars_rounded, color: AppColors.hexFFB7791F, size: 14),
           const SizedBox(width: 4),
           Text(
             label,
             style: const TextStyle(
-              color: Color(0xFF8A5A0A),
+              color: AppColors.hexFF8A5A0A,
               fontSize: 10,
               fontWeight: FontWeight.bold,
             ),
@@ -1145,7 +1445,7 @@ class _SheetHandle extends StatelessWidget {
           width: 42,
           height: 5,
           decoration: BoxDecoration(
-            color: const Color(0xFFE0E3E5),
+            color: AppColors.hexFFE0E3E5,
             borderRadius: BorderRadius.circular(5),
           ),
         ),
@@ -1195,7 +1495,7 @@ class _DecisionRequestSummary extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(13),
       decoration: BoxDecoration(
-        color: const Color(0xFFF1F3F5),
+        color: AppColors.textPrimary,
         borderRadius: BorderRadius.circular(15),
       ),
       child: Column(
@@ -1280,7 +1580,7 @@ class _DecisionAmount extends StatelessWidget {
   Widget build(BuildContext context) => Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(11),
         ),
         child: Column(
@@ -1368,7 +1668,7 @@ class _ServiceIllustration extends StatelessWidget {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFFD6E0E2), Color(0xFF80949A), Color(0xFF324553)],
+          colors: [AppColors.hexFFD6E0E2, AppColors.hexFF80949A, AppColors.hexFF324553],
         ),
       ),
       child: Stack(
@@ -1380,7 +1680,7 @@ class _ServiceIllustration extends StatelessWidget {
             child: Icon(
               icon,
               size: 180,
-              color: Colors.white.withValues(alpha: 0.3),
+              color: AppColors.white.withValues(alpha: 0.3),
             ),
           ),
           Positioned(
@@ -1420,10 +1720,10 @@ class _ImageLabel extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (icon != null) ...[
-            Icon(icon, color: Colors.white, size: 13),
+            Icon(icon, color: AppColors.white, size: 13),
             const SizedBox(width: 3),
           ],
-          Text(text, style: const TextStyle(color: Colors.white, fontSize: 10)),
+          Text(text, style: const TextStyle(color: AppColors.white, fontSize: 10)),
         ],
       ),
     );
@@ -1504,7 +1804,7 @@ class _CategoryChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: selected ? AppColors.primaryDark : Colors.white,
+      color: selected ? AppColors.primaryDark : AppColors.white,
       borderRadius: BorderRadius.circular(20),
       child: InkWell(
         onTap: onTap,
@@ -1523,7 +1823,7 @@ class _CategoryChip extends StatelessWidget {
               Text(
                 label,
                 style: TextStyle(
-                  color: selected ? Colors.white : AppColors.textSecondary,
+                  color: selected ? AppColors.white : AppColors.textSecondary,
                   fontSize: 10,
                   fontWeight: FontWeight.w600,
                 ),
@@ -1533,14 +1833,14 @@ class _CategoryChip extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
                 decoration: BoxDecoration(
                   color: selected
-                      ? Colors.white.withValues(alpha: 0.16)
+                      ? AppColors.white.withValues(alpha: 0.16)
                       : AppColors.surfaceLight,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
                   '$count',
                   style: TextStyle(
-                    color: selected ? Colors.white : AppColors.primaryDark,
+                    color: selected ? AppColors.white : AppColors.primaryDark,
                     fontSize: 9,
                   ),
                 ),
@@ -1606,7 +1906,7 @@ class _DecisionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final foreground = rejected ? AppColors.dangerDark : Colors.white;
+    final foreground = rejected ? AppColors.dangerDark : AppColors.white;
     return SizedBox(
       height: 44,
       child: rejected

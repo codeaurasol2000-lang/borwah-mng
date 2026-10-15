@@ -87,14 +87,12 @@ class FinanceRepositoryImpl implements FinanceRepository {
     required double amount,
     required String bankAccountId,
     required String reason,
-    String? attachmentName,
   }) async {
     try {
       final request = await remoteDataSource.submitExpenseRequest(
         amount: amount,
         bankAccountId: bankAccountId,
         reason: reason,
-        attachmentName: attachmentName,
       );
       return Right(request);
     } on ArgumentError catch (error) {
@@ -200,6 +198,9 @@ class FinanceRepositoryImpl implements FinanceRepository {
     required String iban,
     required String transferMethod,
     required String dateText,
+    String? reference,
+    String? notes,
+    String? settlementMode,
   }) async {
     try {
       return Right(await remoteDataSource.submitSupervisorFinancialRequest(
@@ -212,6 +213,9 @@ class FinanceRepositoryImpl implements FinanceRepository {
         iban: iban,
         transferMethod: transferMethod,
         dateText: dateText,
+        reference: reference,
+        notes: notes,
+        settlementMode: settlementMode,
       ));
     } on ArgumentError catch (error) {
       return Left(ServerFailure(error.message.toString()));

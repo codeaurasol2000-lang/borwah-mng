@@ -20,6 +20,8 @@ class WasalnyAd {
   final int price;
   final String categoryKey;
   final WasalnyAdStatus status;
+  final bool isArchived;
+  final WasalnyAdStatus? statusBeforeArchive;
   final DateTime submittedAt;
   final String? decisionNote;
   final String descriptionAr;
@@ -40,6 +42,8 @@ class WasalnyAd {
     required this.price,
     required this.categoryKey,
     required this.status,
+    this.isArchived = false,
+    this.statusBeforeArchive,
     required this.submittedAt,
     this.decisionNote,
     this.descriptionAr = '',
@@ -54,6 +58,9 @@ class WasalnyAd {
     String? decisionNote,
     String? sellerPhone,
     bool? isSellerPremium,
+    bool? isArchived,
+    WasalnyAdStatus? statusBeforeArchive,
+    bool clearStatusBeforeArchive = false,
   }) {
     return WasalnyAd(
       id: id,
@@ -67,6 +74,10 @@ class WasalnyAd {
       price: price,
       categoryKey: categoryKey,
       status: status ?? this.status,
+      isArchived: isArchived ?? this.isArchived,
+      statusBeforeArchive: clearStatusBeforeArchive
+          ? null
+          : statusBeforeArchive ?? this.statusBeforeArchive,
       submittedAt: submittedAt,
       decisionNote: decisionNote ?? this.decisionNote,
       descriptionAr: descriptionAr,

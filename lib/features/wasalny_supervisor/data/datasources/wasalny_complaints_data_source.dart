@@ -14,4 +14,5 @@ abstract class WasalnyComplaintsDataSource {
     String id, {
     required String notes,
   });
+  Future<WasalnyComplaintModel> reopenComplaint(String id, {required String note});
 }

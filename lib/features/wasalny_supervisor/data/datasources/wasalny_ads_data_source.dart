@@ -7,5 +7,6 @@ abstract interface class WasalnyAdsDataSource {
     required String id,
     required WasalnyAdStatus status,
     String? decisionNote,
+    bool? isArchived,
   });
 }

@@ -59,6 +59,7 @@ class _MerchantFinancialRequestsScreenState
       'merchant_supervisor_financial_requests_v1';
   final Set<String> _sentToFinance = {};
   final Map<String, String> _rejectionReasons = {};
+  final Map<String, RequestStatus> _financeDecisions = {};
   final Set<String> _processingRequests = {};
   final List<_FinancialRequest> _queuedRequests = [];
   bool _isLoadingActions = true;
@@ -147,7 +148,9 @@ class _MerchantFinancialRequestsScreenState
         final decoded = jsonDecode(saved);
         if (decoded is! Map<String, dynamic> ||
             decoded['sent'] is! List ||
-            decoded['rejections'] is! Map<String, dynamic>) {
+            decoded['rejections'] is! Map<String, dynamic> ||
+            (decoded['financeDecisions'] != null &&
+                decoded['financeDecisions'] is! Map<String, dynamic>)) {
           throw const FormatException(
               'Stored merchant finance actions invalid.');
         }
@@ -165,10 +168,24 @@ class _MerchantFinancialRequestsScreenState
           }
           rejections[entry.key] = entry.value as String;
         }
+        final decisions = <String, RequestStatus>{};
+        final storedDecisions = decoded['financeDecisions'];
+        if (storedDecisions is Map<String, dynamic>) {
+          for (final entry in storedDecisions.entries) {
+            if (entry.value is! String) {
+              throw const FormatException(
+                'Stored finance decision status is invalid.',
+              );
+            }
+            decisions[entry.key] =
+                RequestStatus.values.byName(entry.value as String);
+          }
+        }
         if (!mounted) return;
         setState(() {
           _sentToFinance.addAll(sent);
           _rejectionReasons.addAll(rejections);
+          _financeDecisions.addAll(decisions);
         });
       }
     } catch (error, stackTrace) {
@@ -183,6 +200,7 @@ class _MerchantFinancialRequestsScreenState
     } finally {
       if (mounted) setState(() => _isLoadingActions = false);
     }
+    await _syncFinanceDecisions(l10n);
   }
 
   Future<void> _persistActions() async {
@@ -192,6 +210,9 @@ class _MerchantFinancialRequestsScreenState
       jsonEncode({
         'sent': _sentToFinance.toList(),
         'rejections': _rejectionReasons,
+        'financeDecisions': _financeDecisions.map(
+          (id, status) => MapEntry(id, status.name),
+        ),
       }),
     );
     if (!saved) throw StateError('Could not save merchant finance actions.');
@@ -213,6 +234,9 @@ class _MerchantFinancialRequestsScreenState
         requestTitle: request.title,
         sourceAccount: request.id,
         amount: request.amountValue,
+        operationType: request.type == _FinancialRequestType.packageFees
+            ? FinancialOperationType.deposit
+            : FinancialOperationType.withdrawal,
       );
       final failure = result.fold((failure) => failure, (_) => null);
       if (failure != null) {
@@ -251,7 +275,7 @@ class _MerchantFinancialRequestsScreenState
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColors.transparent,
       builder: (_) => _MerchantFinancialRejectionSheet(
         merchantName: request.merchantName,
         requestTitle: request.title,
@@ -371,8 +395,83 @@ class _MerchantFinancialRequestsScreenState
 
   List<_FinancialRequest> _visibleRequests(AppLocalizations l10n) {
     final requests = _requests(l10n);
-    if (_selectedType == null) return requests;
-    return requests.where((request) => request.type == _selectedType).toList();
+    return requests.where((request) {
+      if (_rejectionReasons.containsKey(request.id) ||
+          _financeDecisions.containsKey(request.id)) {
+        return false;
+      }
+      return _selectedType == null || request.type == _selectedType;
+    }).toList();
+  }
+
+  Future<void> _syncFinanceDecisions(AppLocalizations l10n) async {
+    try {
+      final result = await sl<FinanceRepository>().getMerchantWithdrawals();
+      final requests = result.fold(
+        (failure) => throw StateError(failure.message),
+        (value) => value,
+      );
+      final decisions = <String, RequestStatus>{};
+      for (final request in requests) {
+        final sourceId = request.sourceAccount;
+        if (sourceId == null ||
+            !_sentToFinance.contains(sourceId) ||
+            request.status == RequestStatus.pending ||
+            _financeDecisions.containsKey(sourceId)) {
+          continue;
+        }
+        decisions[sourceId] = request.status;
+      }
+      if (decisions.isEmpty) return;
+
+      _financeDecisions.addAll(decisions);
+      try {
+        await _persistActions();
+      } on Object {
+        for (final id in decisions.keys) {
+          _financeDecisions.remove(id);
+        }
+        rethrow;
+      }
+      if (mounted) setState(() {});
+
+      for (final entry in decisions.entries) {
+        final request = _requests(l10n).where((item) => item.id == entry.key);
+        if (request.isEmpty) continue;
+        final action = switch (entry.value) {
+          RequestStatus.approved => l10n.merchantAuditFinancialApproved,
+          RequestStatus.rejected => l10n.merchantAuditFinancialRejected,
+          RequestStatus.frozen ||
+          RequestStatus.underInvestigation =>
+            l10n.merchantAuditFinancialFrozen,
+          RequestStatus.pending => l10n.merchantAuditFinancialSubmitted,
+        };
+        try {
+          await MerchantSupervisorLocalStore.recordAction(
+            action: action,
+            subject: request.first.merchantName,
+            details: '${request.first.title} · ${request.first.amount}',
+          );
+        } on Object catch (error, stackTrace) {
+          FlutterError.reportError(
+            FlutterErrorDetails(
+              exception: error,
+              stack: stackTrace,
+              library: 'merchant finance response audit',
+            ),
+          );
+        }
+      }
+    } on Object catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'merchant finance response sync',
+        ),
+      );
+      if (mounted) _showMessage(l10n, l10n.finRequestActionFailed);
+    }
   }
 
   int _actionableRequestCount(AppLocalizations l10n) => _requests(l10n)
@@ -389,8 +488,7 @@ class _MerchantFinancialRequestsScreenState
     final l10n = AppLocalizations.of(context)!;
     final requests = _visibleRequests(l10n);
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF5F7F9),
+    return Scaffold(backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
         children: [
@@ -438,7 +536,7 @@ class _MerchantFinancialRequestsScreenState
               const SizedBox(width: 6),
               _badge(
                 _requests(l10n).length.toString(),
-                const Color(0xFFE8EAED),
+                 AppColors.hexFFE8EAED,
                 AppColors.textSecondary,
               ),
               const SizedBox(width: 6),
@@ -476,7 +574,7 @@ class _MerchantFinancialRequestsScreenState
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        color: const Color(0xFFE7E9EB),
+        color:  AppColors.hexFFE7E9EB,
         borderRadius: BorderRadius.circular(14),
       ),
       child: Row(
@@ -489,7 +587,7 @@ class _MerchantFinancialRequestsScreenState
               borderRadius: BorderRadius.circular(9),
             ),
             child:
-                const Icon(Icons.lock_outline, color: Colors.white, size: 20),
+                const Icon(Icons.lock_outline, color: AppColors.white, size: 20),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -520,7 +618,7 @@ class _MerchantFinancialRequestsScreenState
       constraints: const BoxConstraints(minHeight: 112),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: AppColors.cardBorder),
       ),
@@ -531,7 +629,7 @@ class _MerchantFinancialRequestsScreenState
             children: [
               CircleAvatar(
                 radius: 13,
-                backgroundColor: const Color(0xFFF0F2F4),
+                backgroundColor:  AppColors.surface,
                 child: Icon(icon, size: 14, color: AppColors.primaryDark),
               ),
               const SizedBox(width: 6),
@@ -605,10 +703,10 @@ class _MerchantFinancialRequestsScreenState
                   setState(() => _selectedType = filters[index].type),
               showCheckmark: false,
               selectedColor: AppColors.primaryDark,
-              backgroundColor: Colors.white,
+              backgroundColor: AppColors.white,
               labelStyle: TextStyle(
                 color: _selectedType == filters[index].type
-                    ? Colors.white
+                    ? AppColors.white
                     : AppColors.info,
                 fontSize: 10,
                 fontWeight: FontWeight.w500,
@@ -638,26 +736,26 @@ class _MerchantFinancialRequestsScreenState
             ? l10n.finRequestSentConfirmation
             : request.status;
     final statusColor = isActionable
-        ? const Color(0xFF68717A)
+        ?  AppColors.hexFF68717A
         : rejection != null
             ? AppColors.danger
             : AppColors.info;
     final statusBackground = isActionable
-        ? const Color(0xFFE7E9EB)
+        ?  AppColors.hexFFE7E9EB
         : rejection != null
-            ? const Color(0xFFFFE8E6)
-            : const Color(0xFFD8E6FF);
+            ?  AppColors.textPrimary
+            :  AppColors.hexFFD8E6FF;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 14),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(15),
         border: Border.all(color: AppColors.cardBorder),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
+            color: AppColors.black.withValues(alpha: 0.02),
             blurRadius: 7,
             offset: const Offset(0, 2),
           ),
@@ -701,7 +799,7 @@ class _MerchantFinancialRequestsScreenState
                       width: 42,
                       height: 42,
                       decoration: BoxDecoration(
-                        color: const Color(0xFFF0F2F4),
+                        color:  AppColors.textPrimary,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Icon(request.icon, color: AppColors.primaryDark),
@@ -766,7 +864,7 @@ class _MerchantFinancialRequestsScreenState
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
             decoration: BoxDecoration(
-              color: const Color(0xFFF1F3F5),
+              color:  AppColors.textPrimary,
               borderRadius: BorderRadius.circular(9),
             ),
             child: Row(
@@ -818,76 +916,67 @@ class _MerchantFinancialRequestsScreenState
             ),
           ],
           const SizedBox(height: 10),
-          Row(
-            children: [
-              if (isActionable || sent)
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: _processingRequests.contains(request.id)
-                        ? null
-                        : sent
-                            ? () => _showFinanceStatus(l10n, request)
-                            : () => _sendToFinance(l10n, request),
-                    icon: Icon(
-                      sent ? Icons.track_changes_outlined : Icons.send_outlined,
-                      size: 14,
-                    ),
-                    label: Text(
-                      sent
-                          ? l10n.merchantFinanceViewStatus
-                          : l10n.finRequestSendToFinance,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 10),
-                    ),
-                    style: OutlinedButton.styleFrom(
-                      backgroundColor: const Color(0xFFF0F1F3),
-                      foregroundColor: AppColors.primaryDark,
-                      side: BorderSide.none,
-                      padding: const EdgeInsets.symmetric(horizontal: 6),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(9),
-                      ),
-                    ),
-                  ),
-                ),
-              const SizedBox(width: 8),
-              Expanded(
-                flex: 2,
-                child: ElevatedButton.icon(
-                  onPressed: () => _showDetails(l10n, request),
-                  icon: const Icon(Icons.receipt_long_outlined, size: 14),
-                  label: Text(
-                    l10n.finRequestViewDetails,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 10),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    elevation: 0,
-                    foregroundColor: AppColors.primaryDark,
-                    backgroundColor: const Color(0xFFF0F1F3),
-                    padding: const EdgeInsets.symmetric(horizontal: 6),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(9),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          if (isActionable) ...[
-            const SizedBox(height: 6),
+          if (sent)
             SizedBox(
               width: double.infinity,
-              child: TextButton.icon(
-                onPressed: () => _rejectRequest(l10n, request),
-                icon: const Icon(Icons.cancel_outlined, size: 15),
-                label: Text(l10n.finRequestRejectAction),
-                style: TextButton.styleFrom(foregroundColor: AppColors.danger),
+              child: OutlinedButton.icon(
+                onPressed: _processingRequests.contains(request.id)
+                    ? null
+                    : () => _showFinanceStatus(l10n, request),
+                icon: const Icon(Icons.track_changes_outlined, size: 14),
+                label: Text(l10n.merchantFinanceViewStatus),
               ),
+            )
+          else if (isActionable)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                OutlinedButton.icon(
+                  onPressed: () => _showDetails(l10n, request),
+                  icon: const Icon(Icons.receipt_long_outlined, size: 16),
+                  label: Text(l10n.finRequestViewDetails),
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: const Size.fromHeight(44),
+                    backgroundColor:  AppColors.surface,
+                    foregroundColor: AppColors.primaryDark,
+                    side: const BorderSide(color: AppColors.cardBorder),
+                  ),
+                ),
+                const SizedBox(height: 7),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: _processingRequests.contains(request.id)
+                            ? null
+                            : () => _rejectRequest(l10n, request),
+                        icon: const Icon(Icons.close, size: 16),
+                        label: Text(l10n.finRequestRejectAction),
+                        style: OutlinedButton.styleFrom(
+                          minimumSize: const Size.fromHeight(44),
+                          foregroundColor: AppColors.danger,
+                          side: const BorderSide(color: AppColors.cardBorder),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      flex: 2,
+                      child: FilledButton.icon(
+                        onPressed: _processingRequests.contains(request.id)
+                            ? null
+                            : () => _sendToFinance(l10n, request),
+                        icon: const Icon(Icons.send_outlined, size: 16),
+                        label: Text(l10n.finRequestSendToFinance),
+                        style: FilledButton.styleFrom(
+                          minimumSize: const Size.fromHeight(44),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ],
         ],
       ),
     );
@@ -897,7 +986,7 @@ class _MerchantFinancialRequestsScreenState
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(15),
         border: Border.all(color: AppColors.cardBorder),
       ),
@@ -984,7 +1073,7 @@ class _MerchantFinancialRequestsScreenState
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColors.transparent,
       builder: (sheetContext) => _requestDetailsSheet(
         sheetContext,
         title: l10n.finRequestViewDetails,
@@ -1037,7 +1126,7 @@ class _MerchantFinancialRequestsScreenState
         context: context,
         isScrollControlled: true,
         useSafeArea: true,
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.transparent,
         builder: (sheetContext) => _requestDetailsSheet(
           sheetContext,
           title: l10n.merchantFinanceStatusTitle,
@@ -1058,6 +1147,9 @@ class _MerchantFinancialRequestsScreenState
       );
       return;
     }
+    if (financialRequest.status != RequestStatus.pending) {
+      await _syncFinanceDecisions(l10n);
+    }
 
     final status = switch (financialRequest.status) {
       RequestStatus.approved => l10n.merchantFinanceStatusApproved,
@@ -1072,14 +1164,15 @@ class _MerchantFinancialRequestsScreenState
       RequestStatus.rejected => AppColors.danger,
       RequestStatus.underInvestigation ||
       RequestStatus.frozen =>
-        const Color(0xFFB45309),
+         AppColors.hexFFB45309,
       RequestStatus.pending => AppColors.info,
     };
+    if (!mounted) return;
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColors.transparent,
       builder: (sheetContext) => _requestDetailsSheet(
         sheetContext,
         title: l10n.merchantFinanceStatusTitle,
@@ -1130,7 +1223,7 @@ class _MerchantFinancialRequestsScreenState
         maxHeight: MediaQuery.sizeOf(sheetContext).height * .86,
       ),
       decoration: const BoxDecoration(
-        color: Color(0xFFF5F7F9),
+        color: AppColors.textPrimary,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
@@ -1143,7 +1236,7 @@ class _MerchantFinancialRequestsScreenState
                   width: 42,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFCBD2D9),
+                    color:  AppColors.hexFFCBD2D9,
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
@@ -1152,7 +1245,7 @@ class _MerchantFinancialRequestsScreenState
                   children: [
                     CircleAvatar(
                       backgroundColor: AppColors.primaryDark,
-                      foregroundColor: Colors.white,
+                      foregroundColor: AppColors.white,
                       child: Icon(icon, size: 20),
                     ),
                     const SizedBox(width: 12),
@@ -1199,7 +1292,7 @@ class _MerchantFinancialRequestsScreenState
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: AppColors.white,
                     border: Border.all(color: AppColors.cardBorder),
                     borderRadius: BorderRadius.circular(16),
                   ),
@@ -1303,7 +1396,7 @@ class _MerchantFinancialRejectionSheetState
       child: Container(
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
         decoration: const BoxDecoration(
-          color: Colors.white,
+          color: AppColors.white,
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: SingleChildScrollView(
@@ -1316,7 +1409,7 @@ class _MerchantFinancialRejectionSheetState
                   width: 42,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFD4D9DE),
+                    color:  AppColors.hexFFD4D9DE,
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
@@ -1376,7 +1469,7 @@ class _MerchantFinancialRejectionSheetState
                       label: Text(widget.rejectLabel),
                       style: FilledButton.styleFrom(
                         backgroundColor: AppColors.danger,
-                        foregroundColor: Colors.white,
+                        foregroundColor: AppColors.white,
                       ),
                     ),
                   ),

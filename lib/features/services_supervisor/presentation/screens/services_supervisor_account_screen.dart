@@ -259,7 +259,7 @@ class _ServicesSupervisorAccountScreenState
         Container(
           padding: const EdgeInsets.all(18),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.white,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(color: AppColors.cardBorder),
           ),
@@ -267,7 +267,7 @@ class _ServicesSupervisorAccountScreenState
             children: [
               const CircleAvatar(
                 radius: 34,
-                backgroundColor: Color(0xFFEAF0F7),
+                backgroundColor: AppColors.hexFFEAF0F7,
                 child: Icon(
                   Icons.person_outline,
                   size: 38,
@@ -424,7 +424,7 @@ class _ServicesSupervisorAccountScreenState
           label: Text(l10n.logout),
           style: OutlinedButton.styleFrom(
             foregroundColor: AppColors.danger,
-            backgroundColor: Colors.white,
+            backgroundColor: AppColors.white,
             side: const BorderSide(color: AppColors.cardBorder),
             minimumSize: const Size.fromHeight(48),
           ),
@@ -572,7 +572,7 @@ class _SectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Material(
-        color: Colors.white,
+        color: AppColors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
           side: const BorderSide(color: AppColors.cardBorder),

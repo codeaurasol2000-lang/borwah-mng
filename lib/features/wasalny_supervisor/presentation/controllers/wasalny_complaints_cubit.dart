@@ -8,6 +8,7 @@ import '../../domain/entities/wasalny_complaint.dart';
 import '../../domain/usecases/escalate_wasalny_complaint_usecase.dart';
 import '../../domain/usecases/get_wasalny_complaints_usecase.dart';
 import '../../domain/usecases/resolve_wasalny_complaint_usecase.dart';
+import '../../domain/usecases/reopen_wasalny_complaint_usecase.dart';
 
 sealed class WasalnyComplaintsState {
   const WasalnyComplaintsState();
@@ -33,12 +34,14 @@ class WasalnyComplaintsCubit extends Cubit<WasalnyComplaintsState> {
   final GetWasalnyComplaintsUseCase getComplaints;
   final EscalateWasalnyComplaintUseCase escalateComplaint;
   final ResolveWasalnyComplaintUseCase resolveComplaint;
+  final ReopenWasalnyComplaintUseCase? reopenComplaint;
   final ProductSupervisorAuditRepository? auditRepository;
 
   WasalnyComplaintsCubit({
     required this.getComplaints,
     required this.escalateComplaint,
     required this.resolveComplaint,
+    this.reopenComplaint,
     this.auditRepository,
   }) : super(const WasalnyComplaintsLoading());
 
@@ -66,6 +69,17 @@ class WasalnyComplaintsCubit extends Cubit<WasalnyComplaintsState> {
       id,
       actionKey: 'wasalny_complaint_escalated',
       actionDetails: reason,
+    );
+  }
+
+  Future<bool> reopen({required String id, required String note}) {
+    final reopenUseCase = reopenComplaint;
+    if (reopenUseCase == null) return Future.value(false);
+    return _updateComplaint(
+      () => reopenUseCase(id, note: note),
+      id,
+      actionKey: 'wasalny_complaint_reopened',
+      actionDetails: note,
     );
   }
 

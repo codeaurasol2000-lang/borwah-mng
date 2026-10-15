@@ -1,13 +1,19 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
-import 'widgets/withdraw_bottom_sheet.dart';
-import 'bank_accounts_screen.dart';
+import '../../data/datasources/finance_supervisor_payout_details_store.dart';
+import 'audit_screen.dart';
 import 'edit_matrix_screen.dart';
+import 'finance_supervisor_payout_details_screen.dart';
+import 'widgets/withdraw_bottom_sheet.dart';
 import '../widgets/finance_navigation.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   final VoidCallback onLogout;
 
   const ProfileScreen({
@@ -16,14 +22,67 @@ class ProfileScreen extends StatelessWidget {
   });
 
   @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  static const _profileImageKey = 'finance_supervisor_profile_image_path_v1';
+  final _imagePicker = ImagePicker();
+  String? _profileImagePath;
+  FinanceSupervisorPayoutDetails? _payoutDetails;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProfileImage();
+    _loadPayoutDetails();
+  }
+
+  Future<void> _loadPayoutDetails() async {
+    try {
+      final details = await FinanceSupervisorPayoutDetailsStore().load();
+      if (mounted) setState(() => _payoutDetails = details);
+    } on Object catch (error, stackTrace) {
+      FlutterError.reportError(FlutterErrorDetails(
+        exception: error,
+        stack: stackTrace,
+        library: 'finance supervisor profile',
+        context: ErrorDescription('while loading personal payout details'),
+      ));
+    }
+  }
+
+  Future<void> _loadProfileImage() async {
+    final preferences = await SharedPreferences.getInstance();
+    final path = preferences.getString(_profileImageKey);
+    if (!mounted) return;
+    setState(() {
+      _profileImagePath = path != null && File(path).existsSync() ? path : null;
+    });
+  }
+
+  Future<void> _pickProfileImage() async {
+    final image = await _imagePicker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 85,
+      maxWidth: 1200,
+    );
+    if (image == null || !mounted) return;
+    final preferences = await SharedPreferences.getInstance();
+    await preferences.setString(_profileImageKey, image.path);
+    if (!mounted) return;
+    setState(() => _profileImagePath = image.path);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
     return Directionality(
-      textDirection:
-          l10n.localeName.startsWith('ar') ? TextDirection.rtl : TextDirection.ltr,
-      child: Scaffold(
-        backgroundColor: AppColors.backgroundLight,
+      textDirection: l10n.localeName.startsWith('ar')
+          ? TextDirection.rtl
+          : TextDirection.ltr,
+      child: Scaffold(backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: FinancePageAppBar(
           title: l10n.profileTitle,
           subtitle: l10n.financialDepartment,
@@ -51,15 +110,15 @@ class ProfileScreen extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: AppColors.white,
                           borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: Colors.grey.shade300),
+                          border: Border.all(color: AppColors.grey300),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(Icons.circle,
-                                size: 6, color: Colors.blue.shade700),
+                                size: 6, color: AppColors.blue700),
                             const SizedBox(width: 4),
                             Flexible(
                               child: Text(l10n.encryptedBit256,
@@ -98,7 +157,7 @@ class ProfileScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: const Icon(Icons.verified_user_outlined,
-                                color: Colors.white, size: 16),
+                                color: AppColors.white, size: 16),
                           ),
                         ],
                       ),
@@ -111,7 +170,7 @@ class ProfileScreen extends StatelessWidget {
               // 1. Profile Card
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.white,
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: AppColors.cardBorder),
                 ),
@@ -137,7 +196,7 @@ class ProfileScreen extends StatelessWidget {
                                       ),
                                       child: const Text('#CFO-01',
                                           style: TextStyle(
-                                              color: Colors.white,
+                                              color: AppColors.white,
                                               fontSize: 10,
                                               fontWeight: FontWeight.bold),
                                           textDirection: TextDirection.ltr),
@@ -171,9 +230,7 @@ class ProfileScreen extends StatelessWidget {
                             alignment: Alignment.bottomRight,
                             children: [
                               GestureDetector(
-                                onTap: () {
-                                  // Upload profile image action
-                                },
+                                onTap: _pickProfileImage,
                                 child: Container(
                                   width: 60,
                                   height: 60,
@@ -186,20 +243,33 @@ class ProfileScreen extends StatelessWidget {
                                     children: [
                                       ClipRRect(
                                         borderRadius: BorderRadius.circular(12),
-                                        child: const Icon(Icons.account_circle,
-                                            size: 60, color: Colors.grey),
+                                        child: _profileImagePath == null
+                                            ? const Icon(Icons.account_circle,
+                                                size: 60, color: AppColors.grey)
+                                            : Image.file(
+                                                File(_profileImagePath!),
+                                                width: 60,
+                                                height: 60,
+                                                fit: BoxFit.cover,
+                                                errorBuilder: (_, __, ___) =>
+                                                    const Icon(
+                                                  Icons.account_circle,
+                                                  size: 60,
+                                                  color: AppColors.grey,
+                                                ),
+                                              ),
                                       ),
                                       Container(
                                         width: double.infinity,
                                         height: double.infinity,
                                         decoration: BoxDecoration(
-                                          color: Colors.black
+                                          color: AppColors.black
                                               .withValues(alpha: 0.3),
                                           borderRadius:
                                               BorderRadius.circular(12),
                                         ),
                                         child: const Icon(Icons.camera_alt,
-                                            color: Colors.white, size: 24),
+                                            color: AppColors.white, size: 24),
                                       ),
                                     ],
                                   ),
@@ -215,7 +285,7 @@ class ProfileScreen extends StatelessWidget {
                                     shape: BoxShape.circle,
                                   ),
                                   child: const Icon(Icons.shield_outlined,
-                                      color: Colors.white, size: 12),
+                                      color: AppColors.white, size: 12),
                                 ),
                               ),
                             ],
@@ -227,9 +297,9 @@ class ProfileScreen extends StatelessWidget {
                       margin: const EdgeInsets.symmetric(horizontal: 16),
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFFAFAFA),
+                        color:  AppColors.textPrimary,
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.grey.shade200),
+                        border: Border.all(color: AppColors.grey200),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
@@ -247,7 +317,7 @@ class ProfileScreen extends StatelessWidget {
                                       textAlign: TextAlign.end)),
                               const SizedBox(width: 8),
                               Icon(Icons.account_balance,
-                                  size: 16, color: Colors.blue.shade700),
+                                  size: 16, color: AppColors.blue700),
                             ],
                           ),
                           const SizedBox(height: 6),
@@ -300,7 +370,7 @@ class ProfileScreen extends StatelessWidget {
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                           fontSize: 10,
-                                          color: Colors.blue.shade700,
+                                          color: AppColors.blue700,
                                           fontWeight: FontWeight.bold)),
                                 ),
                               ],
@@ -330,7 +400,8 @@ class ProfileScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                        color: AppColors.primaryExtraDark.withValues(alpha: 0.2),
+                        color:
+                            AppColors.primaryExtraDark.withValues(alpha: 0.2),
                         blurRadius: 10,
                         offset: const Offset(0, 4)),
                   ],
@@ -347,21 +418,24 @@ class ProfileScreen extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 8, vertical: 4),
                               decoration: BoxDecoration(
-                                color: Colors.blue.withValues(alpha: 0.2),
+                                color: AppColors.blue.withValues(alpha: 0.2),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   const Icon(Icons.circle,
-                                      size: 6, color: Colors.white),
+                                      size: 6, color: AppColors.white),
                                   const SizedBox(width: 4),
                                   Flexible(
-                                    child: Text(l10n.activeAndReconciled,
+                                    child: Text(
+                                        l10n.localeName.startsWith('ar')
+                                            ? 'حساب شخصي'
+                                            : 'Personal account',
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         style: const TextStyle(
-                                            color: Colors.white, fontSize: 10)),
+                                            color: AppColors.white, fontSize: 10)),
                                   ),
                                 ],
                               ),
@@ -376,17 +450,20 @@ class ProfileScreen extends StatelessWidget {
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
-                                        color: Colors.white,
+                                        color: AppColors.white,
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
                                         height: 1.2),
                                     textAlign: TextAlign.end),
                                 const SizedBox(height: 4),
-                                Text(l10n.executiveWalletDescription,
+                                Text(
+                                    l10n.localeName.startsWith('ar')
+                                        ? 'محفظة المستحقات الشخصية للمشرف المالي'
+                                        : 'Finance supervisor personal dues wallet',
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
-                                        color: Colors.white60, fontSize: 10),
+                                        color: AppColors.white60, fontSize: 10),
                                     textAlign: TextAlign.end),
                               ],
                             ),
@@ -395,21 +472,24 @@ class ProfileScreen extends StatelessWidget {
                           Container(
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.1),
+                              color: AppColors.white.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: const Icon(
                                 Icons.account_balance_wallet_outlined,
-                                color: Colors.white,
+                                color: AppColors.white,
                                 size: 24),
                           ),
                         ],
                       ),
                     ),
                     const SizedBox(height: 8),
-                    Text(l10n.totalAccountingDues,
+                    Text(
+                        l10n.localeName.startsWith('ar')
+                            ? 'إجمالي مستحقاتك الشخصية'
+                            : 'Your total personal dues',
                         style: const TextStyle(
-                            color: Colors.white70, fontSize: 11)),
+                            color: AppColors.white70, fontSize: 11)),
                     const SizedBox(height: 4),
                     FittedBox(
                       fit: BoxFit.scaleDown,
@@ -419,14 +499,14 @@ class ProfileScreen extends StatelessWidget {
                         children: [
                           const Text('68,500.00',
                               style: TextStyle(
-                                  color: Colors.white,
+                                  color: AppColors.white,
                                   fontSize: 36,
                                   fontWeight: FontWeight.bold,
                                   height: 1)),
                           const SizedBox(width: 4),
                           Text(l10n.currencyEgy,
                               style: const TextStyle(
-                                  color: Colors.white70,
+                                  color: AppColors.white70,
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold)),
                         ],
@@ -441,7 +521,7 @@ class ProfileScreen extends StatelessWidget {
                             child: Container(
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.05),
+                                color: AppColors.white.withValues(alpha: 0.05),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Column(
@@ -451,17 +531,20 @@ class ProfileScreen extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
                                       Flexible(
-                                        child: Text(l10n.pendingRegulatoryBalance,
+                                        child: Text(
+                                            l10n.localeName.startsWith('ar')
+                                                ? 'مستحقاتك المعلقة'
+                                                : 'Your pending dues',
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                             style: const TextStyle(
-                                                color: Colors.white70,
+                                                color: AppColors.white70,
                                                 fontSize: 10)),
                                       ),
                                       const SizedBox(width: 4),
                                       Icon(Icons.circle,
                                           size: 6,
-                                          color: Colors.blueGrey.shade400),
+                                          color: AppColors.blueGrey400),
                                     ],
                                   ),
                                   const SizedBox(height: 4),
@@ -473,21 +556,24 @@ class ProfileScreen extends StatelessWidget {
                                         child: Text('16,500.00',
                                             overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
-                                                color: Colors.white,
+                                                color: AppColors.white,
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold)),
                                       ),
                                       const SizedBox(width: 2),
                                       Text(l10n.currencyEgy,
                                           style: const TextStyle(
-                                              color: Colors.white70,
+                                              color: AppColors.white70,
                                               fontSize: 9)),
                                     ],
                                   ),
                                   const SizedBox(height: 4),
-                                  Text(l10n.awaitingQuarterlyClose,
+                                  Text(
+                                      l10n.localeName.startsWith('ar')
+                                          ? 'بانتظار الإقفال الربع سنوي'
+                                          : 'Awaiting quarterly close',
                                       style: const TextStyle(
-                                          color: Colors.white54, fontSize: 9)),
+                                          color: AppColors.white54, fontSize: 9)),
                                 ],
                               ),
                             ),
@@ -497,7 +583,7 @@ class ProfileScreen extends StatelessWidget {
                             child: Container(
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.05),
+                                color: AppColors.white.withValues(alpha: 0.05),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Column(
@@ -507,16 +593,19 @@ class ProfileScreen extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
                                       Flexible(
-                                        child: Text(l10n.readyForInstantDisbursement,
+                                        child: Text(
+                                            l10n.localeName.startsWith('ar')
+                                                ? 'متاح لطلب السحب'
+                                                : 'Available for withdrawal request',
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                             style: const TextStyle(
-                                                color: Colors.white70,
+                                                color: AppColors.white70,
                                                 fontSize: 10)),
                                       ),
                                       const SizedBox(width: 4),
                                       Icon(Icons.circle,
-                                          size: 6, color: Colors.blue.shade200),
+                                          size: 6, color: AppColors.blue200),
                                     ],
                                   ),
                                   const SizedBox(height: 4),
@@ -528,21 +617,24 @@ class ProfileScreen extends StatelessWidget {
                                         child: Text('52,000.00',
                                             overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
-                                                color: Colors.white,
+                                                color: AppColors.white,
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold)),
                                       ),
                                       const SizedBox(width: 2),
                                       Text(l10n.currencyEgy,
                                           style: const TextStyle(
-                                              color: Colors.white70,
+                                              color: AppColors.white70,
                                               fontSize: 9)),
                                     ],
                                   ),
                                   const SizedBox(height: 4),
-                                  Text(l10n.approvedWithoutConditions,
+                                  Text(
+                                      l10n.localeName.startsWith('ar')
+                                          ? 'الصرف بعد اعتماد الإدارة'
+                                          : 'Payout after management approval',
                                       style: const TextStyle(
-                                          color: Colors.white54, fontSize: 9)),
+                                          color: AppColors.white54, fontSize: 9)),
                                 ],
                               ),
                             ),
@@ -555,48 +647,61 @@ class ProfileScreen extends StatelessWidget {
                       margin: const EdgeInsets.symmetric(horizontal: 16),
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.1),
+                        color: AppColors.white.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
                         children: [
                           const Icon(Icons.remove_red_eye_outlined,
-                              color: Colors.white70, size: 20),
+                              color: AppColors.white70, size: 20),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                Text(l10n.approvedPayoutAccount,
+                                Text(
+                                    l10n.localeName.startsWith('ar')
+                                        ? 'حسابك الشخصي للسحب'
+                                        : 'Your personal payout account',
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
-                                        color: Colors.white60, fontSize: 9)),
-                                const Text('SA44 8000 0001 **** 3456',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      letterSpacing: 1.2),
-                                  textDirection: TextDirection.ltr),
-                            ],
-                          ),),
+                                        color: AppColors.white60, fontSize: 9)),
+                                Text(
+                                    _payoutDetails?.isComplete == true
+                                        ? _payoutDetails!.maskedIban
+                                        : (l10n.localeName.startsWith('ar')
+                                            ? 'لم تُسجل بيانات سحب شخصية'
+                                            : 'Personal payout details not set'),
+                                    style: const TextStyle(
+                                        color: AppColors.white,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        letterSpacing: 1.2),
+                                    textDirection: TextDirection.ltr),
+                              ],
+                            ),
+                          ),
                           const SizedBox(width: 12),
                           Container(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 6, vertical: 4),
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: AppColors.white,
                               borderRadius: BorderRadius.circular(4),
                             ),
-                            child: const Text('RAJHI',
-                                style: TextStyle(
+                            child: Text(
+                                _payoutDetails?.bankName.isNotEmpty == true
+                                    ? _payoutDetails!.bankName.toUpperCase()
+                                    : '--',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
                                     color: AppColors.primaryExtraDark,
-                                    fontSize: 10,
+                                    fontSize: 9,
                                     fontWeight: FontWeight.bold)),
                           ),
-                      
-                      ],
+                        ],
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -608,8 +713,9 @@ class ProfileScreen extends StatelessWidget {
                             width: double.infinity,
                             child: ElevatedButton.icon(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white.withValues(alpha: 0.15),
-                                foregroundColor: Colors.white,
+                                backgroundColor:
+                                    AppColors.white.withValues(alpha: 0.15),
+                                foregroundColor: AppColors.white,
                                 elevation: 0,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10)),
@@ -619,9 +725,15 @@ class ProfileScreen extends StatelessWidget {
                               icon: const Icon(Icons.arrow_circle_left_outlined,
                                   size: 18),
                               onPressed: () {
-                                showWithdrawBottomSheet(context);
+                                showWithdrawBottomSheet(
+                                  context,
+                                  payoutDetails: _payoutDetails,
+                                );
                               },
-                              label: Text(l10n.requestOwnerProfitWithdrawal,
+                              label: Text(
+                                  l10n.localeName.startsWith('ar')
+                                      ? 'طلب سحب مستحقاتي الشخصية'
+                                      : 'Request personal dues withdrawal',
                                   style: const TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.bold)),
@@ -632,8 +744,9 @@ class ProfileScreen extends StatelessWidget {
                             width: double.infinity,
                             child: ElevatedButton.icon(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white.withValues(alpha: 0.15),
-                                foregroundColor: Colors.white,
+                                backgroundColor:
+                                    AppColors.white.withValues(alpha: 0.15),
+                                foregroundColor: AppColors.white,
                                 elevation: 0,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10)),
@@ -642,12 +755,20 @@ class ProfileScreen extends StatelessWidget {
                               ),
                               icon: const Icon(Icons.arrow_circle_left_outlined,
                                   size: 18),
-                              onPressed: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => const BankAccountsScreen()),
-                              ),
-                              label: Text(l10n.editWithdrawalInformation,
+                              onPressed: () async {
+                                await Navigator.push<bool>(
+                                  context,
+                                  MaterialPageRoute<bool>(
+                                    builder: (_) =>
+                                        const FinanceSupervisorPayoutDetailsScreen(),
+                                  ),
+                                );
+                                await _loadPayoutDetails();
+                              },
+                              label: Text(
+                                  l10n.localeName.startsWith('ar')
+                                      ? 'تعديل بيانات السحب الشخصية'
+                                      : 'Edit personal payout details',
                                   style: const TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.bold)),
@@ -709,7 +830,7 @@ class ProfileScreen extends StatelessWidget {
                       child: ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primaryExtraDark,
-                          foregroundColor: Colors.white,
+                          foregroundColor: AppColors.white,
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
@@ -746,7 +867,7 @@ class ProfileScreen extends StatelessWidget {
                               style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.blue.shade700)),
+                                  color: AppColors.blue700)),
                         ],
                       ),
                     ),
@@ -874,7 +995,7 @@ class ProfileScreen extends StatelessWidget {
                 description: l10n.approveDisputeSettlement,
                 icon: Icons.verified_user_outlined,
                 iconColor: AppColors.primaryDark,
-                bgColor: Colors.blue.shade50,
+                bgColor: AppColors.blue50,
                 bottomWidget: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -882,8 +1003,9 @@ class ProfileScreen extends StatelessWidget {
                       child: Text('${l10n.referenceCode} #SIG-9082',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                            fontSize: 9, color: AppColors.textSecondary)),),
+                          style: const TextStyle(
+                              fontSize: 9, color: AppColors.textSecondary)),
+                    ),
                     const SizedBox(width: 8),
                     Flexible(
                       child: Container(
@@ -901,12 +1023,12 @@ class ProfileScreen extends StatelessWidget {
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                       fontSize: 9,
-                                      color: Colors.blue.shade700,
+                                      color: AppColors.blue700,
                                       fontWeight: FontWeight.bold)),
                             ),
                             const SizedBox(width: 4),
                             Icon(Icons.key,
-                                size: 10, color: Colors.blue.shade700),
+                                size: 10, color: AppColors.blue700),
                           ],
                         ),
                       ),
@@ -929,16 +1051,17 @@ class ProfileScreen extends StatelessWidget {
                       child: Text(l10n.alRajhiBank,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                            fontSize: 9, color: AppColors.textSecondary)),),
+                          style: const TextStyle(
+                              fontSize: 9, color: AppColors.textSecondary)),
+                    ),
                     const SizedBox(width: 8),
                     Flexible(
                       child: Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 6, vertical: 4),
                         decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(color: Colors.grey.shade300),
+                            color: AppColors.white,
+                            border: Border.all(color: AppColors.grey300),
                             borderRadius: BorderRadius.circular(4)),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -948,7 +1071,8 @@ class ProfileScreen extends StatelessWidget {
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
-                                      fontSize: 9, color: AppColors.textPrimary)),
+                                      fontSize: 9,
+                                      color: AppColors.textPrimary)),
                             ),
                             const SizedBox(width: 4),
                             const Icon(Icons.check_circle_outline,
@@ -975,8 +1099,9 @@ class ProfileScreen extends StatelessWidget {
                       child: Text(l10n.auditNoticeReference,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                            fontSize: 9, color: AppColors.textSecondary)),),
+                          style: const TextStyle(
+                              fontSize: 9, color: AppColors.textSecondary)),
+                    ),
                     const SizedBox(width: 8),
                     Flexible(
                       child: Container(
@@ -1014,8 +1139,8 @@ class ProfileScreen extends StatelessWidget {
                 time: l10n.yesterdayAtOneTwenty,
                 description: l10n.commissionUpdatedByBoard,
                 icon: Icons.percent,
-                iconColor: Colors.blue.shade700,
-                bgColor: Colors.blue.shade50,
+                iconColor: AppColors.blue700,
+                bgColor: AppColors.blue50,
                 isLast: true,
                 bottomWidget: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -1035,7 +1160,8 @@ class ProfileScreen extends StatelessWidget {
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
-                                      fontSize: 9, color: AppColors.textPrimary)),
+                                      fontSize: 9,
+                                      color: AppColors.textPrimary)),
                             ),
                             const SizedBox(width: 4),
                             const Icon(Icons.check_box_outlined,
@@ -1060,7 +1186,13 @@ class ProfileScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10)),
                   ),
                   icon: const Icon(Icons.arrow_back, size: 18),
-                  onPressed: () {},
+                  onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const AuditScreen(
+                        showBottomNavigation: false,
+                      ),
+                    ),
+                  ),
                   label: Text(l10n.viewFullAuditActivity,
                       style: const TextStyle(
                           fontSize: 12, fontWeight: FontWeight.bold)),
@@ -1110,7 +1242,7 @@ class ProfileScreen extends StatelessWidget {
     );
 
     if (confirmed != true || !context.mounted) return;
-    onLogout();
+    widget.onLogout();
   }
 
   Widget _buildContactBox(
@@ -1128,12 +1260,12 @@ class ProfileScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.cardBorder),
         boxShadow: [
           BoxShadow(
-              color: Colors.black.withValues(alpha: 0.02),
+              color: AppColors.black.withValues(alpha: 0.02),
               blurRadius: 4,
               offset: const Offset(0, 2)),
         ],
@@ -1148,12 +1280,12 @@ class ProfileScreen extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                      color: Colors.blue.shade50,
+                      color: AppColors.blue50,
                       borderRadius: BorderRadius.circular(12)),
                   child: Text(badgeText,
                       style: TextStyle(
                           fontSize: 9,
-                          color: Colors.blue.shade700,
+                          color: AppColors.blue700,
                           fontWeight: FontWeight.bold)),
                 ),
               const SizedBox(width: 8),

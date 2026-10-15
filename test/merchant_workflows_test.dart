@@ -19,6 +19,11 @@ Widget _localizedApp(Widget home, {Locale locale = const Locale('en')}) {
 }
 
 void main() {
+  setUpAll(() {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    SharedPreferences.setMockInitialValues({});
+  });
+
   testWidgets('pending operations show only the selected merchant ads',
       (tester) async {
     final merchants = await tester.runAsync(

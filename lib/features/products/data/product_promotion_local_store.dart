@@ -7,6 +7,24 @@ import '../domain/entities/product_promotion_request.dart';
 class ProductPromotionLocalStore {
   static const _storagePrefix = 'product_promotion_requests_v1';
 
+  Future<List<ProductPromotionRequest>> loadExisting({
+    required String account,
+  }) async {
+    final preferences = await SharedPreferences.getInstance();
+    final encoded = preferences.getString(_storageKey(account));
+    if (encoded == null) return const [];
+    final decoded = jsonDecode(encoded);
+    if (decoded is! List<dynamic>) {
+      throw const FormatException('Invalid product promotion request list.');
+    }
+    return List.unmodifiable(decoded.map((value) {
+      if (value is! Map<String, dynamic>) {
+        throw const FormatException('Invalid product promotion request.');
+      }
+      return ProductPromotionRequest.fromJson(value);
+    }));
+  }
+
   Future<List<ProductPromotionRequest>> load({
     required String account,
     required List<ProductPromotionRequest> initialRequests,

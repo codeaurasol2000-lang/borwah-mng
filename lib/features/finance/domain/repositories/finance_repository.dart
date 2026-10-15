@@ -26,7 +26,6 @@ abstract class FinanceRepository {
     required double amount,
     required String bankAccountId,
     required String reason,
-    String? attachmentName,
   });
   Future<Either<Failure, List<WithdrawalRequestEntity>>>
       getMerchantWithdrawals();
@@ -62,6 +61,9 @@ abstract class FinanceRepository {
     required String iban,
     required String transferMethod,
     required String dateText,
+    String? reference,
+    String? notes,
+    String? settlementMode,
   });
   Future<Either<Failure, WithdrawalRequestEntity>> submitSupervisorWithdrawal({
     required String beneficiaryName,

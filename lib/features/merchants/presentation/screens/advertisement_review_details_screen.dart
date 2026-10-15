@@ -39,6 +39,7 @@ class AdvertisementReviewDetailsScreen extends StatefulWidget {
   final String description;
   final String price;
   final int photoCount;
+  final double initialDeliveryFee;
   final IconData imageIcon;
   final Color imageColor;
   final List<AdReviewFact> facts;
@@ -60,6 +61,7 @@ class AdvertisementReviewDetailsScreen extends StatefulWidget {
     required this.description,
     required this.price,
     required this.photoCount,
+    this.initialDeliveryFee = 150,
     required this.imageIcon,
     required this.imageColor,
     required this.facts,
@@ -80,13 +82,14 @@ class _AdvertisementReviewDetailsScreenState
     extends State<AdvertisementReviewDetailsScreen> {
   late final TextEditingController _feeController;
   int _selectedPhoto = 0;
-  bool _hideAfterReports = false;
   bool _feeError = false;
 
   @override
   void initState() {
     super.initState();
-    _feeController = TextEditingController(text: '150');
+    _feeController = TextEditingController(
+      text: widget.initialDeliveryFee.toStringAsFixed(2),
+    );
   }
 
   @override
@@ -99,10 +102,9 @@ class _AdvertisementReviewDetailsScreenState
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF5F7F9),
+    return Scaffold(backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.white,
         foregroundColor: AppColors.primaryDark,
         elevation: 0,
         centerTitle: true,
@@ -116,7 +118,7 @@ class _AdvertisementReviewDetailsScreenState
             child: CircleAvatar(
               radius: 15,
               backgroundColor: AppColors.primaryDark,
-              child: Icon(Icons.person_outline, color: Colors.white, size: 18),
+              child: Icon(Icons.person_outline, color: AppColors.white, size: 18),
             ),
           ),
         ],
@@ -146,9 +148,9 @@ class _AdvertisementReviewDetailsScreenState
             alignment: WrapAlignment.spaceBetween,
             runSpacing: 8,
             children: [
-              _pill(l10n.adsInImageReviewStatus, const Color(0xFFEAF1FB),
+              _pill(l10n.adsInImageReviewStatus, AppColors.hexFFEAF1FB,
                   AppColors.info, Icons.circle),
-              _pill(l10n.adsNotPublishedYet, const Color(0xFFF0F1F3),
+              _pill(l10n.adsNotPublishedYet, AppColors.textPrimary,
                   AppColors.textSecondary, Icons.visibility_off_outlined),
             ],
           ),
@@ -159,7 +161,7 @@ class _AdvertisementReviewDetailsScreenState
                 width: 42,
                 height: 42,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFEAF0F5),
+                  color: AppColors.hexFFEAF0F5,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: const Icon(Icons.storefront_outlined,
@@ -200,7 +202,7 @@ class _AdvertisementReviewDetailsScreenState
                 ),
               ),
               const SizedBox(width: 8),
-              _pill(l10n.adsMerchantVerified, const Color(0xFFEAF1FB),
+              _pill(l10n.adsMerchantVerified, AppColors.hexFFEAF1FB,
                   AppColors.info, Icons.verified),
             ],
           ),
@@ -227,14 +229,14 @@ class _AdvertisementReviewDetailsScreenState
                       end: Alignment.bottomRight,
                       colors: [
                         widget.imageColor.withValues(alpha: 0.75),
-                        const Color(0xFFDFE5E9),
+                        AppColors.hexFFDFE5E9,
                         widget.imageColor,
                       ],
                     ),
                   ),
                   child: Center(
                     child: Icon(widget.imageIcon,
-                        size: 120, color: Colors.white.withValues(alpha: 0.9)),
+                        size: 120, color: AppColors.white.withValues(alpha: 0.9)),
                   ),
                 ),
                 PositionedDirectional(
@@ -245,8 +247,8 @@ class _AdvertisementReviewDetailsScreenState
                       (_selectedPhoto + 1).toString(),
                       widget.photoCount.toString(),
                     ),
-                    const Color(0xCC07172C),
-                    Colors.white,
+                    AppColors.hexCC07172C,
+                    AppColors.white,
                     Icons.photo_camera_outlined,
                   ),
                 ),
@@ -255,7 +257,7 @@ class _AdvertisementReviewDetailsScreenState
                   start: 10,
                   child: _pill(
                     l10n.adsAdPhotoVerified,
-                    Colors.white,
+                    AppColors.white,
                     AppColors.info,
                     Icons.verified,
                   ),
@@ -282,7 +284,7 @@ class _AdvertisementReviewDetailsScreenState
                     border: Border.all(
                       color: index == _selectedPhoto
                           ? AppColors.info
-                          : Colors.transparent,
+                          : AppColors.transparent,
                       width: 2,
                     ),
                   ),
@@ -330,7 +332,7 @@ class _AdvertisementReviewDetailsScreenState
                   padding:
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF1F3F5),
+                    color: AppColors.textPrimary,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
@@ -380,7 +382,7 @@ class _AdvertisementReviewDetailsScreenState
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF1F3F5),
+                    color: AppColors.textPrimary,
                     borderRadius: BorderRadius.circular(11),
                   ),
                   child: Text(
@@ -405,7 +407,7 @@ class _AdvertisementReviewDetailsScreenState
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 7),
       decoration: BoxDecoration(
-        color: const Color(0xFFF1F3F5),
+        color: AppColors.textPrimary,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
@@ -439,21 +441,22 @@ class _AdvertisementReviewDetailsScreenState
   }
 
   Widget _checklistCard(AppLocalizations l10n) {
+    final passedCount = widget.checklist.where((item) => item.passed).length;
+    final allPassed = passedCount == widget.checklist.length;
     return _card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _sectionTitle(l10n.adsLicenseChecklist, Icons.checklist_rtl,
-              trailing: l10n.adsChecklistCount(
-                  widget.checklist.where((item) => item.passed).length,
-                  widget.checklist.length)),
+              trailing:
+                  l10n.adsChecklistCount(passedCount, widget.checklist.length)),
           const SizedBox(height: 12),
           ...widget.checklist.map(
             (item) => Container(
               margin: const EdgeInsets.only(bottom: 7),
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: const Color(0xFFF1F3F5),
+                color: AppColors.textPrimary,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Row(
@@ -494,22 +497,15 @@ class _AdvertisementReviewDetailsScreenState
               ),
             ),
           ),
-          Material(
-            color: Colors.transparent,
-            child: SwitchListTile(
-              contentPadding: EdgeInsets.zero,
-              value: _hideAfterReports,
-              onChanged: (value) => setState(() => _hideAfterReports = value),
-              title: Text(l10n.adsAutoHideReportsTitle,
+          if (!allPassed)
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Text(
+                  l10n.adsChecklistCount(passedCount, widget.checklist.length),
                   textAlign: TextAlign.end,
-                  style: const TextStyle(
-                      color: AppColors.primaryDark, fontSize: 11)),
-              subtitle: Text(l10n.adsAutoHideReportsDescription,
-                  textAlign: TextAlign.end,
-                  style: const TextStyle(
-                      color: AppColors.textSecondary, fontSize: 9)),
+                  style:
+                      const TextStyle(color: AppColors.danger, fontSize: 10)),
             ),
-          ),
         ],
       ),
     );
@@ -526,7 +522,7 @@ class _AdvertisementReviewDetailsScreenState
           Container(
             padding: const EdgeInsets.all(11),
             decoration: BoxDecoration(
-              color: const Color(0xFFF1F3F5),
+              color: AppColors.textPrimary,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Text(l10n.adsDeliveryDescription,
@@ -551,7 +547,7 @@ class _AdvertisementReviewDetailsScreenState
                     suffixText: l10n.finRequestCurrency,
                     errorText: _feeError ? l10n.adsFeeInvalid : null,
                     filled: true,
-                    fillColor: const Color(0xFFF1F3F5),
+                    fillColor: AppColors.surfaceLight,
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide.none),
@@ -573,7 +569,7 @@ class _AdvertisementReviewDetailsScreenState
                     maxLines: 1, overflow: TextOverflow.ellipsis),
                 style: FilledButton.styleFrom(
                   backgroundColor: AppColors.primaryDark,
-                  foregroundColor: Colors.white,
+                  foregroundColor: AppColors.white,
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                 ),
               ),
@@ -599,12 +595,16 @@ class _AdvertisementReviewDetailsScreenState
           SizedBox(
             height: 48,
             child: FilledButton.icon(
-              onPressed: widget.onApprove,
+              onPressed: widget.checklist.isNotEmpty &&
+                      widget.checklist.every((item) => item.passed)
+                  ? () =>
+                      _confirmDecision(l10n.adsApproveAction, widget.onApprove)
+                  : null,
               icon: const Icon(Icons.verified_outlined),
               label: Text(l10n.adsApproveAction),
               style: FilledButton.styleFrom(
                 backgroundColor: AppColors.primaryDark,
-                foregroundColor: Colors.white,
+                foregroundColor: AppColors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
               ),
@@ -614,12 +614,13 @@ class _AdvertisementReviewDetailsScreenState
           SizedBox(
             height: 44,
             child: OutlinedButton.icon(
-              onPressed: widget.onHide,
+              onPressed: () =>
+                  _confirmDecision(l10n.adsHideAction, widget.onHide),
               icon: const Icon(Icons.visibility_off_outlined),
               label: Text(l10n.adsHideAction),
               style: OutlinedButton.styleFrom(
                 foregroundColor: AppColors.primaryDark,
-                backgroundColor: const Color(0xFFF0F1F3),
+                backgroundColor: AppColors.surface,
                 side: BorderSide.none,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
@@ -633,8 +634,8 @@ class _AdvertisementReviewDetailsScreenState
                 child: _decisionButton(
                   label: l10n.adsRejectAction,
                   icon: Icons.block,
-                  foreground: const Color(0xFFB42318),
-                  background: const Color(0xFFFFE0DD),
+                  foreground: AppColors.hexFFB42318,
+                  background: AppColors.surface,
                   onPressed: widget.onReject,
                 ),
               ),
@@ -644,7 +645,7 @@ class _AdvertisementReviewDetailsScreenState
                   label: l10n.adsRequestEdit,
                   icon: Icons.edit_note,
                   foreground: AppColors.primaryDark,
-                  background: const Color(0xFFF0F1F3),
+                  background: AppColors.surface,
                   onPressed: () => _showEditRequestSheet(l10n),
                 ),
               ),
@@ -653,6 +654,32 @@ class _AdvertisementReviewDetailsScreenState
         ],
       ),
     );
+  }
+
+  Future<void> _confirmDecision(
+    String title,
+    VoidCallback onConfirm,
+  ) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(title, textAlign: TextAlign.end),
+        content: Text(widget.title, textAlign: TextAlign.end),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: Text(
+              MaterialLocalizations.of(dialogContext).cancelButtonLabel,
+            ),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: Text(title),
+          ),
+        ],
+      ),
+    );
+    if (confirmed == true && mounted) onConfirm();
   }
 
   Widget _decisionButton({
@@ -684,7 +711,7 @@ class _AdvertisementReviewDetailsScreenState
     final note = await showModalBottomSheet<String>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColors.transparent,
       builder: (_) => _AdEditRequestSheet(adTitle: widget.title),
     );
     if (note == null || !mounted) return;
@@ -706,7 +733,7 @@ class _AdvertisementReviewDetailsScreenState
         ),
         if (trailing != null) ...[
           const SizedBox(width: 8),
-          _pill(trailing, const Color(0xFFEAF1FB), AppColors.info, null),
+          _pill(trailing, AppColors.hexFFEAF1FB, AppColors.info, null),
         ],
       ],
     );
@@ -746,7 +773,7 @@ class _AdEditRequestSheetState extends State<_AdEditRequestSheet> {
             maxHeight: MediaQuery.sizeOf(context).height * 0.76,
           ),
           decoration: const BoxDecoration(
-            color: Colors.white,
+            color: AppColors.white,
             borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
           ),
           child: Column(
@@ -763,7 +790,7 @@ class _AdEditRequestSheetState extends State<_AdEditRequestSheet> {
                           width: 40,
                           height: 5,
                           decoration: BoxDecoration(
-                            color: const Color(0xFFD7D9DE),
+                            color: AppColors.hexFFD7D9DE,
                             borderRadius: BorderRadius.circular(8),
                           ),
                         ),
@@ -776,7 +803,7 @@ class _AdEditRequestSheetState extends State<_AdEditRequestSheet> {
                             tooltip: l10n.adsCancelAction,
                             icon: const Icon(Icons.close, size: 18),
                             style: IconButton.styleFrom(
-                              backgroundColor: const Color(0xFFF0F1F3),
+                              backgroundColor: AppColors.surface,
                               foregroundColor: AppColors.textSecondary,
                             ),
                           ),
@@ -816,7 +843,7 @@ class _AdEditRequestSheetState extends State<_AdEditRequestSheet> {
                       Container(
                         padding: const EdgeInsets.all(14),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF1F3F5),
+                          color: AppColors.textPrimary,
                           borderRadius: BorderRadius.circular(13),
                           border: Border.all(color: AppColors.cardBorder),
                         ),
@@ -870,7 +897,7 @@ class _AdEditRequestSheetState extends State<_AdEditRequestSheet> {
                                     ? l10n.adsEditRequestRequired
                                     : null,
                                 filled: true,
-                                fillColor: Colors.white,
+                                fillColor: AppColors.white,
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                   borderSide: const BorderSide(
@@ -905,7 +932,7 @@ class _AdEditRequestSheetState extends State<_AdEditRequestSheet> {
                         label: Text(l10n.adsEditRequestSend),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primaryDark,
-                          foregroundColor: Colors.white,
+                          foregroundColor: AppColors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -958,7 +985,7 @@ Widget _card({required Widget child, EdgeInsets? padding}) {
   return Container(
     padding: padding ?? const EdgeInsets.all(14),
     decoration: BoxDecoration(
-      color: Colors.white,
+      color: AppColors.white,
       borderRadius: BorderRadius.circular(16),
       border: Border.all(color: AppColors.cardBorder),
     ),

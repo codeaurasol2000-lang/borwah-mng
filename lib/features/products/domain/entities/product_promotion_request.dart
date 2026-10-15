@@ -15,6 +15,7 @@ class ProductPromotionRequest {
   final int price;
   final DateTime requestedAt;
   final bool paymentConfirmedByFinance;
+  final bool financeReviewRequested;
   final ProductPromotionStatus status;
   final String? decisionNote;
 
@@ -30,6 +31,7 @@ class ProductPromotionRequest {
     required this.price,
     required this.requestedAt,
     this.paymentConfirmedByFinance = false,
+    this.financeReviewRequested = false,
     this.status = ProductPromotionStatus.pending,
     this.decisionNote,
   });
@@ -37,7 +39,9 @@ class ProductPromotionRequest {
   ProductPromotionRequest copyWith({
     ProductPromotionStatus? status,
     String? decisionNote,
+    bool clearDecisionNote = false,
     bool? paymentConfirmedByFinance,
+    bool? financeReviewRequested,
   }) {
     return ProductPromotionRequest(
       id: id,
@@ -52,8 +56,9 @@ class ProductPromotionRequest {
       requestedAt: requestedAt,
       paymentConfirmedByFinance:
           paymentConfirmedByFinance ?? this.paymentConfirmedByFinance,
+      financeReviewRequested: financeReviewRequested ?? this.financeReviewRequested,
       status: status ?? this.status,
-      decisionNote: decisionNote ?? this.decisionNote,
+      decisionNote: clearDecisionNote ? null : decisionNote ?? this.decisionNote,
     );
   }
 
@@ -69,6 +74,7 @@ class ProductPromotionRequest {
         'price': price,
         'requestedAt': requestedAt.toIso8601String(),
         'paymentConfirmedByFinance': paymentConfirmedByFinance,
+        'financeReviewRequested': financeReviewRequested,
         'status': status.name,
         'decisionNote': decisionNote,
       };
@@ -88,6 +94,7 @@ class ProductPromotionRequest {
       requestedAt: DateTime.parse(_requiredString(json, 'requestedAt')),
       paymentConfirmedByFinance:
           _optionalBool(json, 'paymentConfirmedByFinance'),
+      financeReviewRequested: _optionalBool(json, 'financeReviewRequested'),
       status: ProductPromotionStatus.values.byName(statusName),
       decisionNote: _optionalString(json, 'decisionNote'),
     );

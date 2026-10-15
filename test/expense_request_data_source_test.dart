@@ -1,12 +1,14 @@
 import 'package:barwah_app/features/finance/data/datasources/finance_mock_data_source.dart';
 import 'package:barwah_app/features/finance/domain/entities/expense_request_entity.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   group('FinanceMockDataSource expense requests', () {
     late FinanceMockDataSource dataSource;
 
-    setUp(() {
+    setUp(() async {
+      SharedPreferences.setMockInitialValues({});
       dataSource = FinanceMockDataSource();
     });
 
@@ -18,7 +20,6 @@ void main() {
         amount: 1250.5,
         bankAccountId: account.id,
         reason: 'Office supplies',
-        attachmentName: 'invoice.pdf',
       );
 
       final requests = await dataSource.getExpenseRequests();
@@ -29,19 +30,8 @@ void main() {
       expect(request.bankAccountId, account.id);
       expect(request.bankName, account.bankName);
       expect(request.reason, 'Office supplies');
-      expect(request.attachmentName, 'invoice.pdf');
       expect(requests, [request]);
       expect(accountsAfter.first.balance, account.balance);
-    });
-
-    test('allows an expense request without an attachment', () async {
-      final request = await dataSource.submitExpenseRequest(
-        amount: 10,
-        bankAccountId: 'acc_01',
-        reason: 'Small expense',
-      );
-
-      expect(request.attachmentName, isNull);
     });
 
     test('rejects invalid amounts and missing reasons', () async {

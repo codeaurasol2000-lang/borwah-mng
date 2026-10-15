@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:async';
 
 import '../../core/di/injection_container.dart';
 import '../../features/finance/presentation/widgets/finance_navigation.dart';
@@ -11,6 +12,9 @@ import '../../features/products/presentation/screens/product_reports_screen.dart
 import '../../features/products/presentation/screens/product_supervisor_profile_screen.dart';
 import '../../features/products/presentation/screens/product_supervisor_chats_screen.dart';
 import '../../features/products/presentation/screens/product_supervisor_notifications_screen.dart';
+import '../../features/products/presentation/screens/product_supervisor_complaints_screen.dart';
+import '../../features/products/presentation/screens/product_supervisor_dashboard_screen.dart';
+import '../../features/wasalny_supervisor/data/wasalny_local_event_store.dart';
 import '../../l10n/app_localizations.dart';
 
 class ProductSupervisorTabsShell extends StatefulWidget {
@@ -25,14 +29,44 @@ class ProductSupervisorTabsShell extends StatefulWidget {
 
 class _ProductSupervisorTabsShellState
     extends State<ProductSupervisorTabsShell> {
-  late final PageController _pageController = PageController(initialPage: 3);
-  int _currentIndex = 3;
+  late final PageController _pageController = PageController(initialPage: 4);
+  int _currentIndex = 4;
   bool _isBarsVisible = true;
+  int _unreadNotificationCount = 0;
+  Timer? _notificationRefreshTimer;
 
   @override
   void dispose() {
+    _notificationRefreshTimer?.cancel();
     _pageController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshUnreadNotifications();
+    _notificationRefreshTimer = Timer.periodic(
+      const Duration(seconds: 5),
+      (_) => _refreshUnreadNotifications(),
+    );
+  }
+
+  Future<void> _refreshUnreadNotifications() async {
+    try {
+      final events = await WasalnyLocalEventStore().getEvents('products');
+      final unreadCount = events.where((event) => !event.isRead).length;
+      if (mounted && unreadCount != _unreadNotificationCount) {
+        setState(() => _unreadNotificationCount = unreadCount);
+      }
+    } catch (error, stackTrace) {
+      FlutterError.reportError(FlutterErrorDetails(
+        exception: error,
+        stack: stackTrace,
+        library: 'product supervisor notifications',
+        context: ErrorDescription('while refreshing the unread count'),
+      ));
+    }
   }
 
   void _selectPage(int index) {
@@ -68,26 +102,47 @@ class _ProductSupervisorTabsShellState
         icon: Icons.pending_actions_outlined,
         label: l10n.productReviewTab,
       ),
+      FinanceNavigationItem(
+        icon: Icons.dashboard_outlined,
+        label: l10n.navHome,
+      ),
     ];
     final titles = [
       l10n.productAccountTab,
       l10n.productReportsTab,
       l10n.productSubscriptionsTab,
       l10n.productReviewTab,
+      l10n.navHome,
     ];
     final pages = [
-      ProductSupervisorProfileScreen(onLogout: widget.onLogout),
+      ProductSupervisorProfileScreen(
+        onLogout: widget.onLogout,
+        additionalOperations: [
+          _AccountShortcut(
+            title: l10n.servicesComplaintsTab,
+            onTap: () => Navigator.of(context).push(MaterialPageRoute<void>(
+              builder: (_) => const ProductSupervisorComplaintsScreen(),
+            )),
+          ),
+        ],
+      ),
       const ProductReportsScreen(),
       const ProductPromotionsScreen(),
       BlocProvider(
         create: (_) => sl<ProductReviewCubit>()..loadReviews(),
         child: const ProductAdsReviewScreen(),
       ),
+      ProductSupervisorDashboardScreen(
+        onOpenTab: _selectPage,
+        onOpenComplaints: () => Navigator.of(context).push(MaterialPageRoute<void>(
+          builder: (_) => const ProductSupervisorComplaintsScreen(),
+        )),
+      ),
     ];
     final topPadding = MediaQuery.of(context).padding.top;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7F9),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(_isBarsVisible ? kToolbarHeight : 0),
         child: AnimatedContainer(
@@ -104,8 +159,7 @@ class _ProductSupervisorTabsShellState
                 subtitle: l10n.productSupervisorRoleBadge,
                 showProfileButton: true,
                 onProfilePressed: () => _selectPage(0),
-                additionalActions: _currentIndex == 3
-                    ? [
+                additionalActions: [
                         IconButton(
                           tooltip: l10n.productChatsTitle,
                           onPressed: () => Navigator.of(context).push(
@@ -118,16 +172,22 @@ class _ProductSupervisorTabsShellState
                         ),
                         IconButton(
                           tooltip: l10n.productNotificationsTitle,
-                          onPressed: () => Navigator.of(context).push(
+                          onPressed: () async {
+                            await Navigator.of(context).push(
                             MaterialPageRoute<void>(
                               builder: (_) =>
                                   const ProductSupervisorNotificationsScreen(),
                             ),
+                            );
+                            await _refreshUnreadNotifications();
+                          },
+                          icon: Badge(
+                            isLabelVisible: _unreadNotificationCount > 0,
+                            label: Text('$_unreadNotificationCount'),
+                            child: const Icon(Icons.notifications_none_outlined),
                           ),
-                          icon: const Icon(Icons.notifications_none_outlined),
                         ),
-                      ]
-                    : const [],
+                      ],
               ),
             ),
           ),
@@ -173,4 +233,18 @@ class _ProductSupervisorTabsShellState
       ),
     );
   }
+}
+
+class _AccountShortcut extends StatelessWidget {
+  final String title;
+  final VoidCallback onTap;
+  const _AccountShortcut({required this.title, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) => ListTile(
+        leading: const Icon(Icons.report_gmailerrorred_outlined),
+        title: Text(title),
+        trailing: const Icon(Icons.arrow_forward_ios, size: 15),
+        onTap: onTap,
+      );
 }

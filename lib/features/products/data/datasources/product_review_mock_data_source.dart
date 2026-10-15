@@ -234,19 +234,22 @@ class ProductReviewMockDataSource implements ProductReviewDataSource {
     required String id,
     required ProductReviewStatus status,
     String? decisionNote,
+    bool clearDecisionNote = false,
     bool merchantNotificationRequested = false,
   }) async {
     final index = _reviews.indexWhere((review) => review.id == id);
     if (index < 0) {
       throw StateError('Product review $id was not found.');
     }
-    if (_reviews[index].status != ProductReviewStatus.pending) {
+    if (_reviews[index].status != ProductReviewStatus.pending &&
+        status != ProductReviewStatus.pending) {
       throw StateError('Product review $id has already been processed.');
     }
 
     final updated = _reviews[index].copyWith(
       status: status,
       decisionNote: decisionNote,
+      clearDecisionNote: clearDecisionNote,
       merchantNotificationRequested: merchantNotificationRequested,
     );
     _reviews[index] = updated;

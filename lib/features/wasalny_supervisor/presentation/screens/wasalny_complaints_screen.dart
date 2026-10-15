@@ -10,8 +10,26 @@ import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/wasalny_complaint.dart';
 import '../controllers/wasalny_complaints_cubit.dart';
 
-class WasalnyComplaintsScreen extends StatelessWidget {
+enum _ComplaintListFilter { all, active, escalated, archive }
+
+class WasalnyComplaintsScreen extends StatefulWidget {
   const WasalnyComplaintsScreen({super.key});
+
+  @override
+  State<WasalnyComplaintsScreen> createState() =>
+      _WasalnyComplaintsScreenState();
+}
+
+class _WasalnyComplaintsScreenState extends State<WasalnyComplaintsScreen> {
+  final _searchController = TextEditingController();
+  _ComplaintListFilter _filter = _ComplaintListFilter.active;
+  String _query = '';
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +38,9 @@ class WasalnyComplaintsScreen extends StatelessWidget {
 
     return Directionality(
       textDirection: isArabic ? ui.TextDirection.rtl : ui.TextDirection.ltr,
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF5F7F9),
+      child: Scaffold(backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.white,
           foregroundColor: AppColors.primaryDark,
           title: Text(l10n.wasalnyAccountFollowComplaint),
         ),
@@ -41,9 +58,29 @@ class WasalnyComplaintsScreen extends StatelessWidget {
             if (state is! WasalnyComplaintsLoaded) {
               return const SizedBox.shrink();
             }
-            if (state.complaints.isEmpty) {
-              return Center(child: Text(l10n.wasalnyRequestsEmpty));
-            }
+            final archiveCount = state.complaints.where((complaint) =>
+                complaint.status == WasalnyComplaintStatus.resolved ||
+                complaint.status == WasalnyComplaintStatus.actionTakenBlocked).length;
+            final filteredComplaints = state.complaints.where((complaint) {
+              final query = _query.trim().toLowerCase();
+              final matchesQuery = query.isEmpty ||
+                  complaint.id.toLowerCase().contains(query) ||
+                  complaint.titleAr.toLowerCase().contains(query) ||
+                  complaint.titleEn.toLowerCase().contains(query) ||
+                  complaint.itemTitleAr.toLowerCase().contains(query) ||
+                  complaint.itemTitleEn.toLowerCase().contains(query) ||
+                  (complaint.buyerNameAr?.toLowerCase().contains(query) ?? false) ||
+                  (complaint.sellerNameAr?.toLowerCase().contains(query) ?? false);
+              if (!matchesQuery) return false;
+              final archived = complaint.status == WasalnyComplaintStatus.resolved ||
+                  complaint.status == WasalnyComplaintStatus.actionTakenBlocked;
+              return switch (_filter) {
+                _ComplaintListFilter.all => true,
+                _ComplaintListFilter.active => !archived,
+                _ComplaintListFilter.escalated => complaint.status == WasalnyComplaintStatus.escalatedToChief,
+                _ComplaintListFilter.archive => archived,
+              };
+            }).toList();
 
             return ListView(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 28),
@@ -56,7 +93,48 @@ class WasalnyComplaintsScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 12),
-                for (final complaint in state.complaints)
+                TextField(
+                  controller: _searchController,
+                  onChanged: (value) => setState(() => _query = value),
+                  decoration: InputDecoration(
+                    hintText: isArabic ? 'ابحث برقم الشكوى أو المنتج أو العميل' : 'Search by complaint, product or customer',
+                    prefixIcon: const Icon(Icons.search),
+                    filled: true,
+                    fillColor: AppColors.white,
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: AppColors.cardBorder)),
+                    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(14), borderSide: const BorderSide(color: AppColors.cardBorder)),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(children: [
+                    for (final filter in _ComplaintListFilter.values)
+                      Padding(
+                        padding: const EdgeInsetsDirectional.only(end: 7),
+                        child: ChoiceChip(
+                          label: Text(switch (filter) {
+                            _ComplaintListFilter.all => isArabic ? 'الكل (${state.complaints.length})' : 'All (${state.complaints.length})',
+                            _ComplaintListFilter.active => isArabic ? 'نشطة (${state.complaints.length - archiveCount})' : 'Active (${state.complaints.length - archiveCount})',
+                            _ComplaintListFilter.escalated => isArabic ? 'مصعّدة' : 'Escalated',
+                            _ComplaintListFilter.archive => isArabic ? 'الأرشيف ($archiveCount)' : 'Archive ($archiveCount)',
+                          }),
+                          selected: _filter == filter,
+                          onSelected: (_) => setState(() => _filter = filter),
+                          selectedColor: AppColors.primaryDark,
+                          labelStyle: TextStyle(color: _filter == filter ? AppColors.white : AppColors.textSecondary, fontSize: 11),
+                          side: BorderSide(color: _filter == filter ? AppColors.primaryDark : AppColors.cardBorder),
+                        ),
+                      ),
+                  ]),
+                ),
+                const SizedBox(height: 12),
+                if (filteredComplaints.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 36),
+                    child: Text(isArabic ? 'لا توجد شكاوى في هذا التصنيف' : 'No complaints in this category', textAlign: TextAlign.center, style: const TextStyle(color: AppColors.textSecondary)),
+                  ),
+                for (final complaint in filteredComplaints)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: _ComplaintListTile(
@@ -133,7 +211,7 @@ class _ComplaintListTile extends StatelessWidget {
 
     return Card(
       margin: EdgeInsets.zero,
-      color: Colors.white,
+      color: AppColors.white,
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
@@ -150,7 +228,7 @@ class _ComplaintListTile extends StatelessWidget {
               Row(
                 children: [
                   const Icon(Icons.report_problem_outlined,
-                      color: Color(0xFF8A5A00)),
+                      color: AppColors.hexFF8A5A00),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -235,10 +313,9 @@ class _WasalnyComplaintDetailsScreen extends StatelessWidget {
 
     return Directionality(
       textDirection: isArabic ? ui.TextDirection.rtl : ui.TextDirection.ltr,
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF5F7F9),
+      child: Scaffold(backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.white,
           foregroundColor: AppColors.primaryDark,
           title: Text(l10n.wasalnyComplaintDetailsTitle),
         ),
@@ -442,6 +519,31 @@ class _WasalnyComplaintDetailsScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 9),
+        ] else if (currentComplaint.status == WasalnyComplaintStatus.resolved ||
+            currentComplaint.status == WasalnyComplaintStatus.actionTakenBlocked) ...[
+          OutlinedButton.icon(
+            onPressed: () async {
+              final reopened = await context.read<WasalnyComplaintsCubit>().reopen(
+                    id: currentComplaint.id,
+                    note: isArabic
+                        ? 'أعيد فتحها لمتابعة إضافية'
+                        : 'Reopened for further follow-up',
+                  );
+              if (!context.mounted) return;
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(reopened
+                    ? (isArabic ? 'تمت إعادة فتح الشكوى' : 'Complaint reopened')
+                    : (isArabic ? 'تعذرت إعادة فتح الشكوى' : 'Could not reopen complaint')),
+              ));
+            },
+            icon: const Icon(Icons.restore),
+            label: Text(isArabic ? 'إعادة فتح الشكوى' : 'Reopen complaint'),
+            style: OutlinedButton.styleFrom(
+              foregroundColor: AppColors.primaryDark,
+              minimumSize: const Size.fromHeight(48),
+            ),
+          ),
+          const SizedBox(height: 9),
         ],
         OutlinedButton.icon(
           onPressed: () => Navigator.of(context).pop(),
@@ -504,7 +606,7 @@ class _WasalnyComplaintDetailsScreen extends StatelessWidget {
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColors.transparent,
       builder: (_) => _ComplaintEscalationSheet(
         complaint: complaint,
         isArabic: isArabic,
@@ -571,7 +673,7 @@ class _ComplaintEscalationSheet extends StatelessWidget {
         constraints: BoxConstraints(maxHeight: maxHeight),
         child: Container(
           decoration: const BoxDecoration(
-            color: Color(0xFFF8FAFC),
+            color: AppColors.textPrimary,
             borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
           ),
           clipBehavior: Clip.antiAlias,
@@ -580,14 +682,14 @@ class _ComplaintEscalationSheet extends StatelessWidget {
               Container(
                 height: 42,
                 padding: const EdgeInsets.symmetric(horizontal: 18),
-                color: const Color(0xFF101B2E),
+                color: AppColors.hexFF101B2E,
                 child: Row(
                   children: [
                     Expanded(
                       child: Text(
                         l10n.wasalnyComplaintEscalationSheetKicker,
                         style: const TextStyle(
-                          color: Color(0xFF68C7F5),
+                          color: AppColors.hexFF68C7F5,
                           fontSize: 12,
                           fontWeight: FontWeight.w700,
                         ),
@@ -596,7 +698,7 @@ class _ComplaintEscalationSheet extends StatelessWidget {
                     Text(
                       l10n.wasalnyComplaintEscalationSheetType,
                       style: const TextStyle(
-                        color: Color(0xFF9AA8BC),
+                        color: AppColors.hexFF9AA8BC,
                         fontSize: 9,
                       ),
                     ),
@@ -606,14 +708,14 @@ class _ComplaintEscalationSheet extends StatelessWidget {
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.fromLTRB(18, 10, 18, 14),
-                color: const Color(0xFFF3F6FA),
+                color: AppColors.textPrimary,
                 child: Column(
                   children: [
                     Container(
                       width: 42,
                       height: 5,
                       decoration: BoxDecoration(
-                        color: const Color(0xFFCBD5E1),
+                        color: AppColors.hexFFCBD5E1,
                         borderRadius: BorderRadius.circular(6),
                       ),
                     ),
@@ -622,7 +724,7 @@ class _ComplaintEscalationSheet extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           radius: 19,
-                          backgroundColor: const Color(0xFFE2E8F0),
+                          backgroundColor: AppColors.hexFFE2E8F0,
                           child: IconButton(
                             padding: EdgeInsets.zero,
                             tooltip: l10n.wasalnyComplaintBackToList,
@@ -661,7 +763,7 @@ class _ComplaintEscalationSheet extends StatelessWidget {
                         const SizedBox(width: 12),
                         const CircleAvatar(
                           radius: 17,
-                          backgroundColor: Color(0xFFE2E8F0),
+                          backgroundColor: AppColors.hexFFE2E8F0,
                           child: Icon(
                             Icons.person_outline,
                             size: 19,
@@ -687,7 +789,7 @@ class _ComplaintEscalationSheet extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF102B4E),
+                          color: AppColors.hexFF102B4E,
                           borderRadius: BorderRadius.circular(16),
                         ),
                         child: Row(
@@ -700,7 +802,7 @@ class _ComplaintEscalationSheet extends StatelessWidget {
                                   Text(
                                     l10n.wasalnyComplaintEscalationPolicyTitle,
                                     style: const TextStyle(
-                                      color: Colors.white,
+                                      color: AppColors.white,
                                       fontWeight: FontWeight.w800,
                                     ),
                                   ),
@@ -708,7 +810,7 @@ class _ComplaintEscalationSheet extends StatelessWidget {
                                   Text(
                                     l10n.wasalnyComplaintEscalationPolicyBody,
                                     style: const TextStyle(
-                                      color: Color(0xFFD9E5F2),
+                                      color: AppColors.hexFFD9E5F2,
                                       fontSize: 11,
                                       height: 1.7,
                                     ),
@@ -719,7 +821,7 @@ class _ComplaintEscalationSheet extends StatelessWidget {
                             const SizedBox(width: 12),
                             const Icon(
                               Icons.shield_outlined,
-                              color: Color(0xFF72C7FF),
+                              color: AppColors.hexFF72C7FF,
                               size: 22,
                             ),
                           ],
@@ -785,9 +887,9 @@ class _ComplaintEscalationSheet extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 14),
                 decoration: const BoxDecoration(
-                  color: Color(0xFFF8FAFC),
+                  color: AppColors.textPrimary,
                   border: Border(
-                    top: BorderSide(color: Color(0xFFE4EAF1)),
+                    top: BorderSide(color: AppColors.hexFFE4EAF1),
                   ),
                 ),
                 child: Column(
@@ -801,8 +903,8 @@ class _ComplaintEscalationSheet extends StatelessWidget {
                         textAlign: TextAlign.center,
                       ),
                       style: FilledButton.styleFrom(
-                        backgroundColor: const Color(0xFFB91C1C),
-                        foregroundColor: Colors.white,
+                        backgroundColor: AppColors.hexFFB91C1C,
+                        foregroundColor: AppColors.white,
                         minimumSize: const Size.fromHeight(48),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -815,7 +917,7 @@ class _ComplaintEscalationSheet extends StatelessWidget {
                       icon: const Icon(Icons.close, size: 17),
                       label: Text(l10n.wasalnyComplaintBackToList),
                       style: TextButton.styleFrom(
-                        backgroundColor: const Color(0xFFE5EBF2),
+                        backgroundColor: AppColors.hexFFE5EBF2,
                         foregroundColor: AppColors.textSecondary,
                         minimumSize: const Size.fromHeight(42),
                         shape: RoundedRectangleBorder(
@@ -847,9 +949,9 @@ class _EscalationSummaryCard extends StatelessWidget {
   Widget build(BuildContext context) => Container(
         padding: const EdgeInsets.all(13),
         decoration: BoxDecoration(
-          color: const Color(0xFFF8FAFC),
+          color: AppColors.textPrimary,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: const Color(0xFFDCE5EF)),
+          border: Border.all(color: AppColors.hexFFDCE5EF),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -870,7 +972,7 @@ class _EscalationSummaryCard extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFF1CC),
+                    color: AppColors.textPrimary,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Row(
@@ -879,13 +981,13 @@ class _EscalationSummaryCard extends StatelessWidget {
                       const Icon(
                         Icons.circle,
                         size: 7,
-                        color: Color(0xFFD88A00),
+                        color: AppColors.hexFFD88A00,
                       ),
                       const SizedBox(width: 5),
                       Text(
                         l10n.wasalnyComplaintEscalationPending,
                         style: const TextStyle(
-                          color: Color(0xFF8A5A00),
+                          color: AppColors.hexFF8A5A00,
                           fontSize: 10,
                           fontWeight: FontWeight.w700,
                         ),
@@ -930,9 +1032,9 @@ class _EscalationValueCell extends StatelessWidget {
         constraints: const BoxConstraints(minHeight: 48),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFFDCE5EF)),
+          border: Border.all(color: AppColors.hexFFDCE5EF),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -1009,9 +1111,9 @@ class _EscalationPartyCard extends StatelessWidget {
         constraints: const BoxConstraints(minHeight: 62),
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: const Color(0xFFF5F8FB),
+          color: AppColors.textPrimary,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFFE1E8F0)),
+          border: Border.all(color: AppColors.hexFFE1E8F0),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -1062,10 +1164,10 @@ class _EscalationEvidenceCard extends StatelessWidget {
   Widget build(BuildContext context) => Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: const Color(0xFFF8FAFC),
+          color: AppColors.textPrimary,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
-            color: verified ? const Color(0xFFD9E7F8) : const Color(0xFFE1E8F0),
+            color: verified ? AppColors.hexFFD9E7F8 : AppColors.hexFFE1E8F0,
           ),
         ),
         child: Column(
@@ -1116,7 +1218,7 @@ class _ComplaintStatusBadge extends StatelessWidget {
     final (label, color) = switch (status) {
       WasalnyComplaintStatus.underReview => (
           l10n.wasalnyComplaintOpenStatus,
-          const Color(0xFF8A5A00)
+          AppColors.hexFF8A5A00
         ),
       WasalnyComplaintStatus.escalatedToChief => (
           l10n.wasalnyComplaintEscalatedStatus,
@@ -1159,7 +1261,7 @@ class _DetailsSection extends StatelessWidget {
   Widget build(BuildContext context) => Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: AppColors.cardBorder),
         ),
@@ -1238,7 +1340,7 @@ class _PartyContact extends StatelessWidget {
         children: [
           const CircleAvatar(
             radius: 19,
-            backgroundColor: Color(0xFFE8EDF2),
+            backgroundColor: AppColors.hexFFE8EDF2,
             child: Icon(Icons.person_outline, color: AppColors.primaryDark),
           ),
           const SizedBox(width: 10),

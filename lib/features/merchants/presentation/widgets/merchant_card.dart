@@ -7,12 +7,20 @@ class MerchantCard extends StatelessWidget {
   final MerchantEntity merchant;
   final VoidCallback? onTap;
   final VoidCallback? onActionTap;
+  final bool? isSuspendedOverride;
+  final String? recentAction;
+  final String? recentActionDetails;
+  final String? recentActionTime;
 
   const MerchantCard({
     super.key,
     required this.merchant,
     this.onTap,
     this.onActionTap,
+    this.isSuspendedOverride,
+    this.recentAction,
+    this.recentActionDetails,
+    this.recentActionTime,
   });
 
   @override

@@ -3,6 +3,7 @@ class ProductSupervisorAuditEntry {
   final String actionKey;
   final String subject;
   final String details;
+  final String actorName;
   final DateTime occurredAt;
 
   const ProductSupervisorAuditEntry({
@@ -10,6 +11,7 @@ class ProductSupervisorAuditEntry {
     required this.actionKey,
     required this.subject,
     required this.details,
+    this.actorName = 'مشرف المنتجات',
     required this.occurredAt,
   });
 }

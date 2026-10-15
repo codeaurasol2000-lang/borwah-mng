@@ -30,6 +30,12 @@ class WasalnyAdsMockDataSource implements WasalnyAdsDataSource {
         _ads[index] = _ads[index].copyWith(
           status: WasalnyAdStatus.values.byName(statusName),
           decisionNote: decision['decisionNote'] as String?,
+          isArchived: decision['isArchived'] as bool? ?? false,
+          statusBeforeArchive: decision['statusBeforeArchive'] is String
+              ? WasalnyAdStatus.values
+                  .byName(decision['statusBeforeArchive'] as String)
+              : null,
+          clearStatusBeforeArchive: decision['statusBeforeArchive'] == null,
         );
       }
     }
@@ -41,14 +47,22 @@ class WasalnyAdsMockDataSource implements WasalnyAdsDataSource {
     required String id,
     required WasalnyAdStatus status,
     String? decisionNote,
+    bool? isArchived,
   }) async {
     final index = _ads.indexWhere((ad) => ad.id == id);
     if (index < 0) {
       throw StateError('Wasalny ad $id was not found.');
     }
+    final wasArchived = _ads[index].isArchived;
+    final shouldArchive = isArchived ?? false;
     final updated = _ads[index].copyWith(
       status: status,
       decisionNote: decisionNote,
+      isArchived: shouldArchive,
+      statusBeforeArchive: shouldArchive && !wasArchived
+          ? _ads[index].status
+          : null,
+      clearStatusBeforeArchive: !shouldArchive,
     );
     final previous = _ads[index];
     _ads[index] = updated;
@@ -61,6 +75,8 @@ class WasalnyAdsMockDataSource implements WasalnyAdsDataSource {
             ad.id: {
               'status': ad.status.name,
               'decisionNote': ad.decisionNote,
+              'isArchived': ad.isArchived,
+              'statusBeforeArchive': ad.statusBeforeArchive?.name,
             },
         }),
       );

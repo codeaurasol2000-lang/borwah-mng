@@ -1415,11 +1415,15 @@ class _MerchantSuspensionSheetState extends State<_MerchantSuspensionSheet> {
   }
 
   Widget _buildAttachmentsCard(AppLocalizations l10n) {
+    final isArabic = l10n.localeName.startsWith('ar');
     return _sheetCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _sectionHeading(l10n.merchantSuspendAttachments, Icons.attach_file),
+          _sectionHeading(
+            isArabic ? 'المرفقات' : 'Attachments',
+            Icons.attach_file,
+          ),
           const SizedBox(height: 10),
           InkWell(
             onTap: () => _showUnavailable(l10n),
@@ -1440,7 +1444,7 @@ class _MerchantSuspensionSheetState extends State<_MerchantSuspensionSheet> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    l10n.merchantSuspendUpload,
+                    isArabic ? 'رفع ملف' : 'Upload a file',
                     style: const TextStyle(
                       color: AppColors.primaryDark,
                       fontSize: 11,
@@ -1449,7 +1453,9 @@ class _MerchantSuspensionSheetState extends State<_MerchantSuspensionSheet> {
                   ),
                   const SizedBox(height: 3),
                   Text(
-                    l10n.merchantSuspendFileTypes,
+                    isArabic
+                        ? 'PDF أو صور — بحد أقصى 10 ميجابايت'
+                        : 'PDF or images — up to 10 MB',
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       color: AppColors.textSecondary,

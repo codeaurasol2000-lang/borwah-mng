@@ -19,6 +19,7 @@ Future<void> notifyFinanceOfSupervisorRequest(
         messageEn:
             '${request.beneficiaryRole} submitted ${request.requestNumber} for ${request.grossAmount.toStringAsFixed(2)}.',
         createdAt: DateTime.now(),
+        requestId: request.id,
       ),
     );
   } catch (error, stackTrace) {

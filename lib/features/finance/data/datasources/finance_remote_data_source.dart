@@ -22,7 +22,6 @@ abstract class FinanceRemoteDataSource {
     required double amount,
     required String bankAccountId,
     required String reason,
-    String? attachmentName,
   });
   Future<List<WithdrawalRequestEntity>> getMerchantWithdrawals();
   Future<WithdrawalRequestEntity> submitMerchantFinancialRequest({
@@ -47,6 +46,9 @@ abstract class FinanceRemoteDataSource {
     required String iban,
     required String transferMethod,
     required String dateText,
+    String? reference,
+    String? notes,
+    String? settlementMode,
   });
   Future<WithdrawalRequestEntity> submitSupervisorWithdrawal({
     required String beneficiaryName,

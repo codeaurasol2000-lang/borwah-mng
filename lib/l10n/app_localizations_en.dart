@@ -167,8 +167,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get currentLedgerBalanceLabel => 'Current ledger balance:';
 
   @override
-  String get expenseCategoryAndDocuments =>
-      'Expense category and supporting documents';
+  String get expenseCategoryAndDocuments => 'Expense details';
 
   @override
   String get detailedExpenseReason => 'Detailed reason for the expense';
@@ -176,12 +175,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get expenseDetailsHint =>
       'Enter a detailed description of the expense';
-
-  @override
-  String get invoiceSupportDocument => 'Tax invoice and supporting document';
-
-  @override
-  String get attachDocumentOptional => 'Attach a document image (optional)';
 
   @override
   String get expenseReasonRequired => 'Please enter the expense reason first';
@@ -215,18 +208,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get expenseConfirmDescription =>
       'The expense request will be sent to management for review and approval. No amount will be deducted yet.';
-
-  @override
-  String get expenseAttachedPrefix => 'Attached';
-
-  @override
-  String get expenseRemoveDocumentAction => 'tap to remove';
-
-  @override
-  String get expenseDocumentAttached => 'Document attached';
-
-  @override
-  String get expenseDocumentRemoved => 'Attached document removed';
 
   @override
   String get strictFinancialDisbursementGovernance =>
@@ -360,7 +341,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get servicesProfileDemoMetricsNotice =>
-      'Profile details, performance metrics, and balances are demo values until an approved data source is connected.';
+      'Profile details and balances are demo values; action metrics use the locally saved activity log.';
 
   @override
   String get servicesProfileLoadError =>
@@ -2862,6 +2843,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settlementBeneficiaryAudit => 'Verification and audit';
 
   @override
+  String get settlementBeneficiaryName => 'Beneficiary name';
+
+  @override
+  String get settlementBeneficiaryRole => 'Beneficiary role';
+
+  @override
+  String get settlementUseSavedAccount => 'Choose a registered account';
+
+  @override
+  String get settlementEnterBankManually => 'Enter bank details manually';
+
+  @override
+  String get settlementNoSavedAccounts =>
+      'No registered bank accounts are available';
+
+  @override
   String get settlementAmountLabel => 'Settlement amount';
 
   @override
@@ -3578,6 +3575,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get navFinancialRequests => 'Financial Requests';
+
+  @override
+  String get navMerchantUpgrades => 'Merchant Upgrades';
+
+  @override
+  String get merchantUpgradeReviewSubtitle =>
+      'Review merchant upgrade requests and send accepted requests to Finance';
 
   @override
   String get navAccount => 'Account';
@@ -6162,6 +6166,12 @@ class AppLocalizationsEn extends AppLocalizations {
       'Financial request referred to finance';
 
   @override
+  String get merchantAuditFinancialApproved => 'Financial request approved';
+
+  @override
+  String get merchantAuditFinancialFrozen => 'Financial request put on hold';
+
+  @override
   String get merchantAuditFinancialRejected => 'Financial request rejected';
 
   @override
@@ -6273,6 +6283,31 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get merchantWalletIban => 'IBAN';
+
+  @override
+  String get merchantWalletBankName => 'Bank or wallet provider';
+
+  @override
+  String get merchantWalletDestinationName =>
+      'Account holder or wallet owner name';
+
+  @override
+  String get merchantWalletDestinationDetails =>
+      'Enter the account number, wallet number, or payment address';
+
+  @override
+  String get merchantWalletPhoneLabel => 'Wallet phone number';
+
+  @override
+  String get merchantWalletInstantAddressLabel =>
+      'InstaPay address or username';
+
+  @override
+  String get merchantWalletEnterTransferDetails =>
+      'Enter the destination account details first.';
+
+  @override
+  String get merchantProfileAddPhoto => 'Add profile photo';
 
   @override
   String get merchantWalletDigitalWallet => 'Digital wallet';
@@ -6392,6 +6427,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get merchantInfoTitle => 'Merchant information';
+
+  @override
+  String get merchantRecordAction => 'Merchant record';
 
   @override
   String get merchantInfoProfile => 'Merchant profile';
@@ -6605,18 +6643,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'This note is for the merchant\'s official account';
 
   @override
-  String get merchantSuspendAttachments =>
-      'Supporting documents and field evidence';
-
-  @override
-  String get merchantSuspendUpload =>
-      'Tap to attach an inspection report or photos';
-
-  @override
-  String get merchantSuspendFileTypes =>
-      'Supported formats: PDF, JPG, PNG (up to 10 MB)';
-
-  @override
   String get merchantSuspendDuration => 'Proposed suspension period';
 
   @override
@@ -6642,8 +6668,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Requires a legal investigation and statement';
 
   @override
-  String get merchantSuspendConfirm =>
-      'Confirm temporary suspension and notify merchant';
+  String get merchantSuspendConfirm => 'Confirm temporary suspension';
 
   @override
   String get merchantSuspendCancel => 'Cancel and return to merchant profile';
@@ -7037,7 +7062,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get merchantLinkSavedLocally =>
-      'Link request saved locally. It has not been sent to the merchant or platform.';
+      'Merchant added to your supervised list on this device.';
 
   @override
   String get merchantLinkSaveFailed => 'Could not save the link request.';

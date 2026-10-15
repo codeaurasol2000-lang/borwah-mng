@@ -20,6 +20,8 @@ String _newFinancialRequestId(String prefix, String timestamp) =>
 class FinanceMockDataSource implements FinanceRemoteDataSource {
   final List<BankAccountEditRequestEntity> _bankAccountEditRequests = [];
   final List<ExpenseRequestEntity> _expenseRequests = [];
+  bool _expenseRequestsLoaded = false;
+  static const _expenseRequestsStorageKey = 'finance_expense_requests_v1';
   List<WithdrawalRequestEntity>? _merchantWithdrawalRequests;
   List<WithdrawalRequestEntity>? _supervisorWithdrawalRequests;
   bool _supervisorRequestsLoaded = false;
@@ -95,7 +97,6 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
     ),
   ];
   int _nextBankAccountEditRequestId = 0;
-  int _nextExpenseRequestId = 0;
 
   // القائمة المركزية الموحدة للحسابات البنكية والقنوات الرسمية
   final List<BankAccountModel> _mockBankAccounts = [
@@ -277,6 +278,7 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
 
   @override
   Future<List<ExpenseRequestEntity>> getExpenseRequests() async {
+    await _loadExpenseRequests();
     return List.unmodifiable(_expenseRequests);
   }
 
@@ -285,8 +287,8 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
     required double amount,
     required String bankAccountId,
     required String reason,
-    String? attachmentName,
   }) async {
+    await _loadExpenseRequests();
     if (!amount.isFinite || amount <= 0) {
       throw ArgumentError.value(
           amount, 'amount', 'Amount must be greater than zero.');
@@ -305,28 +307,90 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
     }
     final account = _mockBankAccounts[accountIndex];
 
-    final normalizedAttachment = attachmentName?.trim();
     final request = ExpenseRequestEntity(
-      id: 'expense-${++_nextExpenseRequestId}',
+      id: _newFinancialRequestId(
+        'expense',
+        DateTime.now().microsecondsSinceEpoch.toString(),
+      ),
       amount: amount,
       bankAccountId: account.id,
       bankName: account.bankName,
       reason: normalizedReason,
-      attachmentName:
-          normalizedAttachment == null || normalizedAttachment.isEmpty
-              ? null
-              : normalizedAttachment,
       submittedAt: DateTime.now(),
     );
     _expenseRequests.add(request);
+    try {
+      await _persistExpenseRequests();
+    } catch (_) {
+      _expenseRequests.remove(request);
+      rethrow;
+    }
     return request;
   }
+
+  Future<void> _loadExpenseRequests() async {
+    if (_expenseRequestsLoaded) return;
+
+    final preferences = await SharedPreferences.getInstance();
+    final encoded = preferences.getString(_expenseRequestsStorageKey);
+    if (encoded != null) {
+      final decoded = jsonDecode(encoded);
+      if (decoded is! List) {
+        throw const FormatException('Saved expense requests must be a list.');
+      }
+      _expenseRequests
+        ..clear()
+        ..addAll(decoded.map((item) {
+          if (item is! Map<String, dynamic>) {
+            throw const FormatException('Saved expense request is invalid.');
+          }
+          return _expenseRequestFromJson(item);
+        }));
+    }
+    _expenseRequestsLoaded = true;
+  }
+
+  Future<void> _persistExpenseRequests() async {
+    final preferences = await SharedPreferences.getInstance();
+    final encoded = jsonEncode(
+      _expenseRequests.map(_expenseRequestToJson).toList(growable: false),
+    );
+    final saved =
+        await preferences.setString(_expenseRequestsStorageKey, encoded);
+    if (!saved) {
+      throw StateError('Could not save expense requests.');
+    }
+  }
+
+  Map<String, Object?> _expenseRequestToJson(ExpenseRequestEntity request) => {
+        'id': request.id,
+        'amount': request.amount,
+        'bankAccountId': request.bankAccountId,
+        'bankName': request.bankName,
+        'reason': request.reason,
+        'submittedAt': request.submittedAt.toIso8601String(),
+        'status': request.status.name,
+      };
+
+  ExpenseRequestEntity _expenseRequestFromJson(Map<String, dynamic> json) =>
+      ExpenseRequestEntity(
+        id: json['id'] as String,
+        amount: (json['amount'] as num).toDouble(),
+        bankAccountId: json['bankAccountId'] as String,
+        bankName: json['bankName'] as String,
+        reason: json['reason'] as String,
+        submittedAt: DateTime.parse(json['submittedAt'] as String),
+        status: ExpenseRequestStatus.values.byName(
+          json['status'] as String? ??
+              ExpenseRequestStatus.pendingAdminApproval.name,
+        ),
+      );
 
   @override
   Future<DepartmentWalletEntity> getDepartmentWallet(
       DepartmentType type) async {
     return switch (type) {
-      DepartmentType.merchants => const DepartmentWalletEntity(
+      DepartmentType.merchants => DepartmentWalletEntity(
           type: DepartmentType.merchants,
           totalBalance: 2150000,
           primaryMetricCount: 142,
@@ -336,43 +400,106 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
           items: [
             DepartmentWalletItemEntity(
               title: 'مؤسسة الأفق للتقنية والتجارة',
+              titleEn: 'Al Ofuq Technology & Trading',
               reference: 'السجل التجاري 101089234   #TRD-9041',
               availableBalance: 412800,
               pendingBalance: 12500,
               operationsCount: 1842,
               channel: DepartmentWalletChannel.instantSettlement,
               status: DepartmentWalletStatus.activeMatched,
+              transactions: [
+                DepartmentWalletTransactionEntity(
+                  descriptionAr: 'تسوية مبيعات يومية',
+                  descriptionEn: 'Daily sales settlement',
+                  amount: 14200,
+                  occurredAt: DateTime(2026, 10, 14, 11, 20),
+                ),
+                DepartmentWalletTransactionEntity(
+                  descriptionAr: 'عمولة المنصة',
+                  descriptionEn: 'Platform commission',
+                  amount: -639,
+                  occurredAt: DateTime(2026, 10, 14, 11, 21),
+                ),
+                DepartmentWalletTransactionEntity(
+                  descriptionAr: 'طلب سحب قيد المراجعة',
+                  descriptionEn: 'Withdrawal request under review',
+                  amount: -12500,
+                  occurredAt: DateTime(2026, 10, 15, 9, 0),
+                  isPending: true,
+                ),
+              ],
             ),
             DepartmentWalletItemEntity(
               title: 'متجر الصفوة الذهبي',
+              titleEn: 'Elite Gold Store',
               reference: 'السجل التجاري 1010459810   #TRD-8820',
               availableBalance: 325400,
               pendingBalance: 24000,
               operationsCount: 965,
               channel: DepartmentWalletChannel.alRajhiMainOperating,
               status: DepartmentWalletStatus.activeMatched,
+              transactions: [
+                DepartmentWalletTransactionEntity(
+                  descriptionAr: 'تحويل مبيعات المتجر',
+                  descriptionEn: 'Store sales transfer',
+                  amount: 24000,
+                  occurredAt: DateTime(2026, 10, 13, 15, 45),
+                ),
+                DepartmentWalletTransactionEntity(
+                  descriptionAr: 'سحب أرباح قيد التنفيذ',
+                  descriptionEn: 'Profit withdrawal processing',
+                  amount: -24000,
+                  occurredAt: DateTime(2026, 10, 15, 10, 15),
+                  isPending: true,
+                ),
+              ],
             ),
             DepartmentWalletItemEntity(
               title: 'مجوهرات البريق الراقية',
+              titleEn: 'Al Bareeq Fine Jewelry',
               reference: 'السجل التجاري 1010334992   #TRD-7104',
               availableBalance: 184200,
               pendingBalance: 58000,
               operationsCount: 420,
               channel: DepartmentWalletChannel.scheduledPayment,
               status: DepartmentWalletStatus.activeMatched,
+              transactions: [
+                DepartmentWalletTransactionEntity(
+                  descriptionAr: 'إيداع مبيعات',
+                  descriptionEn: 'Sales deposit',
+                  amount: 18500,
+                  occurredAt: DateTime(2026, 10, 12, 12, 30),
+                ),
+                DepartmentWalletTransactionEntity(
+                  descriptionAr: 'مبلغ مجمد لحين التسوية',
+                  descriptionEn: 'Amount held pending settlement',
+                  amount: -58000,
+                  occurredAt: DateTime(2026, 10, 15, 8, 40),
+                  isPending: true,
+                ),
+              ],
             ),
             DepartmentWalletItemEntity(
               title: 'دار النخبة للأجهزة',
+              titleEn: 'Elite Devices',
               reference: 'السجل التجاري 1010198421   #TRD-6519',
               availableBalance: 98600,
               pendingBalance: 0,
               operationsCount: 312,
               channel: DepartmentWalletChannel.snbEscrow,
               status: DepartmentWalletStatus.activeMatched,
+              transactions: [
+                DepartmentWalletTransactionEntity(
+                  descriptionAr: 'تسوية مبيعات',
+                  descriptionEn: 'Sales settlement',
+                  amount: 9800,
+                  occurredAt: DateTime(2026, 10, 11, 10, 5),
+                ),
+              ],
             ),
           ],
         ),
-      DepartmentType.usedEscrow => const DepartmentWalletEntity(
+      DepartmentType.usedEscrow => DepartmentWalletEntity(
           type: DepartmentType.usedEscrow,
           totalBalance: 980000,
           primaryMetricCount: 85,
@@ -382,25 +509,57 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
           items: [
             DepartmentWalletItemEntity(
               title: 'سيارة تويوتا كامري 2020',
+              titleEn: '2020 Toyota Camry',
               reference: 'عربون الصفقة #ESC-1092',
               availableBalance: 5000,
               pendingBalance: 0,
               operationsCount: 1,
               channel: DepartmentWalletChannel.underInspection,
               status: DepartmentWalletStatus.protectedEscrow,
+              transactions: [
+                DepartmentWalletTransactionEntity(
+                  descriptionAr: 'إيداع عربون الصفقة',
+                  descriptionEn: 'Deal deposit',
+                  amount: 5000,
+                  occurredAt: DateTime(2026, 10, 14, 13, 0),
+                ),
+                DepartmentWalletTransactionEntity(
+                  descriptionAr: 'المبلغ محجوز للفحص',
+                  descriptionEn: 'Funds held for inspection',
+                  amount: -5000,
+                  occurredAt: DateTime(2026, 10, 14, 13, 5),
+                  isPending: true,
+                ),
+              ],
             ),
             DepartmentWalletItemEntity(
               title: 'آيفون 14 برو ماكس',
+              titleEn: 'iPhone 14 Pro Max',
               reference: 'عربون الصفقة #ESC-3321',
               availableBalance: 500,
               pendingBalance: 0,
               operationsCount: 1,
               channel: DepartmentWalletChannel.inShipping,
               status: DepartmentWalletStatus.protectedEscrow,
+              transactions: [
+                DepartmentWalletTransactionEntity(
+                  descriptionAr: 'إيداع عربون',
+                  descriptionEn: 'Escrow deposit',
+                  amount: 500,
+                  occurredAt: DateTime(2026, 10, 13, 9, 30),
+                ),
+                DepartmentWalletTransactionEntity(
+                  descriptionAr: 'المبلغ محجوز حتى اكتمال الشحن',
+                  descriptionEn: 'Funds held until shipment is complete',
+                  amount: -500,
+                  occurredAt: DateTime(2026, 10, 13, 9, 35),
+                  isPending: true,
+                ),
+              ],
             ),
           ],
         ),
-      DepartmentType.services => const DepartmentWalletEntity(
+      DepartmentType.services => DepartmentWalletEntity(
           type: DepartmentType.services,
           totalBalance: 620000,
           primaryMetricCount: 320,
@@ -410,25 +569,50 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
           items: [
             DepartmentWalletItemEntity(
               title: 'مؤسسة التبريد المتقن',
+              titleEn: 'Itqan Cooling Establishment',
               reference: 'رخصة 88214   #SRV-901',
               availableBalance: 25400,
               pendingBalance: 3200,
               operationsCount: 142,
               channel: DepartmentWalletChannel.instantSettlement,
               status: DepartmentWalletStatus.approvedProvider,
+              transactions: [
+                DepartmentWalletTransactionEntity(
+                  descriptionAr: 'مستحقات صيانة دورية',
+                  descriptionEn: 'Scheduled maintenance payment',
+                  amount: 3200,
+                  occurredAt: DateTime(2026, 10, 14, 14, 0),
+                  isPending: true,
+                ),
+                DepartmentWalletTransactionEntity(
+                  descriptionAr: 'رسوم المنصة',
+                  descriptionEn: 'Platform fee',
+                  amount: -256,
+                  occurredAt: DateTime(2026, 10, 12, 16, 10),
+                ),
+              ],
             ),
             DepartmentWalletItemEntity(
               title: 'مؤسسة الصيانة الشاملة',
+              titleEn: 'Comprehensive Maintenance',
               reference: 'رخصة 11029   #SRV-412',
               availableBalance: 18500,
               pendingBalance: 0,
               operationsCount: 89,
               channel: DepartmentWalletChannel.snbEscrow,
               status: DepartmentWalletStatus.approvedProvider,
+              transactions: [
+                DepartmentWalletTransactionEntity(
+                  descriptionAr: 'صرف مستحقات خدمة',
+                  descriptionEn: 'Service payment released',
+                  amount: 7400,
+                  occurredAt: DateTime(2026, 10, 10, 11, 15),
+                ),
+              ],
             ),
           ],
         ),
-      DepartmentType.couriers => const DepartmentWalletEntity(
+      DepartmentType.couriers => DepartmentWalletEntity(
           type: DepartmentType.couriers,
           totalBalance: 450000,
           primaryMetricCount: 1200,
@@ -438,21 +622,53 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
           items: [
             DepartmentWalletItemEntity(
               title: 'شركة زاجل للشحن',
+              titleEn: 'Zajel Shipping',
               reference: 'السجل التجاري 40301122   #DEL-551',
               availableBalance: 145000,
               pendingBalance: 12000,
               operationsCount: 14200,
               channel: DepartmentWalletChannel.weeklySettlement,
               status: DepartmentWalletStatus.strategicPartner,
+              transactions: [
+                DepartmentWalletTransactionEntity(
+                  descriptionAr: 'تسوية شحنات أسبوعية',
+                  descriptionEn: 'Weekly shipment settlement',
+                  amount: 12000,
+                  occurredAt: DateTime(2026, 10, 14, 17, 0),
+                  isPending: true,
+                ),
+                DepartmentWalletTransactionEntity(
+                  descriptionAr: 'رسوم الشحنات المنفذة',
+                  descriptionEn: 'Completed shipment fees',
+                  amount: 4600,
+                  occurredAt: DateTime(2026, 10, 13, 12, 0),
+                ),
+              ],
             ),
             DepartmentWalletItemEntity(
               title: 'مندوب وصلني',
+              titleEn: 'Wasalny Courier',
               reference: 'رقم المندوب #C-1902',
               availableBalance: 450,
               pendingBalance: 120,
               operationsCount: 45,
               channel: DepartmentWalletChannel.stcPay,
               status: DepartmentWalletStatus.activeCourier,
+              transactions: [
+                DepartmentWalletTransactionEntity(
+                  descriptionAr: 'مستحقات توصيل',
+                  descriptionEn: 'Delivery earnings',
+                  amount: 120,
+                  occurredAt: DateTime(2026, 10, 15, 7, 30),
+                  isPending: true,
+                ),
+                DepartmentWalletTransactionEntity(
+                  descriptionAr: 'تحويل إلى STC Pay',
+                  descriptionEn: 'Transfer to STC Pay',
+                  amount: -75,
+                  occurredAt: DateTime(2026, 10, 13, 18, 45),
+                ),
+              ],
             ),
           ],
         ),
@@ -622,7 +838,10 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
   Future<void> approveMerchantFinancialRequest(String requestId) =>
       _updateMerchantFinancialRequest(
         requestId,
-        (request) => request.copyWith(status: RequestStatus.approved),
+        (request) => request.copyWith(
+          status: RequestStatus.approved,
+          decisionAt: DateTime.now(),
+        ),
       );
 
   @override
@@ -643,6 +862,7 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
       (request) => request.copyWith(
         status: RequestStatus.underInvestigation,
         alertNotice: normalizedReason,
+        decisionAt: DateTime.now(),
       ),
     );
   }
@@ -661,6 +881,7 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
       (request) => request.copyWith(
         status: RequestStatus.rejected,
         alertNotice: reason.trim(),
+        decisionAt: DateTime.now(),
       ),
     );
   }
@@ -800,6 +1021,9 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
     required String iban,
     required String transferMethod,
     required String dateText,
+    String? reference,
+    String? notes,
+    String? settlementMode,
   }) async {
     if (beneficiaryName.trim().isEmpty ||
         beneficiaryRole.trim().isEmpty ||
@@ -830,12 +1054,17 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
       iban: iban.trim(),
       dateText: dateText.trim(),
       status: RequestStatus.pending,
-      sourceOfFunds: operationType == FinancialOperationType.withdrawal
-          ? 'طلب سحب رصيد المحفظة؛ بانتظار اعتماد المشرف المالي.'
-          : 'طلب إيداع في المحفظة؛ لن يضاف الرصيد قبل اعتماد المشرف المالي.',
+      sourceOfFunds: sourceAccount == 'finance_supervisor_personal_wallet'
+          ? 'طلب سحب من محفظة المستحقات الشخصية؛ بانتظار اعتماد الإدارة.'
+          : operationType == FinancialOperationType.withdrawal
+              ? 'طلب سحب رصيد المحفظة؛ بانتظار اعتماد المشرف المالي.'
+              : 'طلب إيداع في المحفظة؛ لن يضاف الرصيد قبل اعتماد المشرف المالي.',
       transferMethod: transferMethod.trim(),
       operationType: operationType,
       sourceAccount: sourceAccount.trim(),
+      reference: reference?.trim(),
+      notes: notes?.trim(),
+      settlementMode: settlementMode,
     );
     _supervisorWithdrawalRequests!.insert(0, request);
     try {
@@ -1154,9 +1383,14 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
     }
     _supervisorWithdrawalRequests![index] = request.copyWith(
       status: RequestStatus.approved,
-      alertNotice: request.operationType == FinancialOperationType.withdrawal
-          ? 'Approved by the financial supervisor. Transfer execution requires the configured payment service.'
-          : 'Deposit approved by the financial supervisor. Balance posting requires the configured payment service.',
+      adminApprovalPending: request.settlementMode != null,
+      decisionAt: DateTime.now(),
+      decisionBy: 'Finance Supervisor',
+      alertNotice: request.settlementMode != null
+          ? 'Approved by the Finance Supervisor. Awaiting final Admin approval.'
+          : request.operationType == FinancialOperationType.withdrawal
+              ? 'Approved by the financial supervisor. Transfer execution requires the configured payment service.'
+              : 'Deposit approved by the financial supervisor. Balance posting requires the configured payment service.',
     );
     try {
       await _persistSupervisorRequests();
@@ -1190,6 +1424,8 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
     _supervisorWithdrawalRequests![index] = request.copyWith(
       status: RequestStatus.underInvestigation,
       alertNotice: normalizedReason,
+      decisionAt: DateTime.now(),
+      decisionBy: 'Finance Supervisor',
     );
     try {
       await _persistSupervisorRequests();
@@ -1223,6 +1459,8 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
     _supervisorWithdrawalRequests![index] = request.copyWith(
       status: RequestStatus.rejected,
       alertNotice: normalizedReason,
+      decisionAt: DateTime.now(),
+      decisionBy: 'Finance Supervisor',
     );
     try {
       await _persistSupervisorRequests();
@@ -1262,6 +1500,8 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
         'bankName': request.bankName,
         'iban': request.iban,
         'dateText': request.dateText,
+        'decisionAt': request.decisionAt?.toIso8601String(),
+        'decisionBy': request.decisionBy,
         'status': request.status.name,
         'auditCheckResult': request.auditCheckResult,
         'alertNotice': request.alertNotice,
@@ -1270,6 +1510,10 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
         'transferMethod': request.transferMethod,
         'operationType': request.operationType.name,
         'sourceAccount': request.sourceAccount,
+        'reference': request.reference,
+        'notes': request.notes,
+        'settlementMode': request.settlementMode,
+        'adminApprovalPending': request.adminApprovalPending,
       };
 
   WithdrawalRequestEntity _withdrawalRequestFromJson(
@@ -1291,6 +1535,8 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
         bankName: json['bankName'] as String,
         iban: json['iban'] as String,
         dateText: json['dateText'] as String,
+        decisionAt: DateTime.tryParse(json['decisionAt'] as String? ?? ''),
+        decisionBy: json['decisionBy'] as String?,
         status: RequestStatus.values.byName(json['status'] as String),
         auditCheckResult: json['auditCheckResult'] as String?,
         alertNotice: json['alertNotice'] as String?,
@@ -1302,5 +1548,9 @@ class FinanceMockDataSource implements FinanceRemoteDataSource {
           json['operationType'] as String? ?? 'withdrawal',
         ),
         sourceAccount: json['sourceAccount'] as String?,
+        reference: json['reference'] as String?,
+        notes: json['notes'] as String?,
+        settlementMode: json['settlementMode'] as String?,
+        adminApprovalPending: json['adminApprovalPending'] as bool? ?? false,
       );
 }

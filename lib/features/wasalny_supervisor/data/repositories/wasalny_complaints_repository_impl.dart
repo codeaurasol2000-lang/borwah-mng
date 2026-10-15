@@ -33,4 +33,9 @@ class WasalnyComplaintsRepositoryImpl implements WasalnyComplaintsRepository {
   }) {
     return dataSource.inspectComplaint(id, notes: notes);
   }
+
+  @override
+  Future<WasalnyComplaint> reopenComplaint(String id, {required String note}) {
+    return dataSource.reopenComplaint(id, note: note);
+  }
 }

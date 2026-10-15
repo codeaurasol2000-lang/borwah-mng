@@ -49,7 +49,6 @@ class _ExpensesManagementScreenState
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _reasonController = TextEditingController();
   String _selectedPaymentMethod = '';
-  String? _attachmentName;
 
   @override
   void dispose() {
@@ -66,8 +65,7 @@ class _ExpensesManagementScreenState
       textDirection: l10n.localeName.startsWith('ar')
           ? TextDirection.rtl
           : TextDirection.ltr,
-      child: Scaffold(
-        backgroundColor: AppColors.backgroundLight,
+      child: Scaffold(backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: FinancePageAppBar(
           title: l10n.expensesManagementTitle,
           subtitle: l10n.financialDepartment,
@@ -179,7 +177,7 @@ class _ExpensesManagementScreenState
               ),
               const SizedBox(height: 16),
 
-              // 3. Document Category Card
+              // 3. Expense details
               _buildSectionCard(
                 icon: Icons.assignment_outlined,
                 title: l10n.expenseCategoryAndDocuments,
@@ -208,70 +206,6 @@ class _ExpensesManagementScreenState
                             horizontal: 16, vertical: 12),
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    Text(l10n.invoiceSupportDocument,
-                        style: const TextStyle(
-                            fontSize: 11, color: AppColors.textSecondary)),
-                    const SizedBox(height: 8),
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          _attachmentName = _attachmentName == null
-                              ? 'invoice_receipt.pdf'
-                              : null;
-                        });
-                        AppSnackBar.showInfo(
-                          context,
-                          _attachmentName == null
-                              ? l10n.expenseDocumentRemoved
-                              : '${l10n.expenseDocumentAttached}: $_attachmentName',
-                        );
-                      },
-                      borderRadius: BorderRadius.circular(12),
-                      child: Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        decoration: BoxDecoration(
-                          color: _attachmentName != null
-                              ? Colors.green.shade50
-                              : AppColors.surfaceLight,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: _attachmentName != null
-                                ? Colors.green.shade300
-                                : Colors.transparent,
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              _attachmentName != null
-                                  ? Icons.check_circle
-                                  : Icons.attach_file,
-                              color: _attachmentName != null
-                                  ? Colors.green.shade700
-                                  : AppColors.info,
-                              size: 16,
-                            ),
-                            const SizedBox(width: 8),
-                            Flexible(
-                              child: Text(
-                                _attachmentName != null
-                                    ? '${l10n.expenseAttachedPrefix}: $_attachmentName (${l10n.expenseRemoveDocumentAction})'
-                                    : l10n.attachDocumentOptional,
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: _attachmentName != null
-                                        ? Colors.green.shade800
-                                        : Colors.blue.shade800),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -286,7 +220,7 @@ class _ExpensesManagementScreenState
                   border: Border.all(color: AppColors.cardBorder),
                   boxShadow: [
                     BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.02),
+                        color: AppColors.black.withValues(alpha: 0.02),
                         blurRadius: 4,
                         offset: const Offset(0, 2)),
                   ],
@@ -317,7 +251,7 @@ class _ExpensesManagementScreenState
                             l10n.disbursementGovernanceNote,
                             style: TextStyle(
                                 fontSize: 10,
-                                color: Colors.grey.shade600,
+                                color: AppColors.grey600,
                                 height: 1.4),
                           ),
                         ],
@@ -344,7 +278,7 @@ class _ExpensesManagementScreenState
                           height: 18,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            color: Colors.white,
+                            color: AppColors.white,
                           ),
                         )
                       : const Icon(Icons.send_outlined, size: 18),
@@ -392,7 +326,7 @@ class _ExpensesManagementScreenState
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AppColors.textSecondary,
                   backgroundColor: AppColors.surfaceLight,
-                  side: const BorderSide(color: Colors.transparent),
+                  side: const BorderSide(color: AppColors.transparent),
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12)),
@@ -456,7 +390,6 @@ class _ExpensesManagementScreenState
           amount: amount,
           bankAccountId: selectedAccount.id,
           reason: reason,
-          attachmentName: _attachmentName,
         );
     if (!mounted || !context.mounted) return;
 
@@ -466,7 +399,6 @@ class _ExpensesManagementScreenState
       (_) {
         _amountController.clear();
         _reasonController.clear();
-        setState(() => _attachmentName = null);
         _showExpenseMessage(l10n.expenseRequestSent, AppColors.success);
       },
     );
@@ -514,7 +446,7 @@ class _ExpensesManagementScreenState
               Text(
                 '${l10n.expenseRequestNumber}: ${request.id}',
                 textDirection: TextDirection.ltr,
-                style: const TextStyle(fontSize: 10, color: Colors.black54),
+                style: const TextStyle(fontSize: 10, color: AppColors.black54),
               ),
             ],
           ),
@@ -525,10 +457,6 @@ class _ExpensesManagementScreenState
           Text(FinanceLocalizer.localizeBankName(context, request.bankName)),
           const SizedBox(height: 4),
           Text(request.reason),
-          if (request.attachmentName != null) ...[
-            const SizedBox(height: 4),
-            Text('${l10n.expenseAttachedPrefix}: ${request.attachmentName}'),
-          ],
         ],
       ),
     );
@@ -544,7 +472,7 @@ class _ExpensesManagementScreenState
         border: Border.all(color: AppColors.cardBorder),
         boxShadow: [
           BoxShadow(
-              color: Colors.black.withValues(alpha: 0.02),
+              color: AppColors.black.withValues(alpha: 0.02),
               blurRadius: 4,
               offset: const Offset(0, 2)),
         ],
@@ -587,10 +515,10 @@ class _ExpensesManagementScreenState
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.blue.shade50 : AppColors.surfaceLight,
+          color: isSelected ? AppColors.blue50 : AppColors.surfaceLight,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-              color: isSelected ? Colors.blue.shade200 : Colors.transparent),
+              color: isSelected ? AppColors.blue200 : AppColors.transparent),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -605,7 +533,7 @@ class _ExpensesManagementScreenState
                           fontWeight: FontWeight.bold,
                           color: isSelected
                               ? AppColors.textPrimary
-                              : Colors.black87)),
+                              : AppColors.black87)),
                   const SizedBox(height: 4),
                   Text(subtitle,
                       style: const TextStyle(

@@ -1,6 +1,14 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/di/injection_container.dart';
+import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../domain/entities/withdrawal_request_entity.dart';
+import '../../domain/entities/finance_summary_entity.dart';
+import '../../domain/repositories/finance_repository.dart';
 import '../widgets/finance_navigation.dart';
 import '../widgets/new_settlement_bottom_sheet.dart';
 import 'settlement_details_screen.dart';
@@ -16,77 +24,125 @@ class SettlementsScreen extends StatefulWidget {
 
 class _SettlementsScreenState extends State<SettlementsScreen>
     with AutomaticKeepAliveClientMixin<SettlementsScreen> {
-  static const _filters = ['الكل', 'قيد المراجعة', 'معتمدة', 'قيد نزاع'];
-
-  static const _requests = [
-    _SettlementRequest(
-      id: '#SETTL-2024-098',
-      name: 'د. طارق العمري',
-      description: 'حساب بنكي موثق',
-      amount: '1,200.00',
-      reference: 'CMP-1035#',
-      referenceTitle: 'نزاع صيانة',
-      badge: 'استرداد مالي كامل',
-      status: 'قيد المراجعة',
-      initials: 'ط',
-      age: 'منذ 35 دقيقة',
-      color: Color(0xFFFFD9D6),
-      badgeColor: AppColors.danger,
-    ),
-    _SettlementRequest(
-      id: '#SETTL-2024-102',
-      name: 'مؤسسة الضمان العقارية',
-      description: 'شريك معتمد - سجل تجاري',
-      amount: '485.50',
-      reference: 'SYS-882#',
-      referenceTitle: 'تصحيح عمولة',
-      badge: 'تسوية عمولة',
-      status: 'معتمدة',
-      initials: 'ض',
-      age: 'منذ ساعتين',
-      color: Color(0xFFE8F0FF),
-      badgeColor: Color(0xFF8AB4FF),
-    ),
-    _SettlementRequest(
-      id: '#SETTL-2024-105',
-      name: 'خالد المهيوب',
-      description: 'مزود خدمة مستقل',
-      amount: '850.00',
-      reference: 'PRV-411#',
-      referenceTitle: 'تسليم وساطة',
-      badge: 'خصم جزائي',
-      status: 'قيد نزاع',
-      initials: 'خ',
-      age: 'اليوم 08:30 ص',
-      color: Color(0xFFE9ECEF),
-      badgeColor: Color(0xFFFFD9D6),
-    ),
+  static const _filters = [
+    'الكل',
+    'قيد المراجعة',
+    'معتمدة',
+    'قيد نزاع',
+    'بانتظار الإدارة',
+    'مرفوض',
   ];
 
-  static const _recentSettlements = [
-    _RecentSettlement(
-      title: 'استرداد بنكي',
-      description: 'العميل #USR-8810 - بنك البلاد',
-      amount: '450.00',
-      id: '#097',
-      time: 'اليوم 11:30 ص',
-    ),
-    _RecentSettlement(
-      title: 'تسوية تعويضية',
-      description: 'مزود الخدمة - تصحيح عمولة',
-      amount: '120.00',
-      id: '#096',
-      time: 'أمس 09:15 م',
-    ),
-  ];
+  String _selectedFilter = 'قيد المراجعة';
+  String _searchQuery = '';
+  List<_SettlementRequest> _createdRequests = [];
+  FinanceSummaryEntity? _financeSummary;
 
-  String _selectedFilter = _filters.first;
+  @override
+  void initState() {
+    super.initState();
+    _loadCreatedRequests();
+  }
+
+  Future<void> _loadCreatedRequests() async {
+    try {
+      final repository = sl<FinanceRepository>();
+      final requestResult = await repository.getSupervisorWithdrawals();
+      final summaryResult = await repository.getFinanceSummary();
+      if (!mounted) return;
+      requestResult.fold(
+        (failure) => FlutterError.reportError(
+          FlutterErrorDetails(
+            exception: StateError(failure.message),
+            library: 'settlements screen',
+            context: ErrorDescription('while loading saved settlements'),
+          ),
+        ),
+        (requests) {
+          final l10n = AppLocalizations.of(context)!;
+          setState(() {
+            _createdRequests = requests
+                .where((request) => request.settlementMode != null)
+                .map((request) => _mapSavedRequest(request, l10n))
+                .toList(growable: false);
+            summaryResult.fold(
+              (_) => _financeSummary = null,
+              (summary) => _financeSummary = summary,
+            );
+          });
+        },
+      );
+    } on Object catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'settlements screen',
+          context: ErrorDescription('while loading saved settlements'),
+        ),
+      );
+    }
+  }
+
+  _SettlementRequest _mapSavedRequest(
+    WithdrawalRequestEntity request,
+    AppLocalizations l10n,
+  ) {
+    final isRefund = request.settlementMode == 'refund';
+    return _SettlementRequest(
+      id: request.requestNumber,
+      financeRequestId: request.id,
+      name: request.beneficiaryName,
+      description: request.beneficiaryRole,
+      amount: request.netAmount.toStringAsFixed(2),
+      reference: request.reference?.isNotEmpty == true
+          ? request.reference!
+          : request.requestNumber,
+      referenceTitle: l10n.settlementReferenceLabel,
+      badge: isRefund ? l10n.settlementRefundMode : l10n.settlementOffsetMode,
+      status: request.adminApprovalPending
+          ? 'بانتظار الإدارة'
+          : switch (request.status) {
+              RequestStatus.approved => 'معتمدة',
+              RequestStatus.frozen ||
+              RequestStatus.underInvestigation =>
+                'قيد نزاع',
+              RequestStatus.rejected => 'مرفوض',
+              _ => 'قيد المراجعة',
+            },
+      initials: request.beneficiaryName.isEmpty
+          ? '?'
+          : request.beneficiaryName.substring(0, 1),
+      age: DateFormat.yMd(l10n.localeName)
+          .add_jm()
+          .format(DateTime.tryParse(request.dateText) ?? DateTime.now()),
+      color: isRefund ?  AppColors.textPrimary :  AppColors.hexFFE8F0FF,
+      badgeColor: isRefund ? AppColors.danger : AppColors.info,
+      bankName: request.bankName,
+      iban: request.iban,
+      notes: request.notes,
+      decisionAt: request.decisionAt,
+      decisionBy: request.decisionBy,
+      decisionNote: request.alertNotice,
+      canDecide: request.status == RequestStatus.pending,
+      adminApprovalPending: request.adminApprovalPending,
+      submittedAt: DateTime.tryParse(request.dateText) ?? DateTime(1970),
+    );
+  }
 
   List<_SettlementRequest> get _filteredRequests {
-    if (_selectedFilter == 'الكل') return _requests;
-    return _requests
-        .where((request) => request.status == _selectedFilter)
-        .toList();
+    final allRequests = _createdRequests;
+    final query = _searchQuery.trim().toLowerCase();
+    final visible = allRequests.where((request) {
+      final matchesStatus = _selectedFilter == 'الكل' ||
+          request.status == _selectedFilter;
+      final matchesSearch = query.isEmpty ||
+          [request.id, request.name, request.reference, request.iban ?? '']
+              .any((value) => value.toLowerCase().contains(query));
+      return matchesStatus && matchesSearch;
+    }).toList();
+    visible.sort((a, b) => b.submittedAt.compareTo(a.submittedAt));
+    return visible;
   }
 
   @override
@@ -99,15 +155,14 @@ class _SettlementsScreenState extends State<SettlementsScreen>
     final isArabic = l10n.localeName.startsWith('ar');
 
     return Directionality(
-      textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+      textDirection: isArabic ? ui.TextDirection.rtl : ui.TextDirection.ltr,
       child: FinanceSwipeNavigation(
         currentIndex: 2,
         enabled: widget.showBottomNavigation,
-        child: Scaffold(
-          backgroundColor: AppColors.backgroundLight,
+        child: Scaffold(backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           appBar: widget.showBottomNavigation
               ? AppBar(
-                  backgroundColor: Colors.white,
+                  backgroundColor: AppColors.white,
                   elevation: 0.5,
                   scrolledUnderElevation: 0,
                   leading: widget.showBottomNavigation
@@ -132,7 +187,7 @@ class _SettlementsScreenState extends State<SettlementsScreen>
                       Text(
                         l10n.settlementsSubtitle,
                         style: const TextStyle(
-                            fontSize: 10, color: AppColors.textSecondary),
+                            fontSize: 12, color: AppColors.textSecondary),
                       ),
                     ],
                   ),
@@ -144,7 +199,7 @@ class _SettlementsScreenState extends State<SettlementsScreen>
                         radius: 16,
                         backgroundColor: AppColors.primaryDark,
                         child: Icon(Icons.person_outline,
-                            color: Colors.white, size: 17),
+                            color: AppColors.white, size: 17),
                       ),
                     ),
                   ],
@@ -159,15 +214,29 @@ class _SettlementsScreenState extends State<SettlementsScreen>
               const SizedBox(height: 14),
               _buildAddSettlementAction(),
               const SizedBox(height: 14),
+              TextField(
+                onChanged: (value) => setState(() => _searchQuery = value),
+                decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.search),
+                  hintText: isArabic
+                      ? 'ابحث برقم التسوية أو المستفيد أو المرجع'
+                      : 'Search settlement, beneficiary, or reference',
+                  filled: true,
+                  fillColor: AppColors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
               _buildFilters(),
               const SizedBox(height: 16),
               _buildRequestsHeader(),
               const SizedBox(height: 8),
-              ..._filteredRequests.map(_buildRequestCard),
-              const SizedBox(height: 14),
-              _buildRecentSettlementsHeader(),
-              const SizedBox(height: 8),
-              ..._recentSettlements.map(_buildRecentSettlement),
+              if (_filteredRequests.isEmpty)
+                _buildEmptyRequestsMessage(isArabic)
+              else
+                ..._filteredRequests.map(_buildRequestCard),
               const SizedBox(height: 8),
             ],
           ),
@@ -199,20 +268,20 @@ class _SettlementsScreenState extends State<SettlementsScreen>
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.13),
+                    color: AppColors.white.withValues(alpha: 0.13),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Icon(Icons.verified_user_outlined,
-                          color: Colors.white, size: 12),
+                          color: AppColors.white, size: 12),
                       const SizedBox(width: 4),
                       Flexible(
                         child: Text(
                           l10n.settlementsAuthority,
-                          style:
-                              const TextStyle(color: Colors.white, fontSize: 9),
+                          style: const TextStyle(
+                              color: AppColors.white, fontSize: 11),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -223,8 +292,8 @@ class _SettlementsScreenState extends State<SettlementsScreen>
               const Spacer(),
               const Text(
                 '#SETTL-2024-098',
-                style: TextStyle(color: Colors.white70, fontSize: 8),
-                textDirection: TextDirection.ltr,
+                style: TextStyle(color: AppColors.white70, fontSize: 10),
+                textDirection: ui.TextDirection.ltr,
               ),
             ],
           ),
@@ -233,14 +302,14 @@ class _SettlementsScreenState extends State<SettlementsScreen>
             l10n.settlementsPageTitle,
             textAlign: isArabic ? TextAlign.right : TextAlign.left,
             style: const TextStyle(
-                color: Colors.white, fontSize: 19, fontWeight: FontWeight.bold),
+                color: AppColors.white, fontSize: 19, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 5),
           Text(
             l10n.settlementsPageDescription,
             textAlign: isArabic ? TextAlign.right : TextAlign.left,
             style: const TextStyle(
-                color: Colors.white70, fontSize: 9, height: 1.6),
+                color: AppColors.white70, fontSize: 11, height: 1.6),
           ),
         ],
       ),
@@ -254,8 +323,13 @@ class _SettlementsScreenState extends State<SettlementsScreen>
         Expanded(
           child: _buildBalanceCard(
             title: l10n.settlementsEscrowWallet,
-            amount: '148,650.00',
-            subtitle: l10n.settlementsLinkedRajhiEscrow,
+            amount: _financeSummary == null
+                ? '—'
+                : NumberFormat('#,##0.00', 'en_US')
+                    .format(_financeSummary!.snbEscrowBalance),
+            subtitle: l10n.localeName.startsWith('ar')
+                ? 'رصيد ضمان SNB من ملخص المالية'
+                : 'SNB escrow balance from finance summary',
             icon: Icons.account_balance_wallet_outlined,
             color: AppColors.info,
           ),
@@ -264,7 +338,16 @@ class _SettlementsScreenState extends State<SettlementsScreen>
         Expanded(
           child: _buildBalanceCard(
             title: l10n.settlementsPendingBalance,
-            amount: '1,200.00',
+            amount: NumberFormat('#,##0.00', 'en_US').format(
+              _createdRequests
+                  .where((request) =>
+                      request.canDecide || request.adminApprovalPending)
+                  .fold<double>(
+                    0,
+                    (total, request) =>
+                        total + (double.tryParse(request.amount) ?? 0),
+                  ),
+            ),
             subtitle: l10n.settlementsReadyRefund,
             icon: Icons.pending_actions,
             color: AppColors.danger,
@@ -286,7 +369,7 @@ class _SettlementsScreenState extends State<SettlementsScreen>
       constraints: const BoxConstraints(minHeight: 92),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: AppColors.cardBorder),
       ),
@@ -304,7 +387,7 @@ class _SettlementsScreenState extends State<SettlementsScreen>
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
-                      fontSize: 9, color: AppColors.textSecondary),
+                      fontSize: 11, color: AppColors.textSecondary),
                 ),
               ),
             ],
@@ -323,7 +406,7 @@ class _SettlementsScreenState extends State<SettlementsScreen>
               const SizedBox(width: 4),
               Text(l10n.currencyEgy,
                   style: const TextStyle(
-                      fontSize: 9, color: AppColors.textSecondary)),
+                      fontSize: 11, color: AppColors.textSecondary)),
             ],
           ),
           const SizedBox(height: 4),
@@ -332,7 +415,7 @@ class _SettlementsScreenState extends State<SettlementsScreen>
             textAlign: TextAlign.end,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 8, color: AppColors.info),
+            style: const TextStyle(fontSize: 10, color: AppColors.info),
           ),
         ],
       ),
@@ -346,22 +429,31 @@ class _SettlementsScreenState extends State<SettlementsScreen>
       borderRadius: BorderRadius.circular(12),
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
-        onTap: () {
-          NewSettlementBottomSheet.show(context);
+        onTap: () async {
+          final request = await NewSettlementBottomSheet.show(context);
+          if (!mounted || request == null) return;
+          final l10n = AppLocalizations.of(context)!;
+          setState(() {
+            _createdRequests.insert(0, _mapSavedRequest(request, l10n));
+          });
+          AppSnackBar.showSuccess(
+            context,
+            '${l10n.settlementSubmitSuccess} · ${request.requestNumber}',
+          );
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
           child: Row(
             children: [
               const Icon(Icons.add_circle_outline,
-                  color: Colors.white, size: 20),
+                  color: AppColors.white, size: 20),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   l10n.addNewSettlement,
                   textAlign: TextAlign.end,
                   style: const TextStyle(
-                      color: Colors.white,
+                      color: AppColors.white,
                       fontSize: 13,
                       fontWeight: FontWeight.bold),
                 ),
@@ -370,12 +462,12 @@ class _SettlementsScreenState extends State<SettlementsScreen>
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.12),
+                  color: AppColors.white.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
                   l10n.instantRefundSettlement,
-                  style: const TextStyle(color: Colors.white70, fontSize: 8),
+                  style: const TextStyle(color: AppColors.white70, fontSize: 12),
                 ),
               ),
             ],
@@ -392,6 +484,10 @@ class _SettlementsScreenState extends State<SettlementsScreen>
       'قيد المراجعة': l10n.filterInReview,
       'معتمدة': l10n.filterApproved,
       'قيد نزاع': l10n.filterDisputed,
+      'بانتظار الإدارة': l10n.localeName.startsWith('ar')
+          ? 'بانتظار الإدارة'
+          : 'Pending Admin Approval',
+      'مرفوض': l10n.financeRequestRejectedBadge,
     };
     return Wrap(
       spacing: 7,
@@ -404,8 +500,8 @@ class _SettlementsScreenState extends State<SettlementsScreen>
           selected: isSelected,
           onSelected: (_) => setState(() => _selectedFilter = filter),
           labelStyle: TextStyle(
-            color: isSelected ? Colors.white : AppColors.textSecondary,
-            fontSize: 9,
+            color: isSelected ? AppColors.white : AppColors.textSecondary,
+            fontSize: 11,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
           ),
           backgroundColor: AppColors.surfaceLight,
@@ -437,7 +533,7 @@ class _SettlementsScreenState extends State<SettlementsScreen>
         ),
         Text(
           '${_filteredRequests.length} ${l10n.settlementRequestOne}',
-          style: const TextStyle(fontSize: 9, color: AppColors.info),
+          style: const TextStyle(fontSize: 11, color: AppColors.info),
         ),
       ],
     );
@@ -454,84 +550,41 @@ class _SettlementsScreenState extends State<SettlementsScreen>
   }) _localizedRequestLabels(
     _SettlementRequest request,
     AppLocalizations l10n,
-  ) {
-    return switch (request.id) {
-      '#SETTL-2024-098' => (
-          description: l10n.settlementVerifiedBank,
-          name: l10n.settlementBeneficiaryTariq,
-          referenceTitle: l10n.settlementMaintenanceDispute,
-          badge: l10n.settlementFullRefund,
-          status: l10n.filterInReview,
-          initials: l10n.settlementInitialTariq,
-          age: l10n.settlementAge35Minutes,
-        ),
-      '#SETTL-2024-102' => (
-          description: l10n.settlementApprovedPartner,
-          name: l10n.settlementBeneficiaryRealEstate,
-          referenceTitle: l10n.settlementCommissionCorrection,
-          badge: l10n.settlementCommissionSettlement,
-          status: l10n.filterApproved,
-          initials: l10n.settlementInitialRealEstate,
-          age: l10n.settlementAgeTwoHours,
-        ),
-      '#SETTL-2024-105' => (
-          description: l10n.settlementIndependentProvider,
-          name: l10n.settlementBeneficiaryKhalid,
-          referenceTitle: l10n.settlementMediationDelivery,
-          badge: l10n.settlementPenaltyDeduction,
-          status: l10n.filterDisputed,
-          initials: l10n.settlementInitialKhalid,
-          age: l10n.settlementAgeToday,
-        ),
-      _ => (
-          description: request.description,
-          name: request.name,
-          referenceTitle: request.referenceTitle,
-          badge: request.badge,
-          status: request.status,
-          initials: request.initials,
-          age: request.age,
-        ),
-    };
-  }
-
-  ({String title, String description, String time}) _localizedRecentLabels(
-    _RecentSettlement settlement,
-    AppLocalizations l10n,
-  ) {
-    return switch (settlement.id) {
-      '#097' => (
-          title: l10n.bankRefund,
-          description: l10n.settlementCustomerBank,
-          time: l10n.settlementToday1130,
-        ),
-      '#096' => (
-          title: l10n.compensationSettlement,
-          description: l10n.settlementProviderCorrection,
-          time: l10n.settlementYesterday0915,
-        ),
-      _ => (
-          title: settlement.title,
-          description: settlement.description,
-          time: settlement.time,
-        ),
-    };
-  }
+  ) =>
+      (
+        description: request.description,
+        name: request.name,
+        referenceTitle: request.referenceTitle,
+        badge: request.badge,
+        status: switch (request.status) {
+          'قيد المراجعة' => l10n.filterInReview,
+          'معتمدة' => l10n.filterApproved,
+          'قيد نزاع' => l10n.filterDisputed,
+          'بانتظار الإدارة' => l10n.localeName.startsWith('ar')
+              ? 'بانتظار الإدارة'
+              : 'Pending Admin Approval',
+          'مرفوض' => l10n.financeRequestRejectedBadge,
+          _ => request.status,
+        },
+        initials: request.initials,
+        age: request.age,
+      );
 
   Widget _buildRequestCard(_SettlementRequest request) {
     final l10n = AppLocalizations.of(context)!;
     final isArabic = l10n.localeName.startsWith('ar');
     final labels = _localizedRequestLabels(request, l10n);
     return Material(
-      color: Colors.transparent,
+      color: AppColors.transparent,
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
-        onTap: () {
-          Navigator.push(
+        onTap: () async {
+          await Navigator.push(
             context,
             MaterialPageRoute(
               builder: (_) => SettlementDetailsScreen(
                 id: request.id,
+                financeRequestId: request.financeRequestId,
                 name: labels.name,
                 description: labels.description,
                 amount: request.amount,
@@ -543,16 +596,27 @@ class _SettlementsScreenState extends State<SettlementsScreen>
                 age: labels.age,
                 color: request.color,
                 badgeColor: request.badgeColor,
-                linkedBank: l10n.settlementsLinkedRajhiEscrow,
+                linkedBank:
+                    request.bankName ?? l10n.settlementsLinkedRajhiEscrow,
+                iban: request.iban ?? 'SA44 8000 0123 6080 1012 3456',
+                notes: request.notes,
+                decisionAt: request.decisionAt,
+                decisionBy: request.decisionBy,
+                decisionNote: request.decisionNote,
+                canDecide: request.canDecide,
+                adminApprovalPending: request.adminApprovalPending,
               ),
             ),
           );
+          if (mounted && request.financeRequestId != null) {
+            _loadCreatedRequests();
+          }
         },
         child: Container(
           margin: const EdgeInsets.only(bottom: 8),
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.white,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: AppColors.cardBorder),
           ),
@@ -567,9 +631,9 @@ class _SettlementsScreenState extends State<SettlementsScreen>
                   const Spacer(),
                   Text(
                     request.id,
-                    textDirection: TextDirection.ltr,
+                    textDirection: ui.TextDirection.ltr,
                     style: const TextStyle(
-                        fontSize: 8,
+                        fontSize: 10,
                         fontWeight: FontWeight.bold,
                         color: AppColors.textSecondary),
                   ),
@@ -610,7 +674,7 @@ class _SettlementsScreenState extends State<SettlementsScreen>
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.end,
                           style: const TextStyle(
-                              fontSize: 8, color: AppColors.textSecondary),
+                              fontSize: 10, color: AppColors.textSecondary),
                         ),
                       ],
                     ),
@@ -631,12 +695,13 @@ class _SettlementsScreenState extends State<SettlementsScreen>
                           const SizedBox(width: 3),
                           Text(l10n.currencyEgy,
                               style: const TextStyle(
-                                  fontSize: 8, color: AppColors.textSecondary)),
+                                  fontSize: 10,
+                                  color: AppColors.textSecondary)),
                         ],
                       ),
                       Text(labels.age,
-                          style:
-                              const TextStyle(fontSize: 8, color: AppColors.info)),
+                          style: const TextStyle(
+                              fontSize: 10, color: AppColors.info)),
                     ],
                   ),
                 ],
@@ -659,7 +724,7 @@ class _SettlementsScreenState extends State<SettlementsScreen>
                   const SizedBox(width: 3),
                   Text(l10n.viewLabel,
                       style: const TextStyle(
-                          fontSize: 9,
+                          fontSize: 11,
                           fontWeight: FontWeight.bold,
                           color: AppColors.primaryDark)),
                 ],
@@ -683,102 +748,36 @@ class _SettlementsScreenState extends State<SettlementsScreen>
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         style: TextStyle(
-            fontSize: 8, color: textColor, fontWeight: FontWeight.w600),
+            fontSize: 10, color: textColor, fontWeight: FontWeight.w600),
       ),
     );
   }
 
-  Widget _buildRecentSettlementsHeader() {
-    final l10n = AppLocalizations.of(context)!;
-    return Row(
-      children: [
-        const Icon(Icons.history, color: AppColors.info, size: 17),
-        const SizedBox(width: 6),
-        Expanded(
-          child: Text(
-            l10n.recentSettlementsTitle,
-            textAlign: TextAlign.end,
-            style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.bold,
-                color: AppColors.primaryDark),
+  Widget _buildEmptyRequestsMessage(bool isArabic) => Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppColors.cardBorder),
+        ),
+        child: Text(
+          isArabic
+              ? 'لا توجد طلبات تسوية بهذه الحالة.'
+              : 'No settlements in this status.',
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            color: AppColors.textSecondary,
+            fontSize: 12,
           ),
         ),
-        Text(
-          l10n.settlementRecentOperationsCount,
-          style: const TextStyle(fontSize: 9, color: AppColors.info),
-        ),
-        const SizedBox(width: 6),
-        TextButton(
-          onPressed: () {},
-          style: TextButton.styleFrom(
-              padding: EdgeInsets.zero, minimumSize: const Size(40, 30)),
-          child: Text(l10n.viewAllLabel, style: const TextStyle(fontSize: 9)),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildRecentSettlement(_RecentSettlement settlement) {
-    final l10n = AppLocalizations.of(context)!;
-    final labels = _localizedRecentLabels(settlement, l10n);
-    return Container(
-      margin: const EdgeInsets.only(bottom: 7),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.cardBorder),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.check_circle_outline,
-              color: AppColors.info, size: 18),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(labels.title,
-                    style: const TextStyle(
-                        fontSize: 10, fontWeight: FontWeight.bold)),
-                Text(labels.description,
-                    style: const TextStyle(
-                        fontSize: 8, color: AppColors.textSecondary)),
-              ],
-            ),
-          ),
-          const SizedBox(width: 8),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Row(
-                children: [
-                  Text(settlement.amount,
-                      style: const TextStyle(
-                          fontSize: 11, fontWeight: FontWeight.bold)),
-                  const SizedBox(width: 3),
-                  Text(l10n.currencyEgy,
-                      style: const TextStyle(
-                          fontSize: 8, color: AppColors.textSecondary)),
-                ],
-              ),
-              Text(labels.time,
-                  style: const TextStyle(
-                      fontSize: 8, color: AppColors.textSecondary)),
-            ],
-          ),
-          const SizedBox(width: 5),
-          Text(settlement.id,
-              style: const TextStyle(fontSize: 8, color: AppColors.info)),
-        ],
-      ),
-    );
-  }
+      );
 }
 
 class _SettlementRequest {
+  final DateTime submittedAt;
   final String id;
+  final String? financeRequestId;
   final String name;
   final String description;
   final String amount;
@@ -790,9 +789,19 @@ class _SettlementRequest {
   final String age;
   final Color color;
   final Color badgeColor;
+  final String? bankName;
+  final String? iban;
+  final String? notes;
+  final DateTime? decisionAt;
+  final String? decisionBy;
+  final String? decisionNote;
+  final bool canDecide;
+  final bool adminApprovalPending;
 
-  const _SettlementRequest({
+  _SettlementRequest({
+    required this.submittedAt,
     required this.id,
+    this.financeRequestId,
     required this.name,
     required this.description,
     required this.amount,
@@ -804,21 +813,13 @@ class _SettlementRequest {
     required this.age,
     required this.color,
     required this.badgeColor,
-  });
-}
-
-class _RecentSettlement {
-  final String title;
-  final String description;
-  final String amount;
-  final String id;
-  final String time;
-
-  const _RecentSettlement({
-    required this.title,
-    required this.description,
-    required this.amount,
-    required this.id,
-    required this.time,
+    this.bankName,
+    this.iban,
+    this.notes,
+    this.decisionAt,
+    this.decisionBy,
+    this.decisionNote,
+    this.canDecide = true,
+    this.adminApprovalPending = false,
   });
 }

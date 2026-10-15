@@ -58,6 +58,7 @@ class ProductReview {
     String? descriptionEn,
     ProductReviewStatus? status,
     String? decisionNote,
+    bool clearDecisionNote = false,
     bool? isFeatured,
     bool? merchantNotificationRequested,
   }) {
@@ -78,7 +79,7 @@ class ProductReview {
       descriptionAr: descriptionAr ?? this.descriptionAr,
       descriptionEn: descriptionEn ?? this.descriptionEn,
       status: status ?? this.status,
-      decisionNote: decisionNote ?? this.decisionNote,
+      decisionNote: clearDecisionNote ? null : decisionNote ?? this.decisionNote,
       isFeatured: isFeatured ?? this.isFeatured,
       merchantNotificationRequested:
           merchantNotificationRequested ?? this.merchantNotificationRequested,

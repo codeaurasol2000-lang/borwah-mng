@@ -10,6 +10,7 @@ abstract class ProductReviewDataSource {
     required String id,
     required ProductReviewStatus status,
     String? decisionNote,
+    bool clearDecisionNote = false,
     bool merchantNotificationRequested = false,
   });
 }

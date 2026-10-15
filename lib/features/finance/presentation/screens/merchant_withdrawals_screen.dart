@@ -17,7 +17,9 @@ import '../widgets/withdrawal_request_details_sheet.dart';
 import '../utils/finance_localizer.dart';
 
 class MerchantWithdrawalsScreen extends StatefulWidget {
-  const MerchantWithdrawalsScreen({super.key});
+  final bool promotionOnly;
+
+  const MerchantWithdrawalsScreen({super.key, this.promotionOnly = false});
 
   @override
   State<MerchantWithdrawalsScreen> createState() =>
@@ -43,14 +45,18 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
   // دوال الفلترة والحساب الديناميكي
   List<WithdrawalRequestEntity> get _categoryRequests =>
       switch (_selectedFilter) {
-        'التجار' => _requests
+        'التجار' => _filteredByOperation
             .where((r) => r.beneficiaryType == BeneficiaryType.merchant)
             .toList(),
-        'المستخدمين' => _requests
+        'المستخدمين' => _filteredByOperation
             .where((r) => r.beneficiaryType != BeneficiaryType.merchant)
             .toList(),
-        _ => _requests,
+        _ => _filteredByOperation,
       };
+
+  List<WithdrawalRequestEntity> get _filteredByOperation => widget.promotionOnly
+      ? _requests.where(_isPromotionRequest).toList(growable: false)
+      : _requests;
 
   List<WithdrawalRequestEntity> get _filteredRequests => _categoryRequests
       .where((request) => _showArchive

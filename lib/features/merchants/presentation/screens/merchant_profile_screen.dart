@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -8,7 +9,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/utils/app_locale_controller.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/merchant_supervisor_local_store.dart';
-import '../../../services_supervisor/presentation/screens/services_supervisor_wallet_screen.dart';
+import 'merchant_wallet_screen.dart';
 import 'supervised_merchants_screen.dart';
 
 class MerchantProfileScreen extends StatefulWidget {
@@ -32,6 +33,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
   List<MerchantSupervisorAuditEvent> _auditEvents = const [];
   bool _isLoading = true;
   bool _isSaving = false;
+  bool _isPickingProfileImage = false;
   Object? _loadError;
   Object? _auditError;
 
@@ -149,6 +151,49 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
     }
   }
 
+  Future<void> _pickProfileImage() async {
+    if (_isPickingProfileImage) return;
+    setState(() => _isPickingProfileImage = true);
+    try {
+      final image = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 75,
+        maxWidth: 700,
+        maxHeight: 700,
+      );
+      if (image == null || !mounted) return;
+      final imageBytes = await image.readAsBytes();
+      final next = _data.withProfileImage(base64Encode(imageBytes));
+      final preferences = await SharedPreferences.getInstance();
+      final saved = await preferences.setString(
+        _storageKey,
+        jsonEncode(next.toJson()),
+      );
+      if (!saved) throw StateError('Could not save the profile photo.');
+      if (!mounted) return;
+      setState(() => _data = next);
+    } on Object catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'merchant supervisor profile photo',
+        ),
+      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(context)!.merchantProfileSaveError,
+            ),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isPickingProfileImage = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -156,8 +201,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
 
     return Directionality(
       textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF5F7F9),
+      child: Scaffold(backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: ListView(
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
           children: [
@@ -166,7 +210,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
             _buildSectionHeading(
               l10n.merchantProfileDocumentsTitle,
               Icons.circle,
-              const Color(0xFF0E2B4F),
+               AppColors.hexFF0E2B4F,
             ),
             const SizedBox(height: 8),
             _buildAuthorizationCard(l10n),
@@ -204,7 +248,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
               label: Text(l10n.merchantProfileChangeSettings),
               style: OutlinedButton.styleFrom(
                 foregroundColor: AppColors.primaryDark,
-                backgroundColor: Colors.white,
+                backgroundColor: AppColors.white,
                 side: const BorderSide(color: AppColors.cardBorder),
                 minimumSize: const Size.fromHeight(44),
                 shape: RoundedRectangleBorder(
@@ -214,7 +258,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
             ),
             const SizedBox(height: 8),
             Card(
-              color: Colors.white,
+              color: AppColors.white,
               child: ListTile(
                 leading: const Icon(Icons.language, color: AppColors.info),
                 title: Text(l10n.switchLanguage),
@@ -237,7 +281,6 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
               l10n.merchantProfileSecurityAudit,
               Icons.circle,
               AppColors.textMuted,
-              trailing: l10n.merchantProfileViewAll,
             ),
             Padding(
               padding: const EdgeInsetsDirectional.only(top: 6),
@@ -269,7 +312,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                 label: Text(l10n.logout),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AppColors.danger,
-                  backgroundColor: Colors.white,
+                  backgroundColor: AppColors.white,
                   side: const BorderSide(color: AppColors.cardBorder),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14),
@@ -287,7 +330,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.cardBorder),
       ),
@@ -302,14 +345,56 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                     width: 62,
                     height: 62,
                     decoration: BoxDecoration(
-                      color: const Color(0xFFE8EDF2),
+                      color:  AppColors.hexFFE8EDF2,
                       borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: const Color(0xFFD5DEE8)),
+                      border: Border.all(color:  AppColors.hexFFD5DEE8),
                     ),
-                    child: const Icon(
-                      Icons.person,
-                      size: 38,
+                    clipBehavior: Clip.antiAlias,
+                    child: _data.profileImageData == null
+                        ? const Icon(
+                            Icons.person,
+                            size: 38,
+                            color: AppColors.primaryDark,
+                          )
+                        : Image.memory(
+                            base64Decode(_data.profileImageData!),
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) => const Icon(
+                              Icons.person,
+                              size: 38,
+                              color: AppColors.primaryDark,
+                            ),
+                          ),
+                  ),
+                  Positioned(
+                    top: -6,
+                    right: -6,
+                    child: Material(
                       color: AppColors.primaryDark,
+                      shape: const CircleBorder(),
+                      child: IconButton(
+                        tooltip: l10n.merchantProfileAddPhoto,
+                        onPressed: _isPickingProfileImage
+                            ? null
+                            : _pickProfileImage,
+                        constraints:
+                            const BoxConstraints.tightFor(width: 30, height: 30),
+                        padding: EdgeInsets.zero,
+                        icon: _isPickingProfileImage
+                            ? const SizedBox(
+                                width: 14,
+                                height: 14,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: AppColors.white,
+                                ),
+                              )
+                            : const Icon(
+                                Icons.camera_alt_outlined,
+                                color: AppColors.white,
+                                size: 15,
+                              ),
+                      ),
                     ),
                   ),
                   Positioned(
@@ -321,13 +406,13 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                         color: AppColors.primaryDark,
                         shape: BoxShape.circle,
                         border: Border.fromBorderSide(
-                          BorderSide(color: Colors.white, width: 2),
+                          BorderSide(color: AppColors.white, width: 2),
                         ),
                       ),
                       child: const Icon(
                         Icons.verified,
                         size: 13,
-                        color: Colors.white,
+                        color: AppColors.white,
                       ),
                     ),
                   ),
@@ -368,13 +453,13 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                       children: [
                         _pill(
                           l10n.merchantProfileSupervisorId,
-                          const Color(0xFFEAF0F7),
+                           AppColors.hexFFEAF0F7,
                           AppColors.info,
                           icon: Icons.badge_outlined,
                         ),
                         _pill(
                           l10n.merchantProfileActive,
-                          const Color(0xFFEAF0F7),
+                           AppColors.hexFFEAF0F7,
                           AppColors.info,
                           icon: Icons.circle,
                         ),
@@ -425,7 +510,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
     VoidCallback? onTap,
   }) {
     return Material(
-      color: const Color(0xFFF5F7F9),
+      color:  AppColors.textPrimary,
       borderRadius: BorderRadius.circular(12),
       child: InkWell(
         onTap: onTap,
@@ -511,7 +596,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(15),
         border: Border.all(color: AppColors.cardBorder),
       ),
@@ -551,13 +636,13 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                       children: [
                         _pill(
                           l10n.merchantProfileActive,
-                          const Color(0xFFEAF0F7),
+                           AppColors.hexFFEAF0F7,
                           AppColors.info,
                           icon: Icons.circle,
                         ),
                         _pill(
                           'PDF',
-                          const Color(0xFFDCE8FF),
+                           AppColors.hexFFDCE8FF,
                           AppColors.primaryDark,
                         ),
                       ],
@@ -612,7 +697,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: AppColors.cardBorder),
       ),
@@ -650,7 +735,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
           ),
           if (trailing != null) ...[
             const SizedBox(width: 4),
-            _pill(trailing, const Color(0xFFE9EBED), AppColors.textSecondary),
+            _pill(trailing,  AppColors.hexFFE9EBED, AppColors.textSecondary),
           ],
           const SizedBox(width: 4),
           TextButton(
@@ -673,7 +758,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
       width: 40,
       height: 40,
       decoration: BoxDecoration(
-        color: const Color(0xFFF0F2F4),
+        color:  AppColors.textPrimary,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Icon(icon, color: AppColors.primaryDark, size: 21),
@@ -684,7 +769,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(15),
         border: Border.all(color: AppColors.cardBorder),
       ),
@@ -703,7 +788,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                     ),
             toggleKey: const ValueKey('merchant_profile_availability_toggle'),
           ),
-          const Divider(height: 1, color: Color(0xFFE3E7EB)),
+          const Divider(height: 1, color: AppColors.hexFFE3E7EB),
           _preferenceRow(
             icon: Icons.campaign_outlined,
             title: l10n.merchantProfileDirectNotifications,
@@ -718,7 +803,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
             toggleKey: const ValueKey('merchant_profile_notifications_toggle'),
           ),
           if (_loadError != null) ...[
-            const Divider(height: 1, color: Color(0xFFE3E7EB)),
+            const Divider(height: 1, color: AppColors.hexFFE3E7EB),
             ListTile(
               contentPadding: EdgeInsets.zero,
               title: Text(l10n.merchantProfileLoadError),
@@ -738,12 +823,12 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColors.transparent,
       builder: (sheetContext) => Container(
         height: MediaQuery.sizeOf(sheetContext).height * .78,
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
         decoration: const BoxDecoration(
-          color: Color(0xFFF5F7F9),
+          color: AppColors.textPrimary,
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: Column(
@@ -752,7 +837,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: const Color(0xFFCBD2D9),
+                color:  AppColors.hexFFCBD2D9,
                 borderRadius: BorderRadius.circular(4),
               ),
             ),
@@ -783,10 +868,24 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
             Expanded(
               child: ListView(
                 children: [
+                  Card(
+                    color: AppColors.white,
+                    child: ListTile(
+                      leading: const Icon(
+                        Icons.account_circle_outlined,
+                        color: AppColors.info,
+                      ),
+                      title: Text(l10n.merchantProfileAddPhoto),
+                      subtitle: Text(l10n.merchantProfileLocalOnlyNotice),
+                      trailing: const Icon(Icons.camera_alt_outlined),
+                      onTap: _isPickingProfileImage ? null : _pickProfileImage,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
                   _buildPreferences(l10n),
                   const SizedBox(height: 8),
                   Card(
-                    color: Colors.white,
+                    color: AppColors.white,
                     child: ListTile(
                       leading:
                           const Icon(Icons.language, color: AppColors.info),
@@ -856,80 +955,117 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
   }
 
   Widget _buildAuditHistory(AppLocalizations l10n) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-        border: Border.all(color: AppColors.cardBorder),
+    return OutlinedButton.icon(
+      onPressed: () => _showAuditSheet(l10n),
+      icon: const Icon(Icons.history),
+      label: Text(l10n.merchantProfileViewAll),
+      style: OutlinedButton.styleFrom(
+        foregroundColor: AppColors.primaryDark,
+        backgroundColor: AppColors.white,
+        side: const BorderSide(color: AppColors.cardBorder),
+        minimumSize: const Size.fromHeight(46),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  l10n.merchantProfileLatestActivities,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: AppColors.primaryDark,
-                    fontSize: 10,
-                    fontWeight: FontWeight.w600,
+    );
+  }
+
+  Future<void> _showAuditSheet(AppLocalizations l10n) {
+    return showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: AppColors.transparent,
+      builder: (sheetContext) => Container(
+        height: MediaQuery.sizeOf(sheetContext).height * .78,
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 18),
+        decoration: const BoxDecoration(
+          color: AppColors.textPrimary,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: Column(
+          children: [
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color:  AppColors.hexFFCBD2D9,
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    l10n.merchantProfileLatestActivities,
+                    style: const TextStyle(
+                      color: AppColors.primaryDark,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          if (_auditError != null)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: Text(
-                l10n.merchantAuditLoadError,
-                style: const TextStyle(
-                  color: AppColors.danger,
-                  fontSize: 11,
+                IconButton(
+                  onPressed: () => Navigator.pop(sheetContext),
+                  icon: const Icon(Icons.close),
+                ),
+              ],
+            ),
+            if (_auditError != null)
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: Text(
+                  l10n.merchantAuditLoadError,
+                  style: const TextStyle(color: AppColors.danger),
                 ),
               ),
-            ),
-          if (_data.activities.isEmpty && _auditEvents.isEmpty)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              child: Text(
-                l10n.merchantProfileNoLocalActivity,
-                style: const TextStyle(
-                  color: AppColors.textSecondary,
-                  fontSize: 11,
-                ),
-              ),
-            ),
-          for (final activity in _data.activities) ...[
-            const Divider(height: 1, color: Color(0xFFE3E7EB)),
-            _activity(
-              icon: Icons.settings_outlined,
-              title: l10n.merchantProfilePreferenceUpdated,
-              subtitle:
-                  '${activity.setting == 'fieldAvailability' ? l10n.merchantProfileAvailability : l10n.merchantProfileDirectNotifications} · ${activity.enabled ? l10n.merchantProfileEnabled : l10n.merchantProfileDisabled}',
-              time: intl.DateFormat.yMd(l10n.localeName)
-                  .add_jm()
-                  .format(activity.occurredAt),
+            Expanded(
+              child: _data.activities.isEmpty && _auditEvents.isEmpty
+                  ? Center(child: Text(l10n.merchantProfileNoLocalActivity))
+                  : ListView(
+                      children: [
+                        for (final activity in _data.activities)
+                          Card(
+                            color: AppColors.white,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 12),
+                              child: _activity(
+                                icon: Icons.settings_outlined,
+                                title: l10n.merchantProfilePreferenceUpdated,
+                                subtitle:
+                                    '${activity.setting == 'fieldAvailability' ? l10n.merchantProfileAvailability : l10n.merchantProfileDirectNotifications} · ${activity.enabled ? l10n.merchantProfileEnabled : l10n.merchantProfileDisabled}',
+                                time: intl.DateFormat.yMd(l10n.localeName)
+                                    .add_jm()
+                                    .format(activity.occurredAt),
+                              ),
+                            ),
+                          ),
+                        for (final activity in _auditEvents)
+                          Card(
+                            color: AppColors.white,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 12),
+                              child: _activity(
+                                icon: Icons.fact_check_outlined,
+                                title: activity.action,
+                                subtitle: [
+                                  activity.subject,
+                                  if (activity.details.isNotEmpty)
+                                    activity.details,
+                                ].join(' · '),
+                                time: intl.DateFormat.yMd(l10n.localeName)
+                                    .add_jm()
+                                    .format(activity.occurredAt),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
             ),
           ],
-          for (final activity in _auditEvents.take(20)) ...[
-            const Divider(height: 1, color: Color(0xFFE3E7EB)),
-            _activity(
-              icon: Icons.fact_check_outlined,
-              title: activity.action,
-              subtitle: [
-                activity.subject,
-                if (activity.details.isNotEmpty) activity.details,
-              ].join(' · '),
-              time: intl.DateFormat.yMd(l10n.localeName)
-                  .add_jm()
-                  .format(activity.occurredAt),
-            ),
-          ],
-        ],
+        ),
       ),
     );
   }
@@ -999,7 +1135,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(15),
           border: Border.all(color: AppColors.cardBorder),
         ),
@@ -1009,7 +1145,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: const Color(0xFFEAF0FF),
+                color:  AppColors.hexFFEAF0FF,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Icon(
@@ -1129,9 +1265,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
   void _openWallet() {
     Navigator.of(context).push<void>(
       MaterialPageRoute(
-        builder: (_) => const ServicesSupervisorWalletScreen(
-          owner: SupervisorWalletOwner.merchant,
-        ),
+        builder: (_) => const MerchantWalletScreen(),
       ),
     );
   }
@@ -1141,11 +1275,13 @@ class _MerchantProfileData {
   final bool fieldAvailability;
   final bool directAdNotifications;
   final List<_MerchantProfileActivity> activities;
+  final String? profileImageData;
 
   const _MerchantProfileData({
     this.fieldAvailability = false,
     this.directAdNotifications = false,
     this.activities = const [],
+    this.profileImageData,
   });
 
   factory _MerchantProfileData.fromJson(Map<String, dynamic> json) {
@@ -1159,6 +1295,7 @@ class _MerchantProfileData {
             ),
           )
           .toList(growable: false),
+      profileImageData: json['profileImageData'] as String?,
     );
   }
 
@@ -1180,13 +1317,23 @@ class _MerchantProfileData {
         ),
         ...activities,
       ].take(100).toList(growable: false),
+      profileImageData: profileImageData,
     );
   }
+
+  _MerchantProfileData withProfileImage(String imageData) =>
+      _MerchantProfileData(
+        fieldAvailability: fieldAvailability,
+        directAdNotifications: directAdNotifications,
+        activities: activities,
+        profileImageData: imageData,
+      );
 
   Map<String, Object?> toJson() => {
         'fieldAvailability': fieldAvailability,
         'directAdNotifications': directAdNotifications,
         'activities': activities.map((activity) => activity.toJson()).toList(),
+        'profileImageData': profileImageData,
       };
 }
 

@@ -13,13 +13,11 @@ class SubmitExpenseRequestUseCase {
     required double amount,
     required String bankAccountId,
     required String reason,
-    String? attachmentName,
   }) {
     return repository.submitExpenseRequest(
       amount: amount,
       bankAccountId: bankAccountId,
       reason: reason,
-      attachmentName: attachmentName,
     );
   }
 }

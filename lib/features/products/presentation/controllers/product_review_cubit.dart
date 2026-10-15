@@ -80,6 +80,7 @@ class ProductReviewCubit extends Cubit<ProductReviewState> {
     required String id,
     required ProductReviewStatus status,
     String? decisionNote,
+    bool clearDecisionNote = false,
     bool merchantNotificationRequested = false,
   }) async {
     final current = state;
@@ -90,6 +91,7 @@ class ProductReviewCubit extends Cubit<ProductReviewState> {
         id: id,
         status: status,
         decisionNote: decisionNote,
+        clearDecisionNote: clearDecisionNote,
         merchantNotificationRequested: merchantNotificationRequested,
       );
       await auditRepository?.recordEntry(

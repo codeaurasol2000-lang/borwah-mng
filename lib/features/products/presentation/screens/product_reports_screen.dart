@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
+import 'product_supervisor_audit_screen.dart';
 
 enum _ReportPeriod { today, week, month, custom }
 
@@ -153,12 +154,8 @@ class _ProductReportsScreenState extends State<ProductReportsScreen> {
     final isArabic = l10n.localeName.startsWith('ar');
     final metrics = _metricsByPeriod[_period]!;
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF5F7F9),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView(
+    return Scaffold(backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: ListView(
               padding: const EdgeInsets.fromLTRB(20, 12, 20, 18),
               children: [
                 _buildReportHeading(l10n),
@@ -174,11 +171,9 @@ class _ProductReportsScreenState extends State<ProductReportsScreen> {
                 _buildAuditSection(l10n, isArabic),
                 const SizedBox(height: 16),
                 _buildDataNote(l10n),
+                const SizedBox(height: 12),
+                _buildSaveActions(l10n),
               ],
-            ),
-          ),
-          _buildSaveActions(l10n),
-        ],
       ),
     );
   }
@@ -229,7 +224,7 @@ class _ProductReportsScreenState extends State<ProductReportsScreen> {
           label: Text(l10n.productReportExport),
           style: OutlinedButton.styleFrom(
             foregroundColor: AppColors.primaryDark,
-            backgroundColor: Colors.white,
+            backgroundColor: AppColors.white,
             side: BorderSide.none,
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             shape: RoundedRectangleBorder(
@@ -265,16 +260,16 @@ class _ProductReportsScreenState extends State<ProductReportsScreen> {
               selected: selected,
               showCheckmark: false,
               avatar: selected
-                  ? const Icon(Icons.circle, size: 7, color: Color(0xFF8DBBFF))
+                  ? const Icon(Icons.circle, size: 7, color: AppColors.hexFF8DBBFF)
                   : entry.$1 == _ReportPeriod.custom
                       ? const Icon(Icons.calendar_month_outlined, size: 15)
                       : null,
               label: Text(label),
               onSelected: (_) => _selectPeriod(entry.$1),
-              backgroundColor: Colors.white,
+              backgroundColor: AppColors.white,
               selectedColor: AppColors.primaryDark,
               labelStyle: TextStyle(
-                color: selected ? Colors.white : AppColors.textSecondary,
+                color: selected ? AppColors.white : AppColors.textSecondary,
                 fontSize: 11,
                 fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
               ),
@@ -333,7 +328,7 @@ class _ProductReportsScreenState extends State<ProductReportsScreen> {
         value: metrics.approvalRate,
         detail: l10n.productReportApprovedCount(metrics.approved),
         icon: Icons.check_circle,
-        iconColor: const Color(0xFF3D669C),
+        iconColor: AppColors.hexFF3D669C,
       ),
       _MetricCardData(
         title: l10n.productReportDeclinedRate,
@@ -387,8 +382,8 @@ class _ProductReportsScreenState extends State<ProductReportsScreen> {
                 height: 34,
                 decoration: BoxDecoration(
                   color: data.isDanger
-                      ? const Color(0xFFFFF0EF)
-                      : const Color(0xFFF0F2F4),
+                      ? AppColors.textPrimary
+                      : AppColors.textPrimary,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(data.icon, size: 18, color: data.iconColor),
@@ -461,7 +456,7 @@ class _ProductReportsScreenState extends State<ProductReportsScreen> {
               title: l10n.productReportPackagingTitle,
               subtitle: l10n.productReportPackagingHint,
               icon: Icons.inventory_2_outlined,
-              color: const Color(0xFF9CA7AC),
+              color: AppColors.hexFF9CA7AC,
               isLocked: true,
             ),
           ),
@@ -471,7 +466,7 @@ class _ProductReportsScreenState extends State<ProductReportsScreen> {
               title: l10n.productReportSerialTitle,
               subtitle: l10n.productReportSerialHint,
               icon: Icons.qr_code_2,
-              color: const Color(0xFF7A8B92),
+              color: AppColors.hexFF7A8B92,
               isLocked: false,
             ),
           ),
@@ -490,7 +485,7 @@ class _ProductReportsScreenState extends State<ProductReportsScreen> {
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: const Color(0xFFF3F5F6),
+        color: AppColors.textPrimary,
         borderRadius: BorderRadius.circular(13),
       ),
       child: Column(
@@ -512,14 +507,14 @@ class _ProductReportsScreenState extends State<ProductReportsScreen> {
                 alignment: Alignment.center,
                 children: [
                   Icon(icon,
-                      size: 52, color: Colors.white.withValues(alpha: .9)),
+                      size: 52, color: AppColors.white.withValues(alpha: .9)),
                   PositionedDirectional(
                     end: 6,
                     top: 6,
                     child: Icon(
                       isLocked ? Icons.lock_outline : Icons.verified_outlined,
                       size: 15,
-                      color: Colors.white,
+                      color: AppColors.white,
                     ),
                   ),
                 ],
@@ -560,14 +555,14 @@ class _ProductReportsScreenState extends State<ProductReportsScreen> {
         count: (metrics.reviewed * .48).floor(),
         percent: .48,
         icon: Icons.phone_iphone_outlined,
-        color: const Color(0xFF061A36),
+        color: AppColors.hexFF061A36,
       ),
       _ReportCategoryData(
         name: l10n.productReportGames,
         count: (metrics.reviewed * .26).round(),
         percent: .26,
         icon: Icons.sports_esports_outlined,
-        color: const Color(0xFF3D669C),
+        color: AppColors.hexFF3D669C,
       ),
       _ReportCategoryData(
         name: l10n.productReportPerfumes,
@@ -577,14 +572,14 @@ class _ProductReportsScreenState extends State<ProductReportsScreen> {
             (metrics.reviewed * .10).round(),
         percent: .16,
         icon: Icons.watch_outlined,
-        color: const Color(0xFF445D85),
+        color: AppColors.hexFF445D85,
       ),
       _ReportCategoryData(
         name: l10n.productReportHomeAppliances,
         count: (metrics.reviewed * .10).round(),
         percent: .10,
         icon: Icons.kitchen_outlined,
-        color: const Color(0xFF80868B),
+        color: AppColors.hexFF80868B,
       ),
     ];
 
@@ -653,7 +648,7 @@ class _ProductReportsScreenState extends State<ProductReportsScreen> {
           child: LinearProgressIndicator(
             value: data.percent,
             minHeight: 8,
-            backgroundColor: const Color(0xFFE9ECEF),
+            backgroundColor: AppColors.hexFFE9ECEF,
             valueColor: AlwaysStoppedAnimation(data.color),
           ),
         ),
@@ -695,7 +690,7 @@ class _ProductReportsScreenState extends State<ProductReportsScreen> {
   ) {
     final statusColor = switch (action.status) {
       _ReportActionStatus.hidden => AppColors.textSecondary,
-      _ReportActionStatus.approved => const Color(0xFF3D669C),
+      _ReportActionStatus.approved => AppColors.hexFF3D669C,
       _ReportActionStatus.rejected => AppColors.danger,
     };
     final statusIcon = switch (action.status) {
@@ -713,7 +708,7 @@ class _ProductReportsScreenState extends State<ProductReportsScreen> {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: const Color(0xFFF2F4F6),
+        color: AppColors.textPrimary,
         borderRadius: BorderRadius.circular(13),
       ),
       child: Column(
@@ -884,17 +879,9 @@ class _ProductReportsScreenState extends State<ProductReportsScreen> {
   }
 
   void _showAllActions(AppLocalizations l10n) {
-    showDialog<void>(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(l10n.productReportAuditTitle),
-        content: Text(l10n.productReportRecentActionsNote),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: Text(l10n.productCancelAction),
-          ),
-        ],
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => const ProductSupervisorAuditScreen(),
       ),
     );
   }
@@ -903,7 +890,7 @@ class _ProductReportsScreenState extends State<ProductReportsScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFFF0F2F4),
+        color: AppColors.textPrimary,
         borderRadius: BorderRadius.circular(18),
       ),
       child: Row(
@@ -919,7 +906,7 @@ class _ProductReportsScreenState extends State<ProductReportsScreen> {
               ),
             ),
           ),
-          const Icon(Icons.circle, size: 6, color: Color(0xFF8DBBFF)),
+          const Icon(Icons.circle, size: 6, color: AppColors.hexFF8DBBFF),
         ],
       ),
     );
@@ -927,8 +914,8 @@ class _ProductReportsScreenState extends State<ProductReportsScreen> {
 
   Widget _buildSaveActions(AppLocalizations l10n) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
-      color: Colors.white,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(color: AppColors.white, borderRadius: BorderRadius.circular(16)),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -941,7 +928,7 @@ class _ProductReportsScreenState extends State<ProductReportsScreen> {
               label: Text(l10n.productReportSaveAndUpdate),
               style: FilledButton.styleFrom(
                 backgroundColor: AppColors.primaryDark,
-                foregroundColor: Colors.white,
+                foregroundColor: AppColors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(13),
                 ),
@@ -958,7 +945,7 @@ class _ProductReportsScreenState extends State<ProductReportsScreen> {
             child: TextButton(
               onPressed: _hasUnsavedChanges ? _discardChanges : null,
               style: TextButton.styleFrom(
-                backgroundColor: const Color(0xFFF1F3F5),
+                backgroundColor: AppColors.surface,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(13),
                 ),
@@ -1081,7 +1068,7 @@ class _ProductReportsScreenState extends State<ProductReportsScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
       decoration: BoxDecoration(
-        color: const Color(0xFFEDEFF1),
+        color: AppColors.hexFFEDEFF1,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Text(
@@ -1098,12 +1085,12 @@ class _ProductReportsScreenState extends State<ProductReportsScreen> {
   }
 
   BoxDecoration _cardDecoration() => BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFEFF1F3)),
+        border: Border.all(color: AppColors.hexFFEFF1F3),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: .025),
+            color: AppColors.black.withValues(alpha: .025),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),

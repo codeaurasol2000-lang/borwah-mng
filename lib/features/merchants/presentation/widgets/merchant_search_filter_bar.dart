@@ -37,7 +37,7 @@ class MerchantSearchFilterBar extends StatelessWidget {
               height: 46,
               width: 46,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.white,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: AppColors.cardBorder),
               ),
@@ -54,7 +54,7 @@ class MerchantSearchFilterBar extends StatelessWidget {
               child: Container(
                 height: 46,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.white,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: AppColors.cardBorder),
                 ),
@@ -149,11 +149,11 @@ class MerchantSearchFilterBar extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF07192F) : Colors.white,
+          color: isSelected ? AppColors.hexFF07192F : AppColors.white,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isSelected
-                ? const Color(0xFF07192F)
+                ? AppColors.hexFF07192F
                 : AppColors.cardBorder,
           ),
         ),
@@ -162,7 +162,7 @@ class MerchantSearchFilterBar extends StatelessWidget {
           style: TextStyle(
             fontSize: 11,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-            color: isSelected ? Colors.white : AppColors.textSecondary,
+            color: isSelected ? AppColors.white : AppColors.textSecondary,
           ),
         ),
       ),

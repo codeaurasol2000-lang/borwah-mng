@@ -85,8 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
         return Directionality(
           textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-          child: Scaffold(
-            backgroundColor: const Color(0xFFF1F5F9),
+          child: Scaffold(backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             body: SafeArea(
               child: Center(
                 child: SingleChildScrollView(
@@ -103,8 +102,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: OutlinedButton.icon(
                           onPressed: AppLocaleController.instance.toggle,
                           style: OutlinedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            side: BorderSide(color: Colors.grey.shade300),
+                            backgroundColor: AppColors.white,
+                            side: BorderSide(color: AppColors.grey300),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20),
                             ),
@@ -133,11 +132,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       Container(
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: AppColors.white,
                           borderRadius: BorderRadius.circular(24),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.04),
+                              color: AppColors.black.withValues(alpha: 0.04),
                               blurRadius: 15,
                               offset: const Offset(0, 6),
                             ),
@@ -173,7 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           vertical: 6,
                         ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFE2E8F0),
+                          color:  AppColors.hexFFE2E8F0,
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Row(
@@ -205,11 +204,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       Container(
                         padding: const EdgeInsets.all(22),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: AppColors.white,
                           borderRadius: BorderRadius.circular(24),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.03),
+                              color: AppColors.black.withValues(alpha: 0.03),
                               blurRadius: 20,
                               offset: const Offset(0, 8),
                             ),
@@ -246,7 +245,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               textAlign: TextAlign.left,
                               decoration: InputDecoration(
                                 filled: true,
-                                fillColor: const Color(0xFFF8FAFC),
+                                fillColor:  AppColors.surfaceLight,
                                 prefixIcon: const Icon(
                                   Icons.badge_outlined,
                                   color: AppColors.textSecondary,
@@ -288,7 +287,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               textAlign: TextAlign.left,
                               decoration: InputDecoration(
                                 filled: true,
-                                fillColor: const Color(0xFFF8FAFC),
+                                fillColor:  AppColors.surfaceLight,
                                 prefixIcon: IconButton(
                                   icon: Icon(
                                     _obscurePassword
@@ -311,7 +310,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             Container(
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
-                                color: const Color(0xFFF8FAFC),
+                                color:  AppColors.textPrimary,
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Row(
@@ -356,7 +355,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         ),
                                 child: state is AuthLoading
                                     ? const CircularProgressIndicator(
-                                        color: Colors.white,
+                                        color: AppColors.white,
                                       )
                                     : Row(
                                         mainAxisAlignment:
@@ -367,13 +366,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                             style: const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold,
-                                              color: Colors.white,
+                                              color: AppColors.white,
                                             ),
                                           ),
                                           const SizedBox(width: 8),
                                           const Icon(
                                             Icons.login,
-                                            color: Colors.white,
+                                            color: AppColors.white,
                                           ),
                                         ],
                                       ),

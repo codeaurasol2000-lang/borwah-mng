@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../merchants/presentation/screens/merchant_conversation_screen.dart';
+import '../../data/services_supervisor_work_store.dart';
 import '../../../../l10n/app_localizations.dart';
 import 'service_provider_catalog.dart';
 
@@ -88,7 +89,7 @@ class _ServicesProvidersScreenState extends State<ServicesProvidersScreen> {
           child: _SmallBadge(
             label: l10n.servicesProvidersPortalBadge,
             icon: Icons.verified_user_outlined,
-            background: const Color(0xFFDDEAFF),
+            background: AppColors.hexFFDDEAFF,
             foreground: AppColors.primaryDark,
           ),
         ),
@@ -114,18 +115,27 @@ class _ServicesProvidersScreenState extends State<ServicesProvidersScreen> {
   }
 
   Widget _buildSummary(AppLocalizations l10n) {
+    final verifiedCount = serviceProviders.where((provider) => provider.verified).length;
+    final availableCount = serviceProviders.where((provider) => provider.available).length;
+    final completionRates = serviceProviders
+        .map((provider) => double.tryParse(provider.completionRate.replaceAll('%', '')))
+        .whereType<double>()
+        .toList();
+    final averageCompletion = completionRates.isEmpty
+        ? '—'
+        : '${(completionRates.reduce((a, b) => a + b) / completionRates.length).toStringAsFixed(1)}%';
     return Row(
       children: [
         Expanded(
           child: _SummaryCard(
-            value: '18',
+            value: '$verifiedCount',
             label: l10n.servicesCertifiedProviders,
           ),
         ),
         const SizedBox(width: 8),
         Expanded(
           child: _SummaryCard(
-            value: '14',
+            value: '$availableCount',
             label: l10n.servicesAvailableNow,
             showDot: true,
           ),
@@ -133,7 +143,7 @@ class _ServicesProvidersScreenState extends State<ServicesProvidersScreen> {
         const SizedBox(width: 8),
         Expanded(
           child: _SummaryCard(
-            value: '98.6%',
+            value: averageCompletion,
             label: l10n.servicesCommitmentRate,
           ),
         ),
@@ -160,7 +170,7 @@ class _ServicesProvidersScreenState extends State<ServicesProvidersScreen> {
                 icon: const Icon(Icons.close),
               ),
         filled: true,
-        fillColor: Colors.white,
+        fillColor: AppColors.white,
         contentPadding: const EdgeInsets.symmetric(vertical: 12),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
@@ -220,7 +230,7 @@ class _ServicesProvidersScreenState extends State<ServicesProvidersScreen> {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFFF0F2F4),
+        color: AppColors.textPrimary,
         borderRadius: BorderRadius.circular(14),
       ),
       child: Row(
@@ -294,10 +304,9 @@ class _ProviderProfileScreen extends StatelessWidget {
     final city = isArabic ? provider.cityAr : provider.cityEn;
     final feature = isArabic ? provider.featureAr : provider.featureEn;
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF5F7F9),
+    return Scaffold(backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.white,
         foregroundColor: AppColors.primaryDark,
         title: Text(
           l10n.servicesProviderProfileTitle,
@@ -314,6 +323,8 @@ class _ProviderProfileScreen extends StatelessWidget {
           _buildSectionTitle(l10n.servicesProvidersCompletedTasks),
           const SizedBox(height: 10),
           _buildMetrics(l10n),
+          const SizedBox(height: 12),
+          _buildOperationalQuality(l10n),
           const SizedBox(height: 20),
           _buildSectionTitle(l10n.servicesProviderProfileCertifications),
           const SizedBox(height: 10),
@@ -337,7 +348,7 @@ class _ProviderProfileScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(11),
             decoration: BoxDecoration(
-              color: const Color(0xFFF0F2F4),
+              color: AppColors.textPrimary,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Text(
@@ -393,7 +404,7 @@ class _ProviderProfileScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(color: AppColors.cardBorder),
       ),
@@ -432,7 +443,7 @@ class _ProviderProfileScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(11),
             decoration: BoxDecoration(
-              color: const Color(0xFFF1F3F5),
+              color: AppColors.textPrimary,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
@@ -470,8 +481,10 @@ class _ProviderProfileScreen extends StatelessWidget {
                 child: OutlinedButton.icon(
                   onPressed: () => Navigator.of(context).push(
                     MaterialPageRoute<void>(
-                      builder: (_) =>
-                          MerchantConversationScreen(conversationTitle: name),
+                      builder: (_) => MerchantConversationScreen(
+                        conversationId: 'service-provider-${provider.id}',
+                        conversationTitle: name,
+                      ),
                     ),
                   ),
                   icon: const Icon(Icons.chat_outlined, size: 17),
@@ -540,6 +553,56 @@ class _ProviderProfileScreen extends StatelessWidget {
           detail: l10n.servicesProviderProfileMinutes,
         ),
       ],
+    );
+  }
+
+  Widget _buildOperationalQuality(AppLocalizations l10n) {
+    final isArabic = l10n.localeName.startsWith('ar');
+    return FutureBuilder<ServiceProviderQualitySummary>(
+      future: ServicesSupervisorWorkStore().loadProviderQuality(provider.id),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return const SizedBox.shrink();
+        }
+        if (!snapshot.hasData) {
+          return const LinearProgressIndicator(minHeight: 2);
+        }
+        final summary = snapshot.data!;
+        return _ProfilePanel(
+          children: [
+            Text(
+              isArabic ? 'المتابعة التشغيلية' : 'Operational follow-up',
+              style: const TextStyle(
+                color: AppColors.primaryDark,
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 10),
+            _ProfileRow(
+              icon: Icons.task_alt_outlined,
+              label: isArabic ? 'طلبات مقبولة' : 'Accepted requests',
+              value: '${summary.acceptedRequests}',
+            ),
+            _ProfileRow(
+              icon: Icons.block_outlined,
+              label: isArabic ? 'طلبات مرفوضة' : 'Rejected requests',
+              value: '${summary.rejectedRequests}',
+            ),
+            _ProfileRow(
+              icon: Icons.pending_actions_outlined,
+              label: isArabic ? 'طلبات معلقة' : 'Pending requests',
+              value: '${summary.pendingRequests}',
+            ),
+            const Divider(height: 18),
+            _ProfileRow(
+              icon: Icons.report_gmailerrorred_outlined,
+              label: isArabic ? 'شكاوى مفتوحة' : 'Open complaints',
+              value: '${summary.openComplaints}',
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -626,7 +689,7 @@ class _ProviderMetric extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: AppColors.cardBorder),
       ),
@@ -684,7 +747,7 @@ class _ProfilePanel extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.cardBorder),
       ),
@@ -704,7 +767,7 @@ class _ProfileBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
       decoration: BoxDecoration(
-        color: const Color(0xFFDDEAFF),
+        color: AppColors.hexFFDDEAFF,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
@@ -746,7 +809,7 @@ class _RecentTaskCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(13),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(15),
         border: Border.all(color: AppColors.cardBorder),
       ),
@@ -839,12 +902,12 @@ class _ProviderCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(13),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(17),
-        border: Border.all(color: const Color(0xFFF0F1F3)),
+        border: Border.all(color: AppColors.textPrimary),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.025),
+            color: AppColors.black.withValues(alpha: 0.025),
             blurRadius: 12,
             offset: const Offset(0, 3),
           ),
@@ -918,7 +981,7 @@ class _ProviderCard extends StatelessWidget {
                 _SmallBadge(
                   label: l10n.servicesProvidersCommercialRegister,
                   icon: Icons.assignment_turned_in_outlined,
-                  background: const Color(0xFFEAF1FF),
+                  background: AppColors.hexFFEAF1FF,
                   foreground: AppColors.primaryDark,
                 ),
               _SmallBadge(
@@ -930,7 +993,7 @@ class _ProviderCard extends StatelessWidget {
               _SmallBadge(
                 label: l10n.servicesProvidersServiceTerms,
                 icon: Icons.speed_outlined,
-                background: const Color(0xFFDDF6ED),
+                background: AppColors.hexFFDDF6ED,
                 foreground: AppColors.successDark,
               ),
             ],
@@ -986,7 +1049,7 @@ class _ProviderCard extends StatelessWidget {
                       _SmallBadge(
                         label: l10n.servicesProvidersExecutionWindow,
                         icon: Icons.access_time,
-                        background: const Color(0xFFE8EAEC),
+                        background: AppColors.hexFFE8EAEC,
                         foreground: AppColors.textSecondary,
                       )
                     else
@@ -995,7 +1058,7 @@ class _ProviderCard extends StatelessWidget {
                           provider.completionRate,
                         ),
                         icon: Icons.bolt_outlined,
-                        background: const Color(0xFFDDF6ED),
+                        background: AppColors.hexFFDDF6ED,
                         foreground: AppColors.successDark,
                       ),
                   ],
@@ -1013,7 +1076,7 @@ class _ProviderCard extends StatelessWidget {
               label: Text(l10n.servicesProvidersViewProfile),
               style: FilledButton.styleFrom(
                 backgroundColor: AppColors.primaryDark,
-                foregroundColor: Colors.white,
+                foregroundColor: AppColors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -1043,9 +1106,9 @@ class _SummaryCard extends StatelessWidget {
       height: 60,
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 7),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(13),
-        border: Border.all(color: const Color(0xFFF0F1F3)),
+        border: Border.all(color: AppColors.textPrimary),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -1102,7 +1165,7 @@ class _CategoryChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: selected ? AppColors.primaryDark : Colors.white,
+      color: selected ? AppColors.primaryDark : AppColors.white,
       borderRadius: BorderRadius.circular(20),
       child: InkWell(
         onTap: onTap,
@@ -1118,7 +1181,7 @@ class _CategoryChip extends StatelessWidget {
           child: Text(
             label,
             style: TextStyle(
-              color: selected ? Colors.white : AppColors.textSecondary,
+              color: selected ? AppColors.white : AppColors.textSecondary,
               fontSize: 10,
               fontWeight: FontWeight.w600,
             ),
@@ -1219,7 +1282,7 @@ class _ProviderFact extends StatelessWidget {
         ],
         Icon(
           icon,
-          color: trailing ? const Color(0xFFF6A900) : AppColors.textSecondary,
+          color: trailing ? AppColors.textPrimary : AppColors.textSecondary,
           size: 14,
         ),
         if (!trailing) ...[

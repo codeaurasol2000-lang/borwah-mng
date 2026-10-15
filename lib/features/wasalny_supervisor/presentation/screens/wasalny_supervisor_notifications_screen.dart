@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/wasalny_local_event_store.dart';
+import '../../../finance/presentation/utils/open_financial_request_notice.dart';
 
 class WasalnySupervisorNotificationsScreen extends StatelessWidget {
   const WasalnySupervisorNotificationsScreen({super.key});
@@ -13,6 +14,7 @@ class WasalnySupervisorNotificationsScreen extends StatelessWidget {
   Widget build(BuildContext context) => _WasalnyEventInbox(
         recipient: 'wasalny',
         title: AppLocalizations.of(context)!.wasalnyNotificationsTitle,
+        onOpenEvent: (event) => openFinancialRequestNotice(context, event),
       );
 }
 
@@ -36,11 +38,13 @@ class _WasalnyEventInbox extends StatefulWidget {
   final String recipient;
   final String title;
   final VoidCallback? onLogout;
+  final Future<void> Function(WasalnyLocalEvent event)? onOpenEvent;
 
   const _WasalnyEventInbox({
     required this.recipient,
     required this.title,
     this.onLogout,
+    this.onOpenEvent,
   });
 
   @override
@@ -137,6 +141,12 @@ class _WasalnyEventInboxState extends State<_WasalnyEventInbox> {
     }
   }
 
+  Future<void> _openEvent(WasalnyLocalEvent event) async {
+    if (!event.isRead) await _markRead(event);
+    if (!mounted) return;
+    await widget.onOpenEvent?.call(event);
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -144,10 +154,9 @@ class _WasalnyEventInboxState extends State<_WasalnyEventInbox> {
 
     return Directionality(
       textDirection: isArabic ? ui.TextDirection.rtl : ui.TextDirection.ltr,
-      child: Scaffold(
-        backgroundColor: AppColors.background,
+      child: Scaffold(backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.white,
           foregroundColor: AppColors.primaryDark,
           title: Text(widget.title),
           actions: [
@@ -194,12 +203,12 @@ class _WasalnyEventInboxState extends State<_WasalnyEventInbox> {
                           final color = _sourceColor(event.source);
                           return Material(
                             color: event.isRead
-                                ? Colors.white
+                                ? AppColors.white
                                 : color.withValues(alpha: .07),
                             borderRadius: BorderRadius.circular(14),
                             child: InkWell(
                               borderRadius: BorderRadius.circular(14),
-                              onTap: () => _markRead(event),
+                              onTap: () => _openEvent(event),
                               child: Padding(
                                 padding: const EdgeInsets.all(14),
                                 child: Row(
@@ -284,8 +293,8 @@ class _WasalnyEventInboxState extends State<_WasalnyEventInbox> {
   }
 
   Color _sourceColor(String source) => switch (source) {
-        'finance' => const Color(0xFFB56812),
-        'chief' => const Color(0xFF7A4DB3),
+        'finance' => AppColors.hexFFB56812,
+        'chief' => AppColors.hexFF7A4DB3,
         _ => AppColors.primaryDark,
       };
 

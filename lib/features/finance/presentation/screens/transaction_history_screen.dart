@@ -33,8 +33,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
 
     return Directionality(
       textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-      child: Scaffold(
-        backgroundColor: AppColors.backgroundLight,
+      child: Scaffold(backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: FinancePageAppBar(
           title: l10n.transactionHistoryTitle,
           subtitle: l10n.transactionFinancialSubtitle,
@@ -72,11 +71,11 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                               Container(
                                 padding: const EdgeInsets.all(8),
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.1),
+                                  color: AppColors.white.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: const Icon(Icons.business,
-                                    color: Colors.white, size: 24),
+                                    color: AppColors.white, size: 24),
                               ),
                               const SizedBox(width: 12),
                               Expanded(
@@ -85,13 +84,13 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                   children: [
                                     Text(bankName,
                                         style: const TextStyle(
-                                            color: Colors.white,
+                                            color: AppColors.white,
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold)),
                                     const SizedBox(height: 4),
                                     Text(widget.id,
                                         style: const TextStyle(
-                                            color: Colors.white70,
+                                            color: AppColors.white70,
                                             fontSize: 10),
                                         textDirection: TextDirection.ltr),
                                   ],
@@ -100,11 +99,11 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                               Container(
                                 padding: const EdgeInsets.all(8),
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.1),
+                                  color: AppColors.white.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: const Icon(Icons.picture_as_pdf_outlined,
-                                    color: Colors.white, size: 20),
+                                    color: AppColors.white, size: 20),
                               ),
                             ],
                           ),
@@ -113,18 +112,18 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                             width: double.infinity,
                             padding: const EdgeInsets.symmetric(vertical: 6),
                             decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.05),
+                              color: AppColors.white.withValues(alpha: 0.05),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(l10n.transactionSupervisedBy,
                                 style: const TextStyle(
-                                    color: Colors.white70, fontSize: 10),
+                                    color: AppColors.white70, fontSize: 10),
                                 textAlign: TextAlign.center),
                           ),
                           const SizedBox(height: 20),
                           Text(l10n.transactionAvailableBalance,
                               style: const TextStyle(
-                                  color: Colors.white60, fontSize: 11)),
+                                  color: AppColors.white60, fontSize: 11)),
                           const SizedBox(height: 8),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -142,7 +141,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                             widget.availableBalance,
                                             includeCurrency: false),
                                         style: const TextStyle(
-                                            color: Colors.white,
+                                            color: AppColors.white,
                                             fontSize: 32,
                                             fontWeight: FontWeight.bold,
                                             height: 1),
@@ -150,7 +149,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                       const SizedBox(width: 4),
                                       Text(l10n.currencyEgy,
                                           style: const TextStyle(
-                                              color: Colors.white70,
+                                              color: AppColors.white70,
                                               fontSize: 14,
                                               fontWeight: FontWeight.bold)),
                                     ],
@@ -166,7 +165,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                 child: Container(
                                   padding: const EdgeInsets.all(12),
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withValues(alpha: 0.05),
+                                    color: AppColors.white.withValues(alpha: 0.05),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Column(
@@ -184,7 +183,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
                                                 style: const TextStyle(
-                                                    color: Colors.white70,
+                                                    color: AppColors.white70,
                                                     fontSize: 10)),
                                           ),
                                           const SizedBox(width: 4),
@@ -204,14 +203,14 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                           children: [
                                             const Text('-147,500',
                                                 style: TextStyle(
-                                                    color: Colors.white,
+                                                    color: AppColors.white,
                                                     fontSize: 16,
                                                     fontWeight:
                                                         FontWeight.bold)),
                                             const SizedBox(width: 2),
                                             Text(l10n.currencyEgy,
                                                 style: const TextStyle(
-                                                    color: Colors.white70,
+                                                    color: AppColors.white70,
                                                     fontSize: 9)),
                                           ],
                                         ),
@@ -225,7 +224,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                 child: Container(
                                   padding: const EdgeInsets.all(12),
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withValues(alpha: 0.05),
+                                    color: AppColors.white.withValues(alpha: 0.05),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Column(
@@ -242,12 +241,12 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
                                                 style: const TextStyle(
-                                                    color: Colors.white70,
+                                                    color: AppColors.white70,
                                                     fontSize: 10)),
                                           ),
                                           const SizedBox(width: 4),
                                           const Icon(Icons.arrow_downward,
-                                              color: Colors.greenAccent,
+                                              color: AppColors.greenAccent,
                                               size: 12),
                                         ],
                                       ),
@@ -262,14 +261,14 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                                           children: [
                                             const Text('+560,300',
                                                 style: TextStyle(
-                                                    color: Colors.white,
+                                                    color: AppColors.white,
                                                     fontSize: 16,
                                                     fontWeight:
                                                         FontWeight.bold)),
                                             const SizedBox(width: 2),
                                             Text(l10n.currencyEgy,
                                                 style: const TextStyle(
-                                                    color: Colors.white70,
+                                                    color: AppColors.white70,
                                                     fontSize: 9)),
                                           ],
                                         ),
@@ -418,8 +417,8 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                       time: l10n.transactionTimeLastWeekWithdrawal,
                       balanceAfter: '12,500.00 ${l10n.currencyEgy}',
                       balanceLabel: l10n.transactionHeldBalance,
-                      statusColor: Colors.blue.shade50,
-                      statusTextColor: Colors.blue.shade800,
+                      statusColor: AppColors.blue50,
+                      statusTextColor: AppColors.blue800,
                       iconOverride: Icons.assignment_late_outlined,
                     ),
                   ],
@@ -431,10 +430,10 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.white,
                 boxShadow: [
                   BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.05),
+                      color: AppColors.black.withValues(alpha: 0.05),
                       blurRadius: 10,
                       offset: const Offset(0, -5)),
                 ],
@@ -455,7 +454,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                     child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primaryExtraDark,
-                        foregroundColor: Colors.white,
+                        foregroundColor: AppColors.white,
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12)),
@@ -488,7 +487,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primaryExtraDark : Colors.white,
+          color: isSelected ? AppColors.primaryExtraDark : AppColors.white,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
               color: isSelected
@@ -499,12 +498,12 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             if (isSelected && filterId == 'all')
-              const Icon(Icons.list, size: 14, color: Colors.white),
+              const Icon(Icons.list, size: 14, color: AppColors.white),
             if (isSelected && filterId == 'all') const SizedBox(width: 4),
             Text(
               title,
               style: TextStyle(
-                color: isSelected ? Colors.white : AppColors.textSecondary,
+                color: isSelected ? AppColors.white : AppColors.textSecondary,
                 fontSize: 11,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
@@ -564,12 +563,12 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.cardBorder),
         boxShadow: [
           BoxShadow(
-              color: Colors.black.withValues(alpha: 0.01),
+              color: AppColors.black.withValues(alpha: 0.01),
               blurRadius: 4,
               offset: const Offset(0, 2)),
         ],

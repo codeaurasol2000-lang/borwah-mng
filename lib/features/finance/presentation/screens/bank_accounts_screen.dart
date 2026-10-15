@@ -144,20 +144,20 @@ class _BankAccountEditFormState extends State<_BankAccountEditForm> {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: Colors.amber.shade50,
+                    color: AppColors.amber50,
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.amber.shade200),
+                    border: Border.all(color: AppColors.amber200),
                   ),
                   child: Row(
                     children: [
                       const Icon(Icons.info_outline,
-                          color: Colors.amber, size: 16),
+                          color: AppColors.amber, size: 16),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           l10n.bankEditNotice,
                           style: TextStyle(
-                              fontSize: 11, color: Colors.amber.shade900),
+                              fontSize: 11, color: AppColors.amber900),
                         ),
                       ),
                     ],
@@ -208,14 +208,14 @@ class _BankAccountEditFormState extends State<_BankAccountEditForm> {
                           width: 18,
                           height: 18,
                           child: CircularProgressIndicator(
-                              strokeWidth: 2, color: Colors.white),
+                              strokeWidth: 2, color: AppColors.white),
                         )
                       : const Icon(Icons.send_outlined,
-                          size: 18, color: Colors.white),
+                          size: 18, color: AppColors.white),
                   label: Text(
                     l10n.bankEditSubmitAction,
                     style: const TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold),
+                        color: AppColors.white, fontWeight: FontWeight.bold),
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryDark,
@@ -278,8 +278,7 @@ class _BankAccountsScreenContentState
 
     return Directionality(
       textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF8FAFC),
+      child: Scaffold(backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: FinancePageAppBar(
           title: l10n.officialBankAccountsAndIban,
           subtitle: l10n.bankAccountsScreenSubtitle,
@@ -345,7 +344,7 @@ class _BankAccountsScreenContentState
                           padding: const EdgeInsets.symmetric(vertical: 30),
                           child: Text(l10n.noAccountsInCategory,
                               style: const TextStyle(
-                                  color: Colors.grey, fontSize: 13)),
+                                  color: AppColors.grey, fontSize: 13)),
                         ),
                       )
                     else
@@ -410,14 +409,14 @@ class _BankAccountsScreenContentState
           Row(
             children: [
               const Icon(Icons.account_balance,
-                  color: Colors.white70, size: 18),
+                  color: AppColors.white70, size: 18),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   l10n.totalAggregatedLiquidity,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(color: Colors.white70, fontSize: 12),
+                  style: const TextStyle(color: AppColors.white70, fontSize: 12),
                 ),
               ),
             ],
@@ -428,7 +427,7 @@ class _BankAccountsScreenContentState
             child: Text(
               CurrencyFormatter.format(totalBalance),
               style: const TextStyle(
-                color: Colors.white,
+                color: AppColors.white,
                 fontSize: 26,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 0.5,
@@ -439,20 +438,20 @@ class _BankAccountsScreenContentState
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.12),
+              color: AppColors.white.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.sync, size: 14, color: Colors.greenAccent),
+                const Icon(Icons.sync, size: 14, color: AppColors.greenAccent),
                 const SizedBox(width: 6),
                 Flexible(
                   child: Text(
                     l10n.instantBankSyncNote,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(color: Colors.white, fontSize: 11),
+                    style: const TextStyle(color: AppColors.white, fontSize: 11),
                   ),
                 ),
               ],
@@ -473,7 +472,7 @@ class _BankAccountsScreenContentState
           child: ElevatedButton.icon(
             onPressed: () => _showAddBankAccountSheet(context),
             icon: const Icon(Icons.add_circle_outline,
-                size: 17, color: Colors.white),
+                size: 17, color: AppColors.white),
             label: Text(
               l10n.createBankAccount,
               maxLines: 1,
@@ -482,7 +481,7 @@ class _BankAccountsScreenContentState
               style: const TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white),
+                  color: AppColors.white),
             ),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primaryDark,
@@ -498,7 +497,7 @@ class _BankAccountsScreenContentState
           child: OutlinedButton.icon(
             onPressed: () => _showExportPdfDialog(context),
             icon: const Icon(Icons.picture_as_pdf_outlined,
-                size: 17, color: Colors.redAccent),
+                size: 17, color: AppColors.redAccent),
             label: Text(
               l10n.exportAccountStatementButton,
               maxLines: 1,
@@ -507,11 +506,11 @@ class _BankAccountsScreenContentState
               style: const TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87),
+                  color: AppColors.black87),
             ),
             style: OutlinedButton.styleFrom(
-              backgroundColor: Colors.white,
-              side: BorderSide(color: Colors.grey.shade300),
+              backgroundColor: AppColors.white,
+              side: BorderSide(color: AppColors.grey300),
               elevation: 0,
               padding: const EdgeInsets.symmetric(vertical: 12),
               shape: RoundedRectangleBorder(
@@ -545,12 +544,12 @@ class _BankAccountsScreenContentState
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: Colors.blue.shade100),
+          border: Border.all(color: AppColors.blue100),
           boxShadow: [
             BoxShadow(
-              color: Colors.blue.withValues(alpha: 0.04),
+              color: AppColors.blue.withValues(alpha: 0.04),
               blurRadius: 6,
               offset: const Offset(0, 2),
             )
@@ -561,7 +560,7 @@ class _BankAccountsScreenContentState
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.blue.shade50,
+                color: AppColors.blue50,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: const Icon(Icons.receipt_long_outlined,
@@ -579,20 +578,20 @@ class _BankAccountsScreenContentState
                     style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 13,
-                        color: Colors.black87),
+                        color: AppColors.black87),
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
                     l10n.dailyLedgerDescription,
                     maxLines: 2,
-                    style: const TextStyle(fontSize: 10, color: Colors.grey),
+                    style: const TextStyle(fontSize: 10, color: AppColors.grey),
                     overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
             ),
             const SizedBox(width: 6),
-            const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
+            const Icon(Icons.arrow_forward_ios, size: 14, color: AppColors.grey),
           ],
         ),
       ),
@@ -627,15 +626,15 @@ class _BankAccountsScreenContentState
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                color: isSelected ? Colors.white : Colors.black87,
+                color: isSelected ? AppColors.white : AppColors.black87,
               ),
             ),
             selected: isSelected,
             selectedColor: AppColors.primaryDark,
-            backgroundColor: Colors.white,
+            backgroundColor: AppColors.white,
             side: BorderSide(
                 color:
-                    isSelected ? AppColors.primaryDark : Colors.grey.shade300),
+                    isSelected ? AppColors.primaryDark : AppColors.grey300),
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             onSelected: (selected) {
@@ -662,13 +661,13 @@ class _BankAccountsScreenContentState
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-            color: isEscrow ? Colors.teal.shade200 : AppColors.cardBorder),
+            color: isEscrow ? AppColors.teal200 : AppColors.cardBorder),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
+            color: AppColors.black.withValues(alpha: 0.02),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -682,13 +681,13 @@ class _BankAccountsScreenContentState
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: (isEscrow ? Colors.teal : AppColors.primaryDark)
+                  color: (isEscrow ? AppColors.teal : AppColors.primaryDark)
                       .withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(
                   Icons.account_balance,
-                  color: isEscrow ? Colors.teal : AppColors.primaryDark,
+                  color: isEscrow ? AppColors.teal : AppColors.primaryDark,
                   size: 20,
                 ),
               ),
@@ -704,14 +703,14 @@ class _BankAccountsScreenContentState
                       style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 13,
-                          color: Colors.black87),
+                          color: AppColors.black87),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
                       FinanceLocalizer.localizeAccountType(
                           context, account.accountType),
-                      style: const TextStyle(fontSize: 11, color: Colors.grey),
+                      style: const TextStyle(fontSize: 11, color: AppColors.grey),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -723,7 +722,7 @@ class _BankAccountsScreenContentState
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(
-                    color: Colors.teal.shade50,
+                    color: AppColors.teal50,
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Text(
@@ -731,7 +730,7 @@ class _BankAccountsScreenContentState
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                        color: Colors.teal,
+                        color: AppColors.teal,
                         fontSize: 10,
                         fontWeight: FontWeight.bold),
                   ),
@@ -748,7 +747,7 @@ class _BankAccountsScreenContentState
                   l10n.availableLedgerBalanceLabel,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 11, color: Colors.grey),
+                  style: const TextStyle(fontSize: 11, color: AppColors.grey),
                 ),
               ),
               const SizedBox(width: 8),
@@ -771,7 +770,7 @@ class _BankAccountsScreenContentState
           Row(
             children: [
               Text(l10n.ibanOrIdentifierLabel,
-                  style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                  style: const TextStyle(fontSize: 11, color: AppColors.grey)),
               const SizedBox(width: 6),
               Expanded(
                 child: Text(
@@ -779,7 +778,7 @@ class _BankAccountsScreenContentState
                   style: const TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
-                      color: Colors.black87),
+                      color: AppColors.black87),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -795,13 +794,13 @@ class _BankAccountsScreenContentState
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.green.shade50,
+                    color: AppColors.green50,
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.bolt, size: 14, color: Colors.green.shade700),
+                      Icon(Icons.bolt, size: 14, color: AppColors.green700),
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(
@@ -809,7 +808,7 @@ class _BankAccountsScreenContentState
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                              color: Colors.green.shade700,
+                              color: AppColors.green700,
                               fontSize: 10,
                               fontWeight: FontWeight.bold),
                         ),
@@ -826,9 +825,9 @@ class _BankAccountsScreenContentState
               width: double.infinity,
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Colors.amber.shade50,
+                color: AppColors.amber50,
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Colors.amber.shade200),
+                border: Border.all(color: AppColors.amber200),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -836,13 +835,13 @@ class _BankAccountsScreenContentState
                   Row(
                     children: [
                       Icon(Icons.hourglass_top_rounded,
-                          size: 16, color: Colors.amber.shade900),
+                          size: 16, color: AppColors.amber900),
                       const SizedBox(width: 6),
                       Expanded(
                         child: Text(
                           l10n.bankEditPendingStatus,
                           style: TextStyle(
-                            color: Colors.amber.shade900,
+                            color: AppColors.amber900,
                             fontWeight: FontWeight.bold,
                             fontSize: 11,
                           ),
@@ -855,7 +854,7 @@ class _BankAccountsScreenContentState
                     l10n.bankEditPendingDetails,
                     style: const TextStyle(
                       fontSize: 10,
-                      color: Colors.black54,
+                      color: AppColors.black54,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -871,7 +870,7 @@ class _BankAccountsScreenContentState
                     '${l10n.bankEditRequestNumber}: ${pendingRequest.id}',
                     style: const TextStyle(
                       fontSize: 9,
-                      color: Colors.black45,
+                      color: AppColors.black45,
                     ),
                     textDirection: TextDirection.ltr,
                   ),
@@ -966,14 +965,14 @@ class _BankAccountsScreenContentState
         children: [
           Text(
             '$label: ',
-            style: const TextStyle(fontSize: 10, color: Colors.black54),
+            style: const TextStyle(fontSize: 10, color: AppColors.black54),
           ),
           Expanded(
             child: Text(
               value,
               style: const TextStyle(
                   fontSize: 10,
-                  color: Colors.black87,
+                  color: AppColors.black87,
                   fontWeight: FontWeight.w600),
               textDirection: TextDirection.ltr,
             ),
@@ -990,7 +989,7 @@ class _BankAccountsScreenContentState
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (_) => _BankAccountEditForm(
@@ -1008,7 +1007,7 @@ class _BankAccountsScreenContentState
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (ctx) {
@@ -1032,7 +1031,7 @@ class _BankAccountsScreenContentState
                         fontSize: 15, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 4),
                 Text(l10n.enterBankDetailsToApprove,
-                    style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                    style: const TextStyle(fontSize: 11, color: AppColors.grey)),
                 const SizedBox(height: 16),
                 TextFormField(
                     decoration: InputDecoration(
@@ -1054,7 +1053,7 @@ class _BankAccountsScreenContentState
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
                   child: Text(l10n.saveAccount,
-                      style: const TextStyle(color: Colors.white)),
+                      style: const TextStyle(color: AppColors.white)),
                 ),
               ],
             ),
@@ -1079,7 +1078,7 @@ class _BankAccountsScreenContentState
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           title: Row(
             children: [
-              const Icon(Icons.picture_as_pdf, color: Colors.redAccent),
+              const Icon(Icons.picture_as_pdf, color: AppColors.redAccent),
               const SizedBox(width: 8),
               Text(l10n.exportAccountsTitle,
                   style: const TextStyle(fontSize: 15)),
@@ -1101,7 +1100,7 @@ class _BankAccountsScreenContentState
                 AppSnackBar.showSuccess(context, l10n.accountsExportSuccess);
               },
               child: Text(l10n.download,
-                  style: const TextStyle(color: Colors.white)),
+                  style: const TextStyle(color: AppColors.white)),
             ),
           ],
         ),

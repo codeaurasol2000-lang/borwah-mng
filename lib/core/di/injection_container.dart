@@ -54,6 +54,7 @@ import '../../features/wasalny_supervisor/domain/repositories/wasalny_complaints
 import '../../features/wasalny_supervisor/domain/usecases/escalate_wasalny_complaint_usecase.dart';
 import '../../features/wasalny_supervisor/domain/usecases/get_wasalny_complaints_usecase.dart';
 import '../../features/wasalny_supervisor/domain/usecases/resolve_wasalny_complaint_usecase.dart';
+import '../../features/wasalny_supervisor/domain/usecases/reopen_wasalny_complaint_usecase.dart';
 import '../../features/wasalny_supervisor/presentation/controllers/wasalny_complaints_cubit.dart';
 
 final sl = GetIt.instance;
@@ -162,11 +163,13 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => GetWasalnyComplaintsUseCase(sl()));
   sl.registerLazySingleton(() => EscalateWasalnyComplaintUseCase(sl()));
   sl.registerLazySingleton(() => ResolveWasalnyComplaintUseCase(sl()));
+  sl.registerLazySingleton(() => ReopenWasalnyComplaintUseCase(sl()));
   sl.registerFactory(
     () => WasalnyComplaintsCubit(
       getComplaints: sl(),
       escalateComplaint: sl(),
       resolveComplaint: sl(),
+      reopenComplaint: sl(),
       auditRepository: sl(),
     ),
   );

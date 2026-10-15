@@ -36,7 +36,6 @@ class ExpenseRequestsCubit extends Cubit<ExpenseRequestsState> {
     required double amount,
     required String bankAccountId,
     required String reason,
-    String? attachmentName,
   }) async {
     if (state.isSubmitting) {
       return const Left(ServerFailure());
@@ -47,7 +46,6 @@ class ExpenseRequestsCubit extends Cubit<ExpenseRequestsState> {
       amount: amount,
       bankAccountId: bankAccountId,
       reason: reason,
-      attachmentName: attachmentName,
     );
 
     return result.fold(

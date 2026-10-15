@@ -1,20 +1,30 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../core/constants/app_colors.dart';
+import '../../../../../core/di/injection_container.dart';
 import '../../../../../core/widgets/app_snack_bar.dart';
 import '../../../../../l10n/app_localizations.dart';
+import '../../../data/datasources/finance_supervisor_payout_details_store.dart';
+import '../../../domain/entities/withdrawal_request_entity.dart';
+import '../../../domain/repositories/finance_repository.dart';
+import '../../utils/financial_request_notifications.dart';
 
-void showWithdrawBottomSheet(BuildContext context) {
+void showWithdrawBottomSheet(
+  BuildContext context, {
+  FinanceSupervisorPayoutDetails? payoutDetails,
+}) {
   showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
-    backgroundColor: Colors.transparent,
-    builder: (_) => const _WithdrawBottomSheet(),
+    backgroundColor: AppColors.transparent,
+    builder: (_) => _WithdrawBottomSheet(payoutDetails: payoutDetails),
   );
 }
 
 class _WithdrawBottomSheet extends StatefulWidget {
-  const _WithdrawBottomSheet();
+  final FinanceSupervisorPayoutDetails? payoutDetails;
+
+  const _WithdrawBottomSheet({this.payoutDetails});
 
   @override
   State<_WithdrawBottomSheet> createState() => _WithdrawBottomSheetState();
@@ -23,12 +33,89 @@ class _WithdrawBottomSheet extends StatefulWidget {
 class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
   final TextEditingController _amountController =
       TextEditingController(text: '52,000.00');
-  String _selectedBankId = 'rajhi';
+  bool _isSubmitting = false;
 
   @override
   void dispose() {
     _amountController.dispose();
     super.dispose();
+  }
+
+  Future<void> _submitWithdrawal() async {
+    final l10n = AppLocalizations.of(context)!;
+    final isArabic = l10n.localeName.startsWith('ar');
+    final payoutDetails = widget.payoutDetails;
+    if (payoutDetails == null || !payoutDetails.isComplete) {
+      AppSnackBar.showError(
+        context,
+        isArabic
+            ? 'أضف بيانات السحب الشخصية أولاً من زر تعديل بيانات السحب.'
+            : 'Add personal payout details first using Edit payout details.',
+      );
+      return;
+    }
+    final amount = double.tryParse(
+      _amountController.text.replaceAll(',', '').trim(),
+    );
+    if (amount == null || !amount.isFinite || amount < 1000 || amount > 52000) {
+      AppSnackBar.showError(
+        context,
+        isArabic
+            ? 'أدخل مبلغًا بين 1,000 والرصيد الشخصي المتاح 52,000.'
+            : 'Enter an amount between 1,000 and the personal available balance of 52,000.',
+      );
+      return;
+    }
+
+    setState(() => _isSubmitting = true);
+    try {
+      final result =
+          await sl<FinanceRepository>().submitSupervisorFinancialRequest(
+        beneficiaryName: payoutDetails.accountHolderName,
+        beneficiaryRole: l10n.cfoRole,
+        sourceAccount: 'finance_supervisor_personal_wallet',
+        amount: amount,
+        operationType: FinancialOperationType.withdrawal,
+        bankName: payoutDetails.bankName,
+        iban: payoutDetails.iban,
+        transferMethod: isArabic ? 'تحويل بنكي' : 'Bank transfer',
+        dateText: DateTime.now().toIso8601String(),
+        notes: isArabic
+            ? 'طلب سحب من محفظة المستحقات الشخصية للمشرف المالي، مرسل للإدارة للاعتماد.'
+            : 'Withdrawal from the finance supervisor personal dues wallet; submitted to management for approval.',
+      );
+      final request = result.fold(
+        (failure) => throw StateError(failure.message),
+        (request) => request,
+      );
+      if (!mounted) return;
+      await notifyFinanceOfSupervisorRequest(request);
+      if (!mounted) return;
+      AppSnackBar.showSuccess(
+        context,
+        isArabic
+            ? 'تم إرسال طلب السحب للإدارة للاعتماد. رقم الطلب: ${request.requestNumber}'
+            : 'Withdrawal request sent to management for approval. Request: ${request.requestNumber}',
+      );
+      Navigator.pop(context);
+    } on Object catch (error, stackTrace) {
+      FlutterError.reportError(FlutterErrorDetails(
+        exception: error,
+        stack: stackTrace,
+        library: 'finance supervisor personal withdrawal',
+        context: ErrorDescription('while submitting personal withdrawal'),
+      ));
+      if (mounted) {
+        AppSnackBar.showError(
+          context,
+          isArabic
+              ? 'تعذر إرسال طلب السحب. لم يتم خصم أي مبلغ.'
+              : 'Could not submit the withdrawal request. No amount was deducted.',
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isSubmitting = false);
+    }
   }
 
   @override
@@ -50,7 +137,7 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
             margin: const EdgeInsets.symmetric(horizontal: 8),
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
             decoration: const BoxDecoration(
-              color: Colors.white,
+              color: AppColors.white,
               borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
             ),
             child: SingleChildScrollView(
@@ -63,7 +150,7 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
                       width: 40,
                       height: 4,
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
+                        color: AppColors.grey300,
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),
@@ -84,18 +171,20 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton.icon(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        AppSnackBar.showSuccess(
-                          context,
-                          l10n.withdrawSheetSubmitSuccess,
-                        );
-                      },
-                      icon: const Icon(Icons.flash_on, size: 18),
-                      label: Text(l10n.withdrawSheetConfirm),
+                      onPressed: _isSubmitting ? null : _submitWithdrawal,
+                      icon: const Icon(Icons.send_outlined, size: 18),
+                      label: Text(
+                        _isSubmitting
+                            ? (isArabic
+                                ? 'جارٍ إرسال الطلب...'
+                                : 'Sending request...')
+                            : (isArabic
+                                ? 'إرسال طلب السحب للإدارة'
+                                : 'Send withdrawal request to management'),
+                      ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primaryExtraDark,
-                        foregroundColor: Colors.white,
+                        foregroundColor: AppColors.white,
                         minimumSize: const Size.fromHeight(48),
                       ),
                     ),
@@ -132,7 +221,8 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
             color: AppColors.primaryExtraDark,
             shape: BoxShape.circle,
           ),
-          child: const Icon(Icons.person_outline, color: Colors.white, size: 16),
+          child:
+              const Icon(Icons.person_outline, color: AppColors.white, size: 16),
         ),
         const SizedBox(width: 8),
         Expanded(
@@ -144,7 +234,10 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                       fontSize: 10, color: AppColors.textSecondary)),
-              Text(l10n.withdrawSheetTitle,
+              Text(
+                  l10n.localeName.startsWith('ar')
+                      ? 'طلب سحب المستحقات الشخصية'
+                      : 'Personal dues withdrawal request',
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
@@ -170,7 +263,10 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
         Row(
           children: [
             Expanded(
-              child: Text(l10n.withdrawSheetAccount,
+              child: Text(
+                  l10n.localeName.startsWith('ar')
+                      ? 'محفظة المستحقات الشخصية للمشرف المالي'
+                      : 'Finance supervisor personal dues wallet',
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
@@ -179,19 +275,20 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
             const SizedBox(width: 8),
             Flexible(
               child: _statusBadge(
-                l10n.withdrawSheetInstantAuth,
-                Icons.verified_user_outlined,
+                l10n.localeName.startsWith('ar')
+                    ? 'طلب بانتظار اعتماد الإدارة'
+                    : 'Request pending management approval',
+                Icons.hourglass_top_outlined,
               ),
             ),
           ],
         ),
         const SizedBox(height: 5),
-        Text(l10n.withdrawSheetRequestId,
-            textDirection: TextDirection.ltr,
-            style: const TextStyle(
-                fontSize: 10,
-                color: AppColors.textPrimary,
-                fontWeight: FontWeight.bold)),
+        Text(
+            l10n.localeName.startsWith('ar')
+                ? 'لن يُخصم المبلغ قبل اعتماد الطلب.'
+                : 'No amount will be deducted before the request is approved.',
+            style: const TextStyle(fontSize: 10, color: AppColors.textPrimary)),
       ],
     );
   }
@@ -213,7 +310,10 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
                   size: 14, color: AppColors.primaryDark),
               const SizedBox(width: 4),
               Flexible(
-                child: Text(l10n.withdrawSheetAvailableBalance,
+                child: Text(
+                    l10n.localeName.startsWith('ar')
+                        ? 'الرصيد الشخصي المتاح لطلب السحب'
+                        : 'Personal balance available for withdrawal request',
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
@@ -246,7 +346,12 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
             ],
           ),
           const SizedBox(height: 12),
-          _statusBadge(l10n.withdrawSheetMinimumNotice, Icons.circle),
+          _statusBadge(
+            l10n.localeName.startsWith('ar')
+                ? 'الحد الأدنى 1,000 • الصرف بعد موافقة الإدارة'
+                : 'Minimum 1,000 • payout after management approval',
+            Icons.info_outline,
+          ),
         ],
       ),
     );
@@ -268,8 +373,8 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
                       color: AppColors.textPrimary)),
             ),
             TextButton(
-              onPressed: () => setState(
-                  () => _amountController.text = '52,000.00'),
+              onPressed: () =>
+                  setState(() => _amountController.text = '52,000.00'),
               child: Text(l10n.withdrawSheetSetMaximum),
             ),
           ],
@@ -338,35 +443,70 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
   }
 
   Widget _buildBankSection(AppLocalizations l10n) {
+    final isArabic = l10n.localeName.startsWith('ar');
+    final details = widget.payoutDetails;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: Text(l10n.withdrawSheetSelectBank,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.textPrimary)),
-            ),
-            const SizedBox(width: 8),
-            Flexible(
-              child: _statusBadge(
-                  l10n.withdrawSheetIbanVerified,
-                  Icons.verified_user_outlined),
-            ),
-          ],
+        Text(
+          isArabic ? 'حساب السحب الشخصي' : 'Personal payout account',
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+            color: AppColors.textPrimary,
+          ),
         ),
         const SizedBox(height: 8),
-        _buildBankOption(
-          id: 'rajhi',
-          bankName: l10n.withdrawSheetBankName,
-          iban: 'SA44 8000 0001 **** 3456',
-          status: l10n.withdrawSheetBankStatus,
-          isPrimary: true,
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: AppColors.surfaceLight,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: AppColors.cardBorder),
+          ),
+          child: Row(
+            children: [
+              const Icon(Icons.account_balance_outlined,
+                  color: AppColors.primaryDark),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      details?.isComplete == true
+                          ? details!.bankName
+                          : (isArabic
+                              ? 'بيانات السحب غير مكتملة'
+                              : 'Payout details are incomplete'),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      details?.isComplete == true
+                          ? details!.maskedIban
+                          : (isArabic
+                              ? 'احفظ بيانات حسابك الشخصي أولاً'
+                              : 'Save your personal account details first'),
+                      textDirection: TextDirection.ltr,
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(
+                details?.isComplete == true
+                    ? Icons.verified_user_outlined
+                    : Icons.warning_amber_rounded,
+                color: details?.isComplete == true
+                    ? AppColors.success
+                    : AppColors.warning,
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -377,13 +517,13 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
       constraints: const BoxConstraints(maxWidth: 220),
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
       decoration: BoxDecoration(
-        color: Colors.blue.shade50,
+        color: AppColors.blue50,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 12, color: Colors.blue.shade700),
+          Icon(icon, size: 12, color: AppColors.blue700),
           const SizedBox(width: 4),
           Flexible(
             child: Text(label,
@@ -391,7 +531,7 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                     fontSize: 9,
-                    color: Colors.blue.shade800,
+                    color: AppColors.blue800,
                     fontWeight: FontWeight.bold)),
           ),
         ],
@@ -407,105 +547,17 @@ class _WithdrawBottomSheetState extends State<_WithdrawBottomSheet> {
         constraints: const BoxConstraints(minHeight: 36),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected
-              ? AppColors.primaryExtraDark
-              : AppColors.surfaceLight,
+          color:
+              isSelected ? AppColors.primaryExtraDark : AppColors.surfaceLight,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(label,
             maxLines: 1,
             style: TextStyle(
-                color: isSelected ? Colors.white : AppColors.textSecondary,
+                color: isSelected ? AppColors.white : AppColors.textSecondary,
                 fontSize: 11,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal),
             textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr),
-      ),
-    );
-  }
-
-  Widget _buildBankOption({
-    required String id,
-    required String bankName,
-    required String iban,
-    required String status,
-    bool isPrimary = false,
-  }) {
-    final l10n = AppLocalizations.of(context)!;
-    final isSelected = _selectedBankId == id;
-    return GestureDetector(
-      onTap: () => setState(() => _selectedBankId = id),
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: isSelected ? AppColors.surfaceLight : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-              color: isSelected ? Colors.transparent : AppColors.cardBorder),
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(9),
-              decoration: BoxDecoration(
-                  color: AppColors.primaryExtraDark,
-                  borderRadius: BorderRadius.circular(10)),
-              child: const Icon(Icons.account_balance,
-                  color: Colors.white, size: 22),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(bankName,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.textPrimary)),
-                      ),
-                      if (isPrimary) ...[
-                        const SizedBox(width: 6),
-                        Flexible(
-                          child: Text(l10n.withdrawSheetPrimaryAccount,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                  fontSize: 8,
-                                  color: Colors.blue.shade800,
-                                  fontWeight: FontWeight.bold)),
-                        ),
-                      ],
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Text(iban,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                          fontSize: 10,
-                          color: AppColors.textSecondary,
-                          letterSpacing: 1.1),
-                      textDirection: TextDirection.ltr),
-                  const SizedBox(height: 3),
-                  Text(status,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                          fontSize: 9, color: AppColors.textSecondary)),
-                ],
-              ),
-            ),
-            const SizedBox(width: 8),
-            Icon(isSelected ? Icons.check_circle : Icons.radio_button_unchecked,
-                color: isSelected ? AppColors.primaryExtraDark : Colors.grey,
-                size: 22),
-          ],
-        ),
       ),
     );
   }

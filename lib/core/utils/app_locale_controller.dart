@@ -16,13 +16,26 @@ class AppLocaleController extends ChangeNotifier {
     if (languageCode != 'ar' && languageCode != 'en') {
       return;
     }
+    if (_locale.languageCode == languageCode) return;
 
     _locale = Locale(languageCode);
     CurrencyFormatter.setLocale(languageCode);
-
-    final preferences = await SharedPreferences.getInstance();
-    await preferences.setString('app_language', languageCode);
     notifyListeners();
+
+    try {
+      final preferences = await SharedPreferences.getInstance();
+      final saved = await preferences.setString('app_language', languageCode);
+      if (!saved) throw StateError('Could not save the selected app language.');
+    } catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'app localization',
+          context: ErrorDescription('while saving the selected language'),
+        ),
+      );
+    }
   }
 
   Future<void> load() async {

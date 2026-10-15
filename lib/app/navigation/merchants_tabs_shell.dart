@@ -1,14 +1,20 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../core/di/injection_container.dart';
-import '../../core/widgets/local_event_inbox_screen.dart';
 import '../../features/finance/presentation/widgets/finance_navigation.dart';
+import '../../features/wasalny_supervisor/data/wasalny_local_event_store.dart';
 import '../../features/merchants/presentation/controllers/merchants_cubit.dart';
 import '../../features/merchants/presentation/screens/ads_management_screen.dart';
 import '../../features/merchants/presentation/screens/merchant_financial_requests_screen.dart';
 import '../../features/merchants/presentation/screens/merchant_profile_screen.dart';
+import '../../features/merchants/presentation/screens/merchant_supervisor_notifications_screen.dart';
+import '../../features/merchants/presentation/screens/merchant_supervisor_chats_screen.dart';
+import '../../features/merchants/presentation/screens/merchant_upgrade_requests_screen.dart';
+import '../../features/merchants/data/merchant_conversation_local_store.dart';
 import '../../features/merchants/presentation/screens/merchants_dashboard_screen.dart';
 import '../../l10n/app_localizations.dart';
 
@@ -24,12 +30,52 @@ class MerchantsTabsShell extends StatefulWidget {
 class _MerchantsTabsShellState extends State<MerchantsTabsShell> {
   late final PageController _pageController = PageController();
   int _currentIndex = 0;
+  int _adsRefreshToken = 0;
   bool _isBarsVisible = true;
+  int _unreadNotificationCount = 0;
+  int _unreadChatCount = 0;
+  Timer? _notificationRefreshTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshUnreadNotifications();
+    _notificationRefreshTimer = Timer.periodic(
+      const Duration(seconds: 5),
+      (_) => _refreshUnreadNotifications(),
+    );
+  }
 
   @override
   void dispose() {
+    _notificationRefreshTimer?.cancel();
     _pageController.dispose();
     super.dispose();
+  }
+
+  Future<void> _refreshUnreadNotifications() async {
+    try {
+      final events = await WasalnyLocalEventStore().getEvents('merchant');
+      final count = events.where((event) => !event.isRead).length;
+      final messages = await MerchantConversationLocalStore().getAllMessages();
+      final unreadChats = messages
+          .where((message) => !message.fromSupervisor && !message.isRead)
+          .length;
+      if (mounted &&
+          (count != _unreadNotificationCount || unreadChats != _unreadChatCount)) {
+        setState(() {
+          _unreadNotificationCount = count;
+          _unreadChatCount = unreadChats;
+        });
+      }
+    } on Object catch (error, stackTrace) {
+      FlutterError.reportError(FlutterErrorDetails(
+        exception: error,
+        stack: stackTrace,
+        library: 'merchant notifications',
+        context: ErrorDescription('while refreshing unread notifications'),
+      ));
+    }
   }
 
   void _selectPage(int index) {
@@ -37,6 +83,7 @@ class _MerchantsTabsShellState extends State<MerchantsTabsShell> {
     setState(() {
       _currentIndex = index;
       _isBarsVisible = true;
+      if (index == 1) _adsRefreshToken++;
     });
     _pageController.animateToPage(
       index,
@@ -57,12 +104,17 @@ class _MerchantsTabsShellState extends State<MerchantsTabsShell> {
         icon: Icons.receipt_long_outlined,
         label: l10n.navFinancialRequests,
       ),
+      FinanceNavigationItem(
+        icon: Icons.upgrade,
+        label: l10n.navMerchantUpgrades,
+      ),
       FinanceNavigationItem(icon: Icons.person_outline, label: l10n.navAccount),
     ];
     final titles = [
       l10n.navMerchants,
       l10n.navAds,
       l10n.navFinancialRequests,
+      l10n.navMerchantUpgrades,
       l10n.navAccount,
     ];
     final pages = [
@@ -70,11 +122,13 @@ class _MerchantsTabsShellState extends State<MerchantsTabsShell> {
         create: (_) => sl<MerchantsCubit>()..loadMerchants(),
         child: MerchantsDashboardScreen(
           showAppBar: false,
-          onProfileTap: () => _selectPage(3),
+          onProfileTap: () => _selectPage(4),
+          onOpenReviewQueue: _selectPage,
         ),
       ),
-      const AdsManagementScreen(),
+      AdsManagementScreen(refreshToken: _adsRefreshToken),
       const MerchantFinancialRequestsScreen(),
+      const MerchantUpgradeRequestsScreen(),
       MerchantProfileScreen(
         onLogout: widget.onLogout,
         onSupervisedMerchantsTap: () => _selectPage(0),
@@ -83,7 +137,7 @@ class _MerchantsTabsShellState extends State<MerchantsTabsShell> {
     final topPadding = MediaQuery.of(context).padding.top;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7F9),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(_isBarsVisible ? kToolbarHeight : 0),
         child: AnimatedContainer(
@@ -99,19 +153,44 @@ class _MerchantsTabsShellState extends State<MerchantsTabsShell> {
                 title: titles[_currentIndex],
                 subtitle: l10n.merchantSupervisorRoleBadge,
                 showProfileButton: _currentIndex == 0,
-                onProfilePressed: () => _selectPage(3),
+                onProfilePressed: () => _selectPage(4),
                 additionalActions: [
                   IconButton(
-                    tooltip: l10n.productNotificationsTitle,
-                    onPressed: () => Navigator.of(context).push(
-                      MaterialPageRoute<void>(
-                        builder: (_) => LocalEventInboxScreen(
-                          recipient: 'merchant',
-                          title: l10n.productNotificationsTitle,
+                    tooltip: l10n.localeName.startsWith('ar')
+                        ? 'محادثات التجار'
+                        : 'Merchant chats',
+                    onPressed: () async {
+                      await Navigator.of(context).push<void>(
+                        MaterialPageRoute<void>(
+                          builder: (_) => const MerchantSupervisorChatsScreen(),
                         ),
-                      ),
+                      );
+                      await _refreshUnreadNotifications();
+                    },
+                    icon: Badge(
+                      isLabelVisible: _unreadChatCount > 0,
+                      label: Text('$_unreadChatCount'),
+                      child: const Icon(Icons.chat_bubble_outline),
                     ),
-                    icon: const Icon(Icons.notifications_none_outlined),
+                  ),
+                  IconButton(
+                    tooltip: l10n.localeName.startsWith('ar')
+                        ? 'إشعارات مشرف التجار'
+                        : 'Merchant supervisor notifications',
+                    onPressed: () async {
+                      await Navigator.of(context).push<void>(
+                        MaterialPageRoute<void>(
+                          builder: (_) =>
+                              const MerchantSupervisorNotificationsScreen(),
+                        ),
+                      );
+                      await _refreshUnreadNotifications();
+                    },
+                    icon: Badge(
+                      isLabelVisible: _unreadNotificationCount > 0,
+                      label: Text('$_unreadNotificationCount'),
+                      child: const Icon(Icons.notifications_none_outlined),
+                    ),
                   ),
                 ],
               ),
@@ -136,7 +215,13 @@ class _MerchantsTabsShellState extends State<MerchantsTabsShell> {
           controller: _pageController,
           pageSnapping: true,
           allowImplicitScrolling: true,
-          onPageChanged: (index) => setState(() => _currentIndex = index),
+          onPageChanged: (index) {
+            if (index == _currentIndex) return;
+            setState(() {
+              _currentIndex = index;
+              if (index == 1) _adsRefreshToken++;
+            });
+          },
           children: pages,
         ),
       ),

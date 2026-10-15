@@ -14,4 +14,5 @@ abstract class WasalnyComplaintsRepository {
     String id, {
     required String notes,
   });
+  Future<WasalnyComplaint> reopenComplaint(String id, {required String note});
 }

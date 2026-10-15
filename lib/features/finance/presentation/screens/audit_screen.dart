@@ -17,11 +17,11 @@ class AuditScreen extends StatefulWidget {
 
 class _AuditScreenState extends State<AuditScreen>
     with AutomaticKeepAliveClientMixin<AuditScreen> {
-  static const _hash = 'FIN-9042-ALMAZOURI-7e2f98aa01';
+  static const _hash = 'DEMO-AUDIT-RECORD-001';
   static const _filters = [
-    ('all', 'الكل (1,420)', 'All (1,420)'),
-    ('bank', 'تحويلات بنكية (840)', 'Bank transfers (840)'),
-    ('freeze', 'تجميد أرصدة (3)', 'Frozen balances (3)'),
+    ('all', 'الكل', 'All'),
+    ('bank', 'تحويلات وحركات بنكية', 'Bank and account events'),
+    ('freeze', 'تجميد أرصدة', 'Frozen balances'),
   ];
 
   static const _events = [
@@ -32,7 +32,7 @@ class _AuditScreenState extends State<AuditScreen>
       titleEn: 'Outgoing bank transfer (profit withdrawal)',
       amount: '- 32,500.00 ج.م',
       amountEn: '- 32,500.00 Egy',
-      amountColor: Color(0xFFD32626),
+      amountColor: AppColors.hexFFD32626,
       timeAr: 'اليوم • 11:00:44',
       timeEn: 'Today • 11:00:44',
       descriptionAr:
@@ -43,7 +43,7 @@ class _AuditScreenState extends State<AuditScreen>
       statusEn: 'Instant reconciliation with SARIE',
       reference: 'TRD-8821',
       icon: Icons.account_balance_wallet_outlined,
-      color: Color(0xFF3474B9),
+      color: AppColors.hexFF3474B9,
     ),
     _AuditEvent(
       group: 'today',
@@ -52,7 +52,7 @@ class _AuditScreenState extends State<AuditScreen>
       titleEn: 'Temporary withdrawal freeze (Finance Freeze)',
       amount: '- 18,900.00 ج.م',
       amountEn: '- 18,900.00 Egy',
-      amountColor: Color(0xFFD32626),
+      amountColor: AppColors.hexFFD32626,
       timeAr: 'اليوم • 10:20:16',
       timeEn: 'Today • 10:20:16',
       descriptionAr:
@@ -63,7 +63,7 @@ class _AuditScreenState extends State<AuditScreen>
       statusEn: 'Freeze reason: open commercial dispute',
       reference: 'CLEARANCE: SEC-LVL3',
       icon: Icons.lock_outline_rounded,
-      color: Color(0xFFD32626),
+      color: AppColors.hexFFD32626,
       isWarning: true,
     ),
     _AuditEvent(
@@ -73,7 +73,7 @@ class _AuditScreenState extends State<AuditScreen>
       titleEn: 'Financial refund settlement (Refund)',
       amount: '+ 1,200.00 ج.م',
       amountEn: '+ 1,200.00 Egy',
-      amountColor: Color(0xFF376AB0),
+      amountColor: AppColors.hexFF376AB0,
       timeAr: 'اليوم • 11:00:44',
       timeEn: 'Today • 11:00:44',
       descriptionAr:
@@ -84,7 +84,7 @@ class _AuditScreenState extends State<AuditScreen>
       statusEn: 'Digitally signed by the finance director',
       reference: 'CMP-1035',
       icon: Icons.currency_exchange_rounded,
-      color: Color(0xFF376AB0),
+      color: AppColors.hexFF376AB0,
     ),
     _AuditEvent(
       group: 'yesterday',
@@ -93,7 +93,7 @@ class _AuditScreenState extends State<AuditScreen>
       titleEn: 'Account approval and IBAN match',
       amount: 'ربط حساب',
       amountEn: 'Account linked',
-      amountColor: Color(0xFF376AB0),
+      amountColor: AppColors.hexFF376AB0,
       timeAr: 'أمس • 16:45:10',
       timeEn: 'Yesterday • 16:45:10',
       descriptionAr:
@@ -104,7 +104,7 @@ class _AuditScreenState extends State<AuditScreen>
       statusEn: 'Verified IBAN ✓',
       reference: 'SA40209118',
       icon: Icons.account_balance_outlined,
-      color: Color(0xFF263E5B),
+      color: AppColors.hexFF263E5B,
     ),
     _AuditEvent(
       group: 'yesterday',
@@ -113,7 +113,7 @@ class _AuditScreenState extends State<AuditScreen>
       titleEn: 'Automatic platform commission collection',
       amount: '+ 14,820.00 ج.م',
       amountEn: '+ 14,820.00 Egy',
-      amountColor: Color(0xFF376AB0),
+      amountColor: AppColors.hexFF376AB0,
       timeAr: 'أمس • 09:20:00',
       timeEn: 'Yesterday • 09:20:00',
       descriptionAr:
@@ -124,15 +124,30 @@ class _AuditScreenState extends State<AuditScreen>
       statusEn: 'Automatically verified platform entry',
       reference: 'COMM-1420',
       icon: Icons.savings_outlined,
-      color: Color(0xFF376AB0),
+      color: AppColors.hexFF376AB0,
     ),
   ];
 
   String _selectedFilter = 'all';
+  String _searchQuery = '';
 
-  List<_AuditEvent> get _visibleEvents => _selectedFilter == 'all'
-      ? _events
-      : _events.where((event) => event.category == _selectedFilter).toList();
+  List<_AuditEvent> get _visibleEvents {
+    final query = _searchQuery.trim().toLowerCase();
+    return _events.where((event) {
+      final matchesCategory =
+          _selectedFilter == 'all' || event.category == _selectedFilter;
+      final matchesSearch = query.isEmpty || [
+        event.reference,
+        event.titleAr,
+        event.titleEn,
+        event.descriptionAr,
+        event.descriptionEn,
+        event.statusAr,
+        event.statusEn,
+      ].any((value) => value.toLowerCase().contains(query));
+      return matchesCategory && matchesSearch;
+    }).toList(growable: false);
+  }
 
   List<_AuditEvent> _eventsForGroup(String group) =>
       _visibleEvents.where((event) => event.group == group).toList();
@@ -151,8 +166,7 @@ class _AuditScreenState extends State<AuditScreen>
       child: FinanceSwipeNavigation(
         currentIndex: 0,
         enabled: widget.showBottomNavigation,
-        child: Scaffold(
-          backgroundColor: const Color(0xFFF5F7F9),
+        child: Scaffold(backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           body: SafeArea(
             bottom: false,
             child: ListView(
@@ -163,14 +177,29 @@ class _AuditScreenState extends State<AuditScreen>
                 _buildHashCard(context, l10n, isArabic),
                 const SizedBox(height: 10),
                 _buildFilters(isArabic),
+                const SizedBox(height: 8),
+                TextField(
+                  onChanged: (value) => setState(() => _searchQuery = value),
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.search),
+                    hintText: isArabic
+                        ? 'ابحث بالمرجع أو وصف الحركة'
+                        : 'Search reference or event description',
+                    filled: true,
+                    fillColor: AppColors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 10),
                 _buildSummary(isArabic),
+                const SizedBox(height: 8),
+                _sampleDataNotice(isArabic),
                 const SizedBox(height: 14),
                 if (_eventsForGroup('today').isNotEmpty) ...[
                   _buildDateHeading(
-                    isArabic
-                        ? 'اليوم - الأربعاء 24 مايو'
-                        : 'Today - Wednesday, May 24',
+                    isArabic ? 'أمثلة توضيحية — المجموعة الأولى' : 'Sample entries — group one',
                     isArabic,
                   ),
                   const SizedBox(height: 8),
@@ -185,9 +214,7 @@ class _AuditScreenState extends State<AuditScreen>
                 ],
                 if (_eventsForGroup('yesterday').isNotEmpty) ...[
                   _buildDateHeading(
-                    isArabic
-                        ? 'أمس - الثلاثاء 23 مايو'
-                        : 'Yesterday - Tuesday, May 23',
+                    isArabic ? 'أمثلة توضيحية — المجموعة الثانية' : 'Sample entries — group two',
                     isArabic,
                   ),
                   const SizedBox(height: 8),
@@ -224,13 +251,13 @@ class _AuditScreenState extends State<AuditScreen>
             const CircleAvatar(
               radius: 16,
               backgroundColor: AppColors.primaryDark,
-              child: Icon(Icons.person_outline, color: Colors.white, size: 18),
+              child: Icon(Icons.person_outline, color: AppColors.white, size: 18),
             ),
             const SizedBox(width: 8),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.white,
                 borderRadius: BorderRadius.circular(18),
               ),
               child: Row(
@@ -269,7 +296,7 @@ class _AuditScreenState extends State<AuditScreen>
                 borderRadius: BorderRadius.circular(8),
               ),
               child: const Icon(Icons.shield_outlined,
-                  size: 19, color: Colors.white),
+                  size: 19, color: AppColors.white),
             ),
           ],
         ),
@@ -283,14 +310,14 @@ class _AuditScreenState extends State<AuditScreen>
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFF102B4B), Color(0xFF071A31)],
+          colors: [AppColors.hexFF102B4B, AppColors.hexFF071A31],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(12),
         boxShadow: const [
           BoxShadow(
-              color: Color(0x1A071A31), blurRadius: 10, offset: Offset(0, 5)),
+              color: AppColors.hex1A071A31, blurRadius: 10, offset: Offset(0, 5)),
         ],
       ),
       child: Column(
@@ -298,17 +325,21 @@ class _AuditScreenState extends State<AuditScreen>
         children: [
           Row(
             children: [
-              const Icon(Icons.lock_outline, color: Colors.white70, size: 13),
+              const Icon(Icons.lock_outline, color: AppColors.white70, size: 13),
               const SizedBox(width: 5),
               Expanded(
                 child: Text(
                   isArabic
                       ? 'بروتوكول الرقابة المزدوجة FIN-402'
                       : 'Dual-control protocol FIN-402',
-                  style: const TextStyle(color: Colors.white70, fontSize: 9),
+                  style: const TextStyle(color: AppColors.white70, fontSize: 9),
                 ),
               ),
-              _pill(l10n.liveDocumented, const Color(0xFF263E59), Colors.white),
+              _pill(
+                isArabic ? 'عرض توضيحي' : 'Sample view',
+                 AppColors.hexFF263E59,
+                AppColors.white,
+              ),
             ],
           ),
           const SizedBox(height: 12),
@@ -318,13 +349,13 @@ class _AuditScreenState extends State<AuditScreen>
                 : 'Central financial audit log',
             textAlign: isArabic ? TextAlign.right : TextAlign.left,
             style: const TextStyle(
-                color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                color: AppColors.white, fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 10),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             decoration: BoxDecoration(
-              color: const Color(0xFF07182F),
+              color:  AppColors.hexFF07182F,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Column(
@@ -335,14 +366,14 @@ class _AuditScreenState extends State<AuditScreen>
                     Expanded(
                       child: Text(
                         isArabic
-                            ? 'بصمة الكتلة التشفيرية (Block Hash)'
-                            : 'Cryptographic block hash',
+                            ? 'معرّف السجل التوضيحي'
+                            : 'Sample record identifier',
                         style:
-                            const TextStyle(color: Colors.white70, fontSize: 9),
+                            const TextStyle(color: AppColors.white70, fontSize: 9),
                       ),
                     ),
                     const Icon(Icons.fingerprint,
-                        color: Colors.white60, size: 14),
+                        color: AppColors.white60, size: 14),
                   ],
                 ),
                 const SizedBox(height: 5),
@@ -353,13 +384,13 @@ class _AuditScreenState extends State<AuditScreen>
                         _hash,
                         textDirection: TextDirection.ltr,
                         style: TextStyle(
-                            color: Colors.white,
+                            color: AppColors.white,
                             fontSize: 10,
                             fontFamily: 'monospace'),
                       ),
                     ),
                     IconButton(
-                      tooltip: isArabic ? 'نسخ البصمة' : 'Copy hash',
+                      tooltip: isArabic ? 'نسخ المعرّف' : 'Copy identifier',
                       visualDensity: VisualDensity.compact,
                       constraints:
                           const BoxConstraints.tightFor(width: 30, height: 30),
@@ -370,11 +401,11 @@ class _AuditScreenState extends State<AuditScreen>
                         if (!context.mounted) return;
                         AppSnackBar.showInfo(
                           context,
-                          isArabic ? 'تم نسخ بصمة السجل.' : 'Audit hash copied.',
+                          isArabic ? 'تم نسخ المعرّف التوضيحي.' : 'Sample identifier copied.',
                         );
                       },
                       icon: const Icon(Icons.copy_rounded,
-                          size: 13, color: Colors.white70),
+                          size: 13, color: AppColors.white70),
                     ),
                   ],
                 ),
@@ -384,14 +415,14 @@ class _AuditScreenState extends State<AuditScreen>
           const SizedBox(height: 8),
           Row(
             children: [
-              const Icon(Icons.circle, size: 7, color: Color(0xFF26D69A)),
+              const Icon(Icons.circle, size: 7, color: AppColors.hexFF26D69A),
               const SizedBox(width: 5),
               Expanded(
                 child: Text(
                   isArabic
-                      ? 'سجل نهائي مشفر للقراءة فقط (Read-Only) • معتمد رسميًا'
-                      : 'Final encrypted read-only record • officially certified',
-                  style: const TextStyle(color: Colors.white70, fontSize: 8),
+                      ? 'معرّف توضيحي ثابت — ليس بصمة تشفير إنتاجية'
+                      : 'Static sample identifier — not a production cryptographic hash',
+                  style: const TextStyle(color: AppColors.white70, fontSize: 8),
                 ),
               ),
             ],
@@ -419,8 +450,8 @@ class _AuditScreenState extends State<AuditScreen>
               padding: const EdgeInsets.symmetric(horizontal: 5),
               labelStyle: TextStyle(
                   fontSize: 9,
-                  color: selected ? Colors.white : AppColors.textSecondary),
-              backgroundColor: Colors.white,
+                  color: selected ? AppColors.white : AppColors.textSecondary),
+              backgroundColor: AppColors.white,
               selectedColor: AppColors.primaryDark,
               side: BorderSide.none,
             ),
@@ -431,34 +462,64 @@ class _AuditScreenState extends State<AuditScreen>
   }
 
   Widget _buildSummary(bool isArabic) {
+    final visible = _visibleEvents;
+    final frozenCount = visible.where((event) => event.category == 'freeze').length;
+    final bankCount = visible.where((event) => event.category == 'bank').length;
     return Row(
       children: [
         Expanded(
           child: _AuditMetric(
             icon: Icons.pending_actions_outlined,
-            title: isArabic ? 'عمليات اليوم' : 'Today’s operations',
-            value: isArabic ? '24 قيد' : '24 pending',
+            title: isArabic ? 'السجلات المعروضة' : 'Entries shown',
+            value: '${visible.length}',
           ),
         ),
         const SizedBox(width: 7),
         Expanded(
           child: _AuditMetric(
             icon: Icons.account_balance_wallet_outlined,
-            title: isArabic ? 'إجمالي السيولة' : 'Total liquidity',
-            value: '68.4K ${isArabic ? 'ج.م' : 'Egy'}',
+            title: isArabic ? 'حركات بنكية' : 'Bank events',
+            value: '$bankCount',
           ),
         ),
         const SizedBox(width: 7),
         Expanded(
           child: _AuditMetric(
             icon: Icons.fact_check_outlined,
-            title: isArabic ? 'حالة المطابقة' : 'Reconciliation',
-            value: isArabic ? '100% تطابق' : '100% matched',
+            title: isArabic ? 'عمليات التجميد' : 'Freeze events',
+            value: '$frozenCount',
           ),
         ),
       ],
     );
   }
+
+  Widget _sampleDataNotice(bool isArabic) => Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color:  AppColors.textPrimary,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color:  AppColors.hexFFE8C96A),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.info_outline, size: 17, color: AppColors.hexFF8A6410),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                isArabic
+                    ? 'هذه سجلات توضيحية ثابتة وليست سجلًا مباشرًا أو معتمدًا للإنتاج.'
+                    : 'These are static sample entries, not a live or production-certified audit log.',
+                style: const TextStyle(
+                  fontSize: 10,
+                  height: 1.4,
+                  color: AppColors.hexFF72540D,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
 
   Widget _buildDateHeading(String label, bool isArabic) {
     return Row(
@@ -466,7 +527,7 @@ class _AuditScreenState extends State<AuditScreen>
         const Icon(Icons.calendar_month_outlined,
             size: 14, color: AppColors.info),
         const SizedBox(width: 6),
-        Expanded(child: Divider(color: Colors.blueGrey.shade100)),
+        Expanded(child: Divider(color: AppColors.blueGrey100)),
         const SizedBox(width: 8),
         Text(label,
             style: const TextStyle(
@@ -481,7 +542,7 @@ class _AuditScreenState extends State<AuditScreen>
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFFE5E8EB),
+        color:  AppColors.hexFFE5E8EB,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
@@ -492,8 +553,8 @@ class _AuditScreenState extends State<AuditScreen>
           Expanded(
             child: Text(
               isArabic
-                  ? 'يتم تصدير نسخة مشفرة من هذا السجل آليًا وبشكل يومي ومباشر لمكتب الملك وصندوق الحسابات القانونيين المعتمدين، ولا يمكن التراجع عنه أو محوه إلى أي سجل في هذه المنظومة.'
-                  : 'An encrypted copy of this log is automatically delivered daily to the approved legal accounting office and cannot be altered or deleted.',
+                  ? 'هذا العرض غير متصل بمخزن تدقيق مركزي أو بخدمة تصدير خارجية. التصدير ينسخ السجلات الظاهرة فقط.'
+                  : 'This view is not connected to a central audit store or external export service. Export copies only the entries currently shown.',
               textAlign: isArabic ? TextAlign.right : TextAlign.left,
               style: const TextStyle(
                   color: AppColors.textSecondary, fontSize: 9, height: 1.6),
@@ -506,21 +567,49 @@ class _AuditScreenState extends State<AuditScreen>
 
   Widget _buildExportButton(AppLocalizations l10n) {
     return ElevatedButton.icon(
-      onPressed: () {},
+      onPressed: () => _copyVisibleEvents(l10n.localeName.startsWith('ar')),
       icon: const Icon(Icons.download_rounded, size: 17),
       label: Text(
         l10n.localeName.startsWith('ar')
-            ? 'تصدير السجل الكامل بصيغة Excel / PDF مشفر'
-            : 'Export complete encrypted log as Excel / PDF',
+            ? 'نسخ السجلات الظاهرة بصيغة CSV إلى Excel'
+            : 'Copy visible entries as CSV for Excel',
       ),
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primaryDark,
-        foregroundColor: Colors.white,
+        foregroundColor: AppColors.white,
         minimumSize: const Size.fromHeight(44),
         textStyle: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         elevation: 3,
       ),
+    );
+  }
+
+  Future<void> _copyVisibleEvents(bool isArabic) async {
+    final rows = <List<String>>[
+      ['reference', 'category', 'title', 'amount', 'time', 'description', 'status'],
+      ..._visibleEvents.map((event) => [
+            event.reference,
+            event.category,
+            isArabic ? event.titleAr : event.titleEn,
+            isArabic ? event.amount : event.amountEn,
+            isArabic ? event.timeAr : event.timeEn,
+            isArabic ? event.descriptionAr : event.descriptionEn,
+            isArabic ? event.statusAr : event.statusEn,
+          ]),
+    ];
+    final csv = rows
+        .map((row) => row
+            .map((value) => '"${value.replaceAll('"', '""')}"')
+            .join(','))
+        .join('\n');
+    await Clipboard.setData(ClipboardData(text: csv));
+    if (!mounted) return;
+    AppSnackBar.showSuccess(
+      context,
+      isArabic
+          ? 'تم نسخ السجلات الظاهرة بصيغة CSV.'
+          : 'Visible entries copied as CSV.',
     );
   }
 }
@@ -542,7 +631,7 @@ class _AuditMetric extends StatelessWidget {
       constraints: const BoxConstraints(minHeight: 76),
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 9),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         border: Border.all(color: AppColors.cardBorder),
         borderRadius: BorderRadius.circular(9),
       ),
@@ -628,9 +717,9 @@ class _AuditEventCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(11),
-        border: Border.all(color: const Color(0xFFE9EDF2)),
+        border: Border.all(color:  AppColors.hexFFE9EDF2),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -685,7 +774,7 @@ class _AuditEventCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
             decoration: BoxDecoration(
-              color: const Color(0xFFF1F3F5),
+              color:  AppColors.textPrimary,
               borderRadius: BorderRadius.circular(7),
             ),
             child: Column(
@@ -703,7 +792,7 @@ class _AuditEventCard extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 7, vertical: 5),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFFFE9E7),
+                      color:  AppColors.textPrimary,
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: Row(
