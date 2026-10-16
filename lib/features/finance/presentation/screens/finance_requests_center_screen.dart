@@ -386,6 +386,7 @@ class _FinanceRequestsCenterScreenState
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final colors = Theme.of(context).colorScheme;
     final visible = _visibleRequests;
     final visibleAmount =
         visible.fold(0.0, (sum, request) => sum + request.netAmount);
@@ -403,8 +404,8 @@ class _FinanceRequestsCenterScreenState
           onBackPressed: () => Navigator.pop(context),
         ),
         body: _isLoading
-            ? const Center(
-                child: CircularProgressIndicator(color: AppColors.primaryDark),
+            ? Center(
+                child: CircularProgressIndicator(color: colors.primary),
               )
             : RefreshIndicator(
                 onRefresh: _loadRequests,
@@ -424,7 +425,7 @@ class _FinanceRequestsCenterScreenState
                             ? 'ابحث برقم الطلب أو المستفيد أو الحساب'
                             : 'Search request, beneficiary, or account',
                         filled: true,
-                        fillColor: AppColors.white,
+                        fillColor: colors.surface,
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12)),
                       ),
@@ -444,9 +445,10 @@ class _FinanceRequestsCenterScreenState
                     _filterSelectors(),
                     const SizedBox(height: 16),
                     if (_loadError != null)
-                      _messageCard(_loadError!, Icons.error_outline),
+                      _messageCard(context, _loadError!, Icons.error_outline),
                     if (visible.isEmpty)
                       _messageCard(
+                        context,
                         _queueStatus == _QueueStatus.pending
                             ? l10n.financeRequestsInProgressEmpty
                             : l10n.financeRequestsArchiveEmpty,
@@ -584,7 +586,7 @@ class _FinanceRequestsCenterScreenState
         decoration: InputDecoration(
           labelText: label,
           filled: true,
-          fillColor: AppColors.white,
+          fillColor: Theme.of(context).colorScheme.surface,
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -602,6 +604,7 @@ class _FinanceRequestsCenterScreenState
       );
 
   Widget _requestCard(WithdrawalRequestEntity request) {
+    final colors = Theme.of(context).colorScheme;
     final overdue = _queueStatus == _QueueStatus.pending && _isOverdue(request);
     final isPending = request.status == RequestStatus.pending;
     final statusColor = switch (request.status) {
@@ -615,12 +618,12 @@ class _FinanceRequestsCenterScreenState
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
-      color: AppColors.white,
+      color: colors.surface,
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: BorderSide(
-          color: overdue ? AppColors.orange300 : AppColors.cardBorder,
+          color: overdue ? AppColors.orange300 : colors.outlineVariant,
         ),
       ),
       child: Padding(
@@ -635,13 +638,13 @@ class _FinanceRequestsCenterScreenState
                     request.beneficiaryName,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: AppColors.primaryDark,
+                      color: colors.primary,
                     ),
                   ),
                 ),
-                _pill(_originLabel(request), AppColors.primaryDark),
+                _pill(_originLabel(request), colors.primary),
               ],
             ),
             const SizedBox(height: 8),
@@ -661,7 +664,7 @@ class _FinanceRequestsCenterScreenState
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 _pill(_statusText(request.status, _isArabic), statusColor),
-                _pill(request.requestNumber, AppColors.blueGrey),
+                _pill(request.requestNumber, colors.onSurfaceVariant),
                 if (overdue)
                   _pill(
                     _isArabic ? 'متأخر أكثر من 24 ساعة' : 'Over 24 hours old',
@@ -672,15 +675,13 @@ class _FinanceRequestsCenterScreenState
             const SizedBox(height: 8),
             Text(
               '${_isArabic ? 'تاريخ الطلب' : 'Submitted'}: ${_formatSubmittedDate(request)}',
-              style:
-                  const TextStyle(color: AppColors.textSecondary, fontSize: 11),
+              style: TextStyle(color: colors.onSurfaceVariant, fontSize: 11),
             ),
             if (!isPending) ...[
               const SizedBox(height: 6),
               Text(
                 '${_isArabic ? 'تاريخ القرار' : 'Decision date'}: ${_formatDate(_decisionAt(request))}',
-                style: const TextStyle(
-                    color: AppColors.textSecondary, fontSize: 11),
+                style: TextStyle(color: colors.onSurfaceVariant, fontSize: 11),
               ),
             ],
             if (request.alertNotice?.trim().isNotEmpty == true) ...[
@@ -812,17 +813,24 @@ class _FinanceRequestsCenterScreenState
           _isArabic ? 'طلب ترويج منتج' : 'Product promotion request',
       };
 
-  Widget _messageCard(String message, IconData icon) => Container(
+  Widget _messageCard(BuildContext context, String message, IconData icon) =>
+      Container(
         margin: const EdgeInsets.only(top: 20),
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.cardBorder),
+          border: Border.all(
+            color: Theme.of(context).colorScheme.outlineVariant,
+          ),
         ),
         child: Column(
           children: [
-            Icon(icon, color: AppColors.textSecondary, size: 32),
+            Icon(
+              icon,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              size: 32,
+            ),
             const SizedBox(height: 10),
             Text(message, textAlign: TextAlign.center),
             if (_loadError != null) ...[

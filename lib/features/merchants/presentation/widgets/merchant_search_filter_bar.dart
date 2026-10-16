@@ -26,6 +26,7 @@ class MerchantSearchFilterBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final colors = Theme.of(context).colorScheme;
 
     return Column(
       children: [
@@ -37,13 +38,13 @@ class MerchantSearchFilterBar extends StatelessWidget {
               height: 46,
               width: 46,
               decoration: BoxDecoration(
-                color: AppColors.white,
+                color: colors.surface,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.cardBorder),
+                border: Border.all(color: colors.outlineVariant),
               ),
               child: IconButton(
-                icon: const Icon(Icons.tune,
-                    size: 20, color: AppColors.textPrimary),
+                icon: Icon(Icons.tune,
+                    size: 20, color: colors.onSurface),
                 onPressed: onFilterIconTap,
               ),
             ),
@@ -54,26 +55,25 @@ class MerchantSearchFilterBar extends StatelessWidget {
               child: Container(
                 height: 46,
                 decoration: BoxDecoration(
-                  color: AppColors.white,
+                  color: colors.surface,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColors.cardBorder),
+                  border: Border.all(color: colors.outlineVariant),
                 ),
                 child: TextField(
                   controller: searchController,
                   onChanged: onSearchChanged,
-                  style: const TextStyle(
-                      fontSize: 12, color: AppColors.textPrimary),
+                  style: TextStyle(fontSize: 12, color: colors.onSurface),
                   decoration: InputDecoration(
                     hintText: l10n.searchMerchantsHint,
-                    hintStyle: const TextStyle(
-                        fontSize: 11, color: AppColors.textMuted),
+                    hintStyle: TextStyle(
+                        fontSize: 11, color: colors.onSurfaceVariant),
                     suffixIcon: searchController.text.isNotEmpty
                         ? IconButton(
                             icon: const Icon(Icons.clear, size: 16),
                             onPressed: onClearSearch,
                           )
-                        : const Icon(Icons.search,
-                            size: 18, color: AppColors.textMuted),
+                        : Icon(Icons.search,
+                            size: 18, color: colors.onSurfaceVariant),
                     border: InputBorder.none,
                     contentPadding: const EdgeInsets.symmetric(
                         horizontal: 14, vertical: 12),
@@ -143,18 +143,20 @@ class MerchantSearchFilterBar extends StatelessWidget {
     required String label,
     required bool isSelected,
   }) {
+    final colors = Theme.of(context).colorScheme;
+
     return GestureDetector(
       onTap: () => onFilterSelected(index),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.hexFF07192F : AppColors.white,
+          color: isSelected ? AppColors.hexFF07192F : colors.surface,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isSelected
                 ? AppColors.hexFF07192F
-                : AppColors.cardBorder,
+                : colors.outlineVariant,
           ),
         ),
         child: Text(
@@ -162,7 +164,7 @@ class MerchantSearchFilterBar extends StatelessWidget {
           style: TextStyle(
             fontSize: 11,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-            color: isSelected ? AppColors.white : AppColors.textSecondary,
+            color: isSelected ? AppColors.white : colors.onSurfaceVariant,
           ),
         ),
       ),

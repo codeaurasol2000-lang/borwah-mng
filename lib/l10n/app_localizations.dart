@@ -11524,6 +11524,12 @@ abstract class AppLocalizations {
   /// **'01012345678'**
   String get merchantWalletPhoneValue;
 
+  /// No description provided for @merchantRecordAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجل التاجر'**
+  String get merchantRecordAction;
+
   /// No description provided for @merchantWalletInstantAddress.
   ///
   /// In ar, this message translates to:
@@ -11697,12 +11703,6 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'معلومات التاجر'**
   String get merchantInfoTitle;
-
-  /// No description provided for @merchantRecordAction.
-  ///
-  /// In ar, this message translates to:
-  /// **'سجل التاجر'**
-  String get merchantRecordAction;
 
   /// No description provided for @merchantInfoProfile.
   ///

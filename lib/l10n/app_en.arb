@@ -2136,6 +2136,7 @@
   "merchantWalletTransferAddress": "Instant payment address (IPA) or linked phone number",
   "merchantWalletIbanValue": "SA0380000000608010167519",
   "merchantWalletPhoneValue": "01012345678",
+  "merchantRecordAction": "Record action",
   "merchantWalletInstantAddress": "supervisor.audit@instapay",
   "merchantWalletAccountName": "Registered account name: Abdulrahman Al-Shehri (verified)",
   "merchantWalletProcessingDetails": "Processing speed: instant, 24/7\nProcessing and transfer fee: SAR 0.5 (fully covered for the supervisor)",

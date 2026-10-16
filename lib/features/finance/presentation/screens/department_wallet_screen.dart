@@ -164,10 +164,12 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final isArabic = l10n.localeName.startsWith('ar');
+    final colors = Theme.of(context).colorScheme;
 
     return Directionality(
       textDirection: isArabic ? ui.TextDirection.rtl : ui.TextDirection.ltr,
-      child: Scaffold(backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      child: Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: FinancePageAppBar(
           title: _screenTitleFor(context),
           subtitle: l10n.financialDepartment,
@@ -243,7 +245,8 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                                                         l10n
                                                             .departmentAuditedBadge,
                                                         style: const TextStyle(
-                                                            color: AppColors.white,
+                                                            color:
+                                                                AppColors.white,
                                                             fontSize: 9),
                                                         maxLines: 1,
                                                         overflow: TextOverflow
@@ -251,7 +254,8 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                                                   ),
                                                   const SizedBox(width: 4),
                                                   const Icon(Icons.verified,
-                                                      color: AppColors.blueAccent,
+                                                      color:
+                                                          AppColors.blueAccent,
                                                       size: 12),
                                                 ],
                                               ),
@@ -311,7 +315,8 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                     style: const TextStyle(
-                                                        color: AppColors.white60,
+                                                        color:
+                                                            AppColors.white60,
                                                         fontSize: 10)),
                                                 const SizedBox(height: 4),
                                                 Row(
@@ -335,7 +340,8 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                                                     Icon(
                                                         _getIconData(
                                                             stats['icon1']!),
-                                                        color: AppColors.white60,
+                                                        color:
+                                                            AppColors.white60,
                                                         size: 14),
                                                   ],
                                                 ),
@@ -352,7 +358,8 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                     style: const TextStyle(
-                                                        color: AppColors.white60,
+                                                        color:
+                                                            AppColors.white60,
                                                         fontSize: 10)),
                                                 const SizedBox(height: 4),
                                                 Row(
@@ -377,7 +384,8 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                                                     const Icon(
                                                         Icons
                                                             .assignment_late_outlined,
-                                                        color: AppColors.white60,
+                                                        color:
+                                                            AppColors.white60,
                                                         size: 14),
                                                   ],
                                                 ),
@@ -392,7 +400,8 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                                                               .elementAt(1)
                                                               .indexOf('(')),
                                                       style: const TextStyle(
-                                                          color: AppColors.white54,
+                                                          color:
+                                                              AppColors.white54,
                                                           fontSize: 9)),
                                               ],
                                             ),
@@ -407,7 +416,8 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                     style: const TextStyle(
-                                                        color: AppColors.white60,
+                                                        color:
+                                                            AppColors.white60,
                                                         fontSize: 10)),
                                                 const SizedBox(height: 4),
                                                 Row(
@@ -432,7 +442,8 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                                                     const SizedBox(width: 4),
                                                     const Icon(
                                                         Icons.pie_chart_outline,
-                                                        color: AppColors.white60,
+                                                        color:
+                                                            AppColors.white60,
                                                         size: 14),
                                                   ],
                                                 ),
@@ -454,9 +465,8 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                                     Expanded(
                                       child: Row(
                                         children: [
-                                          const Icon(Icons.tune,
-                                              color: AppColors.primaryDark,
-                                              size: 18),
+                                          Icon(Icons.tune,
+                                              color: colors.primary, size: 18),
                                           const SizedBox(width: 8),
                                           Expanded(
                                             child: Text(
@@ -464,11 +474,10 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                                                     .departmentWalletSectionTitle,
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis,
-                                                style: const TextStyle(
+                                                style: TextStyle(
                                                     fontSize: 14,
                                                     fontWeight: FontWeight.bold,
-                                                    color:
-                                                        AppColors.textPrimary)),
+                                                    color: colors.onSurface)),
                                           ),
                                         ],
                                       ),
@@ -478,13 +487,13 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 8, vertical: 4),
                                       decoration: BoxDecoration(
-                                          color: AppColors.surfaceLight,
+                                          color: colors.surfaceContainerHighest,
                                           borderRadius:
                                               BorderRadius.circular(6)),
                                       child: Text(l10n.departmentSyncStatus,
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                               fontSize: 9,
-                                              color: AppColors.textSecondary)),
+                                              color: colors.onSurfaceVariant)),
                                     ),
                                   ],
                                 ),
@@ -496,24 +505,27 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                                   child: Row(
                                     children: [
                                       _buildFilterChip(
+                                          context,
                                           '${l10n.departmentAllFilter} 142',
                                           true),
                                       const SizedBox(width: 8),
                                       _buildFilterChip(
+                                          context,
                                           l10n.departmentHighestBalanceFilter,
                                           false,
                                           icon: Icons.trending_up),
                                       const SizedBox(width: 8),
                                       _buildFilterChip(
+                                          context,
                                           l10n.departmentWithdrawalFilter,
                                           false,
                                           icon: Icons.hourglass_empty),
                                       const SizedBox(width: 8),
-                                      _buildFilterChip('', false,
+                                      _buildFilterChip(context, '', false,
                                           icon: Icons.lock_outline,
                                           isIconOnly: true),
                                       const SizedBox(width: 8),
-                                      _buildFilterChip('', false,
+                                      _buildFilterChip(context, '', false,
                                           icon: Icons.warning_amber_rounded,
                                           isIconOnly: true,
                                           iconColor: AppColors.danger),
@@ -533,7 +545,7 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                                 Container(
                                   padding: const EdgeInsets.all(16),
                                   decoration: BoxDecoration(
-                                    color:  AppColors.hexFFE2E8F0,
+                                    color: colors.surfaceContainerHighest,
                                     borderRadius: BorderRadius.circular(16),
                                   ),
                                   child: Column(
@@ -548,11 +560,10 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                                                 maxLines: 2,
                                                 textAlign: TextAlign.center,
                                                 overflow: TextOverflow.ellipsis,
-                                                style: const TextStyle(
+                                                style: TextStyle(
                                                     fontSize: 13,
                                                     fontWeight: FontWeight.bold,
-                                                    color:
-                                                        AppColors.primaryDark)),
+                                                    color: colors.primary)),
                                           ),
                                           const SizedBox(width: 8),
                                           Icon(Icons.verified_user_outlined,
@@ -565,7 +576,7 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                                         l10n.departmentGovernanceNotice,
                                         style: TextStyle(
                                             fontSize: 10,
-                                            color: AppColors.grey700,
+                                            color: colors.onSurfaceVariant,
                                             height: 1.5),
                                         textAlign: TextAlign.center,
                                       ),
@@ -574,13 +585,14 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                                         alignment: WrapAlignment.spaceBetween,
                                         runSpacing: 4,
                                         children: [
-                                          const Text('ISO-20022 COMPLIANT',
+                                          Text('ISO-20022 COMPLIANT',
                                               style: TextStyle(
                                                   fontSize: 9,
                                                   fontWeight: FontWeight.bold,
                                                   color:
-                                                      AppColors.textSecondary),
-                                              textDirection: ui.TextDirection.ltr),
+                                                      colors.onSurfaceVariant),
+                                              textDirection:
+                                                  ui.TextDirection.ltr),
                                           FittedBox(
                                             fit: BoxFit.scaleDown,
                                             child: Row(
@@ -589,14 +601,14 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                                                 Text(
                                                     l10n
                                                         .departmentLastReconciliation,
-                                                    style: const TextStyle(
+                                                    style: TextStyle(
                                                         fontSize: 9,
-                                                        color: AppColors.textSecondary)),
+                                                        color: colors
+                                                            .onSurfaceVariant)),
                                                 const SizedBox(width: 4),
                                                 Icon(Icons.circle,
                                                     size: 6,
-                                                    color:
-                                                        AppColors.blue400),
+                                                    color: AppColors.blue400),
                                               ],
                                             ),
                                           ),
@@ -615,17 +627,17 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
     );
   }
 
-  Widget _buildFilterChip(String title, bool isSelected,
+  Widget _buildFilterChip(BuildContext context, String title, bool isSelected,
       {IconData? icon, bool isIconOnly = false, Color? iconColor}) {
+    final colors = Theme.of(context).colorScheme;
     return Container(
       padding:
           EdgeInsets.symmetric(horizontal: isIconOnly ? 10 : 16, vertical: 8),
       decoration: BoxDecoration(
-        color: isSelected ? AppColors.primaryExtraDark : AppColors.white,
+        color: isSelected ? colors.primary : colors.surface,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-            color:
-                isSelected ? AppColors.primaryExtraDark : AppColors.cardBorder),
+            color: isSelected ? colors.primary : colors.outlineVariant),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -634,14 +646,14 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
             Icon(icon,
                 size: 14,
                 color: iconColor ??
-                    (isSelected ? AppColors.white : AppColors.blue700)),
+                    (isSelected ? colors.onPrimary : colors.primary)),
             if (!isIconOnly) const SizedBox(width: 6),
           ],
           if (!isIconOnly)
             Text(
               title,
               style: TextStyle(
-                color: isSelected ? AppColors.white : AppColors.textSecondary,
+                color: isSelected ? colors.onPrimary : colors.onSurfaceVariant,
                 fontSize: 11,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
@@ -654,15 +666,16 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
   Widget _buildListItemCard(BuildContext context, Map<String, dynamic> item) {
     final l10n = AppLocalizations.of(context)!;
     final isArabic = l10n.localeName.startsWith('ar');
+    final colors = Theme.of(context).colorScheme;
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: colors.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.cardBorder),
+        border: Border.all(color: colors.outlineVariant),
         boxShadow: [
           BoxShadow(
-              color: AppColors.black.withValues(alpha: 0.02),
+              color: colors.shadow.withValues(alpha: 0.08),
               blurRadius: 8,
               offset: const Offset(0, 4)),
         ],
@@ -679,12 +692,12 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: AppColors.primaryExtraDark,
+                    color: colors.primary,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Center(
+                  child: Center(
                     child: Icon(Icons.storefront,
-                        color: AppColors.white, size: 20), // Generic icon
+                        color: colors.onPrimary, size: 20), // Generic icon
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -695,21 +708,20 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                       Text(item['title'],
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
-                              color: AppColors.textPrimary)),
+                              color: colors.onSurface)),
                       const SizedBox(height: 4),
                       Row(
                         children: [
-                          const Icon(Icons.security,
-                              size: 12, color: AppColors.blue),
+                          Icon(Icons.security, size: 12, color: colors.primary),
                           const SizedBox(width: 4),
                           Expanded(
                               child: Text(item['id'],
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       fontSize: 10,
-                                      color: AppColors.textSecondary),
+                                      color: colors.onSurfaceVariant),
                                   textDirection: isArabic
                                       ? ui.TextDirection.rtl
                                       : ui.TextDirection.ltr,
@@ -724,7 +736,7 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: AppColors.blue50,
+                      color: colors.primaryContainer,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(item['status'],
@@ -733,7 +745,7 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                         textAlign: TextAlign.end,
                         style: TextStyle(
                             fontSize: 9,
-                            color: AppColors.blue700,
+                            color: colors.onPrimaryContainer,
                             fontWeight: FontWeight.bold)),
                   ),
                 ),
@@ -745,9 +757,9 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
-              color:  AppColors.textPrimary,
+              color: colors.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColors.grey200),
+              border: Border.all(color: colors.outlineVariant),
             ),
             child: Row(
               children: [
@@ -760,8 +772,8 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                         Text(l10n.departmentAvailableBalance,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                                fontSize: 10, color: AppColors.textSecondary)),
+                            style: TextStyle(
+                                fontSize: 10, color: colors.onSurfaceVariant)),
                         const SizedBox(height: 4),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.end,
@@ -770,17 +782,17 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                                 child: Text(
                                     CurrencyFormatter.format(item['available'],
                                         includeCurrency: false),
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
-                                        color: AppColors.primaryExtraDark),
+                                        color: colors.primary),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis)),
                             const SizedBox(width: 2),
                             Text(AppLocalizations.of(context)!.currencyEgy,
-                                style: const TextStyle(
+                                style: TextStyle(
                                     fontSize: 10,
-                                    color: AppColors.primaryDark,
+                                    color: colors.primary,
                                     fontWeight: FontWeight.bold)),
                           ],
                         ),
@@ -788,7 +800,7 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                     ),
                   ),
                 ),
-                Container(width: 1, height: 40, color: AppColors.grey200),
+                Container(width: 1, height: 40, color: colors.outlineVariant),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(12),
@@ -798,8 +810,8 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                         Text(l10n.departmentUnderReview,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                                fontSize: 10, color: AppColors.textSecondary)),
+                            style: TextStyle(
+                                fontSize: 10, color: colors.onSurfaceVariant)),
                         const SizedBox(height: 4),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.end,
@@ -808,10 +820,10 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                                 child: Text(
                                     CurrencyFormatter.format(item['pending'],
                                         includeCurrency: false),
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
-                                        color: AppColors.primaryDark),
+                                        color: colors.primary),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis)),
                             const SizedBox(width: 2),
@@ -820,9 +832,9 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                                   '${AppLocalizations.of(context)!.currencyEgy} ${isArabic ? l10n.departmentPendingSuffix : 'pending'}',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       fontSize: 9,
-                                      color: AppColors.textSecondary)),
+                                      color: colors.onSurfaceVariant)),
                             ),
                           ],
                         ),
@@ -844,16 +856,16 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                 Expanded(
                   child: Row(
                     children: [
-                      const Icon(Icons.shopping_bag_outlined,
-                          size: 14, color: AppColors.textSecondary),
+                      Icon(Icons.shopping_bag_outlined,
+                          size: 14, color: colors.onSurfaceVariant),
                       const SizedBox(width: 6),
                       Expanded(
                         child: Text(
                           '${l10n.departmentMonthlySales}: ${item['operations']} ${l10n.departmentOperationsUnit}',
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                              fontSize: 10, color: AppColors.textPrimary),
+                          style:
+                              TextStyle(fontSize: 10, color: colors.onSurface),
                         ),
                       ),
                     ],
@@ -930,8 +942,8 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
         child: Container(
           height: MediaQuery.of(context).size.height * 0.72,
           padding: const EdgeInsets.fromLTRB(18, 12, 18, 20),
-          decoration: const BoxDecoration(
-            color: AppColors.white,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
           ),
           child: Column(
@@ -942,7 +954,7 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                   width: 38,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: AppColors.grey300,
+                    color: Theme.of(context).colorScheme.outlineVariant,
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
@@ -950,30 +962,32 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
               const SizedBox(height: 16),
               Text(
                 isArabic ? 'سجل الحركات المالية' : 'Financial activity',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 17,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.primaryDark,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
               const SizedBox(height: 4),
               Text(
                 isArabic ? item.title : (item.titleEn ?? item.title),
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 12,
-                  color: AppColors.textSecondary,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
               ),
               const SizedBox(height: 14),
               Row(
                 children: [
                   _balanceSummary(
+                    context: context,
                     label: l10n.departmentAvailableBalance,
                     amount: item.availableBalance,
-                    color: AppColors.primaryDark,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                   const SizedBox(width: 10),
                   _balanceSummary(
+                    context: context,
                     label: l10n.departmentUnderReview,
                     amount: item.pendingBalance,
                     color: AppColors.warning,
@@ -1017,7 +1031,8 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
                                 isCredit
                                     ? Icons.arrow_downward
                                     : Icons.arrow_upward,
-                                color: isCredit ? AppColors.green : AppColors.red,
+                                color:
+                                    isCredit ? AppColors.green : AppColors.red,
                                 size: 17,
                               ),
                             ),
@@ -1060,6 +1075,7 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
   }
 
   Widget _balanceSummary({
+    required BuildContext context,
     required String label,
     required double amount,
     required Color color,
@@ -1068,7 +1084,7 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
         child: Container(
           padding: const EdgeInsets.all(11),
           decoration: BoxDecoration(
-            color: AppColors.surfaceLight,
+            color: Theme.of(context).colorScheme.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Column(
@@ -1077,8 +1093,9 @@ class _DepartmentWalletScreenState extends State<DepartmentWalletScreen> {
               Text(label,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                      fontSize: 10, color: AppColors.textSecondary)),
+                  style: TextStyle(
+                      fontSize: 10,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant)),
               const SizedBox(height: 4),
               Text(
                 CurrencyFormatter.format(amount),

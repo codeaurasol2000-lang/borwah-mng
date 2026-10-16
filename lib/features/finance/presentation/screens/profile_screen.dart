@@ -77,6 +77,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final colors = Theme.of(context).colorScheme;
 
     return Directionality(
       textDirection: l10n.localeName.startsWith('ar')
@@ -99,7 +100,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: BoxDecoration(
-                  color: AppColors.surfaceLight,
+                  color: colors.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
@@ -110,9 +111,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
-                          color: AppColors.white,
+                          color: colors.surface,
                           borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: AppColors.grey300),
+                          border: Border.all(color: colors.outlineVariant),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -124,9 +125,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               child: Text(l10n.encryptedBit256,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       fontSize: 10,
-                                      color: AppColors.textSecondary)),
+                                      color: colors.onSurfaceVariant)),
                             ),
                           ],
                         ),
@@ -143,10 +144,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.end,
-                              style: const TextStyle(
+                              style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
-                                  color: AppColors.textPrimary),
+                                  color: colors.onSurface),
                             ),
                           ),
                           const SizedBox(width: 8),
@@ -170,9 +171,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               // 1. Profile Card
               Container(
                 decoration: BoxDecoration(
-                  color: AppColors.white,
+                  color: colors.surface,
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppColors.cardBorder),
+                  border: Border.all(color: colors.outlineVariant),
                 ),
                 child: Column(
                   children: [
@@ -202,12 +203,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           textDirection: TextDirection.ltr),
                                     ),
                                     const SizedBox(width: 8),
-                                    Flexible(
+                                        Flexible(
                                         child: Text(l10n.cfoName,
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold,
-                                                color: AppColors.textPrimary),
+                                                color: colors.onSurface),
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis)),
                                   ],
@@ -218,9 +219,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         fontSize: 11, color: AppColors.info)),
                                 const SizedBox(height: 4),
                                 Text(l10n.cfoAuditingTitle,
-                                    style: const TextStyle(
+                                style: TextStyle(
                                         fontSize: 10,
-                                        color: AppColors.textSecondary),
+                                    color: colors.onSurfaceVariant),
                                     textDirection: TextDirection.ltr),
                               ],
                             ),
@@ -235,7 +236,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   width: 60,
                                   height: 60,
                                   decoration: BoxDecoration(
-                                    color: AppColors.surfaceLight,
+                                    color: colors.surfaceContainerHigh,
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Stack(
@@ -244,18 +245,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       ClipRRect(
                                         borderRadius: BorderRadius.circular(12),
                                         child: _profileImagePath == null
-                                            ? const Icon(Icons.account_circle,
-                                                size: 60, color: AppColors.grey)
+                                            ? Icon(Icons.account_circle,
+                                                size: 60, color: colors.onSurfaceVariant)
                                             : Image.file(
                                                 File(_profileImagePath!),
                                                 width: 60,
                                                 height: 60,
                                                 fit: BoxFit.cover,
                                                 errorBuilder: (_, __, ___) =>
-                                                    const Icon(
+                                                    Icon(
                                                   Icons.account_circle,
                                                   size: 60,
-                                                  color: AppColors.grey,
+                                                  color: colors.onSurfaceVariant,
                                                 ),
                                               ),
                                       ),
@@ -297,9 +298,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       margin: const EdgeInsets.symmetric(horizontal: 16),
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color:  AppColors.textPrimary,
+                        color: colors.surfaceContainerHigh,
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.grey200),
+                        border: Border.all(color: colors.outlineVariant),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
@@ -310,21 +311,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             children: [
                               Expanded(
                                   child: Text(l10n.sovereignApprovalPowers,
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                           fontSize: 11,
                                           fontWeight: FontWeight.bold,
-                                          color: AppColors.textPrimary),
+                                          color: colors.onSurface),
                                       textAlign: TextAlign.end)),
                               const SizedBox(width: 8),
                               Icon(Icons.account_balance,
-                                  size: 16, color: AppColors.blue700),
+                                  size: 16, color: colors.secondary),
                             ],
                           ),
                           const SizedBox(height: 6),
                           Text(l10n.certifiedAuditorAuthority,
-                              style: const TextStyle(
+                              style: TextStyle(
                                   fontSize: 10,
-                                  color: AppColors.textSecondary,
+                                  color: colors.onSurfaceVariant,
                                   height: 1.4),
                               textAlign: TextAlign.end),
                         ],
@@ -351,7 +352,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Divider(height: 1, color: AppColors.cardBorder),
+                    Divider(height: 1, color: colors.outlineVariant),
                     Padding(
                       padding: const EdgeInsets.all(12),
                       child: Row(
@@ -370,7 +371,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                           fontSize: 10,
-                                          color: AppColors.blue700,
+                                          color: colors.secondary,
                                           fontWeight: FontWeight.bold)),
                                 ),
                               ],
@@ -381,9 +382,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: Text(l10n.authorizationEffectiveFrom,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
+                                style: TextStyle(
                                     fontSize: 10,
-                                    color: AppColors.textSecondary)),
+                                    color: colors.onSurfaceVariant)),
                           ),
                         ],
                       ),
@@ -1257,15 +1258,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
       required IconData icon,
       String? badgeText,
       required Widget content}) {
+    final colors = Theme.of(context).colorScheme;
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: colors.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.cardBorder),
+        border: Border.all(color: colors.outlineVariant),
         boxShadow: [
           BoxShadow(
-              color: AppColors.black.withValues(alpha: 0.02),
+              color: colors.shadow.withValues(alpha: 0.08),
               blurRadius: 4,
               offset: const Offset(0, 2)),
         ],
@@ -1280,12 +1282,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                      color: AppColors.blue50,
+                      color: colors.secondaryContainer,
                       borderRadius: BorderRadius.circular(12)),
                   child: Text(badgeText,
                       style: TextStyle(
                           fontSize: 9,
-                          color: AppColors.blue700,
+                          color: colors.onSecondaryContainer,
                           fontWeight: FontWeight.bold)),
                 ),
               const SizedBox(width: 8),
@@ -1294,10 +1296,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(title,
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
-                            color: AppColors.textPrimary),
+                            color: colors.onSurface),
                         textAlign: TextAlign.end),
                     const SizedBox(height: 4),
                   ],
@@ -1307,9 +1309,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                    color: AppColors.surfaceLight,
+                    color: colors.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(10)),
-                child: Icon(icon, size: 20, color: AppColors.primaryDark),
+                child: Icon(icon, size: 20, color: colors.primary),
               ),
             ],
           ),
@@ -1319,9 +1321,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               Expanded(
                 child: Text(subtitle,
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontSize: 10,
-                        color: AppColors.textSecondary,
+                        color: colors.onSurfaceVariant,
                         height: 1.4),
                     textAlign: TextAlign.end),
               ),
@@ -1347,6 +1349,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     bool isLast = false,
   }) {
     final isArabic = AppLocalizations.of(context)!.localeName == 'ar';
+    final colors = Theme.of(context).colorScheme;
     return IntrinsicHeight(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -1365,8 +1368,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             overflow: TextOverflow.ellipsis,
                             textAlign:
                                 isArabic ? TextAlign.left : TextAlign.right,
-                            style: const TextStyle(
-                                fontSize: 9, color: AppColors.textSecondary)),
+                            style: TextStyle(
+                                fontSize: 9, color: colors.onSurfaceVariant)),
                       ),
                       const SizedBox(width: 6),
                       Expanded(
@@ -1376,18 +1379,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             overflow: TextOverflow.ellipsis,
                             textAlign:
                                 isArabic ? TextAlign.right : TextAlign.left,
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,
-                                color: AppColors.textPrimary)),
+                                color: colors.onSurface)),
                       ),
                     ],
                   ),
                   const SizedBox(height: 4),
                   Text(description,
-                      style: const TextStyle(
+                  style: TextStyle(
                           fontSize: 10,
-                          color: AppColors.textSecondary,
+                      color: colors.onSurfaceVariant,
                           height: 1.4),
                       textAlign: TextAlign.end),
                   if (bottomWidget != null) ...[
@@ -1411,7 +1414,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Expanded(
                   child: Container(
                     width: 1,
-                    color: AppColors.cardBorder,
+                    color: colors.outlineVariant,
                   ),
                 ),
             ],
@@ -1446,6 +1449,7 @@ class _ObscureContactBoxState extends State<_ObscureContactBox> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     String displayValue = widget.value;
     if (_isObscured && widget.value.contains('@')) {
       final parts = widget.value.split('@');
@@ -1466,7 +1470,7 @@ class _ObscureContactBoxState extends State<_ObscureContactBox> {
       child: Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: AppColors.surfaceLight,
+          color: colors.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(10),
         ),
         child: Row(
@@ -1477,18 +1481,18 @@ class _ObscureContactBoxState extends State<_ObscureContactBox> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(widget.title,
-                      style: const TextStyle(
-                          fontSize: 9, color: AppColors.textSecondary)),
+                      style: TextStyle(
+                          fontSize: 9, color: colors.onSurfaceVariant)),
                   const SizedBox(height: 2),
                   FittedBox(
                     fit: BoxFit.scaleDown,
                     alignment: AlignmentDirectional.centerEnd,
                     child: Text(
                       displayValue,
-                      style: const TextStyle(
+                      style: TextStyle(
                           fontSize: 10,
                           fontWeight: FontWeight.bold,
-                          color: AppColors.textPrimary),
+                          color: colors.onSurface),
                       textDirection:
                           AppLocalizations.of(context)!.localeName == 'ar'
                               ? TextDirection.rtl
@@ -1499,7 +1503,7 @@ class _ObscureContactBoxState extends State<_ObscureContactBox> {
               ),
             ),
             const SizedBox(width: 8),
-            Icon(widget.icon, size: 18, color: AppColors.textPrimary),
+            Icon(widget.icon, size: 18, color: colors.onSurface),
           ],
         ),
       ),

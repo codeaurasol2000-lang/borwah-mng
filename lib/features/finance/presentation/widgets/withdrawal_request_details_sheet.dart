@@ -30,12 +30,13 @@ class _WithdrawalRequestDetailsSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final status = _statusLabel(l10n, request.status);
+    final colors = Theme.of(context).colorScheme;
 
     return Container(
       constraints:
           BoxConstraints(maxHeight: MediaQuery.sizeOf(context).height * .88),
-      decoration: const BoxDecoration(
-        color: AppColors.textPrimary,
+      decoration: BoxDecoration(
+        color: colors.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
@@ -48,8 +49,8 @@ class _WithdrawalRequestDetailsSheet extends StatelessWidget {
                 Expanded(
                   child: Text(
                     l10n.withdrawalDetailsTitle,
-                    style: const TextStyle(
-                      color: AppColors.primaryDark,
+                    style: TextStyle(
+                      color: colors.onSurface,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
@@ -72,9 +73,9 @@ class _WithdrawalRequestDetailsSheet extends StatelessWidget {
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: AppColors.white,
+                      color: colors.surfaceContainerHigh,
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: AppColors.cardBorder),
+                      border: Border.all(color: colors.outlineVariant),
                     ),
                     child: Column(
                       children: [
@@ -88,8 +89,8 @@ class _WithdrawalRequestDetailsSheet extends StatelessWidget {
                         const SizedBox(height: 8),
                         Text(
                           CurrencyFormatter.format(request.netAmount),
-                          style: const TextStyle(
-                            color: AppColors.primaryDark,
+                        style: TextStyle(
+                            color: colors.onSurface,
                             fontSize: 24,
                             fontWeight: FontWeight.w900,
                           ),
@@ -265,9 +266,11 @@ class _DetailsCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: Theme.of(context).colorScheme.surfaceContainerLow,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.cardBorder),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.outlineVariant,
+        ),
       ),
       child: Column(children: children),
     );
@@ -295,7 +298,9 @@ class _DetailRow extends StatelessWidget {
           Expanded(
             child: Text(
               label,
-              style: const TextStyle(color: AppColors.textSecondary),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
           ),
           const SizedBox(width: 12),
@@ -307,8 +312,8 @@ class _DetailRow extends StatelessWidget {
               child: Text(
                 value,
                 textAlign: TextAlign.end,
-                style: const TextStyle(
-                  color: AppColors.primaryDark,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
                   fontWeight: FontWeight.w600,
                 ),
               ),

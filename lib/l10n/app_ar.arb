@@ -2136,6 +2136,7 @@
   "merchantWalletTransferAddress": "عنوان الدفع اللحظي (IPA) أو رقم الهاتف المرتبط",
   "merchantWalletIbanValue": "SA0380000000608010167519",
   "merchantWalletPhoneValue": "01012345678",
+  "merchantRecordAction": "تسجيل إجراء",
   "merchantWalletInstantAddress": "supervisor.audit@instapay",
   "merchantWalletAccountName": "اسم الحساب المسجل: م. عبد الرحمن الشهري (موثق)",
   "merchantWalletProcessingDetails": "سرعة المعالجة: فوري ومباشر على مدار الساعة\nرسوم المعالجة والتحويل: 0.5 ر.س (محفظة بالكامل للمشرف)",

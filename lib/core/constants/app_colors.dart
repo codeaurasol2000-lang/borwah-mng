@@ -527,4 +527,5 @@ class AppColors {
   static const Color black54 = Color(0x8A000000);
   static const Color black45 = Color(0x73000000);
   static const Color black38 = Color(0x61000000);
+  static const Color hexFFBBE8D1 = Color(0XFFBBE8D1);
 }

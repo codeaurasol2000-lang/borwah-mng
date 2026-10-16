@@ -6150,6 +6150,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get merchantWalletPhoneValue => '01012345678';
 
   @override
+  String get merchantRecordAction => 'سجل التاجر';
+
+  @override
   String get merchantWalletInstantAddress => 'supervisor.audit@instapay';
 
   @override
@@ -6241,9 +6244,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get merchantInfoTitle => 'معلومات التاجر';
-
-  @override
-  String get merchantRecordAction => 'سجل التاجر';
 
   @override
   String get merchantInfoProfile => 'ملف التاجر';

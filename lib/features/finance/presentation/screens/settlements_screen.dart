@@ -116,7 +116,9 @@ class _SettlementsScreenState extends State<SettlementsScreen>
       age: DateFormat.yMd(l10n.localeName)
           .add_jm()
           .format(DateTime.tryParse(request.dateText) ?? DateTime.now()),
-      color: isRefund ?  AppColors.textPrimary :  AppColors.hexFFE8F0FF,
+      color: isRefund
+          ? AppColors.dangerLight
+          : Theme.of(context).colorScheme.secondaryContainer,
       badgeColor: isRefund ? AppColors.danger : AppColors.info,
       bankName: request.bankName,
       iban: request.iban,
@@ -153,6 +155,7 @@ class _SettlementsScreenState extends State<SettlementsScreen>
     super.build(context);
     final l10n = AppLocalizations.of(context)!;
     final isArabic = l10n.localeName.startsWith('ar');
+    final colors = Theme.of(context).colorScheme;
 
     return Directionality(
       textDirection: isArabic ? ui.TextDirection.rtl : ui.TextDirection.ltr,
@@ -162,7 +165,8 @@ class _SettlementsScreenState extends State<SettlementsScreen>
         child: Scaffold(backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           appBar: widget.showBottomNavigation
               ? AppBar(
-                  backgroundColor: AppColors.white,
+                  backgroundColor: colors.surface,
+                  foregroundColor: colors.onSurface,
                   elevation: 0.5,
                   scrolledUnderElevation: 0,
                   leading: widget.showBottomNavigation
@@ -186,8 +190,8 @@ class _SettlementsScreenState extends State<SettlementsScreen>
                       ),
                       Text(
                         l10n.settlementsSubtitle,
-                        style: const TextStyle(
-                            fontSize: 12, color: AppColors.textSecondary),
+                        style: TextStyle(
+                            fontSize: 12, color: colors.onSurfaceVariant),
                       ),
                     ],
                   ),
@@ -222,7 +226,7 @@ class _SettlementsScreenState extends State<SettlementsScreen>
                       ? 'ابحث برقم التسوية أو المستفيد أو المرجع'
                       : 'Search settlement, beneficiary, or reference',
                   filled: true,
-                  fillColor: AppColors.white,
+                  fillColor: colors.surface,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -234,7 +238,7 @@ class _SettlementsScreenState extends State<SettlementsScreen>
               _buildRequestsHeader(),
               const SizedBox(height: 8),
               if (_filteredRequests.isEmpty)
-                _buildEmptyRequestsMessage(isArabic)
+                _buildEmptyRequestsMessage(context, isArabic)
               else
                 ..._filteredRequests.map(_buildRequestCard),
               const SizedBox(height: 8),
@@ -365,13 +369,14 @@ class _SettlementsScreenState extends State<SettlementsScreen>
     required Color color,
   }) {
     final l10n = AppLocalizations.of(context)!;
+    final colors = Theme.of(context).colorScheme;
     return Container(
       constraints: const BoxConstraints(minHeight: 92),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: colors.surface,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: AppColors.cardBorder),
+        border: Border.all(color: colors.outlineVariant),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -386,8 +391,8 @@ class _SettlementsScreenState extends State<SettlementsScreen>
                   textAlign: TextAlign.end,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                      fontSize: 11, color: AppColors.textSecondary),
+                  style: TextStyle(
+                      fontSize: 11, color: colors.onSurfaceVariant),
                 ),
               ),
             ],
@@ -398,15 +403,15 @@ class _SettlementsScreenState extends State<SettlementsScreen>
             children: [
               Text(
                 amount,
-                style: const TextStyle(
+                style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.primaryDark),
+                    color: colors.onSurface),
               ),
               const SizedBox(width: 4),
               Text(l10n.currencyEgy,
-                  style: const TextStyle(
-                      fontSize: 11, color: AppColors.textSecondary)),
+                  style: TextStyle(
+                      fontSize: 11, color: colors.onSurfaceVariant)),
             ],
           ),
           const SizedBox(height: 4),
@@ -479,6 +484,7 @@ class _SettlementsScreenState extends State<SettlementsScreen>
 
   Widget _buildFilters() {
     final l10n = AppLocalizations.of(context)!;
+    final colors = Theme.of(context).colorScheme;
     final labels = {
       'الكل': l10n.filterAll,
       'قيد المراجعة': l10n.filterInReview,
@@ -500,12 +506,12 @@ class _SettlementsScreenState extends State<SettlementsScreen>
           selected: isSelected,
           onSelected: (_) => setState(() => _selectedFilter = filter),
           labelStyle: TextStyle(
-            color: isSelected ? AppColors.white : AppColors.textSecondary,
+            color: isSelected ? colors.onPrimary : colors.onSurfaceVariant,
             fontSize: 11,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
           ),
-          backgroundColor: AppColors.surfaceLight,
-          selectedColor: AppColors.primaryDark,
+          backgroundColor: colors.surfaceContainerHighest,
+          selectedColor: colors.primary,
           side: BorderSide.none,
           visualDensity: VisualDensity.compact,
           showCheckmark: false,
@@ -571,6 +577,7 @@ class _SettlementsScreenState extends State<SettlementsScreen>
       );
 
   Widget _buildRequestCard(_SettlementRequest request) {
+    final colors = Theme.of(context).colorScheme;
     final l10n = AppLocalizations.of(context)!;
     final isArabic = l10n.localeName.startsWith('ar');
     final labels = _localizedRequestLabels(request, l10n);
@@ -616,9 +623,9 @@ class _SettlementsScreenState extends State<SettlementsScreen>
           margin: const EdgeInsets.only(bottom: 8),
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: AppColors.white,
+            color: colors.surface,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColors.cardBorder),
+            border: Border.all(color: colors.outlineVariant),
           ),
           child: Column(
             children: [
@@ -626,16 +633,16 @@ class _SettlementsScreenState extends State<SettlementsScreen>
                 children: [
                   _buildTag(labels.badge, request.badgeColor),
                   const SizedBox(width: 5),
-                  _buildTag(labels.status, AppColors.surfaceLight,
+                  _buildTag(labels.status, colors.surfaceContainerHighest,
                       textColor: AppColors.infoDark),
                   const Spacer(),
                   Text(
                     request.id,
                     textDirection: ui.TextDirection.ltr,
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.textSecondary),
+                        color: colors.onSurfaceVariant),
                   ),
                 ],
               ),
@@ -663,18 +670,18 @@ class _SettlementsScreenState extends State<SettlementsScreen>
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.end,
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.bold,
-                              color: AppColors.primaryDark),
+                              color: colors.onSurface),
                         ),
                         Text(
                           labels.description,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.end,
-                          style: const TextStyle(
-                              fontSize: 10, color: AppColors.textSecondary),
+                          style: TextStyle(
+                              fontSize: 10, color: colors.onSurfaceVariant),
                         ),
                       ],
                     ),
@@ -687,16 +694,16 @@ class _SettlementsScreenState extends State<SettlementsScreen>
                         children: [
                           Text(
                             request.amount,
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,
-                                color: AppColors.primaryDark),
+                                color: colors.onSurface),
                           ),
                           const SizedBox(width: 3),
                           Text(l10n.currencyEgy,
-                              style: const TextStyle(
+                              style: TextStyle(
                                   fontSize: 10,
-                                  color: AppColors.textSecondary)),
+                                  color: colors.onSurfaceVariant)),
                         ],
                       ),
                       Text(labels.age,
@@ -706,27 +713,27 @@ class _SettlementsScreenState extends State<SettlementsScreen>
                   ),
                 ],
               ),
-              const Padding(
+              Padding(
                 padding: EdgeInsets.symmetric(vertical: 7),
-                child: Divider(height: 1, color: AppColors.surfaceLight),
+                child: Divider(height: 1, color: colors.outlineVariant),
               ),
               Row(
                 children: [
                   _buildTag('${labels.referenceTitle} ${request.reference}',
-                      AppColors.surfaceLight,
+                      colors.surfaceContainerHighest,
                       textColor: AppColors.infoDark),
                   const Spacer(),
                   Icon(
                     isArabic ? Icons.arrow_back : Icons.arrow_forward,
                     size: 14,
-                    color: AppColors.primaryDark,
+                    color: colors.primary,
                   ),
                   const SizedBox(width: 3),
                   Text(l10n.viewLabel,
-                      style: const TextStyle(
+                      style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.bold,
-                          color: AppColors.primaryDark)),
+                          color: colors.primary)),
                 ],
               ),
             ],
@@ -737,7 +744,8 @@ class _SettlementsScreenState extends State<SettlementsScreen>
   }
 
   Widget _buildTag(String label, Color color,
-      {Color textColor = AppColors.primaryDark}) {
+      {Color? textColor}) {
+    final foreground = textColor ?? Theme.of(context).colorScheme.onSurface;
     return Container(
       constraints: const BoxConstraints(maxWidth: 150),
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
@@ -748,26 +756,28 @@ class _SettlementsScreenState extends State<SettlementsScreen>
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         style: TextStyle(
-            fontSize: 10, color: textColor, fontWeight: FontWeight.w600),
+            fontSize: 10, color: foreground, fontWeight: FontWeight.w600),
       ),
     );
   }
 
-  Widget _buildEmptyRequestsMessage(bool isArabic) => Container(
+  Widget _buildEmptyRequestsMessage(BuildContext context, bool isArabic) => Container(
         width: double.infinity,
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.cardBorder),
+          border: Border.all(
+            color: Theme.of(context).colorScheme.outlineVariant,
+          ),
         ),
         child: Text(
           isArabic
               ? 'لا توجد طلبات تسوية بهذه الحالة.'
               : 'No settlements in this status.',
           textAlign: TextAlign.center,
-          style: const TextStyle(
-            color: AppColors.textSecondary,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
             fontSize: 12,
           ),
         ),
