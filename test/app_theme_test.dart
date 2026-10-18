@@ -22,25 +22,25 @@ void main() {
     expect(theme.colorScheme.surface, AppColors.surface);
   });
 
-  test('theme mode defaults to light and persists user selection', () async {
+  test('theme mode defaults to system and persists user selection', () async {
     final controller = AppThemeController.instance;
     final preferences = await SharedPreferences.getInstance();
 
-    expect(controller.mode, ThemeMode.light);
+    expect(controller.themeMode, ThemeMode.system);
 
-    await controller.setMode(ThemeMode.dark);
-    expect(controller.mode, ThemeMode.dark);
+    await controller.setThemeMode(ThemeMode.dark);
+    expect(controller.themeMode, ThemeMode.dark);
     expect(preferences.getString('app_theme_mode'), 'dark');
 
-    await controller.setMode(ThemeMode.system);
-    expect(controller.mode, ThemeMode.system);
+    await controller.setThemeMode(ThemeMode.system);
+    expect(controller.themeMode, ThemeMode.system);
     expect(preferences.getString('app_theme_mode'), 'system');
   });
 
   testWidgets('appearance menu switches the app theme immediately',
       (tester) async {
     final controller = AppThemeController.instance;
-    await controller.setMode(ThemeMode.light);
+    await controller.setThemeMode(ThemeMode.light);
 
     await tester.pumpWidget(
       AnimatedBuilder(
@@ -48,7 +48,7 @@ void main() {
         builder: (context, _) => MaterialApp(
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
-          themeMode: controller.mode,
+          themeMode: controller.themeMode,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(

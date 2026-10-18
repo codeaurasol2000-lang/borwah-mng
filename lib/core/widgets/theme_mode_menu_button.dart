@@ -20,28 +20,31 @@ class ThemeModeMenuButton extends StatelessWidget {
         color: palette.accent,
       ),
       onSelected: (mode) {
-        AppThemeController.instance.setMode(mode);
+        AppThemeController.instance.setThemeMode(mode);
       },
       itemBuilder: (context) => [
         _buildMenuItem(
           mode: ThemeMode.light,
           label: l10n.themeModeLight,
           icon: Icons.light_mode_outlined,
-          selected: AppThemeController.instance.mode == ThemeMode.light,
+          selected:
+              AppThemeController.instance.themeMode == ThemeMode.light,
           accent: palette.accent,
         ),
         _buildMenuItem(
           mode: ThemeMode.dark,
           label: l10n.themeModeDark,
           icon: Icons.dark_mode_outlined,
-          selected: AppThemeController.instance.mode == ThemeMode.dark,
+          selected:
+              AppThemeController.instance.themeMode == ThemeMode.dark,
           accent: palette.accent,
         ),
         _buildMenuItem(
           mode: ThemeMode.system,
           label: l10n.themeModeSystem,
           icon: Icons.brightness_auto_outlined,
-          selected: AppThemeController.instance.mode == ThemeMode.system,
+          selected:
+              AppThemeController.instance.themeMode == ThemeMode.system,
           accent: palette.accent,
         ),
       ],
