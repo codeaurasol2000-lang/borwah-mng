@@ -2,19 +2,23 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../data/merchant_conversation_local_store.dart';
 import '../../domain/entities/merchant_entity.dart';
 
 class MerchantConversationScreen extends StatefulWidget {
   final MerchantEntity? merchant;
+  final String? conversationId;
   final String? conversationTitle;
   final List<String> conversationParticipants;
 
   const MerchantConversationScreen({
     super.key,
     this.merchant,
+    this.conversationId,
     this.conversationTitle,
     this.conversationParticipants = const [],
-  }) : assert(merchant != null || conversationTitle != null);
+  }) : assert(merchant != null || conversationTitle != null),
+       assert(merchant != null || conversationId != null || conversationTitle != null);
 
   @override
   State<MerchantConversationScreen> createState() =>
@@ -24,7 +28,43 @@ class MerchantConversationScreen extends StatefulWidget {
 class _MerchantConversationScreenState
     extends State<MerchantConversationScreen> {
   final TextEditingController _messageController = TextEditingController();
-  final List<String> _messages = [];
+  final MerchantConversationLocalStore _store =
+      MerchantConversationLocalStore();
+  List<MerchantConversationMessage> _messages = const [];
+  bool _loading = true;
+  bool _sending = false;
+
+  String? get _merchantId => widget.merchant?.id ?? widget.conversationId;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadMessages();
+  }
+
+  Future<void> _loadMessages() async {
+    final merchantId = _merchantId;
+    if (merchantId == null) {
+      setState(() => _loading = false);
+      return;
+    }
+    try {
+      await _store.markMerchantMessagesRead(merchantId);
+      final messages = await _store.getMessages(merchantId);
+      if (!mounted) return;
+      setState(() {
+        _messages = messages;
+        _loading = false;
+      });
+    } on Object catch (error, stackTrace) {
+      FlutterError.reportError(FlutterErrorDetails(
+        exception: error,
+        stack: stackTrace,
+        library: 'merchant conversation',
+      ));
+      if (mounted) setState(() => _loading = false);
+    }
+  }
 
   @override
   void dispose() {
@@ -39,10 +79,9 @@ class _MerchantConversationScreenState
 
     return Directionality(
       textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF5F7F9),
+      child: Scaffold(backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.white,
           foregroundColor: AppColors.primaryDark,
           titleSpacing: 0,
           title: Row(
@@ -53,7 +92,7 @@ class _MerchantConversationScreenState
                   widget.merchant?.logoIcon ??
                       widget.merchant?.categoryIcon ??
                       Icons.support_agent_outlined,
-                  color: Colors.white,
+                  color: AppColors.white,
                   size: 20,
                 ),
               ),
@@ -89,7 +128,9 @@ class _MerchantConversationScreenState
         body: Column(
           children: [
             Expanded(
-              child: _messages.isEmpty
+              child: _loading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _messages.isEmpty
                   ? Center(
                       child: Padding(
                         padding: const EdgeInsets.all(24),
@@ -132,8 +173,8 @@ class _MerchantConversationScreenState
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: Text(
-                            _messages[index],
-                            style: const TextStyle(color: Colors.white),
+                          _messages[index].text,
+                            style: const TextStyle(color: AppColors.white),
                           ),
                         ),
                       ),
@@ -143,7 +184,7 @@ class _MerchantConversationScreenState
               top: false,
               child: Container(
                 padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
-                color: Colors.white,
+                color: AppColors.white,
                 child: Row(
                   children: [
                     Expanded(
@@ -156,7 +197,7 @@ class _MerchantConversationScreenState
                         decoration: InputDecoration(
                           hintText: l10n.merchantConversationInputHint,
                           filled: true,
-                          fillColor: const Color(0xFFF5F7F9),
+                          fillColor: AppColors.surfaceLight,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(22),
                             borderSide: BorderSide.none,
@@ -174,7 +215,7 @@ class _MerchantConversationScreenState
                       onPressed: _sendMessage,
                       style: IconButton.styleFrom(
                         backgroundColor: AppColors.primaryDark,
-                        foregroundColor: Colors.white,
+                        foregroundColor: AppColors.white,
                       ),
                       icon: const Icon(Icons.send_rounded),
                     ),
@@ -188,12 +229,37 @@ class _MerchantConversationScreenState
     );
   }
 
-  void _sendMessage() {
+  Future<void> _sendMessage() async {
     final message = _messageController.text.trim();
-    if (message.isEmpty) return;
-    setState(() {
-      _messages.add(message);
-      _messageController.clear();
-    });
+    final merchantId = _merchantId;
+    if (message.isEmpty || merchantId == null || _sending) return;
+    setState(() => _sending = true);
+    final item = MerchantConversationMessage(
+      id: '${DateTime.now().microsecondsSinceEpoch}',
+      merchantId: merchantId,
+      text: message,
+      sentAt: DateTime.now(),
+      fromSupervisor: true,
+    );
+    try {
+      await _store.addMessage(item);
+      if (!mounted) return;
+      setState(() {
+        _messages = [..._messages, item];
+        _messageController.clear();
+        _sending = false;
+      });
+    } on Object catch (error, stackTrace) {
+      FlutterError.reportError(FlutterErrorDetails(
+        exception: error,
+        stack: stackTrace,
+        library: 'merchant conversation',
+      ));
+      if (!mounted) return;
+      setState(() => _sending = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context)!.productAuditSaveError)),
+      );
+    }
   }
 }

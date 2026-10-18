@@ -15,11 +15,13 @@ class WasalnyAdsRepositoryImpl implements WasalnyAdsRepository {
     required String id,
     required WasalnyAdStatus status,
     String? decisionNote,
+    bool? isArchived,
   }) {
     return dataSource.updateAdStatus(
       id: id,
       status: status,
       decisionNote: decisionNote,
+      isArchived: isArchived,
     );
   }
 }

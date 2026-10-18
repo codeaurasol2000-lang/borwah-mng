@@ -2,19 +2,19 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_colors.dart';
-import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../data/services_supervisor_local_store.dart';
-import '../../../wasalny_supervisor/data/wasalny_local_event_store.dart';
 import '../../../merchants/presentation/screens/merchant_conversation_screen.dart';
+import '../../data/services_supervisor_activity_store.dart';
+import '../../data/services_supervisor_work_store.dart';
 
 enum _ComplaintStatus { investigating, waiting, closed }
 
 class _ServiceComplaint {
   final String id;
-  final _ComplaintStatus status;
+  _ComplaintStatus status;
   final String priority;
   final String age;
+  final int ageMinutes;
   final String client;
   final String provider;
   final String service;
@@ -26,12 +26,14 @@ class _ServiceComplaint {
   final List<String> photoUrls;
   final String action;
   bool escalated = false;
+  bool reassigned = false;
 
   _ServiceComplaint({
     required this.id,
     required this.status,
     required this.priority,
     required this.age,
+    required this.ageMinutes,
     required this.client,
     required this.provider,
     required this.service,
@@ -56,50 +58,79 @@ class ServicesComplaintsScreen extends StatefulWidget {
 class _ServicesComplaintsScreenState extends State<ServicesComplaintsScreen> {
   final _searchController = TextEditingController();
   int _selectedFilter = 0;
-  bool _isLoadingEscalations = true;
-  final Set<String> _escalatedComplaintIds = {};
+  final ServicesSupervisorActivityStore _activityStore =
+      ServicesSupervisorActivityStore();
+  final ServicesSupervisorWorkStore _workStore = ServicesSupervisorWorkStore();
+  bool _isLoadingState = true;
+  bool _didRestoreState = false;
 
   late final List<_ServiceComplaint> _complaints = _createComplaints();
 
   @override
-  void initState() {
-    super.initState();
-    _loadEscalations();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_didRestoreState) return;
+    _didRestoreState = true;
+    _restoreComplaintState();
   }
 
-  Future<void> _loadEscalations() async {
+  Future<void> _restoreComplaintState() async {
     try {
-      final ids =
-          await ServicesSupervisorLocalStore.loadEscalatedComplaintIds();
-      if (!mounted) return;
-      setState(() {
-        _escalatedComplaintIds
-          ..clear()
-          ..addAll(ids);
-        for (final complaint in _complaints) {
-          complaint.escalated = ids.contains(complaint.id);
+      final saved = await _workStore.loadComplaints();
+      final escalated = saved['escalatedIds'];
+      final reassigned = saved['reassignedIds'];
+      final statuses = saved['statuses'];
+      for (final complaint in _complaints) {
+        complaint.escalated = escalated is List && escalated.contains(complaint.id);
+        complaint.reassigned = reassigned is List && reassigned.contains(complaint.id);
+        if (statuses is Map && statuses[complaint.id] is String) {
+          complaint.status = _ComplaintStatus.values.byName(statuses[complaint.id] as String);
         }
-        _isLoadingEscalations = false;
-      });
+      }
     } on Object catch (error, stackTrace) {
       FlutterError.reportError(FlutterErrorDetails(
         exception: error,
         stack: stackTrace,
         library: 'services supervisor complaints',
-        context: ErrorDescription('while loading saved complaint escalations'),
+        context: ErrorDescription('while restoring saved complaint state'),
       ));
-      if (mounted) setState(() => _isLoadingEscalations = false);
     }
+    if (mounted) setState(() => _isLoadingState = false);
+  }
+
+  Future<void> _saveComplaintState({
+    Set<String>? escalatedIds,
+    Set<String>? reassignedIds,
+    Map<String, _ComplaintStatus>? statuses,
+  }) {
+    final savedStatuses = <String, String>{};
+    for (final complaint in _complaints) {
+      savedStatuses[complaint.id] =
+          (statuses?[complaint.id] ?? complaint.status).name;
+    }
+    return _workStore.saveComplaints(
+      escalatedIds: escalatedIds ?? {
+        for (final complaint in _complaints)
+          if (complaint.escalated) complaint.id,
+      },
+      reassignedIds: reassignedIds ?? {
+        for (final complaint in _complaints)
+          if (complaint.reassigned) complaint.id,
+      },
+      statuses: savedStatuses,
+    );
   }
 
   List<_ServiceComplaint> _createComplaints() {
     final l10n = AppLocalizations.of(context)!;
     return [
       _ServiceComplaint(
-        id: 'CMP-3091',
+        id: ServicesSupervisorWorkStore.complaintIds[0],
         status: _ComplaintStatus.investigating,
         priority: l10n.servicesComplaintUrgent,
         age: l10n.servicesComplaintAgeMinutes(45),
+        ageMinutes:
+            ServicesSupervisorWorkStore.complaintAgeMinutes['CMP-3091']!,
         client: l10n.servicesComplaintClientOne,
         provider: l10n.servicesComplaintProviderOne,
         service: l10n.servicesComplaintSubjectOne,
@@ -112,10 +143,12 @@ class _ServicesComplaintsScreenState extends State<ServicesComplaintsScreen> {
         action: l10n.servicesComplaintContactParties,
       ),
       _ServiceComplaint(
-        id: 'CMP-3038',
+        id: ServicesSupervisorWorkStore.complaintIds[1],
         status: _ComplaintStatus.waiting,
         priority: l10n.servicesComplaintPriorityMedium,
         age: l10n.servicesComplaintAgeHours(2),
+        ageMinutes:
+            ServicesSupervisorWorkStore.complaintAgeMinutes['CMP-3038']!,
         client: l10n.servicesComplaintClientTwo,
         provider: l10n.servicesComplaintProviderTwo,
         service: l10n.servicesComplaintSubjectTwo,
@@ -128,10 +161,12 @@ class _ServicesComplaintsScreenState extends State<ServicesComplaintsScreen> {
         action: l10n.servicesComplaintReassign,
       ),
       _ServiceComplaint(
-        id: 'CMP-3012',
+        id: ServicesSupervisorWorkStore.complaintIds[2],
         status: _ComplaintStatus.closed,
         priority: l10n.servicesComplaintClosed,
         age: l10n.servicesComplaintClosedToday,
+        ageMinutes:
+            ServicesSupervisorWorkStore.complaintAgeMinutes['CMP-3012']!,
         client: l10n.servicesComplaintClientThree,
         provider: l10n.servicesComplaintProviderThree,
         service: l10n.servicesComplaintSubjectThree,
@@ -155,10 +190,8 @@ class _ServicesComplaintsScreenState extends State<ServicesComplaintsScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    if (_isLoadingEscalations) {
-      return const Center(child: CircularProgressIndicator());
-    }
     final isArabic = l10n.localeName.startsWith('ar');
+    if (_isLoadingState) return const Center(child: CircularProgressIndicator());
     final complaints = _filteredComplaints();
 
     return Directionality(
@@ -209,7 +242,7 @@ class _ServicesComplaintsScreenState extends State<ServicesComplaintsScreen> {
 
   List<_ServiceComplaint> _filteredComplaints() {
     final query = _searchController.text.trim().toLowerCase();
-    return _complaints.where((complaint) {
+    final filtered = _complaints.where((complaint) {
       final matchesFilter = switch (_selectedFilter) {
         1 => complaint.status == _ComplaintStatus.investigating,
         2 => complaint.status == _ComplaintStatus.waiting,
@@ -224,6 +257,16 @@ class _ServicesComplaintsScreenState extends State<ServicesComplaintsScreen> {
       ].join(' ').toLowerCase();
       return matchesFilter && (query.isEmpty || text.contains(query));
     }).toList();
+    filtered.sort((first, second) {
+      final firstOpen = first.status != _ComplaintStatus.closed;
+      final secondOpen = second.status != _ComplaintStatus.closed;
+      if (firstOpen != secondOpen) return secondOpen ? 1 : -1;
+      if (first.escalated != second.escalated) {
+        return second.escalated ? 1 : -1;
+      }
+      return second.ageMinutes.compareTo(first.ageMinutes);
+    });
+    return filtered;
   }
 
   Widget _buildMetrics(AppLocalizations l10n) {
@@ -233,8 +276,8 @@ class _ServicesComplaintsScreenState extends State<ServicesComplaintsScreen> {
           child: _MetricCard(
             icon: Icons.report_gmailerrorred_outlined,
             label: l10n.servicesComplaintActive,
-            value: '3',
-            detail: l10n.servicesComplaintUrgent,
+            value: '${_complaints.where((complaint) => complaint.status != _ComplaintStatus.closed).length}',
+            detail: l10n.servicesComplaintFilterAll,
             color: AppColors.danger,
           ),
         ),
@@ -242,18 +285,18 @@ class _ServicesComplaintsScreenState extends State<ServicesComplaintsScreen> {
         Expanded(
           child: _MetricCard(
             icon: Icons.access_time,
-            label: l10n.servicesComplaintResolutionTime,
-            value: '18',
-            detail: l10n.servicesComplaintMinutes,
+            label: l10n.servicesComplaintFilterWaiting,
+            value: '${_complaints.where((complaint) => complaint.status == _ComplaintStatus.waiting).length}',
+            detail: l10n.servicesComplaintWaitingProvider,
           ),
         ),
         const SizedBox(width: 8),
         Expanded(
           child: _MetricCard(
             icon: Icons.handshake_outlined,
-            label: l10n.servicesComplaintSatisfaction,
-            value: '96.5%',
-            detail: l10n.servicesComplaintApproved,
+            label: l10n.servicesComplaintEscalated,
+            value: '${_complaints.where((complaint) => complaint.escalated).length}',
+            detail: l10n.servicesComplaintEscalated,
           ),
         ),
       ],
@@ -269,7 +312,7 @@ class _ServicesComplaintsScreenState extends State<ServicesComplaintsScreen> {
         prefixIcon: const Icon(Icons.search),
         suffixIcon: const Icon(Icons.tune),
         filled: true,
-        fillColor: Colors.white,
+        fillColor: AppColors.white,
         contentPadding: const EdgeInsets.symmetric(vertical: 10),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
@@ -290,7 +333,12 @@ class _ServicesComplaintsScreenState extends State<ServicesComplaintsScreen> {
       l10n.servicesComplaintFilterWaiting,
       l10n.servicesComplaintFilterClosed,
     ];
-    final counts = ['8', '3', '2', '3'];
+    final counts = [
+      _complaints.length,
+      _complaints.where((item) => item.status == _ComplaintStatus.investigating).length,
+      _complaints.where((item) => item.status == _ComplaintStatus.waiting).length,
+      _complaints.where((item) => item.status == _ComplaintStatus.closed).length,
+    ];
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -304,7 +352,7 @@ class _ServicesComplaintsScreenState extends State<ServicesComplaintsScreen> {
                 onSelected: (_) => setState(() => _selectedFilter = index),
                 showCheckmark: false,
                 selectedColor: AppColors.primaryDark,
-                backgroundColor: Colors.white,
+                backgroundColor: AppColors.white,
                 side: BorderSide(
                   color: _selectedFilter == index
                       ? AppColors.primaryDark
@@ -312,7 +360,7 @@ class _ServicesComplaintsScreenState extends State<ServicesComplaintsScreen> {
                 ),
                 labelStyle: TextStyle(
                   color: _selectedFilter == index
-                      ? Colors.white
+                      ? AppColors.white
                       : AppColors.textSecondary,
                   fontSize: 10,
                   fontWeight: FontWeight.w700,
@@ -322,7 +370,7 @@ class _ServicesComplaintsScreenState extends State<ServicesComplaintsScreen> {
                   children: [
                     Text(labels[index]),
                     const SizedBox(width: 5),
-                    Text(counts[index]),
+                    Text('${counts[index]}'),
                   ],
                 ),
               ),
@@ -362,7 +410,7 @@ class _ServicesComplaintsScreenState extends State<ServicesComplaintsScreen> {
       ),
       child: Row(
         children: [
-          const Icon(Icons.shield_outlined, color: Colors.white, size: 34),
+          const Icon(Icons.shield_outlined, color: AppColors.white, size: 34),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -371,7 +419,7 @@ class _ServicesComplaintsScreenState extends State<ServicesComplaintsScreen> {
                 Text(
                   l10n.servicesComplaintResolutionTitle,
                   style: const TextStyle(
-                    color: Colors.white,
+                    color: AppColors.white,
                     fontSize: 15,
                     fontWeight: FontWeight.w800,
                   ),
@@ -380,7 +428,7 @@ class _ServicesComplaintsScreenState extends State<ServicesComplaintsScreen> {
                 Text(
                   l10n.servicesComplaintResolutionDescription,
                   style: const TextStyle(
-                    color: Color(0xFFD7E2EF),
+                    color: AppColors.hexFFD7E2EF,
                     fontSize: 10,
                     height: 1.5,
                   ),
@@ -401,17 +449,65 @@ class _ServicesComplaintsScreenState extends State<ServicesComplaintsScreen> {
     await showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColors.transparent,
       builder: (context) => SafeArea(
         child: _ServiceComplaintDetailsSheet(
           complaint: complaint,
           l10n: l10n,
           isArabic: isArabic,
           onCall: (phone) => _callParty(phone, l10n),
-          onChat: (name) => _openPartyChat(name),
+          onChat: (target) =>
+              _openPartyChat(target.name, complaint.id, target.party),
+          onResolve: () => _updateComplaintStatus(
+            complaint,
+            _ComplaintStatus.closed,
+            l10n,
+          ),
+          onReopen: () => _updateComplaintStatus(
+            complaint,
+            _ComplaintStatus.waiting,
+            l10n,
+          ),
         ),
       ),
     );
+  }
+
+  Future<bool> _updateComplaintStatus(
+    _ServiceComplaint complaint,
+    _ComplaintStatus status,
+    AppLocalizations l10n,
+  ) async {
+    final nextStatuses = {
+      for (final item in _complaints) item.id: item.status,
+      complaint.id: status,
+    };
+    try {
+      await _saveComplaintState(statuses: nextStatuses);
+      await _activityStore.record(
+        action: status == _ComplaintStatus.closed
+            ? 'complaint_resolved'
+            : 'complaint_reopened',
+        subject: '${complaint.id} • ${complaint.client}',
+        entityId: complaint.id,
+        entityType: 'service_complaint',
+      );
+      if (!mounted) return false;
+      setState(() => complaint.status = status);
+      _showMessage(status == _ComplaintStatus.closed
+          ? (l10n.localeName.startsWith('ar') ? 'تم إغلاق الشكوى وتسجيلها.' : 'Complaint resolved and recorded.')
+          : (l10n.localeName.startsWith('ar') ? 'تمت إعادة فتح الشكوى.' : 'Complaint reopened.'));
+      return true;
+    } on Object catch (error, stackTrace) {
+      FlutterError.reportError(FlutterErrorDetails(
+        exception: error,
+        stack: stackTrace,
+        library: 'services supervisor complaints',
+        context: ErrorDescription('while updating complaint status'),
+      ));
+      if (mounted) _showMessage(l10n.localeName.startsWith('ar') ? 'تعذر حفظ حالة الشكوى.' : 'Could not save the complaint status.');
+      return false;
+    }
   }
 
   Future<void> _handleAction(
@@ -452,6 +548,25 @@ class _ServicesComplaintsScreenState extends State<ServicesComplaintsScreen> {
       ),
     );
     if (confirmed == true && mounted) {
+      final nextReassigned = {
+        for (final item in _complaints)
+          if (item.reassigned || item.id == complaint.id) item.id,
+      };
+      try {
+        await _saveComplaintState(reassignedIds: nextReassigned);
+      } on Object catch (error, stackTrace) {
+        FlutterError.reportError(FlutterErrorDetails(exception: error, stack: stackTrace, library: 'services supervisor complaints', context: ErrorDescription('while saving complaint reassignment')));
+        _showMessage(l10n.localeName.startsWith('ar') ? 'تعذر حفظ إعادة الإسناد.' : 'Could not save the reassignment.');
+        return;
+      }
+      final recorded = await _recordAction(
+        action: 'complaint_reassigned',
+        subject: '${complaint.id} • ${complaint.client}',
+        entityId: complaint.id,
+        l10n: l10n,
+      );
+      if (!recorded || !mounted) return;
+      setState(() => complaint.reassigned = true);
       _showMessage(l10n.servicesComplaintActionRecorded);
     }
   }
@@ -464,57 +579,63 @@ class _ServicesComplaintsScreenState extends State<ServicesComplaintsScreen> {
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColors.transparent,
       builder: (_) => _ServicesComplaintEscalationSheet(
         complaint: complaint,
         l10n: l10n,
       ),
     );
     if (confirmed != true || !mounted) return;
-    _escalatedComplaintIds.add(complaint.id);
-    complaint.escalated = true;
+    final nextEscalated = {
+      for (final item in _complaints)
+        if (item.escalated || item.id == complaint.id) item.id,
+    };
     try {
-      await ServicesSupervisorLocalStore.saveEscalatedComplaintIds(
-        _escalatedComplaintIds,
-      );
+      await _saveComplaintState(escalatedIds: nextEscalated);
     } on Object catch (error, stackTrace) {
-      _escalatedComplaintIds.remove(complaint.id);
-      complaint.escalated = false;
+      FlutterError.reportError(FlutterErrorDetails(exception: error, stack: stackTrace, library: 'services supervisor complaints', context: ErrorDescription('while saving complaint escalation')));
+      _showMessage(l10n.localeName.startsWith('ar') ? 'تعذر حفظ التصعيد.' : 'Could not save the escalation.');
+      return;
+    }
+    final recorded = await _recordAction(
+      action: 'complaint_escalated',
+      subject: '${complaint.id} • ${complaint.client}',
+      entityId: complaint.id,
+      l10n: l10n,
+    );
+    if (!recorded || !mounted) return;
+    setState(() => complaint.escalated = true);
+    _showMessage(l10n.servicesComplaintEscalatedNotice(complaint.id));
+  }
+
+  Future<bool> _recordAction({
+    required String action,
+    required String subject,
+    required String entityId,
+    required AppLocalizations l10n,
+  }) async {
+    try {
+      await _activityStore.record(
+        action: action,
+        subject: subject,
+        entityId: entityId,
+        entityType: 'service_complaint',
+      );
+      return true;
+    } on Object catch (error, stackTrace) {
       FlutterError.reportError(FlutterErrorDetails(
         exception: error,
         stack: stackTrace,
         library: 'services supervisor complaints',
-        context: ErrorDescription('while saving a complaint escalation'),
+        context: ErrorDescription('while recording a complaint action'),
       ));
       if (mounted) {
-        AppSnackBar.showError(context, l10n.servicesAccountSaveError(error));
+        _showMessage(l10n.localeName.startsWith('ar')
+            ? 'تعذر تسجيل الإجراء، حاول مرة أخرى.'
+            : 'Could not record the action. Please try again.');
       }
-      return;
+      return false;
     }
-    if (!mounted) return;
-    setState(() {});
-    try {
-      await WasalnyLocalEventStore().publish(
-        WasalnyLocalEvent(
-          id: 'service-complaint-escalated-${complaint.id}',
-          recipient: 'head',
-          source: 'services',
-          titleAr: 'تصعيد شكوى خدمات',
-          titleEn: 'Service complaint escalated',
-          messageAr: 'الشكوى ${complaint.id} تحتاج إلى مراجعة رئيس المشرفين.',
-          messageEn: 'Complaint ${complaint.id} needs head-supervisor review.',
-          createdAt: DateTime.now(),
-        ),
-      );
-    } on Object catch (error, stackTrace) {
-      FlutterError.reportError(FlutterErrorDetails(
-        exception: error,
-        stack: stackTrace,
-        library: 'services supervisor notifications',
-        context: ErrorDescription('while notifying the head supervisor'),
-      ));
-    }
-    _showMessage(l10n.servicesComplaintEscalatedNotice(complaint.id));
   }
 
   void _showMessage(String message) {
@@ -530,10 +651,13 @@ class _ServicesComplaintsScreenState extends State<ServicesComplaintsScreen> {
     if (!opened && mounted) _showMessage(l10n.servicesContactUnavailable);
   }
 
-  void _openPartyChat(String name) {
+  void _openPartyChat(String name, String complaintId, String party) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => MerchantConversationScreen(conversationTitle: name),
+        builder: (_) => MerchantConversationScreen(
+          conversationId: 'service-complaint-$complaintId-$party',
+          conversationTitle: name,
+        ),
       ),
     );
   }
@@ -545,6 +669,7 @@ class _ServicesComplaintsScreenState extends State<ServicesComplaintsScreen> {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (_) => MerchantConversationScreen(
+          conversationId: 'service-complaint-${complaint.id}-group',
           conversationTitle: l10n.servicesComplaintGroupChatTitle(complaint.id),
           conversationParticipants: [complaint.client, complaint.provider],
         ),
@@ -571,7 +696,7 @@ class _ServicesComplaintEscalationSheet extends StatelessWidget {
         ),
         child: Container(
           decoration: const BoxDecoration(
-            color: Color(0xFFF5F7F9),
+            color: AppColors.textPrimary,
             borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
           ),
           clipBehavior: Clip.antiAlias,
@@ -588,7 +713,7 @@ class _ServicesComplaintEscalationSheet extends StatelessWidget {
                         width: 42,
                         height: 4,
                         decoration: BoxDecoration(
-                          color: Colors.grey.shade400,
+                          color: AppColors.grey400,
                           borderRadius: BorderRadius.circular(5),
                         ),
                       ),
@@ -673,7 +798,7 @@ class _ServicesComplaintEscalationSheet extends StatelessWidget {
                         l10n.servicesComplaintEscalationConfirmation,
                         textAlign: TextAlign.start,
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: AppColors.white,
                           fontSize: 12,
                           height: 1.6,
                         ),
@@ -693,7 +818,7 @@ class _ServicesComplaintEscalationSheet extends StatelessWidget {
                       label: Text(l10n.productConfirmAction),
                       style: FilledButton.styleFrom(
                         backgroundColor: AppColors.danger,
-                        foregroundColor: Colors.white,
+                        foregroundColor: AppColors.white,
                         minimumSize: const Size.fromHeight(48),
                       ),
                     ),
@@ -731,7 +856,7 @@ class _EscalationInfoCard extends StatelessWidget {
   Widget build(BuildContext context) => Container(
         padding: const EdgeInsets.all(13),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(13),
           border: Border.all(color: AppColors.cardBorder),
         ),
@@ -773,7 +898,9 @@ class _ServiceComplaintDetailsSheet extends StatelessWidget {
   final AppLocalizations l10n;
   final bool isArabic;
   final ValueChanged<String> onCall;
-  final ValueChanged<String> onChat;
+  final ValueChanged<({String name, String party})> onChat;
+  final Future<bool> Function() onResolve;
+  final Future<bool> Function() onReopen;
 
   const _ServiceComplaintDetailsSheet({
     required this.complaint,
@@ -781,6 +908,8 @@ class _ServiceComplaintDetailsSheet extends StatelessWidget {
     required this.isArabic,
     required this.onCall,
     required this.onChat,
+    required this.onResolve,
+    required this.onReopen,
   });
 
   @override
@@ -792,7 +921,7 @@ class _ServiceComplaintDetailsSheet extends StatelessWidget {
       child: Container(
         constraints: BoxConstraints(maxHeight: maxHeight),
         decoration: const BoxDecoration(
-          color: Color(0xFFF5F7F9),
+          color: AppColors.textPrimary,
           borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
         ),
         child: Column(
@@ -807,7 +936,7 @@ class _ServiceComplaintDetailsSheet extends StatelessWidget {
                       width: 42,
                       height: 4,
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade400,
+                        color: AppColors.grey400,
                         borderRadius: BorderRadius.circular(5),
                       ),
                     ),
@@ -845,7 +974,7 @@ class _ServiceComplaintDetailsSheet extends StatelessWidget {
                           name: complaint.client,
                           phone: complaint.clientPhone,
                           onCall: () => onCall(complaint.clientPhone),
-                          onChat: () => onChat(complaint.client),
+                          onChat: () => onChat((name: complaint.client, party: 'client')),
                           l10n: l10n,
                         ),
                         const Divider(height: 20),
@@ -854,7 +983,7 @@ class _ServiceComplaintDetailsSheet extends StatelessWidget {
                           name: complaint.provider,
                           phone: complaint.providerPhone,
                           onCall: () => onCall(complaint.providerPhone),
-                          onChat: () => onChat(complaint.provider),
+                          onChat: () => onChat((name: complaint.provider, party: 'provider')),
                           l10n: l10n,
                         ),
                       ],
@@ -947,14 +1076,43 @@ class _ServiceComplaintDetailsSheet extends StatelessWidget {
               top: false,
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(18, 8, 18, 12),
-                child: SizedBox(
-                  height: 46,
-                  width: double.infinity,
-                  child: OutlinedButton.icon(
-                    onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(Icons.close),
-                    label: Text(l10n.logoutCancel),
-                  ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      height: 46,
+                      width: double.infinity,
+                      child: complaint.status == _ComplaintStatus.closed
+                          ? OutlinedButton.icon(
+                              onPressed: () async {
+                                if (await onReopen() && context.mounted) {
+                                  Navigator.of(context).pop();
+                                }
+                              },
+                              icon: const Icon(Icons.restore),
+                              label: Text(isArabic ? 'إعادة فتح الشكوى' : 'Reopen complaint'),
+                            )
+                          : FilledButton.icon(
+                              onPressed: () async {
+                                if (await onResolve() && context.mounted) {
+                                  Navigator.of(context).pop();
+                                }
+                              },
+                              icon: const Icon(Icons.task_alt),
+                              label: Text(isArabic ? 'تأكيد حل الشكوى' : 'Mark complaint resolved'),
+                            ),
+                    ),
+                    const SizedBox(height: 6),
+                    SizedBox(
+                      height: 42,
+                      width: double.infinity,
+                      child: TextButton.icon(
+                        onPressed: () => Navigator.of(context).pop(),
+                        icon: const Icon(Icons.close),
+                        label: Text(l10n.logoutCancel),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -978,7 +1136,7 @@ class _ComplaintDetailSection extends StatelessWidget {
   Widget build(BuildContext context) => Container(
         padding: const EdgeInsets.all(13),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(color: AppColors.cardBorder),
         ),
@@ -1130,6 +1288,7 @@ class _ComplaintCard extends StatelessWidget {
         : isWaiting
             ? AppColors.info
             : AppColors.primaryDark;
+    final isOverdue = !isClosed && complaint.ageMinutes >= 60;
 
     return Container(
       padding: const EdgeInsets.all(14),
@@ -1144,8 +1303,8 @@ class _ComplaintCard extends StatelessWidget {
                 height: 36,
                 decoration: BoxDecoration(
                   color: isClosed
-                      ? const Color(0xFFE3F2E8)
-                      : const Color(0xFFFFE2DF),
+                      ? AppColors.hexFFE3F2E8
+                      : AppColors.textPrimary,
                   borderRadius: BorderRadius.circular(11),
                 ),
                 child: Icon(
@@ -1171,10 +1330,16 @@ class _ComplaintCard extends StatelessWidget {
               _Badge(
                 label: complaint.escalated
                     ? l10n.servicesComplaintEscalated
-                    : complaint.priority,
+                    : complaint.reassigned
+                        ? (l10n.localeName.startsWith('ar')
+                            ? 'أعيد إسنادها'
+                            : 'Reassigned')
+                        : complaint.priority,
                 color: complaint.escalated
                     ? AppColors.danger
-                    : AppColors.primaryDark,
+                    : complaint.reassigned
+                        ? AppColors.info
+                        : AppColors.primaryDark,
               ),
             ],
           ),
@@ -1200,6 +1365,18 @@ class _ComplaintCard extends StatelessWidget {
               ),
             ],
           ),
+          if (isOverdue) ...[
+            const SizedBox(height: 7),
+            Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: _Badge(
+                label: l10n.localeName.startsWith('ar')
+                    ? 'تجاوز مدة الاستجابة المستهدفة'
+                    : 'Response SLA exceeded',
+                color: AppColors.danger,
+              ),
+            ),
+          ],
           const SizedBox(height: 11),
           _PartiesPanel(complaint: complaint, l10n: l10n),
           const SizedBox(height: 11),
@@ -1233,7 +1410,7 @@ class _ComplaintCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(11),
               decoration: BoxDecoration(
-                color: const Color(0xFFF0F7FF),
+                color: AppColors.textPrimary,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
@@ -1263,7 +1440,7 @@ class _ComplaintCard extends StatelessWidget {
                 ),
                 style: FilledButton.styleFrom(
                   backgroundColor: AppColors.primaryDark,
-                  foregroundColor: Colors.white,
+                  foregroundColor: AppColors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(11),
                   ),
@@ -1313,7 +1490,7 @@ class _PartiesPanel extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: const Color(0xFFF1F3F5),
+        color: AppColors.textPrimary,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -1508,7 +1685,7 @@ class _ActionButton extends StatelessWidget {
       onPressed: onPressed,
       style: OutlinedButton.styleFrom(
         foregroundColor: foreground,
-        backgroundColor: const Color(0xFFF1F3F5),
+        backgroundColor: AppColors.surface,
         side: BorderSide.none,
         padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 8),
         textStyle: const TextStyle(fontSize: 9),
@@ -1533,7 +1710,7 @@ class _ActionButton extends StatelessWidget {
 
 BoxDecoration _cardDecoration() {
   return BoxDecoration(
-    color: Colors.white,
+    color: AppColors.white,
     borderRadius: BorderRadius.circular(16),
     border: Border.all(color: AppColors.cardBorder),
   );

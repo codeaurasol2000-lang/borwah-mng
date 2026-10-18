@@ -4,12 +4,14 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MerchantSupervisorAuditEvent {
+  final String? subjectId;
   final String action;
   final String subject;
   final String details;
   final DateTime occurredAt;
 
   const MerchantSupervisorAuditEvent({
+    this.subjectId,
     required this.action,
     required this.subject,
     required this.details,
@@ -48,6 +50,19 @@ class MerchantSupervisorLocalStore {
     };
   }
 
+  static Future<Map<String, double>> getCommissionOverrides() async {
+    final state = await _readState();
+    final merchants = state['merchants'] as Map<String, dynamic>;
+    return {
+      for (final entry in merchants.entries)
+        if (entry.value is Map<String, dynamic> &&
+            (entry.value as Map<String, dynamic>)['commissionPercent'] is num)
+          entry.key: ((entry.value as Map<String, dynamic>)['commissionPercent']
+                  as num)
+              .toDouble(),
+    };
+  }
+
   static Future<List<MerchantSupervisorAuditEvent>> getAuditEvents() async {
     final state = await _readState();
     final events = state['events'];
@@ -63,12 +78,26 @@ class MerchantSupervisorLocalStore {
         throw const FormatException('Merchant audit event is invalid.');
       }
       return MerchantSupervisorAuditEvent(
+        subjectId: value['subjectId'] as String?,
         action: value['action'] as String,
         subject: value['subject'] as String,
         details: value['details'] as String,
         occurredAt: DateTime.parse(value['occurredAt'] as String),
       );
     }).toList(growable: false);
+  }
+
+  static Future<Map<String, MerchantSupervisorAuditEvent>>
+      getLatestMerchantActions() async {
+    final events = await getAuditEvents();
+    final latest = <String, MerchantSupervisorAuditEvent>{};
+    for (final event in events) {
+      final merchantId = event.subjectId;
+      if (merchantId != null && !latest.containsKey(merchantId)) {
+        latest[merchantId] = event;
+      }
+    }
+    return Map.unmodifiable(latest);
   }
 
   static Future<void> setMerchantSuspended({
@@ -80,7 +109,9 @@ class MerchantSupervisorLocalStore {
   }) async {
     final state = await _readState();
     final merchants = state['merchants'] as Map<String, dynamic>;
+    final existingMerchant = merchants[merchantId];
     merchants[merchantId] = {
+      if (existingMerchant is Map<String, dynamic>) ...existingMerchant,
       'name': merchantName,
       'details': details,
       'suspended': isSuspended,
@@ -88,9 +119,43 @@ class MerchantSupervisorLocalStore {
     };
     _appendAuditEvent(
       state,
+      subjectId: merchantId,
       action: action,
       subject: merchantName,
       details: details,
+    );
+    await _writeState(state);
+  }
+
+  static Future<void> setMerchantCommission({
+    required String merchantId,
+    required String merchantName,
+    required double commissionPercent,
+    required String action,
+  }) async {
+    if (!commissionPercent.isFinite ||
+        commissionPercent < 0 ||
+        commissionPercent > 100) {
+      throw ArgumentError.value(
+        commissionPercent,
+        'commissionPercent',
+        'Commission must be between 0 and 100.',
+      );
+    }
+    final state = await _readState();
+    final merchants = state['merchants'] as Map<String, dynamic>;
+    final existingMerchant = merchants[merchantId];
+    merchants[merchantId] = {
+      if (existingMerchant is Map<String, dynamic>) ...existingMerchant,
+      'name': merchantName,
+      'commissionPercent': commissionPercent,
+    };
+    _appendAuditEvent(
+      state,
+      subjectId: merchantId,
+      action: action,
+      subject: merchantName,
+      details: '${commissionPercent.toStringAsFixed(1)}%',
     );
     await _writeState(state);
   }
@@ -112,12 +177,14 @@ class MerchantSupervisorLocalStore {
 
   static void _appendAuditEvent(
     Map<String, dynamic> state, {
+    String? subjectId,
     required String action,
     required String subject,
     required String details,
   }) {
     final events = state['events'] as List<dynamic>;
     events.insert(0, {
+      if (subjectId != null) 'subjectId': subjectId,
       'action': action,
       'subject': subject,
       'details': details,

@@ -1,4 +1,7 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/utils/currency_formatter.dart';
@@ -13,7 +16,7 @@ Future<void> showWithdrawalRequestDetailsSheet(
     context: context,
     isScrollControlled: true,
     useSafeArea: true,
-    backgroundColor: Colors.transparent,
+    backgroundColor: AppColors.transparent,
     builder: (_) => _WithdrawalRequestDetailsSheet(request: request),
   );
 }
@@ -27,12 +30,13 @@ class _WithdrawalRequestDetailsSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final status = _statusLabel(l10n, request.status);
+    final colors = Theme.of(context).colorScheme;
 
     return Container(
       constraints:
           BoxConstraints(maxHeight: MediaQuery.sizeOf(context).height * .88),
-      decoration: const BoxDecoration(
-        color: Color(0xFFF5F7F9),
+      decoration: BoxDecoration(
+        color: colors.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
@@ -45,8 +49,8 @@ class _WithdrawalRequestDetailsSheet extends StatelessWidget {
                 Expanded(
                   child: Text(
                     l10n.withdrawalDetailsTitle,
-                    style: const TextStyle(
-                      color: AppColors.primaryDark,
+                    style: TextStyle(
+                      color: colors.onSurface,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
@@ -69,9 +73,9 @@ class _WithdrawalRequestDetailsSheet extends StatelessWidget {
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: colors.surfaceContainerHigh,
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: AppColors.cardBorder),
+                      border: Border.all(color: colors.outlineVariant),
                     ),
                     child: Column(
                       children: [
@@ -85,8 +89,8 @@ class _WithdrawalRequestDetailsSheet extends StatelessWidget {
                         const SizedBox(height: 8),
                         Text(
                           CurrencyFormatter.format(request.netAmount),
-                          style: const TextStyle(
-                            color: AppColors.primaryDark,
+                        style: TextStyle(
+                            color: colors.onSurface,
                             fontSize: 24,
                             fontWeight: FontWeight.w900,
                           ),
@@ -149,12 +153,31 @@ class _WithdrawalRequestDetailsSheet extends StatelessWidget {
                         label: l10n.withdrawalDetailsNetAmount,
                         value: CurrencyFormatter.format(request.netAmount),
                       ),
+                      if (request.reference?.isNotEmpty ?? false)
+                        _DetailRow(
+                          label: l10n.settlementReferenceLabel,
+                          value: request.reference!,
+                        ),
+                      if (request.notes?.isNotEmpty ?? false)
+                        _DetailRow(
+                          label: l10n.settlementNotesLabel,
+                          value: request.notes!,
+                        ),
                       _DetailRow(
                         label: l10n.withdrawalDetailsDate,
                         value: request.dateText.isEmpty
                             ? l10n.withdrawalDetailsNoValue
                             : request.dateText,
                       ),
+                      if (request.decisionAt != null)
+                        _DetailRow(
+                          label: l10n.localeName.startsWith('ar')
+                              ? 'تاريخ القرار'
+                              : 'Decision date',
+                          value: DateFormat.yMMMd(
+                            l10n.localeName,
+                          ).add_jm().format(request.decisionAt!.toLocal()),
+                        ),
                     ],
                   ),
                   const SizedBox(height: 12),
@@ -171,7 +194,7 @@ class _WithdrawalRequestDetailsSheet extends StatelessWidget {
                         value: request.iban.isEmpty
                             ? l10n.withdrawalDetailsNoValue
                             : request.iban,
-                        valueDirection: TextDirection.ltr,
+                        valueDirection: ui.TextDirection.ltr,
                       ),
                       if (request.transferMethod?.isNotEmpty ?? false)
                         _DetailRow(
@@ -243,9 +266,11 @@ class _DetailsCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.surfaceContainerLow,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.cardBorder),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.outlineVariant,
+        ),
       ),
       child: Column(children: children),
     );
@@ -255,7 +280,7 @@ class _DetailsCard extends StatelessWidget {
 class _DetailRow extends StatelessWidget {
   final String label;
   final String value;
-  final TextDirection? valueDirection;
+  final ui.TextDirection? valueDirection;
 
   const _DetailRow({
     required this.label,
@@ -273,18 +298,22 @@ class _DetailRow extends StatelessWidget {
           Expanded(
             child: Text(
               label,
-              style: const TextStyle(color: AppColors.textSecondary),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Directionality(
-              textDirection: valueDirection ?? Directionality.of(context),
+              textDirection: valueDirection ??
+                  Directionality.maybeOf(context) ??
+                  ui.TextDirection.ltr,
               child: Text(
                 value,
                 textAlign: TextAlign.end,
-                style: const TextStyle(
-                  color: AppColors.primaryDark,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
                   fontWeight: FontWeight.w600,
                 ),
               ),

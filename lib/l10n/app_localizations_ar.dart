@@ -174,19 +174,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get currentLedgerBalanceLabel => 'الرصيد الدفتري الحالي:';
 
   @override
-  String get expenseCategoryAndDocuments => 'تصنيف المصروف والمستندات المؤيدة';
+  String get expenseCategoryAndDocuments => 'تفاصيل المصروف';
 
   @override
   String get detailedExpenseReason => 'سبب سحب وصرف المصروف تفصيلياً';
 
   @override
   String get expenseDetailsHint => 'أدخل بياناً تفصيلياً بالمصروف';
-
-  @override
-  String get invoiceSupportDocument => 'مرفق الفاتورة الضريبية والمستند المؤيد';
-
-  @override
-  String get attachDocumentOptional => 'إرفاق صورة المستند إن وجدت';
 
   @override
   String get expenseReasonRequired => 'يرجى كتابة سبب المصروف أولاً';
@@ -220,18 +214,6 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get expenseConfirmDescription =>
       'سيتم إرسال طلب المصروف إلى الإدارة للمراجعة والموافقة، دون خصم المبلغ الآن.';
-
-  @override
-  String get expenseAttachedPrefix => 'مرفق';
-
-  @override
-  String get expenseRemoveDocumentAction => 'انقر للإزالة';
-
-  @override
-  String get expenseDocumentAttached => 'تم إرفاق المستند';
-
-  @override
-  String get expenseDocumentRemoved => 'تمت إزالة المستند المرفق';
 
   @override
   String get strictFinancialDisbursementGovernance =>
@@ -354,7 +336,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get servicesProfileDemoMetricsNotice =>
-      'بيانات الملف ومؤشرات الأداء والأرصدة المعروضة تجريبية حتى ربط الحساب بمصدر بيانات معتمد.';
+      'بيانات الملف والأرصدة المعروضة تجريبية؛ مؤشرات الإجراءات مبنية على سجل العمليات المحفوظ محليًا.';
 
   @override
   String get servicesProfileLoadError =>
@@ -2798,6 +2780,21 @@ class AppLocalizationsAr extends AppLocalizations {
   String get settlementBeneficiaryAudit => 'التحقق والتدقيق';
 
   @override
+  String get settlementBeneficiaryName => 'اسم المستفيد';
+
+  @override
+  String get settlementBeneficiaryRole => 'صفة المستفيد';
+
+  @override
+  String get settlementUseSavedAccount => 'اختيار حساب مسجل';
+
+  @override
+  String get settlementEnterBankManually => 'إدخال بيانات البنك يدويًا';
+
+  @override
+  String get settlementNoSavedAccounts => 'لا توجد حسابات بنكية مسجلة';
+
+  @override
   String get settlementAmountLabel => 'قيمة التسوية';
 
   @override
@@ -3490,6 +3487,13 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get navFinancialRequests => 'الطلبات المالية';
+
+  @override
+  String get navMerchantUpgrades => 'طلبات الترقية';
+
+  @override
+  String get merchantUpgradeReviewSubtitle =>
+      'راجع طلبات ترقية المتاجر وأرسل الطلبات المقبولة إلى المشرف المالي';
 
   @override
   String get navAccount => 'الحساب';
@@ -5998,6 +6002,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get merchantAuditFinancialSubmitted => 'إحالة طلب مالي للمشرف المالي';
 
   @override
+  String get merchantAuditFinancialApproved => 'اعتماد الطلب المالي';
+
+  @override
+  String get merchantAuditFinancialFrozen => 'تعليق الطلب المالي';
+
+  @override
   String get merchantAuditFinancialRejected => 'رفض طلب مالي';
 
   @override
@@ -6106,6 +6116,30 @@ class AppLocalizationsAr extends AppLocalizations {
   String get merchantWalletIban => 'آيبان (IBAN)';
 
   @override
+  String get merchantWalletBankName => 'اسم البنك أو مزود المحفظة';
+
+  @override
+  String get merchantWalletDestinationName => 'اسم صاحب الحساب أو المحفظة';
+
+  @override
+  String get merchantWalletDestinationDetails =>
+      'أدخل رقم الحساب أو المحفظة أو عنوان التحويل';
+
+  @override
+  String get merchantWalletPhoneLabel => 'رقم هاتف المحفظة';
+
+  @override
+  String get merchantWalletInstantAddressLabel =>
+      'عنوان إنستاباي أو اسم المستخدم';
+
+  @override
+  String get merchantWalletEnterTransferDetails =>
+      'أدخل بيانات الحساب المستلم أولاً.';
+
+  @override
+  String get merchantProfileAddPhoto => 'إضافة صورة شخصية';
+
+  @override
   String get merchantWalletDigitalWallet => 'محفظة رقمية';
 
   @override
@@ -6126,6 +6160,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get merchantWalletPhoneValue => '01012345678';
+
+  @override
+  String get merchantRecordAction => 'سجل التاجر';
 
   @override
   String get merchantWalletInstantAddress => 'supervisor.audit@instapay';
@@ -6427,17 +6464,6 @@ class AppLocalizationsAr extends AppLocalizations {
       'هذا النص سيظهر كسجل رسمي للتاجر في حسابه الموثق.';
 
   @override
-  String get merchantSuspendAttachments =>
-      'المستندات التوثيقية ومحاضر المعاينة';
-
-  @override
-  String get merchantSuspendUpload => 'انقر لإرفاق محضر المعاينة أو الصور';
-
-  @override
-  String get merchantSuspendFileTypes =>
-      'صيغ مدعومة: PDF, JPG, PNG (بحد أقصى 10 ميجابايت)';
-
-  @override
   String get merchantSuspendDuration => 'فترة التعليق المقترحة';
 
   @override
@@ -6463,7 +6489,7 @@ class AppLocalizationsAr extends AppLocalizations {
       'يتطلب تحقيقاً وتدقيقاً قانونياً';
 
   @override
-  String get merchantSuspendConfirm => 'تأكيد التعليق المؤقت وإشعار التاجر';
+  String get merchantSuspendConfirm => 'تأكيد التعليق المؤقت';
 
   @override
   String get merchantSuspendCancel => 'إلغاء والعودة لملف التاجر';
@@ -6844,7 +6870,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get merchantLinkSavedLocally =>
-      'تم حفظ طلب الربط محلياً. لم يُرسل للتاجر أو للمنصة.';
+      'تمت إضافة التاجر إلى قائمة إشرافك على هذا الجهاز.';
 
   @override
   String get merchantLinkSaveFailed => 'تعذر حفظ طلب الربط.';

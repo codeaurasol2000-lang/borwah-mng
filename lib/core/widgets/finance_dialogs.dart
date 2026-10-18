@@ -47,7 +47,7 @@ class FinanceDialogs {
             onPressed: () => Navigator.pop(ctx, true),
             child: Text(
               confirmText ?? (isArabic ? 'تأكيد وإرسال للإدارة' : 'Approve & Send to Admin'),
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              style: const TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
             ),
           ),
         ],
@@ -125,7 +125,7 @@ class FinanceDialogs {
             },
             child: Text(
               isArabic ? 'إرسال الرفض' : 'Submit Rejection',
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              style: const TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
             ),
           ),
         ],
@@ -176,7 +176,7 @@ class FinanceDialogs {
             onPressed: () => Navigator.pop(ctx, true),
             child: Text(
               isArabic ? 'تأكيد التجميد' : 'Confirm Freeze',
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              style: const TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
             ),
           ),
         ],
@@ -233,7 +233,7 @@ class FinanceDialogs {
             onPressed: () => Navigator.pop(ctx, true),
             child: Text(
               isArabic ? 'تأكيد وإرسال للإدارة' : 'Send to Admin',
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              style: const TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
             ),
           ),
         ],
@@ -310,7 +310,7 @@ class FinanceDialogs {
                         ],
                       ),
                     ),
-                    Container(width: 1, height: 28, color: Colors.grey.shade300),
+                    Container(width: 1, height: 28, color: AppColors.grey300),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
@@ -347,10 +347,10 @@ class FinanceDialogs {
                         children: [
                           CircleAvatar(
                             radius: 14,
-                            backgroundColor: isDeposit ? Colors.green.shade50 : Colors.red.shade50,
+                            backgroundColor: isDeposit ? AppColors.green50 : AppColors.red50,
                             child: Icon(
                               isDeposit ? Icons.arrow_downward : Icons.arrow_upward,
-                              color: isDeposit ? Colors.green : Colors.red,
+                              color: isDeposit ? AppColors.green : AppColors.red,
                               size: 14,
                             ),
                           ),
@@ -369,7 +369,7 @@ class FinanceDialogs {
                             style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.bold,
-                              color: isDeposit ? Colors.green.shade700 : Colors.red.shade700,
+                              color: isDeposit ? AppColors.green700 : AppColors.red700,
                             ),
                           ),
                         ],
@@ -388,7 +388,7 @@ class FinanceDialogs {
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             ),
             onPressed: () => Navigator.pop(ctx),
-            child: Text(isArabic ? 'إغلاق' : 'Close', style: const TextStyle(color: Colors.white)),
+            child: Text(isArabic ? 'إغلاق' : 'Close', style: const TextStyle(color: AppColors.white)),
           ),
         ],
       ),

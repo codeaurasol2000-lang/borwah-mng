@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../domain/entities/merchant_entity.dart';
 import '../models/merchant_model.dart';
@@ -6,6 +9,8 @@ import '../models/supervisor_stats_model.dart';
 import 'merchants_data_source.dart';
 
 class MerchantsMockDataSource implements MerchantsDataSource {
+  static const _linkedMerchantsKey = 'merchant_supervisor_linked_merchants_v1';
+
   final SupervisorStatsModel _stats = const SupervisorStatsModel(
     supervisorName: 'المشرف أحمد',
     supervisorNameEn: 'Supervisor Ahmed',
@@ -1036,7 +1041,67 @@ class MerchantsMockDataSource implements MerchantsDataSource {
   @override
   Future<List<MerchantModel>> getMerchants() async {
     await Future<void>.delayed(const Duration(milliseconds: 150));
-    return _merchants;
+    final preferences = await SharedPreferences.getInstance();
+    final encoded = preferences.getString(_linkedMerchantsKey);
+    if (encoded == null) return _merchants;
+
+    final decoded = jsonDecode(encoded);
+    if (decoded is! List) {
+      throw const FormatException('Linked merchant data must be a list.');
+    }
+    final linkedMerchants = <MerchantModel>[];
+    for (var index = 0; index < decoded.length; index++) {
+      final value = decoded[index];
+      if (value is! Map<String, dynamic> ||
+          value['merchantName'] is! String ||
+          value['phone'] is! String ||
+          (value['commercialRegistration'] != null &&
+              value['commercialRegistration'] is! String)) {
+        throw const FormatException('Linked merchant record is invalid.');
+      }
+      final name = (value['merchantName'] as String).trim();
+      if (name.isEmpty) {
+        throw const FormatException('Linked merchant name is required.');
+      }
+      final crNumber =
+          (value['commercialRegistration'] as String?)?.trim() ?? '';
+      final id = value['id'] as String? ?? 'MER-LINK-${index + 1}';
+      linkedMerchants.add(
+        MerchantModel(
+          id: id,
+          code: '#$id',
+          name: name,
+          nameEn: name,
+          category: 'تاجر جديد',
+          categoryEn: 'New merchant',
+          categoryIcon: Icons.storefront_outlined,
+          crNumber: crNumber.isEmpty ? '—' : crNumber,
+          logoIcon: Icons.storefront,
+          status: MerchantStatus.activeVerified,
+          statusTagText: 'نشط وموثق',
+          statusTagTextEn: 'Active & Verified',
+          adsCount: 0,
+          adsCountLabel: '0 إعلان',
+          adsCountLabelEn: '0 Ads',
+          adsSectionTitle: 'الإعلانات المعروضة',
+          adsSectionTitleEn: 'Displayed ads',
+          adsIcon: Icons.campaign_outlined,
+          activityNote: 'تمت إضافته للإشراف',
+          activityNoteEn: 'Added to supervision',
+          footerStatusText: 'تاجر جديد تحت الإشراف',
+          footerStatusTextEn: 'New supervised merchant',
+          footerStatusIcon: Icons.check_circle_outline,
+          actionButtonText: 'سجل التاجر',
+          actionButtonTextEn: 'Merchant record',
+          contactPhone: value['phone'] as String,
+          joinedDate: value['createdAt'] as String?,
+          commissionPercent: 5,
+          activeAdsCount: 0,
+          pendingReviewCount: 0,
+        ),
+      );
+    }
+    return [..._merchants, ...linkedMerchants];
   }
 
   @override

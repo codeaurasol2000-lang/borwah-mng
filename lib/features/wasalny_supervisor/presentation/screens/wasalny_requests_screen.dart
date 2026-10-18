@@ -89,7 +89,7 @@ const _sampleRequests = <_WasalnyRequest>[
     stage: _RequestStage.communication,
     status: _RequestStatus.communication,
     icon: Icons.camera_alt_outlined,
-    color: Color(0xFF253B54),
+    color: AppColors.hexFF253B54,
   ),
   _WasalnyRequest(
     id: 'W-1038',
@@ -115,7 +115,7 @@ const _sampleRequests = <_WasalnyRequest>[
     stage: _RequestStage.communication,
     status: _RequestStatus.underReview,
     icon: Icons.sports_esports_outlined,
-    color: Color(0xFF5D8097),
+    color: AppColors.hexFF5D8097,
   ),
   _WasalnyRequest(
     id: 'W-1031',
@@ -141,7 +141,7 @@ const _sampleRequests = <_WasalnyRequest>[
     stage: _RequestStage.communication,
     status: _RequestStatus.awaitingApproval,
     icon: Icons.laptop_mac_outlined,
-    color: Color(0xFF796B56),
+    color: AppColors.hexFF796B56,
   ),
   _WasalnyRequest(
     id: 'W-1024',
@@ -167,7 +167,7 @@ const _sampleRequests = <_WasalnyRequest>[
     stage: _RequestStage.sold,
     status: _RequestStatus.sold,
     icon: Icons.phone_iphone_outlined,
-    color: Color(0xFF51627A),
+    color: AppColors.hexFF51627A,
   ),
 ];
 
@@ -670,12 +670,12 @@ class _SafetyBanner extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFF18375C), Color(0xFF08213E)],
+          colors: [AppColors.hexFF18375C, AppColors.hexFF08213E],
         ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: const [
           BoxShadow(
-            color: Color(0x1A000000),
+            color: AppColors.hex1A000000,
             blurRadius: 8,
             offset: Offset(0, 3),
           ),
@@ -683,7 +683,7 @@ class _SafetyBanner extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(Icons.shield_outlined, color: Colors.white, size: 28),
+          const Icon(Icons.shield_outlined, color: AppColors.white, size: 28),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -692,7 +692,7 @@ class _SafetyBanner extends StatelessWidget {
                 Text(
                   l10n.wasalnyRequestsSafetyTitle,
                   style: const TextStyle(
-                    color: Colors.white,
+                    color: AppColors.white,
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
                   ),
@@ -701,7 +701,7 @@ class _SafetyBanner extends StatelessWidget {
                 Text(
                   l10n.wasalnyRequestsSafetyDescription,
                   style: const TextStyle(
-                    color: Color(0xFFD6E1EF),
+                    color: AppColors.hexFFD6E1EF,
                     height: 1.5,
                     fontSize: 10,
                   ),
@@ -731,7 +731,7 @@ class _SummaryCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 11),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(15),
       ),
       child: Column(
@@ -792,14 +792,14 @@ class _StageChip extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
               decoration: BoxDecoration(
                 color: selected
-                    ? Colors.white.withValues(alpha: 0.18)
-                    : const Color(0xFFE4E6E9),
+                    ? AppColors.white.withValues(alpha: 0.18)
+                    : AppColors.hexFFE4E6E9,
                 shape: BoxShape.circle,
               ),
               child: Text(
                 count.toString(),
                 style: TextStyle(
-                  color: selected ? Colors.white : AppColors.textSecondary,
+                  color: selected ? AppColors.white : AppColors.textSecondary,
                   fontSize: 9,
                 ),
               ),
@@ -810,7 +810,7 @@ class _StageChip extends StatelessWidget {
         onSelected: (_) => onTap(),
         selectedColor: AppColors.primaryDark,
         labelStyle: TextStyle(
-          color: selected ? Colors.white : AppColors.textSecondary,
+          color: selected ? AppColors.white : AppColors.textSecondary,
           fontSize: 10,
         ),
         side: BorderSide.none,
@@ -852,11 +852,11 @@ class _RequestCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: const [
           BoxShadow(
-            color: Color(0x10000000),
+            color: AppColors.hex10000000,
             blurRadius: 7,
             offset: Offset(0, 3),
           ),
@@ -884,7 +884,7 @@ class _RequestCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: const Color(0xFFF6F7F8),
+              color: AppColors.textPrimary,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
@@ -922,7 +922,7 @@ class _RequestCard extends StatelessWidget {
                     color: request.color,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Icon(request.icon, color: Colors.white, size: 32),
+                  child: Icon(request.icon, color: AppColors.white, size: 32),
                 ),
               ],
             ),
@@ -960,7 +960,7 @@ class _RequestCard extends StatelessWidget {
                         ? Icons.lock_outline
                         : Icons.lock_open_outlined,
                     background: AppColors.primaryDark,
-                    foreground: Colors.white,
+                    foreground: AppColors.white,
                     onPressed: isRevealed ? onHideData : onReveal,
                   ),
                 ),
@@ -969,7 +969,7 @@ class _RequestCard extends StatelessWidget {
                   child: _CardButton(
                     label: l10n.wasalnyRequestsPreviewAction,
                     icon: Icons.visibility_outlined,
-                    background: const Color(0xFFEDEFF1),
+                    background: AppColors.hexFFEDEFF1,
                     foreground: AppColors.primaryDark,
                     onPressed: onPreview,
                   ),
@@ -1002,7 +1002,7 @@ class _RequestCard extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 7),
             decoration: BoxDecoration(
-              color: const Color(0xFFE9EAEC),
+              color: AppColors.hexFFE9EAEC,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Row(
@@ -1060,7 +1060,7 @@ class _StatusPill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
       decoration: BoxDecoration(
-        color: const Color(0xFFDCE8FF),
+        color: AppColors.hexFFDCE8FF,
         borderRadius: BorderRadius.circular(18),
       ),
       child: Row(
@@ -1098,7 +1098,7 @@ class _PersonPill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 5),
       decoration: BoxDecoration(
-        color: const Color(0xFFE9EAEC),
+        color: AppColors.hexFFE9EAEC,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
@@ -1168,7 +1168,7 @@ class _RequestPhotoGallery extends StatelessWidget {
               Center(
                 child: Icon(
                   request.icon,
-                  color: Colors.white.withValues(alpha: 0.92),
+                  color: AppColors.white.withValues(alpha: 0.92),
                   size: 66,
                 ),
               ),
@@ -1179,13 +1179,13 @@ class _RequestPhotoGallery extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.black.withValues(alpha: 0.32),
+                    color: AppColors.black.withValues(alpha: 0.32),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
                     '${isArabic ? 'صورة' : 'Photo'} ${index + 1}',
                     style: const TextStyle(
-                      color: Colors.white,
+                      color: AppColors.white,
                       fontSize: 10,
                       fontWeight: FontWeight.w600,
                     ),
@@ -1201,7 +1201,7 @@ class _RequestPhotoGallery extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
-                    color: Colors.white,
+                    color: AppColors.white,
                     fontSize: 10,
                     fontWeight: FontWeight.w600,
                   ),
@@ -1231,7 +1231,7 @@ class _DetailsSection extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(13),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: AppColors.cardBorder),
       ),
@@ -1332,7 +1332,7 @@ class _PhonePill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(7),
       decoration: BoxDecoration(
-        color: const Color(0xFFF0F4FA),
+        color: AppColors.textPrimary,
         borderRadius: BorderRadius.circular(9),
       ),
       child: Text(

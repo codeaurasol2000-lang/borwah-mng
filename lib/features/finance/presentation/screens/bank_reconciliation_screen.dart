@@ -28,6 +28,7 @@ class BankReconciliationScreen extends StatefulWidget {
 
 class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
   int _activeRequestIndex = 0;
+  String _searchQuery = '';
   late final BankReconciliationCubit _cubit = BankReconciliationCubit(
     getRequestsUseCase: sl(),
     approveRequestUseCase: sl(),
@@ -38,7 +39,18 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
     rejectFrozenRequestUseCase: sl(),
   )..loadRequests();
 
-  List<BankLinkRequestEntity> get _requests => _cubit.state.requests;
+  List<BankLinkRequestEntity> get _requests {
+    final query = _searchQuery.trim().toLowerCase();
+    if (query.isEmpty) return _cubit.state.requests;
+    return _cubit.state.requests.where((request) => [
+      request.id,
+      request.commercialName,
+      request.beneficiaryName,
+      request.iban,
+      request.bankName,
+      request.crNumber,
+    ].any((value) => value.toLowerCase().contains(query))).toList();
+  }
   BankLinkRequestEntity get _currentRequest =>
       _requests[_activeRequestIndex % _requests.length];
   BankLinkRequestEntity get _nextRequest =>
@@ -176,9 +188,9 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
             Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: const Color(0xFFF8F9FA),
+                color:  AppColors.textPrimary,
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: Colors.grey.shade300),
+                border: Border.all(color: AppColors.grey300),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -233,7 +245,7 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
             ),
             onPressed: () => Navigator.pop(ctx),
             child: Text(isArabic ? 'إغلاق' : 'Close',
-                style: const TextStyle(color: Colors.white)),
+                style: const TextStyle(color: AppColors.white)),
           ),
         ],
       ),
@@ -252,11 +264,10 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
         child: FinanceSwipeNavigation(
           currentIndex: widget.currentIndex,
           enabled: widget.showBottomNavigation,
-          child: Scaffold(
-            backgroundColor: const Color(0xFFF4F6F8),
+          child: Scaffold(backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             appBar: widget.showBottomNavigation
                 ? AppBar(
-                    backgroundColor: Colors.white,
+                    backgroundColor: AppColors.white,
                     elevation: 0,
                     scrolledUnderElevation: 0,
                     leading: const Padding(
@@ -264,7 +275,7 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
                       child: CircleAvatar(
                         backgroundColor: AppColors.primaryDark,
                         child: Icon(Icons.shield_outlined,
-                            color: Colors.white, size: 19),
+                            color: AppColors.white, size: 19),
                       ),
                     ),
                     title: Column(
@@ -289,7 +300,7 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
                           radius: 15,
                           backgroundColor: AppColors.primaryDark,
                           child: Icon(Icons.person_outline,
-                              color: Colors.white, size: 17),
+                              color: AppColors.white, size: 17),
                         ),
                       ),
                     ],
@@ -329,16 +340,40 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
                     const SizedBox(height: 12),
                     _buildGovernmentConnection(context),
                     const SizedBox(height: 14),
-                    if (state.requests.isEmpty)
+                    if (state.requests.isNotEmpty) ...[
+                      TextField(
+                        onChanged: (value) => setState(() {
+                          _searchQuery = value;
+                          _activeRequestIndex = 0;
+                        }),
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.search),
+                          hintText: AppLocaleController.instance.isArabic
+                              ? 'ابحث بالاسم أو رقم الطلب أو الآيبان'
+                              : 'Search name, request ID, or IBAN',
+                          filled: true,
+                          fillColor: AppColors.white,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                    ],
+                    if (_requests.isEmpty)
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 20),
                         child: Center(
-                          child: Text(l10n.reconciliationNoPendingRequests),
+                          child: Text(state.requests.isEmpty
+                              ? l10n.reconciliationNoPendingRequests
+                              : (AppLocaleController.instance.isArabic
+                                  ? 'لا توجد نتائج مطابقة للبحث.'
+                                  : 'No requests match your search.')),
                         ),
                       )
                     else ...[
                       _buildAccountCard(context),
-                      if (state.requests.length > 1) ...[
+                      if (_requests.length > 1) ...[
                         const SizedBox(height: 14),
                         _buildNextAccountCard(context),
                       ],
@@ -370,7 +405,7 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: AppColors.warning.withValues(alpha: 0.5)),
       ),
@@ -473,7 +508,7 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
       ),
       child: Row(
         children: [
-          const Icon(Icons.gavel, color: Colors.white, size: 20),
+          const Icon(Icons.gavel, color: AppColors.white, size: 20),
           const SizedBox(width: 10),
           Expanded(
             child: Column(
@@ -487,7 +522,7 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
                       ? TextAlign.right
                       : TextAlign.left,
                   style: const TextStyle(
-                      color: Colors.white,
+                      color: AppColors.white,
                       fontSize: 12,
                       fontWeight: FontWeight.bold),
                 ),
@@ -498,7 +533,7 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
                       ? TextAlign.right
                       : TextAlign.left,
                   style: const TextStyle(
-                      color: Colors.white70, fontSize: 9, height: 1.5),
+                      color: AppColors.white70, fontSize: 9, height: 1.5),
                 ),
               ],
             ),
@@ -507,10 +542,10 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
           Container(
             padding: const EdgeInsets.all(7),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.12),
+              color: AppColors.white.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: const Icon(Icons.gavel, color: Colors.white, size: 17),
+            child: const Icon(Icons.gavel, color: AppColors.white, size: 17),
           ),
         ],
       ),
@@ -522,7 +557,7 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
       decoration: BoxDecoration(
-        color: const Color(0xFFEFF1F3),
+        color:  AppColors.hexFFEFF1F3,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -546,7 +581,7 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
             ),
           ),
           const SizedBox(width: 8),
-          _statusPill(l10n.reconciliationConnected, const Color(0xFFDCE8FF),
+          _statusPill(l10n.reconciliationConnected,  AppColors.hexFFDCE8FF,
               AppColors.infoDark),
         ],
       ),
@@ -561,11 +596,11 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(14),
         boxShadow: const [
           BoxShadow(
-              color: Color(0x12000000), blurRadius: 8, offset: Offset(0, 3)),
+              color: AppColors.hex12000000, blurRadius: 8, offset: Offset(0, 3)),
         ],
       ),
       child: Column(
@@ -625,7 +660,7 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
               onPressed: _handleApprove,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primaryDark,
-                foregroundColor: Colors.white,
+                foregroundColor: AppColors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
               ),
@@ -645,7 +680,7 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
               onPressed: _handleRequestIban,
               style: OutlinedButton.styleFrom(
                 foregroundColor: AppColors.primaryDark,
-                backgroundColor: const Color(0xFFEFF1F3),
+                backgroundColor:  AppColors.hexFFEFF1F3,
                 side: BorderSide.none,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
@@ -666,7 +701,7 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
                     onPressed: _handleFreeze,
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.warning,
-                      backgroundColor: const Color(0xFFFFF9E6),
+                      backgroundColor:  AppColors.surface,
                       side: const BorderSide(
                           color: AppColors.warning, width: 0.8),
                       shape: RoundedRectangleBorder(
@@ -690,7 +725,7 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
                     onPressed: _handleReject,
                     style: TextButton.styleFrom(
                       foregroundColor: AppColors.dangerDark,
-                      backgroundColor: const Color(0xFFFFE0DE),
+                      backgroundColor:  AppColors.surface,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
                     ),
@@ -719,16 +754,16 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
         Row(
           children: [
             _statusPill(l10n.reconciliationComplianceReview,
-                const Color(0xFFE4ECFF), AppColors.infoDark),
+                 AppColors.hexFFE4ECFF, AppColors.infoDark),
             const Spacer(),
-            _statusPill(item.id, AppColors.primaryDark, Colors.white),
+            _statusPill(item.id, AppColors.primaryDark, AppColors.white),
           ],
         ),
         const SizedBox(height: 9),
         Container(
           padding: const EdgeInsets.all(10),
           decoration: const BoxDecoration(
-              color: Color(0xFFF5F6F7),
+              color: AppColors.textPrimary,
               borderRadius: BorderRadius.all(Radius.circular(10))),
           child: Row(
             children: [
@@ -770,7 +805,7 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: const BoxDecoration(
-          color: Color(0xFFF0F2F4),
+          color: AppColors.textPrimary,
           borderRadius: BorderRadius.all(Radius.circular(12))),
       child: Column(
         children: [
@@ -804,7 +839,7 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
             child: const LinearProgressIndicator(
               value: 1,
               minHeight: 9,
-              backgroundColor: Colors.white,
+              backgroundColor: AppColors.white,
               color: AppColors.primaryDark,
             ),
           ),
@@ -838,7 +873,7 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 8),
       decoration: const BoxDecoration(
-          color: Color(0xFFF0F2F4),
+          color: AppColors.textPrimary,
           borderRadius: BorderRadius.all(Radius.circular(9))),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -848,7 +883,7 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
               Flexible(
                 child: _statusPill(
                     AppLocalizations.of(context)!.reconciliationMatchVerified,
-                    const Color(0xFFDDE3E8),
+                     AppColors.hexFFDDE3E8,
                     AppColors.infoDark),
               ),
               const SizedBox(width: 8),
@@ -878,7 +913,7 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
     return Container(
       padding: const EdgeInsets.all(9),
       decoration: BoxDecoration(
-          color: const Color(0xFFF0F2F4),
+          color:  AppColors.textPrimary,
           borderRadius: BorderRadius.circular(9)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -906,7 +941,7 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 8),
             decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(8)),
+                color: AppColors.white, borderRadius: BorderRadius.circular(8)),
             child: Row(
               children: [
                 const Icon(Icons.copy_outlined,
@@ -937,7 +972,7 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 8),
       decoration: BoxDecoration(
-          color: const Color(0xFFF0F2F4),
+          color:  AppColors.textPrimary,
           borderRadius: BorderRadius.circular(9)),
       child: Row(
         children: [
@@ -963,7 +998,7 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
           Flexible(
             child: _statusPill(
                 '${l10n.reconciliationValidUntil} ${item.getCrExpiry(isArabic)}',
-                const Color(0xFFE0E4E7),
+                 AppColors.hexFFE0E4E7,
                 AppColors.textSecondary),
           ),
         ],
@@ -976,7 +1011,7 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: BoxDecoration(
-          color: const Color(0xFFF0F2F4),
+          color:  AppColors.textPrimary,
           borderRadius: BorderRadius.circular(9)),
       child: Row(
         children: [
@@ -985,7 +1020,7 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
               onPressed: () => _previewDocument(item),
               style: OutlinedButton.styleFrom(
                 foregroundColor: AppColors.primaryDark,
-                backgroundColor: Colors.white,
+                backgroundColor: AppColors.white,
                 side: BorderSide.none,
                 minimumSize: const Size(60, 34),
                 padding: const EdgeInsets.symmetric(horizontal: 6),
@@ -1017,7 +1052,7 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
           Container(
             padding: const EdgeInsets.all(7),
             decoration: BoxDecoration(
-                color: const Color(0xFFE0E4E7),
+                color:  AppColors.hexFFE0E4E7,
                 borderRadius: BorderRadius.circular(7)),
             child: const Icon(Icons.picture_as_pdf_outlined,
                 color: AppColors.info, size: 15),
@@ -1035,7 +1070,7 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.circular(14)),
+          color: AppColors.white, borderRadius: BorderRadius.circular(14)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -1053,14 +1088,14 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
                         color: AppColors.primaryDark)),
               ),
               _statusPill(
-                  item.id, const Color(0xFFE8EAEC), AppColors.textSecondary),
+                  item.id,  AppColors.hexFFE8EAEC, AppColors.textSecondary),
             ],
           ),
           const SizedBox(height: 9),
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-                color: const Color(0xFFF0F2F4),
+                color:  AppColors.textPrimary,
                 borderRadius: BorderRadius.circular(10)),
             child: Row(
               children: [
@@ -1098,13 +1133,13 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
                 ),
                 const SizedBox(width: 6),
                 _statusPill(l10n.reconciliationAuditAlert,
-                    const Color(0xFFFFE0DE), AppColors.dangerDark),
+                     AppColors.textPrimary, AppColors.dangerDark),
               ],
             ),
           ),
           const SizedBox(height: 7),
           Material(
-            color: Colors.transparent,
+            color: AppColors.transparent,
             child: InkWell(
               borderRadius: BorderRadius.circular(9),
               onTap: _advanceToNextRequest,
@@ -1112,7 +1147,7 @@ class _BankReconciliationScreenState extends State<BankReconciliationScreen> {
                 padding:
                     const EdgeInsets.symmetric(vertical: 9, horizontal: 10),
                 decoration: BoxDecoration(
-                    color: const Color(0xFFE9ECEF),
+                    color: AppColors.hexFFE9ECEF,
                     borderRadius: BorderRadius.circular(9)),
                 child: Row(
                   children: [

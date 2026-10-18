@@ -7,6 +7,13 @@ import '../domain/entities/merchant_entity.dart';
 
 class MerchantAdvertisementLocalStore {
   static const _storageKey = 'merchant_advertisement_statuses_v1';
+  static const referencesByLocalId = <int, String>{
+    1: 'AD-94820',
+    2: 'AD-66214',
+    3: 'AD-78011',
+  };
+  static List<String> get trackedReferences =>
+      List.unmodifiable(referencesByLocalId.values);
   static final ValueNotifier<int> version = ValueNotifier<int>(0);
   static bool _loaded = false;
   static Future<void>? _loading;

@@ -118,7 +118,7 @@ class _BarwahAppState extends State<BarwahApp> {
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             theme: AppTheme.lightTheme,
             darkTheme: AppTheme.darkTheme,
-            themeMode: AppThemeController.instance.mode,
+            themeMode: AppThemeController.instance.themeMode,
             builder: (context, child) {
               final isArabic = AppLocaleController.instance.isArabic;
 

@@ -1,3 +1,4 @@
+import 'package:barwah_app/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class AppBrandMark extends StatelessWidget {
@@ -19,18 +20,18 @@ class AppBrandMark extends StatelessWidget {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF173457), Color(0xFF071228)],
+          colors: [AppColors.hexFF173457, AppColors.hexFF071228],
         ),
         borderRadius: BorderRadius.circular(size * 0.23),
-        border: Border.all(color: const Color(0xFF43C6AC).withValues(alpha: 0.5)),
+        border: Border.all(color:  AppColors.hexFF43C6AC.withValues(alpha: 0.5)),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF43C6AC).withValues(alpha: 0.18),
+            color:  AppColors.hexFF43C6AC.withValues(alpha: 0.18),
             blurRadius: size * 0.3,
             spreadRadius: size * 0.015,
           ),
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.25),
+            color: AppColors.black.withValues(alpha: 0.25),
             blurRadius: size * 0.22,
             offset: Offset(0, size * 0.08),
           ),
@@ -39,7 +40,7 @@ class AppBrandMark extends StatelessWidget {
       child: Icon(
         Icons.shield_outlined,
         size: iconSize,
-        color: Colors.white,
+        color: AppColors.white,
         ),
     );
   }

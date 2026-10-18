@@ -8,7 +8,6 @@ class ExpenseRequestEntity extends Equatable {
   final String bankAccountId;
   final String bankName;
   final String reason;
-  final String? attachmentName;
   final DateTime submittedAt;
   final ExpenseRequestStatus status;
 
@@ -18,7 +17,6 @@ class ExpenseRequestEntity extends Equatable {
     required this.bankAccountId,
     required this.bankName,
     required this.reason,
-    this.attachmentName,
     required this.submittedAt,
     this.status = ExpenseRequestStatus.pendingAdminApproval,
   });
@@ -30,7 +28,6 @@ class ExpenseRequestEntity extends Equatable {
         bankAccountId,
         bankName,
         reason,
-        attachmentName,
         submittedAt,
         status,
       ];

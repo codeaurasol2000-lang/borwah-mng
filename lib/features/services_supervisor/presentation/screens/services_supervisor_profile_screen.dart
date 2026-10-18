@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../data/services_supervisor_activity_store.dart';
 import 'services_supervisor_account_screen.dart';
 import 'services_supervisor_wallet_screen.dart';
 
@@ -111,6 +112,8 @@ class _ServicesSupervisorProfileScreenState
           const SizedBox(height: 10),
           _buildMetrics(l10n),
           const SizedBox(height: 14),
+          const _RecentServicesActions(),
+          const SizedBox(height: 14),
           _buildWalletCard(context, l10n),
           const SizedBox(height: 22),
           Text(
@@ -131,8 +134,8 @@ class _ServicesSupervisorProfileScreenState
               icon: const Icon(Icons.logout, size: 19),
               label: Text(l10n.servicesProfileLogout),
               style: FilledButton.styleFrom(
-                foregroundColor: const Color(0xFFB42318),
-                backgroundColor: const Color(0xFFFFD9D5),
+                foregroundColor: AppColors.hexFFB42318,
+                backgroundColor: AppColors.surface,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(14),
                 ),
@@ -166,7 +169,7 @@ class _ServicesSupervisorProfileScreenState
                 width: 58,
                 height: 66,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE7EDF4),
+                  color: AppColors.hexFFE7EDF4,
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: const Icon(
@@ -232,12 +235,12 @@ class _ServicesSupervisorProfileScreenState
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 10),
             decoration: BoxDecoration(
-              color: const Color(0xFFF1F3F5),
+              color: AppColors.textPrimary,
               borderRadius: BorderRadius.circular(11),
             ),
             child: Row(
               children: [
-                const Icon(Icons.circle, color: Color(0xFF16A37A), size: 10),
+                const Icon(Icons.circle, color: AppColors.hexFF16A37A, size: 10),
                 const SizedBox(width: 7),
                 Expanded(
                   child: Text(
@@ -262,70 +265,22 @@ class _ServicesSupervisorProfileScreenState
   }
 
   Widget _buildMetrics(AppLocalizations l10n) {
-    final metrics = [
-      _ProfileMetric(
-        icon: Icons.task_alt,
-        label: l10n.servicesProfileCompletedTasks,
-        value: '342',
-        detail: l10n.servicesProfileFieldTasks,
-        color: AppColors.info,
-      ),
-      _ProfileMetric(
-        icon: Icons.star,
-        label: l10n.servicesProfilePerformanceRating,
-        value: '4.9',
-        detail: l10n.servicesProfileRatingDetail,
-        color: const Color(0xFFE59A16),
-      ),
-      _ProfileMetric(
-        icon: Icons.access_time,
-        label: l10n.servicesProfileAssignmentTime,
-        value: '15',
-        detail: l10n.servicesProfileMinutes,
-        color: AppColors.info,
-      ),
-      _ProfileMetric(
-        icon: Icons.verified_outlined,
-        label: l10n.servicesProfileComplaintResolution,
-        value: '99.2%',
-        detail: l10n.servicesProfileResolutionDetail,
-        color: const Color(0xFF16A37A),
-      ),
-    ];
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        const gap = 9.0;
-        final width = (constraints.maxWidth - gap) / 2;
-        return Wrap(
-          spacing: gap,
-          runSpacing: gap,
-          children: [
-            for (final metric in metrics)
-              SizedBox(
-                width: width,
-                height: 96,
-                child: _MetricCard(metric: metric),
-              ),
-          ],
-        );
-      },
-    );
+    return _LiveServicesMetrics(isArabic: l10n.localeName.startsWith('ar'));
   }
 
   Widget _buildDemoDataNotice(AppLocalizations l10n) => Container(
         padding: const EdgeInsets.all(11),
         decoration: BoxDecoration(
-          color: const Color(0xFFFFF4DB),
+          color: AppColors.textPrimary,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFFF0D99C)),
+          border: Border.all(color: AppColors.textPrimary),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Icon(
               Icons.info_outline,
-              color: Color(0xFF8A5A00),
+              color: AppColors.hexFF8A5A00,
               size: 18,
             ),
             const SizedBox(width: 8),
@@ -333,7 +288,7 @@ class _ServicesSupervisorProfileScreenState
               child: Text(
                 l10n.servicesProfileDemoMetricsNotice,
                 style: const TextStyle(
-                  color: Color(0xFF6D4C00),
+                  color: AppColors.hexFF6D4C00,
                   fontSize: 11,
                   height: 1.45,
                 ),
@@ -365,7 +320,7 @@ class _ServicesSupervisorProfileScreenState
                 child: Text(
                   l10n.servicesProfileWalletTitle,
                   style: const TextStyle(
-                    color: Colors.white,
+                    color: AppColors.white,
                     fontSize: 17,
                     fontWeight: FontWeight.w800,
                   ),
@@ -373,7 +328,7 @@ class _ServicesSupervisorProfileScreenState
               ),
               const Icon(
                 Icons.account_balance_wallet_outlined,
-                color: Color(0xFFA7C8FF),
+                color: AppColors.hexFFA7C8FF,
                 size: 25,
               ),
             ],
@@ -384,7 +339,7 @@ class _ServicesSupervisorProfileScreenState
             child: Text(
               l10n.servicesProfileWalletDescription,
               style: const TextStyle(
-                color: Color(0xFFB5C7DF),
+                color: AppColors.hexFFB5C7DF,
                 fontSize: 10,
               ),
             ),
@@ -424,7 +379,7 @@ class _ServicesSupervisorProfileScreenState
               label: Text(l10n.servicesProfileOpenWallet),
               style: TextButton.styleFrom(
                 foregroundColor: AppColors.primaryDark,
-                backgroundColor: const Color(0xFFA7C8FF),
+                backgroundColor: AppColors.hexFFA7C8FF,
                 alignment: AlignmentDirectional.center,
                 padding: const EdgeInsets.symmetric(vertical: 11),
                 shape: RoundedRectangleBorder(
@@ -509,6 +464,71 @@ class _ServicesSupervisorProfileScreenState
   }
 }
 
+class _LiveServicesMetrics extends StatefulWidget {
+  final bool isArabic;
+  const _LiveServicesMetrics({required this.isArabic});
+
+  @override
+  State<_LiveServicesMetrics> createState() => _LiveServicesMetricsState();
+}
+
+class _LiveServicesMetricsState extends State<_LiveServicesMetrics> {
+  late Future<List<ServicesSupervisorActivity>> _future;
+  final _store = ServicesSupervisorActivityStore();
+
+  @override
+  void initState() {
+    super.initState();
+    _future = _store.load();
+  }
+
+  @override
+  void didUpdateWidget(covariant _LiveServicesMetrics oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _future = _store.load();
+  }
+
+  @override
+  Widget build(BuildContext context) => FutureBuilder<List<ServicesSupervisorActivity>>(
+        future: _future,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return SizedBox(
+              height: 92,
+              child: Center(
+                child: snapshot.hasError
+                    ? Text(widget.isArabic ? 'تعذر تحميل الإحصائيات' : 'Could not load statistics')
+                    : const CircularProgressIndicator(),
+              ),
+            );
+          }
+          final entries = snapshot.data!;
+          final requestDecisions = entries.where((item) =>
+              item.action == 'request_approved' || item.action == 'request_rejected').length;
+          final escalatedComplaints = entries.where((item) => item.action == 'complaint_escalated').length;
+          final resolvedComplaints = entries.where((item) => item.action == 'complaint_resolved').length;
+          final metrics = [
+            _ProfileMetric(icon: Icons.fact_check_outlined, label: widget.isArabic ? 'إجمالي الإجراءات' : 'Recorded actions', value: '${entries.length}', detail: widget.isArabic ? 'إجراءات محفوظة' : 'Saved actions', color: AppColors.info),
+            _ProfileMetric(icon: Icons.task_alt, label: widget.isArabic ? 'طلبات تمت مراجعتها' : 'Requests reviewed', value: '$requestDecisions', detail: widget.isArabic ? 'قبول أو رفض' : 'Approved or rejected', color: AppColors.hexFF16A37A),
+            _ProfileMetric(icon: Icons.north_east, label: widget.isArabic ? 'شكاوى مصعّدة' : 'Escalated complaints', value: '$escalatedComplaints', detail: widget.isArabic ? 'إجراءات مسجلة' : 'Recorded actions', color: AppColors.danger),
+            _ProfileMetric(icon: Icons.verified_outlined, label: widget.isArabic ? 'شكاوى تم حلها' : 'Complaints resolved', value: '$resolvedComplaints', detail: widget.isArabic ? 'إجراءات مسجلة' : 'Recorded actions', color: AppColors.hexFF16A37A),
+          ];
+          return LayoutBuilder(builder: (context, constraints) {
+            const gap = 9.0;
+            final width = (constraints.maxWidth - gap) / 2;
+            return Wrap(
+              spacing: gap,
+              runSpacing: gap,
+              children: [
+                for (final metric in metrics)
+                  SizedBox(width: width, height: 96, child: _MetricCard(metric: metric)),
+              ],
+            );
+          });
+        },
+      );
+}
+
 class _ProfileMetric {
   final IconData icon;
   final String label;
@@ -544,7 +564,7 @@ class _MetricCard extends StatelessWidget {
                 width: 25,
                 height: 25,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF0F3F7),
+                  color: AppColors.textPrimary,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(metric.icon, size: 15, color: metric.color),
@@ -603,7 +623,7 @@ class _WalletBalance extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: const Color(0xFF0A2849),
+        color: AppColors.hexFF0A2849,
         borderRadius: BorderRadius.circular(11),
       ),
       child: Column(
@@ -614,7 +634,7 @@ class _WalletBalance extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
-              color: Color(0xFFD1DCEB),
+              color: AppColors.hexFFD1DCEB,
               fontSize: 9,
             ),
           ),
@@ -622,7 +642,7 @@ class _WalletBalance extends StatelessWidget {
           Text(
             amount,
             style: const TextStyle(
-              color: Colors.white,
+              color: AppColors.white,
               fontSize: 18,
               fontWeight: FontWeight.w800,
             ),
@@ -630,7 +650,7 @@ class _WalletBalance extends StatelessWidget {
           Text(
             currency,
             style: const TextStyle(
-              color: Color(0xFFB5C7DF),
+              color: AppColors.hexFFB5C7DF,
               fontSize: 8,
             ),
           ),
@@ -652,7 +672,7 @@ class _InfoBadge extends StatelessWidget {
       constraints: const BoxConstraints(maxWidth: 170),
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
       decoration: BoxDecoration(
-        color: const Color(0xFFEAF0F7),
+        color: AppColors.hexFFEAF0F7,
         borderRadius: BorderRadius.circular(18),
       ),
       child: Row(
@@ -696,7 +716,7 @@ class _AdministrationRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.transparent,
+      color: AppColors.transparent,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
@@ -708,7 +728,7 @@ class _AdministrationRow extends StatelessWidget {
                 width: 36,
                 height: 36,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF0F2F4),
+                  color: AppColors.textPrimary,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(icon, color: AppColors.primaryDark, size: 19),
@@ -730,7 +750,7 @@ class _AdministrationRow extends StatelessWidget {
                     Text(
                       subtitle,
                       style: const TextStyle(
-                        color: Color(0xFF16A37A),
+                        color: AppColors.hexFF16A37A,
                         fontSize: 9,
                       ),
                     ),
@@ -753,8 +773,90 @@ class _AdministrationRow extends StatelessWidget {
 
 BoxDecoration _cardDecoration() {
   return BoxDecoration(
-    color: Colors.white,
+    color: AppColors.white,
     borderRadius: BorderRadius.circular(16),
     border: Border.all(color: AppColors.cardBorder),
   );
+}
+
+class _RecentServicesActions extends StatefulWidget {
+  const _RecentServicesActions();
+
+  @override
+  State<_RecentServicesActions> createState() => _RecentServicesActionsState();
+}
+
+class _RecentServicesActionsState extends State<_RecentServicesActions> {
+  late Future<List<ServicesSupervisorActivity>> _activities;
+  final _store = ServicesSupervisorActivityStore();
+
+  @override
+  void initState() {
+    super.initState();
+    _activities = _store.load();
+  }
+
+  @override
+  void didUpdateWidget(covariant _RecentServicesActions oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _activities = _store.load();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isArabic = AppLocalizations.of(context)!.localeName.startsWith('ar');
+    return FutureBuilder<List<ServicesSupervisorActivity>>(
+      future: _activities,
+      builder: (context, snapshot) {
+        final entries = snapshot.data ?? const <ServicesSupervisorActivity>[];
+        return Container(
+          padding: const EdgeInsets.all(14),
+          decoration: _cardDecoration(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(children: [
+                const Icon(Icons.history_edu_outlined, color: AppColors.primaryDark, size: 19),
+                const SizedBox(width: 8),
+                Expanded(child: Text(isArabic ? 'أحدث الإجراءات الرقابية' : 'Recent supervisory actions', style: const TextStyle(color: AppColors.primaryDark, fontSize: 14, fontWeight: FontWeight.w800))),
+              ]),
+              const SizedBox(height: 10),
+              if (snapshot.connectionState != ConnectionState.done)
+                const LinearProgressIndicator(minHeight: 2)
+              else if (snapshot.hasError)
+                Text(isArabic ? 'تعذر تحميل سجل الإجراءات.' : 'Could not load the action log.', style: const TextStyle(color: AppColors.textSecondary, fontSize: 11))
+              else if (entries.isEmpty)
+                Text(isArabic ? 'ستظهر هنا قرارات الطلبات والشكاوى.' : 'Request and complaint decisions will appear here.', style: const TextStyle(color: AppColors.textSecondary, fontSize: 11))
+              else
+                for (final entry in entries.take(4))
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      const Icon(Icons.check_circle_outline, size: 16, color: AppColors.infoDark),
+                      const SizedBox(width: 8),
+                      Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                        Text(_actionLabel(entry.action, isArabic), style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+                        Text(entry.subject, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 10, color: AppColors.textSecondary)),
+                        Text('${MaterialLocalizations.of(context).formatShortDate(entry.occurredAt.toLocal())} • ${TimeOfDay.fromDateTime(entry.occurredAt.toLocal()).format(context)}', style: const TextStyle(fontSize: 9, color: AppColors.textMuted)),
+                      ])),
+                    ]),
+                  ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  String _actionLabel(String action, bool isArabic) => switch (action) {
+        'request_approved' => isArabic ? 'تم اعتماد طلب خدمة' : 'Service request approved',
+        'request_rejected' => isArabic ? 'تم رفض طلب خدمة' : 'Service request rejected',
+        'request_reopened' => isArabic ? 'تمت إعادة فتح طلب خدمة' : 'Service request reopened',
+        'request_provider_assigned' => isArabic ? 'تم إسناد الطلب إلى مزود' : 'Request assigned to a provider',
+        'complaint_reassigned' => isArabic ? 'تمت إعادة إسناد شكوى' : 'Complaint reassigned',
+        'complaint_escalated' => isArabic ? 'تم تصعيد شكوى' : 'Complaint escalated',
+        'complaint_resolved' => isArabic ? 'تم حل الشكوى' : 'Complaint resolved',
+        'complaint_reopened' => isArabic ? 'تمت إعادة فتح الشكوى' : 'Complaint reopened',
+        _ => action,
+      };
 }

@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/di/injection_container.dart';
 import '../../../../core/widgets/app_snack_bar.dart';
+import '../../../finance/domain/entities/withdrawal_request_entity.dart';
+import '../../../finance/domain/repositories/finance_repository.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../data/merchant_advertisement_local_store.dart';
 import '../../data/merchant_supervisor_local_store.dart';
@@ -24,6 +27,7 @@ enum _AdStatus {
 }
 
 enum _AdRejectionReason { price, misleading, photos, policy }
+enum _SummaryFilter { hidden, approved, underReview, urgent }
 
 class _AdRecord {
   final int id;
@@ -50,7 +54,9 @@ class _AdRecord {
 }
 
 class AdsManagementScreen extends StatefulWidget {
-  const AdsManagementScreen({super.key});
+  final int refreshToken;
+
+  const AdsManagementScreen({super.key, this.refreshToken = 0});
 
   @override
   State<AdsManagementScreen> createState() => _AdsManagementScreenState();
@@ -63,7 +69,7 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
       id: 1,
       category: _AdCategory.vehicles,
       imageIcon: Icons.directions_car_filled_outlined,
-      imageColor: Color(0xFF476176),
+      imageColor: AppColors.hexFF476176,
       imageCount: 8,
       receivedMinutesAgo: 25,
       hasMarketPriceBadge: true,
@@ -74,7 +80,7 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
       id: 2,
       category: _AdCategory.electronics,
       imageIcon: Icons.smartphone,
-      imageColor: Color(0xFF8DA5B7),
+      imageColor: AppColors.hexFF8DA5B7,
       imageCount: 5,
       receivedMinutesAgo: 40,
     ),
@@ -82,12 +88,14 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
       id: 3,
       category: _AdCategory.realEstate,
       imageIcon: Icons.villa_outlined,
-      imageColor: Color(0xFF6E765D),
+      imageColor: AppColors.hexFF6E765D,
       imageCount: 14,
       receivedMinutesAgo: 120,
     ),
   ];
   final Map<int, _AdStatus> _statuses = {};
+  final Map<int, double> _deliveryFees = {};
+  final Map<int, String> _editRequests = {};
   final Map<int, ({_AdRejectionReason reason, String guidance})> _rejections =
       {};
   final Set<int> _hiddenAds = {};
@@ -97,6 +105,8 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
   String _searchQuery = '';
   _AdCategory? _categoryFilter;
   bool _newestFirst = true;
+  _SummaryFilter? _summaryFilter;
+  DateTime _lastUpdatedAt = DateTime.now();
 
   static const _savedActionsKey = 'merchant_supervisor_ad_actions_v1';
   static const _financialRequestsKey =
@@ -109,6 +119,14 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
       _refreshSharedStatuses,
     );
     _loadSavedActions().then((_) => _refreshSharedStatuses());
+  }
+
+  @override
+  void didUpdateWidget(covariant AdsManagementScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.refreshToken != widget.refreshToken) {
+      _syncFinanceDecisions();
+    }
   }
 
   @override
@@ -134,6 +152,7 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
             _hiddenAds.remove(ad.id);
           }
         }
+        _lastUpdatedAt = DateTime.now();
       });
     } catch (error, stackTrace) {
       FlutterError.reportError(
@@ -148,6 +167,79 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
           AppLocalizations.of(context)!,
           AppLocalizations.of(context)!.adsLoadFailed,
         );
+      }
+    }
+  }
+
+  Future<void> _syncFinanceDecisions() async {
+    try {
+      final result = await sl<FinanceRepository>().getMerchantWithdrawals();
+      final financeRequests = result.fold(
+        (failure) => throw StateError(failure.message),
+        (requests) => requests,
+      );
+      final updates = <_AdRecord, _AdStatus>{};
+      for (final ad in _ads) {
+        if (_statuses[ad.id] != _AdStatus.awaitingFinance) continue;
+        final requestId = 'AD-FEE-${_adReference(ad)}';
+        final request = financeRequests.where(
+          (item) => item.sourceAccount == requestId,
+        );
+        if (request.isEmpty) continue;
+        final nextStatus = switch (request.first.status) {
+          RequestStatus.approved => _AdStatus.approved,
+          RequestStatus.rejected => _AdStatus.rejected,
+          RequestStatus.frozen ||
+          RequestStatus.underInvestigation =>
+            _AdStatus.suspended,
+          _ => _AdStatus.awaitingFinance,
+        };
+        if (nextStatus != _AdStatus.awaitingFinance) {
+          updates[ad] = nextStatus;
+        }
+      }
+      if (updates.isEmpty || !mounted) return;
+      final l10n = AppLocalizations.of(context)!;
+      setState(() {
+        for (final entry in updates.entries) {
+          _statuses[entry.key.id] = entry.value;
+        }
+        _lastUpdatedAt = DateTime.now();
+      });
+      await _persistActions();
+      for (final entry in updates.entries) {
+        final status = switch (entry.value) {
+          _AdStatus.approved => MerchantAdvertisementStatus.approved,
+          _AdStatus.rejected => MerchantAdvertisementStatus.rejected,
+          _AdStatus.suspended => MerchantAdvertisementStatus.frozen,
+          _ => MerchantAdvertisementStatus.awaitingFinance,
+        };
+        await MerchantAdvertisementLocalStore.saveStatus(
+          reference: _adReference(entry.key),
+          status: status,
+        );
+        await MerchantSupervisorLocalStore.recordAction(
+          action: switch (entry.value) {
+            _AdStatus.approved => l10n.adsApprovedStatus,
+            _AdStatus.rejected => l10n.adsRejectedStatus,
+            _AdStatus.suspended => l10n.adsFrozenStatus,
+            _ => l10n.adsPremiumWaitingFinance,
+          },
+          subject: _adTitle(l10n, entry.key),
+          details: _adReference(entry.key),
+        );
+      }
+    } on Object catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'merchant advertisement finance status',
+        ),
+      );
+      if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
+        _showMessage(l10n, l10n.adsLoadFailed);
       }
     }
   }
@@ -199,9 +291,13 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
       final statusEntries = decoded['statuses'];
       final hiddenEntries = decoded['hidden'];
       final rejectionEntries = decoded['rejections'] ?? <String, dynamic>{};
+      final feeEntries = decoded['deliveryFees'] ?? <String, dynamic>{};
+      final editRequestEntries = decoded['editRequests'] ?? <String, dynamic>{};
       if (statusEntries is! Map<String, dynamic> ||
           hiddenEntries is! List ||
-          rejectionEntries is! Map<String, dynamic>) {
+          rejectionEntries is! Map<String, dynamic> ||
+          feeEntries is! Map<String, dynamic> ||
+          editRequestEntries is! Map<String, dynamic>) {
         throw const FormatException(
           'Saved advertisement action fields are invalid.',
         );
@@ -242,11 +338,31 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
           guidance: value['guidance'] as String,
         );
       }
+      final fees = <int, double>{};
+      for (final entry in feeEntries.entries) {
+        final id = int.tryParse(entry.key);
+        final value = entry.value;
+        if (id == null || value is! num || !value.isFinite || value < 0) {
+          throw const FormatException(
+              'Saved advertisement delivery fee is invalid.');
+        }
+        fees[id] = value.toDouble();
+      }
+      final editRequests = <int, String>{};
+      for (final entry in editRequestEntries.entries) {
+        final id = int.tryParse(entry.key);
+        if (id == null || entry.value is! String) {
+          throw const FormatException('Saved advertisement edit request is invalid.');
+        }
+        editRequests[id] = entry.value as String;
+      }
       if (!mounted) return;
       setState(() {
         _statuses.addAll(statuses);
         _hiddenAds.addAll(hidden);
         _rejections.addAll(rejections);
+        _deliveryFees.addAll(fees);
+        _editRequests.addAll(editRequests);
         _isLoadingActions = false;
       });
     } catch (error, stackTrace) {
@@ -281,9 +397,93 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
             'guidance': rejection.guidance,
           }),
         ),
+        'deliveryFees': _deliveryFees.map(
+          (id, fee) => MapEntry(id.toString(), fee),
+        ),
+        'editRequests': _editRequests.map(
+          (id, note) => MapEntry(id.toString(), note),
+        ),
       }),
     );
     if (!saved) throw StateError('Could not save advertisement actions.');
+  }
+
+  Future<void> _saveDeliveryFee(
+    AppLocalizations l10n,
+    _AdRecord ad,
+    double fee,
+  ) async {
+    if (!fee.isFinite || fee < 0) {
+      _showMessage(l10n, l10n.adsFeeInvalid);
+      return;
+    }
+    final previous = _deliveryFees[ad.id];
+    setState(() {
+      _deliveryFees[ad.id] = fee;
+      _lastUpdatedAt = DateTime.now();
+    });
+    try {
+      await _persistActions();
+      await MerchantSupervisorLocalStore.recordAction(
+        action: l10n.adsDeliveryFee,
+        subject: _adTitle(l10n, ad),
+        details: '$fee ${l10n.finRequestCurrency}',
+      );
+      if (mounted) _showMessage(l10n, l10n.adsFeeUpdated);
+    } on Object catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'merchant advertisement delivery fee',
+        ),
+      );
+      if (!mounted) return;
+      setState(() {
+        if (previous == null) {
+          _deliveryFees.remove(ad.id);
+        } else {
+          _deliveryFees[ad.id] = previous;
+        }
+      });
+      _showMessage(l10n, l10n.adsSaveFailed);
+    }
+  }
+
+  Future<void> _requestAdEdit(
+    AppLocalizations l10n,
+    _AdRecord ad,
+    String note,
+  ) async {
+    final previous = _editRequests[ad.id];
+    setState(() {
+      _editRequests[ad.id] = note;
+      _lastUpdatedAt = DateTime.now();
+    });
+    try {
+      await _persistActions();
+      await MerchantSupervisorLocalStore.recordAction(
+        action: l10n.adsRequestEdit,
+        subject: _adTitle(l10n, ad),
+        details: note,
+      );
+      if (mounted) _showMessage(l10n, l10n.adsRequestEdit);
+    } on Object catch (error, stackTrace) {
+      FlutterError.reportError(FlutterErrorDetails(
+        exception: error,
+        stack: stackTrace,
+        library: 'merchant advertisement edit request',
+      ));
+      if (!mounted) return;
+      setState(() {
+        if (previous == null) {
+          _editRequests.remove(ad.id);
+        } else {
+          _editRequests[ad.id] = previous;
+        }
+      });
+      _showMessage(l10n, l10n.adsSaveFailed);
+    }
   }
 
   Future<void> _setAdState(
@@ -301,6 +501,7 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
       if (hidden == true) _hiddenAds.add(ad.id);
       if (hidden == false) _hiddenAds.remove(ad.id);
       if (rejection != null) _rejections[ad.id] = rejection;
+      _lastUpdatedAt = DateTime.now();
     });
     try {
       await _persistActions();
@@ -464,16 +665,26 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
         _ => l10n.adsVillaPrice,
       };
 
-  String _adReference(_AdRecord ad) => switch (ad.id) {
-        1 => 'AD-94820',
-        2 => 'AD-66214',
-        _ => 'AD-78011',
-      };
+  String _adReference(_AdRecord ad) =>
+      MerchantAdvertisementLocalStore.referencesByLocalId[ad.id] ??
+      'AD-${ad.id}';
 
   List<_AdRecord> _filteredAds(AppLocalizations l10n) {
     final query = _searchQuery.trim().toLowerCase();
     final ads = _ads.where((ad) {
       if (_isArchived(ad) != _showArchive) return false;
+      final status = _statuses[ad.id] ?? _AdStatus.pending;
+      final matchesSummary = switch (_summaryFilter) {
+        null => true,
+        _SummaryFilter.hidden => _hiddenAds.contains(ad.id),
+        _SummaryFilter.approved => status == _AdStatus.approved,
+        _SummaryFilter.underReview =>
+          !_hiddenAds.contains(ad.id) && status == _AdStatus.pending,
+        _SummaryFilter.urgent => !_hiddenAds.contains(ad.id) &&
+            status == _AdStatus.pending &&
+            ad.receivedMinutesAgo >= 60,
+      };
+      if (!matchesSummary) return false;
       final matchesCategory =
           _categoryFilter == null || ad.category == _categoryFilter;
       final matchesQuery = query.isEmpty ||
@@ -493,8 +704,7 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
     final l10n = AppLocalizations.of(context)!;
     final ads = _filteredAds(l10n);
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF5F7F9),
+    return Scaffold(backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
         children: [
@@ -521,7 +731,10 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
             ],
             selected: {_showArchive},
             onSelectionChanged: (selection) =>
-                setState(() => _showArchive = selection.first),
+                setState(() {
+                  _showArchive = selection.first;
+                  _summaryFilter = null;
+                }),
           ),
           const SizedBox(height: 18),
           Row(
@@ -540,8 +753,8 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
               ),
               const SizedBox(width: 6),
               _smallBadge(
-                l10n.adsUnderReviewCount,
-                const Color(0xFFD9E7FF),
+                '${ads.length}',
+                AppColors.hexFFD9E7FF,
                 AppColors.primaryDark,
               ),
               const SizedBox(width: 8),
@@ -596,6 +809,21 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
   }
 
   Widget _buildSummary(AppLocalizations l10n) {
+    final hiddenCount = _ads.where((ad) => _hiddenAds.contains(ad.id)).length;
+    final approvedCount = _ads
+        .where((ad) => _statuses[ad.id] == _AdStatus.approved)
+        .length;
+    final underReviewCount = _ads
+        .where((ad) => !_hiddenAds.contains(ad.id) &&
+            (_statuses[ad.id] ?? _AdStatus.pending) == _AdStatus.pending)
+        .length;
+    final urgentCount = _ads.where((ad) =>
+        !_hiddenAds.contains(ad.id) &&
+        (_statuses[ad.id] ?? _AdStatus.pending) == _AdStatus.pending &&
+        ad.receivedMinutesAgo >= 60).length;
+    final updatedTime = MaterialLocalizations.of(context).formatTimeOfDay(
+      TimeOfDay.fromDateTime(_lastUpdatedAt),
+    );
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -613,60 +841,91 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
         children: [
           Row(
             children: [
-              const Icon(Icons.circle, color: Color(0xFFD92D35), size: 9),
+              Icon(Icons.circle,
+                  color: urgentCount > 0
+                      ? AppColors.hexFFD92D35
+                      : AppColors.success,
+                  size: 9),
               const SizedBox(width: 6),
               Expanded(
                 child: Text(
                   l10n.adsReviewGateway,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(color: Colors.white, fontSize: 10),
+                  style: const TextStyle(color: AppColors.white, fontSize: 10),
                 ),
               ),
               const SizedBox(width: 8),
-              Flexible(
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF3D1B2B),
+              if (urgentCount > 0)
+                Flexible(
+                  child: InkWell(
+                    onTap: () => setState(() {
+                      _showArchive = false;
+                      _summaryFilter = _SummaryFilter.urgent;
+                    }),
                     borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: Text(
-                    l10n.adsUrgentDecision,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 9,
-                      fontWeight: FontWeight.bold,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: AppColors.hexFF3D1B2B,
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: Text(
+                        '${l10n.adsUrgentDecision} · $urgentCount',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: AppColors.white,
+                          fontSize: 9,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
             ],
           ),
           const SizedBox(height: 12),
           Row(
             children: [
               _summaryMetric(
-                value: '4',
+                value: '$hiddenCount',
                 label: l10n.adsHiddenToday,
                 icon: Icons.visibility_off_outlined,
+                onTap: () => setState(() {
+                  _showArchive = true;
+                  _summaryFilter = _SummaryFilter.hidden;
+                }),
               ),
               const SizedBox(width: 8),
               _summaryMetric(
-                value: '38',
-                label: l10n.adsPendingToday,
+                value: '$approvedCount',
+                label: l10n.adsApprovedStatus,
                 icon: Icons.check_circle_outline,
+                onTap: () => setState(() {
+                  _showArchive = true;
+                  _summaryFilter = _SummaryFilter.approved;
+                }),
               ),
               const SizedBox(width: 8),
               _summaryMetric(
-                value: '12',
+                value: '$underReviewCount',
                 label: l10n.adsUnderReviewCount,
                 icon: Icons.fact_check_outlined,
+                onTap: () => setState(() {
+                  _showArchive = false;
+                  _summaryFilter = _SummaryFilter.underReview;
+                }),
               ),
             ],
+          ),
+          const SizedBox(height: 8),
+          Align(
+            alignment: AlignmentDirectional.centerEnd,
+            child: Text(
+              '${l10n.updatedNow} · $updatedTime',
+              style: const TextStyle(color: AppColors.hexFFCBD5E1, fontSize: 9),
+            ),
           ),
         ],
       ),
@@ -677,12 +936,16 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
     required String value,
     required String label,
     required IconData icon,
+    required VoidCallback onTap,
   }) {
     return Expanded(
-      child: Container(
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 10),
         decoration: BoxDecoration(
-          color: const Color(0xFF1A304B),
+          color: AppColors.hexFF1A304B,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
@@ -692,18 +955,18 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
-              style: const TextStyle(color: Color(0xFFCBD5E1), fontSize: 9),
+              style: const TextStyle(color: AppColors.hexFFCBD5E1, fontSize: 9),
             ),
             const SizedBox(height: 5),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(icon, size: 13, color: const Color(0xFF93B9F5)),
+                Icon(icon, size: 13, color: AppColors.hexFF93B9F5),
                 const SizedBox(width: 4),
                 Text(
                   value,
                   style: const TextStyle(
-                    color: Colors.white,
+                    color: AppColors.white,
                     fontSize: 17,
                     fontWeight: FontWeight.bold,
                   ),
@@ -711,6 +974,7 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
               ],
             ),
           ],
+        ),
         ),
       ),
     );
@@ -723,7 +987,7 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
           height: 46,
           width: 46,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.white,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(color: AppColors.cardBorder),
           ),
@@ -738,7 +1002,7 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
           child: Container(
             height: 46,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.white,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: AppColors.cardBorder),
             ),
@@ -806,10 +1070,10 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
                   setState(() => _categoryFilter = filters[index].category),
               showCheckmark: false,
               selectedColor: AppColors.primaryDark,
-              backgroundColor: Colors.white,
+              backgroundColor: AppColors.white,
               labelStyle: TextStyle(
                 color: _categoryFilter == filters[index].category
-                    ? Colors.white
+                    ? AppColors.white
                     : AppColors.textSecondary,
                 fontSize: 10,
                 fontWeight: _categoryFilter == filters[index].category
@@ -839,12 +1103,12 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
         margin: const EdgeInsets.only(bottom: 14),
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: AppColors.cardBorder),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.025),
+              color: AppColors.black.withValues(alpha: 0.025),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -858,7 +1122,7 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
               children: [
                 CircleAvatar(
                   radius: 17,
-                  backgroundColor: const Color(0xFFF1F5F9),
+                  backgroundColor: AppColors.surface,
                   child: Icon(
                     ad.category == _AdCategory.vehicles
                         ? Icons.directions_car_outlined
@@ -907,10 +1171,10 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
                       _smallBadge(
                         ad.isPremium ? l10n.adsPremium : l10n.adsRegular,
                         ad.isPremium
-                            ? const Color(0xFFFFE8B2)
-                            : const Color(0xFFE8EAED),
+                            ? AppColors.textPrimary
+                            : AppColors.hexFFE8EAED,
                         ad.isPremium
-                            ? const Color(0xFF8A4B08)
+                            ? AppColors.hexFF8A4B08
                             : AppColors.textSecondary,
                       ),
                     ],
@@ -946,19 +1210,19 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
               children: [
                 _smallBadge(
                   '${l10n.adsLicenseVerified} ✓',
-                  const Color(0xFFEAF1FB),
+                  AppColors.hexFFEAF1FB,
                   AppColors.primaryDark,
                 ),
                 if (ad.hasMarketPriceBadge)
                   _smallBadge(
                     l10n.adsMarketPriceMatched,
-                    const Color(0xFFEAF1FB),
+                    AppColors.hexFFEAF1FB,
                     AppColors.primaryDark,
                   ),
                 if (ad.category != _AdCategory.electronics)
                   _smallBadge(
                     _adDetails(l10n, ad),
-                    const Color(0xFFF1F3F5),
+                    AppColors.textPrimary,
                     AppColors.textSecondary,
                   ),
               ],
@@ -1023,6 +1287,7 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
           imageColor: ad.imageColor,
           facts: details.facts,
           checklist: details.checklist,
+          initialDeliveryFee: _deliveryFees[ad.id] ?? 150,
           onApprove: () async {
             Navigator.of(context).pop();
             await _approveAd(l10n, ad);
@@ -1036,10 +1301,8 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
             Navigator.of(context).pop();
             _rejectAd(l10n, ad);
           },
-          onRequestEdit: (_) {
-            _showMessage(l10n, l10n.adsRequestEditUnavailable);
-          },
-          onFeeUpdated: (_) => _showMessage(l10n, l10n.adsFeeUpdated),
+          onRequestEdit: (note) => _requestAdEdit(l10n, ad, note),
+          onFeeUpdated: (fee) => _saveDeliveryFee(l10n, ad, fee),
         ),
       ),
     );
@@ -1165,7 +1428,7 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
                             ? l10n.adsHiddenStatus
                             : l10n.adsReviewHidden;
     final color = status == _AdStatus.suspended
-        ? const Color(0xFFAC6900)
+        ? AppColors.hexFFAC6900
         : status == _AdStatus.approved
             ? AppColors.successDark
             : status == _AdStatus.awaitingFinance ||
@@ -1186,7 +1449,7 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
             decoration: BoxDecoration(
-              color: const Color(0xFFF0F2F4),
+              color: AppColors.textPrimary,
               borderRadius: BorderRadius.circular(18),
             ),
             child: Row(
@@ -1210,7 +1473,7 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: const Color(0xFFF5F6F7),
+              color: AppColors.textPrimary,
               borderRadius: BorderRadius.circular(16),
             ),
             child: Row(
@@ -1253,7 +1516,7 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
                   end: Alignment.bottomRight,
                   colors: [
                     ad.imageColor.withValues(alpha: 0.65),
-                    const Color(0xFFDFE5E9),
+                    AppColors.hexFFDFE5E9,
                     ad.imageColor.withValues(alpha: 0.8),
                   ],
                 ),
@@ -1261,7 +1524,7 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
               child: Icon(
                 ad.imageIcon,
                 size: 104,
-                color: Colors.white.withValues(alpha: 0.82),
+                color: AppColors.white.withValues(alpha: 0.82),
               ),
             ),
             Positioned(
@@ -1276,7 +1539,7 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.white,
                   borderRadius: BorderRadius.circular(9),
                 ),
                 child: Text(
@@ -1303,7 +1566,7 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
             height: 116,
             decoration: BoxDecoration(
               gradient: const LinearGradient(
-                colors: [Color(0xFFE9EFF3), Color(0xFFCAD6DE)],
+                colors: [AppColors.hexFFE9EFF3, AppColors.hexFFCAD6DE],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -1315,7 +1578,7 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
                   child: Icon(
                     Icons.phone_iphone,
                     size: 62,
-                    color: Color(0xFF5B7182),
+                    color: AppColors.hexFF5B7182,
                   ),
                 ),
                 Positioned(
@@ -1381,11 +1644,11 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           const Icon(Icons.photo_camera_outlined,
-              size: 12, color: Colors.white),
+              size: 12, color: AppColors.white),
           const SizedBox(width: 4),
           Text(
             l10n.adsImageCount('$count'),
-            style: const TextStyle(color: Colors.white, fontSize: 9),
+            style: const TextStyle(color: AppColors.white, fontSize: 9),
           ),
         ],
       ),
@@ -1398,6 +1661,23 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
     bool isHidden,
     _AdStatus status,
   ) {
+    if (status == _AdStatus.rejected) return const SizedBox.shrink();
+    if (status == _AdStatus.suspended) {
+      return Align(
+        alignment: AlignmentDirectional.centerEnd,
+        child: _actionButton(
+          label: l10n.adsUnfreezeAction,
+          icon: Icons.play_circle_outline,
+          background: AppColors.hexFFE8F6EF,
+          foreground: AppColors.success,
+          onPressed: () => _setAdState(
+            l10n,
+            ad,
+            status: _AdStatus.pending,
+          ),
+        ),
+      );
+    }
     if (status == _AdStatus.awaitingFinance ||
         status == _AdStatus.awaitingManagement) {
       return _actionButton(
@@ -1405,7 +1685,7 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
             ? l10n.adsPremiumWaitingFinance
             : l10n.adsPremiumWaitingManagement,
         icon: Icons.hourglass_top,
-        background: const Color(0xFFEAF0FF),
+        background: AppColors.hexFFEAF0FF,
         foreground: AppColors.info,
         onPressed: null,
       );
@@ -1420,7 +1700,7 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
                 icon: isHidden
                     ? Icons.visibility_outlined
                     : Icons.visibility_off_outlined,
-                background: const Color(0xFFF0F1F3),
+                background: AppColors.surface,
                 foreground: AppColors.textSecondary,
                 onPressed: () async {
                   await _setAdState(l10n, ad, hidden: !isHidden);
@@ -1435,20 +1715,14 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
             Expanded(
               flex: 2,
               child: _actionButton(
-                label: status == _AdStatus.suspended
-                    ? l10n.adsUnfreezeAction
-                    : l10n.adsFreezeAction,
-                icon: status == _AdStatus.suspended
-                    ? Icons.play_circle_outline
-                    : Icons.pause_circle_outline,
-                background: const Color(0xFFF0F1F3),
+                label: l10n.adsFreezeAction,
+                icon: Icons.pause_circle_outline,
+                background: AppColors.surface,
                 foreground: AppColors.primaryDark,
                 onPressed: () => _setAdState(
                   l10n,
                   ad,
-                  status: status == _AdStatus.suspended
-                      ? _AdStatus.pending
-                      : _AdStatus.suspended,
+                  status: _AdStatus.suspended,
                 ),
               ),
             ),
@@ -1461,8 +1735,8 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
               child: _actionButton(
                 label: l10n.adsRejectAction,
                 icon: Icons.close,
-                background: const Color(0xFFFFE0DD),
-                foreground: const Color(0xFFB42318),
+                background: AppColors.surface,
+                foreground: AppColors.hexFFB42318,
                 onPressed: () => _rejectAd(l10n, ad),
               ),
             ),
@@ -1474,7 +1748,7 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
                     : l10n.adsApproveAction,
                 icon: Icons.check,
                 background: AppColors.primaryDark,
-                foreground: Colors.white,
+                foreground: AppColors.white,
                 onPressed: () => _approveAd(l10n, ad),
               ),
             ),
@@ -1594,7 +1868,7 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
         ({_AdRejectionReason reason, String guidance})>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColors.transparent,
       builder: (sheetContext) => StatefulBuilder(
         builder: (context, setSheetState) {
           return Padding(
@@ -1608,7 +1882,7 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
                   maxHeight: MediaQuery.sizeOf(context).height * 0.84,
                 ),
                 decoration: const BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.white,
                   borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
                 ),
                 child: Column(
@@ -1625,7 +1899,7 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
                                 width: 42,
                                 height: 5,
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFFC5C8CE),
+                                  color: AppColors.hexFFC5C8CE,
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                               ),
@@ -1638,7 +1912,7 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
                                   tooltip: l10n.adsCancelAction,
                                   icon: const Icon(Icons.close, size: 18),
                                   style: IconButton.styleFrom(
-                                    backgroundColor: const Color(0xFFF0F1F3),
+                                    backgroundColor: AppColors.surface,
                                     foregroundColor: AppColors.textSecondary,
                                   ),
                                 ),
@@ -1674,12 +1948,12 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
                                   width: 38,
                                   height: 38,
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFFFFE0DD),
+                                    color: AppColors.textPrimary,
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: const Icon(
                                     Icons.gavel,
-                                    color: Color(0xFFB42318),
+                                    color: AppColors.hexFFB42318,
                                     size: 19,
                                   ),
                                 ),
@@ -1709,8 +1983,8 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
                                     padding: const EdgeInsets.only(bottom: 6),
                                     child: Material(
                                       color: selected
-                                          ? const Color(0xFFFFF0EF)
-                                          : const Color(0xFFF1F3F5),
+                                          ? AppColors.textPrimary
+                                          : AppColors.textPrimary,
                                       borderRadius: BorderRadius.circular(12),
                                       child: InkWell(
                                         borderRadius: BorderRadius.circular(12),
@@ -1727,7 +2001,7 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
                                               Radio<_AdRejectionReason>(
                                                 value: option.reason,
                                                 activeColor:
-                                                    const Color(0xFFB42318),
+                                                    AppColors.hexFFB42318,
                                               ),
                                               Expanded(
                                                 child: Text(
@@ -1789,7 +2063,7 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
                               decoration: InputDecoration(
                                 hintText: l10n.adsRejectGuidanceHint,
                                 filled: true,
-                                fillColor: const Color(0xFFF1F3F5),
+                                fillColor: AppColors.surfaceLight,
                                 counterText: '',
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
@@ -1819,9 +2093,9 @@ class _AdsManagementScreenState extends State<AdsManagementScreen> {
                           icon: const Icon(Icons.outgoing_mail, size: 17),
                           label: Text(l10n.adsConfirmRejectAndNotify),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFB91C1C),
-                            disabledBackgroundColor: const Color(0xFFD9A6A3),
-                            foregroundColor: Colors.white,
+                            backgroundColor: AppColors.hexFFB91C1C,
+                            disabledBackgroundColor: AppColors.hexFFD9A6A3,
+                            foregroundColor: AppColors.white,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),

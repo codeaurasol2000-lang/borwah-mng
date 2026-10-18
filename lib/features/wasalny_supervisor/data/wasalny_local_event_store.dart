@@ -12,6 +12,7 @@ class WasalnyLocalEvent {
   final String messageEn;
   final DateTime createdAt;
   final bool isRead;
+  final String? requestId;
 
   const WasalnyLocalEvent({
     required this.id,
@@ -23,6 +24,7 @@ class WasalnyLocalEvent {
     required this.messageEn,
     required this.createdAt,
     this.isRead = false,
+    this.requestId,
   });
 
   WasalnyLocalEvent copyWith({bool? isRead}) => WasalnyLocalEvent(
@@ -35,6 +37,7 @@ class WasalnyLocalEvent {
         messageEn: messageEn,
         createdAt: createdAt,
         isRead: isRead ?? this.isRead,
+        requestId: requestId,
       );
 
   Map<String, Object?> toJson() => {
@@ -47,6 +50,7 @@ class WasalnyLocalEvent {
         'messageEn': messageEn,
         'createdAt': createdAt.toIso8601String(),
         'isRead': isRead,
+        'requestId': requestId,
       };
 
   factory WasalnyLocalEvent.fromJson(Map<String, dynamic> json) {
@@ -60,6 +64,7 @@ class WasalnyLocalEvent {
       messageEn: json['messageEn'] as String,
       createdAt: DateTime.parse(json['createdAt'] as String),
       isRead: json['isRead'] as bool? ?? false,
+      requestId: json['requestId'] as String?,
     );
   }
 }

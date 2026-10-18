@@ -21,12 +21,16 @@ class MerchantWalletScreen extends StatefulWidget {
 class _MerchantWalletScreenState extends State<MerchantWalletScreen> {
   final TextEditingController _amountController =
       TextEditingController(text: '8450');
+  final TextEditingController _institutionController = TextEditingController();
+  final TextEditingController _accountNameController = TextEditingController();
+  final TextEditingController _destinationController = TextEditingController();
   _WalletTransferMethod _method = _WalletTransferMethod.instapay;
   FinancialOperationType _operationType = FinancialOperationType.withdrawal;
   bool _isSubmitting = false;
   bool _isLoadingRequests = true;
   bool _requestsLoadFailed = false;
   List<WithdrawalRequestEntity> _financialRequests = const [];
+  static const double _withdrawableBalance = 8450;
 
   @override
   void initState() {
@@ -37,6 +41,9 @@ class _MerchantWalletScreenState extends State<MerchantWalletScreen> {
   @override
   void dispose() {
     _amountController.dispose();
+    _institutionController.dispose();
+    _accountNameController.dispose();
+    _destinationController.dispose();
     super.dispose();
   }
 
@@ -63,7 +70,8 @@ class _MerchantWalletScreenState extends State<MerchantWalletScreen> {
         },
         (requests) => setState(() {
           _financialRequests = requests
-              .where((request) => request.sourceAccount == 'merchant')
+              .where((request) =>
+                  request.sourceAccount == 'merchant_supervisor_personal')
               .toList(growable: false);
           _isLoadingRequests = false;
           _requestsLoadFailed = false;
@@ -105,26 +113,23 @@ class _MerchantWalletScreenState extends State<MerchantWalletScreen> {
       );
       return;
     }
+    if (_institutionController.text.trim().isEmpty ||
+        _accountNameController.text.trim().isEmpty ||
+        _destinationController.text.trim().isEmpty) {
+      AppSnackBar.showError(context, l10n.merchantWalletEnterTransferDetails);
+      return;
+    }
 
     setState(() => _isSubmitting = true);
     try {
-      final transferAddress = switch (_method) {
-        _WalletTransferMethod.bank => l10n.merchantWalletIbanValue,
-        _WalletTransferMethod.wallet => l10n.merchantWalletPhoneValue,
-        _WalletTransferMethod.instapay => l10n.merchantWalletInstantAddress,
-      };
       final result = await sl<FinanceRepository>().submitSupervisorWithdrawal(
-        beneficiaryName: l10n.merchantWalletAccountName,
+        beneficiaryName: _accountNameController.text.trim(),
         beneficiaryRole: 'مشرف حساب التجار',
-        sourceAccount: 'merchant',
+        sourceAccount: 'merchant_supervisor_personal',
         amount: amount,
         operationType: _operationType,
-        bankName: switch (_method) {
-          _WalletTransferMethod.bank => l10n.merchantWalletBankTransfer,
-          _WalletTransferMethod.wallet => l10n.merchantWalletDigitalWallet,
-          _WalletTransferMethod.instapay => l10n.merchantWalletInstantTransfer,
-        },
-        iban: transferAddress,
+        bankName: _institutionController.text.trim(),
+        iban: _destinationController.text.trim(),
         transferMethod: switch (_method) {
           _WalletTransferMethod.bank => l10n.merchantWalletBankTransfer,
           _WalletTransferMethod.wallet => l10n.merchantWalletDigitalWallet,
@@ -170,10 +175,9 @@ class _MerchantWalletScreenState extends State<MerchantWalletScreen> {
 
     return Directionality(
       textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF5F7F9),
+      child: Scaffold(backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.white,
           foregroundColor: AppColors.primaryDark,
           elevation: 0,
           centerTitle: true,
@@ -188,7 +192,7 @@ class _MerchantWalletScreenState extends State<MerchantWalletScreen> {
                 radius: 15,
                 backgroundColor: AppColors.primaryDark,
                 child:
-                    Icon(Icons.person_outline, color: Colors.white, size: 18),
+                    Icon(Icons.person_outline, color: AppColors.white, size: 18),
               ),
             ),
           ],
@@ -257,7 +261,7 @@ class _MerchantWalletScreenState extends State<MerchantWalletScreen> {
           else
             for (final request in _financialRequests)
               Material(
-                color: Colors.white,
+                color: AppColors.white,
                 child: ListTile(
                   contentPadding: EdgeInsets.zero,
                   title: Text(
@@ -331,7 +335,7 @@ class _MerchantWalletScreenState extends State<MerchantWalletScreen> {
         children: [
           Row(
             children: [
-              _pill(l10n.merchantWalletReady, const Color(0xFF183454)),
+              _pill(l10n.merchantWalletReady,  AppColors.hexFF183454),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
@@ -339,12 +343,12 @@ class _MerchantWalletScreenState extends State<MerchantWalletScreen> {
                   textAlign: TextAlign.end,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(color: Colors.white70, fontSize: 10),
+                  style: const TextStyle(color: AppColors.white70, fontSize: 10),
                 ),
               ),
               const SizedBox(width: 7),
               const Icon(Icons.account_balance_wallet_outlined,
-                  color: Colors.white, size: 18),
+                  color: AppColors.white, size: 18),
             ],
           ),
           const SizedBox(height: 12),
@@ -352,7 +356,7 @@ class _MerchantWalletScreenState extends State<MerchantWalletScreen> {
             '${l10n.merchantWalletAvailableAmount} ${l10n.finRequestCurrency}',
             textAlign: TextAlign.end,
             style: const TextStyle(
-              color: Colors.white,
+              color: AppColors.white,
               fontSize: 27,
               fontWeight: FontWeight.w900,
             ),
@@ -362,7 +366,7 @@ class _MerchantWalletScreenState extends State<MerchantWalletScreen> {
             l10n.merchantWalletBalanceDescription,
             textAlign: TextAlign.end,
             style: const TextStyle(
-                color: Color(0xFFB8C8DB), fontSize: 10, height: 1.5),
+                color: AppColors.hexFFB8C8DB, fontSize: 10, height: 1.5),
           ),
         ],
       ),
@@ -395,7 +399,7 @@ class _MerchantWalletScreenState extends State<MerchantWalletScreen> {
     return Container(
       padding: const EdgeInsets.all(13),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(13),
         border: Border.all(color: AppColors.cardBorder),
       ),
@@ -437,7 +441,7 @@ class _MerchantWalletScreenState extends State<MerchantWalletScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFFF0F2F4),
+        color:  AppColors.textPrimary,
         borderRadius: BorderRadius.circular(11),
       ),
       child: Row(
@@ -521,11 +525,6 @@ class _MerchantWalletScreenState extends State<MerchantWalletScreen> {
                       color: AppColors.textSecondary, fontSize: 10),
                 ),
               ),
-              const SizedBox(width: 6),
-              Text(
-                l10n.merchantWalletFullBalance,
-                style: const TextStyle(color: AppColors.info, fontSize: 9),
-              ),
             ],
           ),
           const SizedBox(height: 6),
@@ -536,13 +535,44 @@ class _MerchantWalletScreenState extends State<MerchantWalletScreen> {
             decoration: InputDecoration(
               suffixText: l10n.finRequestCurrency,
               filled: true,
-              fillColor: const Color(0xFFF1F3F5),
+              fillColor:  AppColors.surfaceLight,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(11),
                 borderSide: BorderSide.none,
               ),
             ),
           ),
+          if (_operationType == FinancialOperationType.withdrawal) ...[
+            const SizedBox(height: 8),
+            Wrap(
+              alignment: WrapAlignment.end,
+              spacing: 6,
+              runSpacing: 6,
+              children: [
+                for (final percent in [25, 50, 75, 100])
+                  ActionChip(
+                    label: Text(
+                      percent == 100
+                          ? l10n.merchantWalletFullBalance
+                          : '$percent%',
+                    ),
+                    onPressed: _isSubmitting
+                        ? null
+                        : () => setState(() {
+                              _amountController.text =
+                                  (_withdrawableBalance * percent / 100)
+                                      .toStringAsFixed(2);
+                            }),
+                    backgroundColor:  AppColors.hexFFEAF0FF,
+                    labelStyle: const TextStyle(
+                      color: AppColors.primaryDark,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+              ],
+            ),
+          ],
           const SizedBox(height: 7),
           Text(
             l10n.merchantWalletTransferLimit,
@@ -589,32 +619,76 @@ class _MerchantWalletScreenState extends State<MerchantWalletScreen> {
           const SizedBox(height: 14),
           Text(
             _method == _WalletTransferMethod.bank
-                ? l10n.merchantWalletIban
-                : l10n.merchantWalletTransferAddress,
+                ? l10n.merchantWalletBankName
+                : _method == _WalletTransferMethod.wallet
+                    ? l10n.merchantWalletWalletProvider
+                    : l10n.merchantWalletInstantTransfer,
             textAlign: TextAlign.end,
             style: const TextStyle(color: AppColors.textPrimary, fontSize: 10),
           ),
           const SizedBox(height: 6),
-          _detailField(
-            icon: _method == _WalletTransferMethod.bank
-                ? Icons.account_balance_outlined
-                : Icons.alternate_email,
-            value: _method == _WalletTransferMethod.bank
-                ? l10n.merchantWalletIbanValue
-                : _method == _WalletTransferMethod.wallet
-                    ? l10n.merchantWalletPhoneValue
-                    : l10n.merchantWalletInstantAddress,
+          TextField(
+            controller: _institutionController,
+            textAlign: TextAlign.end,
+            decoration: InputDecoration(
+              prefixIcon: Icon(
+                _method == _WalletTransferMethod.bank
+                    ? Icons.account_balance_outlined
+                    : Icons.person_outline,
+              ),
+              hintText: l10n.merchantWalletBankName,
+              filled: true,
+              fillColor:  AppColors.surfaceLight,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(11),
+                borderSide: BorderSide.none,
+              ),
+            ),
           ),
           const SizedBox(height: 8),
-          _detailField(
-            icon: Icons.verified_user_outlined,
-            value: l10n.merchantWalletAccountName,
+          TextField(
+            controller: _accountNameController,
+            textAlign: TextAlign.end,
+            decoration: InputDecoration(
+              prefixIcon: const Icon(Icons.person_outline),
+              hintText: l10n.merchantWalletDestinationName,
+              filled: true,
+              fillColor:  AppColors.surfaceLight,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(11),
+                borderSide: BorderSide.none,
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          TextField(
+            controller: _destinationController,
+            textAlign: TextAlign.end,
+            decoration: InputDecoration(
+              prefixIcon: Icon(
+                _method == _WalletTransferMethod.bank
+                    ? Icons.account_balance_outlined
+                    : Icons.alternate_email,
+              ),
+              labelText: _method == _WalletTransferMethod.bank
+                  ? l10n.merchantWalletIban
+                  : _method == _WalletTransferMethod.wallet
+                      ? l10n.merchantWalletPhoneLabel
+                      : l10n.merchantWalletInstantAddressLabel,
+              hintText: l10n.merchantWalletDestinationDetails,
+              filled: true,
+              fillColor:  AppColors.surfaceLight,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(11),
+                borderSide: BorderSide.none,
+              ),
+            ),
           ),
           const SizedBox(height: 10),
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: const Color(0xFFF0F2F4),
+              color:  AppColors.textPrimary,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Row(
@@ -642,14 +716,14 @@ class _MerchantWalletScreenState extends State<MerchantWalletScreen> {
                       dimension: 18,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        color: Colors.white,
+                        color: AppColors.white,
                       ),
                     )
                   : const Icon(Icons.currency_exchange, size: 18),
               label: Text(l10n.financeWalletSubmitRequest),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primaryDark,
-                foregroundColor: Colors.white,
+                foregroundColor: AppColors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
               ),
@@ -674,10 +748,10 @@ class _MerchantWalletScreenState extends State<MerchantWalletScreen> {
         constraints: const BoxConstraints(minHeight: 76),
         padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 8),
         decoration: BoxDecoration(
-          color: selected ? AppColors.primaryDark : const Color(0xFFF1F3F5),
+          color: selected ? AppColors.primaryDark :  AppColors.textPrimary,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: selected ? AppColors.primaryDark : Colors.transparent,
+            color: selected ? AppColors.primaryDark : AppColors.transparent,
           ),
         ),
         child: Column(
@@ -685,7 +759,7 @@ class _MerchantWalletScreenState extends State<MerchantWalletScreen> {
           children: [
             Icon(icon,
                 size: 19,
-                color: selected ? Colors.white : AppColors.textSecondary),
+                color: selected ? AppColors.white : AppColors.textSecondary),
             const SizedBox(height: 4),
             Text(
               title,
@@ -693,7 +767,7 @@ class _MerchantWalletScreenState extends State<MerchantWalletScreen> {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                color: selected ? Colors.white : AppColors.textPrimary,
+                color: selected ? AppColors.white : AppColors.textPrimary,
                 fontSize: 9,
                 fontWeight: FontWeight.w600,
               ),
@@ -704,7 +778,7 @@ class _MerchantWalletScreenState extends State<MerchantWalletScreen> {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                color: selected ? Colors.white70 : AppColors.textMuted,
+                color: selected ? AppColors.white70 : AppColors.textMuted,
                 fontSize: 8,
               ),
             ),
@@ -714,35 +788,11 @@ class _MerchantWalletScreenState extends State<MerchantWalletScreen> {
     );
   }
 
-  Widget _detailField({required IconData icon, required String value}) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 13),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF1F3F5),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(value,
-                textAlign: TextAlign.start,
-                style: const TextStyle(
-                    color: AppColors.primaryDark,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500)),
-          ),
-          const SizedBox(width: 8),
-          Icon(icon, color: AppColors.info, size: 17),
-        ],
-      ),
-    );
-  }
-
   Widget _buildBonus(AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFFF0F2F4),
+        color:  AppColors.textPrimary,
         borderRadius: BorderRadius.circular(14),
       ),
       child: Row(
@@ -772,7 +822,7 @@ class _MerchantWalletScreenState extends State<MerchantWalletScreen> {
           ),
           const SizedBox(width: 10),
           const CircleAvatar(
-            backgroundColor: Color(0xFFD8E6FF),
+            backgroundColor: AppColors.hexFFD8E6FF,
             child:
                 Icon(Icons.workspace_premium_outlined, color: AppColors.info),
           ),
@@ -817,7 +867,7 @@ class _MerchantWalletScreenState extends State<MerchantWalletScreen> {
         ),
         if (trailing != null) ...[
           const SizedBox(width: 6),
-          _pill(trailing, const Color(0xFFEAF1FB)),
+          _pill(trailing,  AppColors.hexFFEAF1FB),
         ],
       ],
     );
@@ -847,7 +897,7 @@ class _MerchantWalletScreenState extends State<MerchantWalletScreen> {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(15),
         border: Border.all(color: AppColors.cardBorder),
       ),

@@ -18,6 +18,7 @@ import 'package:barwah_app/l10n/app_localizations.dart';
 void main() {
   setUpAll(() async {
     TestWidgetsFlutterBinding.ensureInitialized();
+    SharedPreferences.setMockInitialValues({});
     await di.initDependencies();
   });
 

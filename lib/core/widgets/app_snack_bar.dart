@@ -1,3 +1,4 @@
+import 'package:barwah_app/core/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class AppSnackBar {
@@ -11,8 +12,8 @@ class AppSnackBar {
     _show(
       context,
       message,
-      backgroundColor: const Color(0xFF10B981),
-      borderColor: const Color(0xFFA7F3D0),
+      backgroundColor:  AppColors.hexFF10B981,
+      borderColor:  AppColors.hexFFA7F3D0,
       icon: Icons.check_circle_outline_rounded,
       actionLabel: actionLabel,
       onActionTap: onActionTap,
@@ -30,8 +31,8 @@ class AppSnackBar {
     _show(
       context,
       message,
-      backgroundColor: const Color(0xFF0284C7),
-      borderColor: const Color(0xFFE0F2FE),
+      backgroundColor:  AppColors.hexFF0284C7,
+      borderColor:  AppColors.hexFFE0F2FE,
       icon: Icons.info_outline_rounded,
       actionLabel: actionLabel,
       onActionTap: onActionTap,
@@ -49,8 +50,8 @@ class AppSnackBar {
     _show(
       context,
       message,
-      backgroundColor: const Color(0xFFF59E0B),
-      borderColor: const Color(0xFFFDE68A),
+      backgroundColor:  AppColors.surface,
+      borderColor:  AppColors.cardBorder,
       icon: Icons.warning_amber_rounded,
       actionLabel: actionLabel,
       onActionTap: onActionTap,
@@ -68,8 +69,8 @@ class AppSnackBar {
     _show(
       context,
       message,
-      backgroundColor: const Color(0xFFEF4444),
-      borderColor: const Color(0xFFFECACA),
+      backgroundColor:  AppColors.hexFFEF4444,
+      borderColor:  AppColors.cardBorder,
       icon: Icons.error_outline_rounded,
       actionLabel: actionLabel,
       onActionTap: onActionTap,
@@ -123,10 +124,10 @@ class AppSnackBar {
               width: 32,
               height: 32,
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.15),
+                color: AppColors.white.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(icon, color: Colors.white, size: 18),
+              child: Icon(icon, color: AppColors.white, size: 18),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -135,7 +136,7 @@ class AppSnackBar {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
-                  color: Colors.white,
+                  color: AppColors.white,
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
                 ),
@@ -156,7 +157,7 @@ class AppSnackBar {
             ? null
             : SnackBarAction(
                 label: actionLabel,
-                textColor: Colors.white,
+                textColor: AppColors.white,
                 onPressed: onActionTap,
               ),
       ),

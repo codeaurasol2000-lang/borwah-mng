@@ -1,30 +1,34 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
-import '../../../../core/theme/app_theme.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/supervisor_stats_entity.dart';
 
 class SupervisorHeaderCard extends StatelessWidget {
   final SupervisorStatsEntity stats;
+  final VoidCallback? onPendingReviewTap;
+  final VoidCallback? onApprovedTap;
 
-  const SupervisorHeaderCard({super.key, required this.stats});
+  const SupervisorHeaderCard({
+    super.key,
+    required this.stats,
+    this.onPendingReviewTap,
+    this.onApprovedTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final isArabic = l10n.localeName.startsWith('ar');
-    final palette = context.appThemePalette;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark ? palette.surfaceElevated : const Color(0xFF07192F),
+        color: AppColors.hexFF07192F,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
+            color: AppColors.black.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -51,7 +55,7 @@ class SupervisorHeaderCard extends StatelessWidget {
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                              color: AppColors.white,
                             ),
                           ),
                         ),
@@ -60,21 +64,21 @@ class SupervisorHeaderCard extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 8, vertical: 3),
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.15),
+                            color: AppColors.white.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               const Icon(Icons.work_outline,
-                                  size: 11, color: Colors.white70),
+                                  size: 11, color: AppColors.white70),
                               const SizedBox(width: 4),
                               Text(
                                 stats.getSupervisorTag(isArabic),
                                 style: const TextStyle(
                                   fontSize: 10,
                                   fontWeight: FontWeight.w600,
-                                  color: Colors.white,
+                                  color: AppColors.white,
                                 ),
                               ),
                             ],
@@ -89,7 +93,7 @@ class SupervisorHeaderCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: 11,
-                        color: Colors.white.withValues(alpha: 0.7),
+                        color: AppColors.white.withValues(alpha: 0.7),
                       ),
                     ),
                   ],
@@ -104,17 +108,15 @@ class SupervisorHeaderCard extends StatelessWidget {
                     width: 42,
                     height: 42,
                     decoration: BoxDecoration(
-                        color: isDark
-                          ? palette.accentContainer
-                          : const Color(0xFF1E3A5F),
+                      color: AppColors.hexFF1E3A5F,
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.15),
+                        color: AppColors.white.withValues(alpha: 0.15),
                       ),
                     ),
                     child: const Icon(
                       Icons.shield_outlined,
-                      color: Colors.white,
+                      color: AppColors.white,
                       size: 22,
                     ),
                   ),
@@ -129,9 +131,7 @@ class SupervisorHeaderCard extends StatelessWidget {
                         color: AppColors.success,
                         shape: BoxShape.circle,
                         border: Border.all(
-                            color: isDark
-                              ? palette.surfaceElevated
-                              : const Color(0xFF07192F),
+                          color: AppColors.hexFF07192F,
                           width: 2,
                         ),
                       ),
@@ -149,19 +149,26 @@ class SupervisorHeaderCard extends StatelessWidget {
             children: [
               // Pending Review Box
               Expanded(
-                child: Container(
+                child: Material(
+                  color: AppColors.transparent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: InkWell(
+                    onTap: onPendingReviewTap,
+                    borderRadius: BorderRadius.circular(14),
+                    child: Container(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 12, vertical: 10),
                   decoration: BoxDecoration(
-                    color: isDark
-                      ? palette.surface
-                      : const Color(0xFF031020),
+                    color: AppColors.hexFF031020,
                     borderRadius: BorderRadius.circular(14),
                     border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.08),
+                      color: AppColors.white.withValues(alpha: 0.08),
                     ),
                   ),
-                  child: Stack(
+                    child: Stack(
                     children: [
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -171,7 +178,7 @@ class SupervisorHeaderCard extends StatelessWidget {
                             style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                              color: AppColors.white,
                             ),
                           ),
                           const SizedBox(height: 2),
@@ -181,7 +188,7 @@ class SupervisorHeaderCard extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               fontSize: 11,
-                              color: Colors.white.withValues(alpha: 0.7),
+                              color: AppColors.white.withValues(alpha: 0.7),
                             ),
                           ),
                         ],
@@ -194,33 +201,42 @@ class SupervisorHeaderCard extends StatelessWidget {
                           width: 6,
                           height: 6,
                           decoration: const BoxDecoration(
-                            color: Colors.lightBlueAccent,
+                            color: AppColors.lightBlueAccent,
                             shape: BoxShape.circle,
                           ),
                         ),
                       ),
                     ],
+                    ),
                   ),
                 ),
+              ),
               ),
 
               const SizedBox(width: 10),
 
               // Approved Merchants Box
               Expanded(
-                child: Container(
+                child: Material(
+                  color: AppColors.transparent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: InkWell(
+                    onTap: onApprovedTap,
+                    borderRadius: BorderRadius.circular(14),
+                    child: Container(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 12, vertical: 10),
                   decoration: BoxDecoration(
-                    color: isDark
-                      ? palette.surface
-                      : const Color(0xFF031020),
+                    color: AppColors.hexFF031020,
                     borderRadius: BorderRadius.circular(14),
                     border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.08),
+                      color: AppColors.white.withValues(alpha: 0.08),
                     ),
                   ),
-                  child: Column(
+                    child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
@@ -228,7 +244,7 @@ class SupervisorHeaderCard extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: AppColors.white,
                         ),
                       ),
                       const SizedBox(height: 2),
@@ -238,12 +254,14 @@ class SupervisorHeaderCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: 11,
-                          color: Colors.white.withValues(alpha: 0.7),
+                          color: AppColors.white.withValues(alpha: 0.7),
                         ),
                       ),
                     ],
+                    ),
                   ),
                 ),
+              ),
               ),
             ],
           ),

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart' show NumberFormat;
 
 import '../../../../core/constants/app_colors.dart';
-import '../../../../core/theme/app_theme.dart';
+import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../widgets/finance_navigation.dart';
 
@@ -22,7 +23,7 @@ class CommissionsScreen extends StatelessWidget {
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFF0F1F3D), Color(0xFF0A142A)],
+          colors: [AppColors.hexFF0F1F3D, AppColors.hexFF0A142A],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
         ),
@@ -33,13 +34,13 @@ class CommissionsScreen extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.percent_rounded, color: Colors.white, size: 20),
+              const Icon(Icons.percent_rounded, color: AppColors.white, size: 20),
               const SizedBox(width: 8),
               const Expanded(
                 child: Text(
                   'إجمالي العمولات',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: AppColors.white,
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
                   ),
@@ -48,18 +49,18 @@ class CommissionsScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.12),
+                  color: AppColors.white.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Row(
                   children: [
                     Icon(Icons.trending_up_rounded,
-                        color: Color(0xFF7AE7A8), size: 12),
+                        color: AppColors.hexFF7AE7A8, size: 12),
                     SizedBox(width: 4),
                     Text(
                       '+14.2%',
                       style: TextStyle(
-                        color: Color(0xFF7AE7A8),
+                        color: AppColors.hexFF7AE7A8,
                         fontSize: 10,
                         fontWeight: FontWeight.bold,
                       ),
@@ -78,7 +79,7 @@ class CommissionsScreen extends StatelessWidget {
                   TextSpan(
                     text: '284,900',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: AppColors.white,
                       fontSize: 36,
                       fontWeight: FontWeight.bold,
                     ),
@@ -86,7 +87,7 @@ class CommissionsScreen extends StatelessWidget {
                   TextSpan(
                     text: ' ج.م',
                     style: TextStyle(
-                      color: Colors.white70,
+                      color: AppColors.white70,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
@@ -102,7 +103,7 @@ class CommissionsScreen extends StatelessWidget {
                 child: _MiniInfo(
                   title: 'العمولات المكتسبة',
                   value: '38,500 ج.م',
-                  color: Color(0xFF7AE7A8),
+                  color: AppColors.hexFF7AE7A8,
                   icon: Icons.savings_rounded,
                 ),
               ),
@@ -111,7 +112,7 @@ class CommissionsScreen extends StatelessWidget {
                 child: _MiniInfo(
                   title: 'المعاملات',
                   value: '3,245',
-                  color: Color(0xFFBEE3FF),
+                  color: AppColors.hexFFBEE3FF,
                   icon: Icons.receipt_long_rounded,
                 ),
               ),
@@ -163,17 +164,14 @@ class CommissionsScreen extends StatelessWidget {
 
     return Directionality(
       textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: AppColors.backgroundLight,
-        appBar: AppBar(
-          backgroundColor: AppColors.backgroundLight,
+      child: Scaffold(backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           elevation: 0,
           scrolledUnderElevation: 0,
           leading: const Padding(
             padding: EdgeInsets.all(8),
             child: CircleAvatar(
               backgroundColor: AppColors.primaryDark,
-              child: Icon(Icons.person_outline, color: Colors.white, size: 18),
+              child: Icon(Icons.person_outline, color: AppColors.white, size: 18),
             ),
           ),
           title: const Text(
@@ -218,7 +216,7 @@ class CommissionsScreen extends StatelessWidget {
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFF0F1F3D), Color(0xFF0A142A)],
+          colors: [AppColors.hexFF0F1F3D, AppColors.hexFF0A142A],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
         ),
@@ -229,13 +227,13 @@ class CommissionsScreen extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.percent_rounded, color: Colors.white, size: 20),
+              const Icon(Icons.percent_rounded, color: AppColors.white, size: 20),
               const SizedBox(width: 8),
               const Expanded(
                 child: Text(
                   'إجمالي العمولات',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: AppColors.white,
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
                   ),
@@ -244,17 +242,17 @@ class CommissionsScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.12),
+                  color: AppColors.white.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Row(
                   children: [
-                    Icon(Icons.trending_up_rounded, color: Color(0xFF7AE7A8), size: 12),
+                    Icon(Icons.trending_up_rounded, color: AppColors.hexFF7AE7A8, size: 12),
                     SizedBox(width: 4),
                     Text(
                       '+14.2%',
                       style: TextStyle(
-                        color: Color(0xFF7AE7A8),
+                        color: AppColors.hexFF7AE7A8,
                         fontSize: 10,
                         fontWeight: FontWeight.bold,
                       ),
@@ -273,7 +271,7 @@ class CommissionsScreen extends StatelessWidget {
                   TextSpan(
                     text: '284,900',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: AppColors.white,
                       fontSize: 36,
                       fontWeight: FontWeight.bold,
                     ),
@@ -281,7 +279,7 @@ class CommissionsScreen extends StatelessWidget {
                   TextSpan(
                     text: ' ج.م',
                     style: TextStyle(
-                      color: Colors.white70,
+                      color: AppColors.white70,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
@@ -297,7 +295,7 @@ class CommissionsScreen extends StatelessWidget {
                 child: _MiniInfo(
                   title: 'العمولات المكتسبة',
                   value: '38,500 ج.م',
-                  color: const Color(0xFF7AE7A8),
+                  color: AppColors.hexFF7AE7A8,
                   icon: Icons.savings_rounded,
                 ),
               ),
@@ -306,7 +304,7 @@ class CommissionsScreen extends StatelessWidget {
                 child: _MiniInfo(
                   title: 'المعاملات',
                   value: '3,245',
-                  color: const Color(0xFFBEE3FF),
+                  color: AppColors.hexFFBEE3FF,
                   icon: Icons.receipt_long_rounded,
                 ),
               ),
@@ -374,7 +372,7 @@ class CommissionsScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: const Color(0xFFE5EAF2),
+        color: AppColors.hexFFE5EAF2,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -411,7 +409,7 @@ class CommissionsScreen extends StatelessWidget {
               onPressed: () {},
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primaryDark,
-                foregroundColor: Colors.white,
+                foregroundColor: AppColors.white,
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -453,7 +451,7 @@ class _StatCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: AppColors.cardBorder),
       ),
@@ -518,7 +516,7 @@ class _MiniInfo extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.08),
+        color: AppColors.white.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -540,7 +538,7 @@ class _MiniInfo extends StatelessWidget {
                 Text(
                   title,
                   style: const TextStyle(
-                    color: Colors.white70,
+                    color: AppColors.white70,
                     fontSize: 9,
                   ),
                 ),
@@ -548,7 +546,7 @@ class _MiniInfo extends StatelessWidget {
                 Text(
                   value,
                   style: const TextStyle(
-                    color: Colors.white,
+                    color: AppColors.white,
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
                   ),
@@ -589,7 +587,7 @@ class _CommissionCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: AppColors.cardBorder),
       ),
@@ -703,9 +701,9 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
   ];
 
   static const _filters = [
-    ('all', 'الكل (3,420)', 'All (3,420)'),
-    ('merchants', 'متاجر وتجار (1,840)', 'Merchants (1,840)'),
-    ('providers', 'مزودو خدمات (890)', 'Service providers (890)'),
+    ('all', 'الكل', 'All'),
+    ('merchants', 'متاجر وتجار', 'Merchants'),
+    ('providers', 'مزودو خدمات', 'Service providers'),
     ('requests', 'طلبات', 'Requests'),
   ];
 
@@ -727,7 +725,7 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
       action: 'إشعار التحصيل',
       actionEn: 'Collection notice',
       icon: Icons.workspace_premium_outlined,
-      tone: Color(0xFF059669),
+      tone: AppColors.hexFF059669,
     ),
     _CommissionTransaction(
       amount: '+ 1,200.00',
@@ -744,7 +742,7 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
       action: 'عرض سند القيد',
       actionEn: 'View journal voucher',
       icon: Icons.verified_outlined,
-      tone: Color(0xFF059669),
+      tone: AppColors.hexFF059669,
     ),
     _CommissionTransaction(
       amount: '+ 175.00',
@@ -763,7 +761,7 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
       action: 'تفاصيل الفاتورة',
       actionEn: 'Invoice details',
       icon: Icons.handyman_outlined,
-      tone: Color(0xFF2563EB),
+      tone: AppColors.hexFF2563EB,
     ),
     _CommissionTransaction(
       amount: '+ 15.00',
@@ -783,7 +781,7 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
       action: 'سند المحفظة',
       actionEn: 'Wallet voucher',
       icon: Icons.local_shipping_outlined,
-      tone: Color(0xFFB45309),
+      tone: AppColors.hexFFB45309,
     ),
     _CommissionTransaction(
       amount: '+ 210.00',
@@ -802,7 +800,7 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
       action: 'عقد الوساطة',
       actionEn: 'Brokerage agreement',
       icon: Icons.lock_outline_rounded,
-      tone: Color(0xFF9333EA),
+      tone: AppColors.hexFF9333EA,
     ),
   ];
 
@@ -819,6 +817,70 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
   _RevenuePeriodData get _selectedRevenuePeriod =>
       _revenuePeriods[_periodIndex];
 
+  Widget _buildSampleDataNotice() => Container(
+        padding: const EdgeInsets.all(11),
+        decoration: BoxDecoration(
+          color:  AppColors.textPrimary,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color:  AppColors.hexFFE8C96A),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.info_outline, size: 17, color: AppColors.hexFF8A6410),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                _text(
+                  'الأرقام والحركات هنا توضيحية ثابتة وليست بيانات عمولات مباشرة.',
+                  'Amounts and entries shown here are static examples, not live commission data.',
+                ),
+                style: const TextStyle(
+                  fontSize: 10,
+                  height: 1.4,
+                  color: AppColors.hexFF72540D,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+
+  Future<void> _copyCommissionReport(bool isArabic) async {
+    final rows = <List<String>>[
+      ['reference', 'title', 'category', 'amount', 'description', 'detail'],
+      ..._visibleTransactions.map((item) => [
+            item.code,
+            isArabic ? item.title : item.titleEn,
+            item.filterKey,
+            item.amount,
+            isArabic ? item.description : item.descriptionEn,
+            isArabic ? item.detail : item.detailEn,
+          ]),
+    ];
+    final csv = rows
+        .map((row) => row
+            .map((value) => '"${value.replaceAll('"', '""')}"')
+            .join(','))
+        .join('\n');
+    await Clipboard.setData(ClipboardData(text: csv));
+    if (!mounted) return;
+    AppSnackBar.showSuccess(
+      context,
+      _text('تم نسخ الحركات الظاهرة بصيغة CSV.',
+          'Visible entries copied as CSV.'),
+    );
+  }
+
+  void _explainBankConnection() {
+    AppSnackBar.showInfo(
+      context,
+      _text(
+        'مطابقة كشف البنك غير مفعلة لعدم وجود اتصال بنكي أو استيراد كشف في التطبيق.',
+        'Bank-statement matching is unavailable until a bank connection or statement import is configured.',
+      ),
+    );
+  }
+
   String _formatRevenue(double value) =>
       NumberFormat('#,##0', 'en_US').format(value);
 
@@ -828,18 +890,13 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
   @override
   Widget build(BuildContext context) {
     final isArabic = AppLocalizations.of(context)!.localeName == 'ar';
-    final palette = context.appThemePalette;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     super.build(context);
     return Directionality(
       textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
       child: FinanceSwipeNavigation(
         currentIndex: 1,
         enabled: widget.showBottomNavigation,
-        child: Scaffold(
-            backgroundColor: isDark
-              ? Theme.of(context).scaffoldBackgroundColor
-              : const Color(0xFFF5F7F9),
+        child: Scaffold(backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           body: SafeArea(
             bottom: false,
             child: ListView(
@@ -853,9 +910,8 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
                   _text('صافي الإيراد الرقابي وعمليات التطبيق',
                       'Net controlled revenue and app transactions'),
                   textAlign: isArabic ? TextAlign.right : TextAlign.left,
-                  style: TextStyle(
-                    color:
-                        isDark ? palette.textPrimary : AppColors.primaryDark,
+                  style: const TextStyle(
+                    color: AppColors.primaryDark,
                     fontSize: 22,
                     fontWeight: FontWeight.w800,
                     height: 1.3,
@@ -864,16 +920,18 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
                 const SizedBox(height: 3),
                 Text(
                   _text(
-                      'التحقق المالي المباشر لمعاملات المنصة المستقطعة من كافة القطاعات والأنشطة',
-                      'Live financial verification of deductions across all platform sectors'),
+                      'عرض توضيحي للإيرادات والعمولات حسب الفترة والقطاع',
+                      'Sample view of revenue and commissions by period and sector'),
                   textAlign: isArabic ? TextAlign.right : TextAlign.left,
-                  style: TextStyle(
-                    color: palette.textSecondary,
+                  style: const TextStyle(
+                    color: AppColors.textSecondary,
                     fontSize: 12,
                     height: 1.45,
                   ),
                 ),
                 const SizedBox(height: 16),
+                _buildSampleDataNotice(),
+                const SizedBox(height: 12),
                 _buildPeriodSelector(isArabic),
                 const SizedBox(height: 10),
                 _buildRevenueCard(isArabic),
@@ -881,7 +939,7 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
                 _buildSectionTitle(
                     _text('توزيع الإيراد الرقابي حسب القطاع',
                         'Controlled revenue by sector'),
-                    _text('معدل الامتثال 100%', '100% compliance')),
+                    _text('بيانات توضيحية', 'Sample data')),
                 const SizedBox(height: 10),
                 _buildSectors(isArabic),
                 const SizedBox(height: 20),
@@ -891,8 +949,8 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
                   children: [
                     Expanded(
                       child: Text(
-                        _text('أحدث عمليات استقطاع العمولات المباشرة',
-                            'Latest direct commission deductions'),
+                        _text('أمثلة على حركات العمولات',
+                            'Sample commission entries'),
                         textAlign: isArabic ? TextAlign.right : TextAlign.left,
                         style: const TextStyle(
                           color: AppColors.primaryDark,
@@ -928,11 +986,9 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
 
   Widget _buildBrandHeader(bool isArabic) {
     final l10n = AppLocalizations.of(context)!;
-    final palette = context.appThemePalette;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       height: 62,
-      color: isDark ? palette.surface : Colors.white,
+      color: AppColors.white,
       child: Directionality(
         textDirection: TextDirection.ltr,
         child: Row(
@@ -940,14 +996,13 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
             const CircleAvatar(
               radius: 16,
               backgroundColor: AppColors.primaryDark,
-              child: Icon(Icons.person_outline, color: Colors.white, size: 18),
+              child: Icon(Icons.person_outline, color: AppColors.white, size: 18),
             ),
             const SizedBox(width: 8),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
               decoration: BoxDecoration(
-                color:
-                    isDark ? palette.surfaceElevated : const Color(0xFFF1F5F9),
+                color:  AppColors.textPrimary,
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Row(
@@ -957,8 +1012,8 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
                       isArabic
                           ? 'مدقق مالي معتمد'
                           : 'Certified financial auditor',
-                        style: TextStyle(
-                            fontSize: 9, color: palette.accent)),
+                      style: const TextStyle(
+                          fontSize: 9, color: AppColors.primaryDark)),
                   const SizedBox(width: 4),
                   const Icon(Icons.verified_user_outlined,
                       size: 12, color: AppColors.info),
@@ -971,14 +1026,14 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(l10n.appName,
-                  style: TextStyle(
+                    style: const TextStyle(
                         fontSize: 17,
                         height: 1.1,
-                    color: palette.accent,
+                        color: AppColors.primaryDark,
                         fontWeight: FontWeight.bold)),
                 Text(l10n.financialDepartment,
-                  style: TextStyle(
-                    fontSize: 9, color: palette.textSecondary)),
+                    style: const TextStyle(
+                        fontSize: 9, color: AppColors.textSecondary)),
               ],
             ),
             const SizedBox(width: 8),
@@ -989,7 +1044,7 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
                   color: AppColors.primaryDark,
                   borderRadius: BorderRadius.circular(8)),
               child: const Icon(Icons.shield_outlined,
-                  color: Colors.white, size: 20),
+                  color: AppColors.white, size: 20),
             ),
           ],
         ),
@@ -998,22 +1053,20 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
   }
 
   Widget _buildLiveStatus(bool isArabic) {
-    final palette = context.appThemePalette;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 7),
       decoration: BoxDecoration(
-          color: isDark ? palette.surfaceElevated : const Color(0xFFE9ECEF),
+          color:  AppColors.hexFFE9ECEF,
           borderRadius: BorderRadius.circular(16)),
       child: Row(
         children: [
-          const CircleAvatar(radius: 3, backgroundColor: AppColors.success),
+          const CircleAvatar(radius: 3, backgroundColor: AppColors.warning),
           const SizedBox(width: 6),
           Text(
             isArabic
-                ? 'الإيرادات حسب الفترة المختارة'
-                : 'Revenue for selected period',
-            style: TextStyle(fontSize: 10, color: palette.textPrimary),
+                ? 'بيانات توضيحية حسب الفترة المختارة'
+                : 'Sample data for selected period',
+            style: const TextStyle(fontSize: 10, color: AppColors.primaryDark),
           ),
         ],
       ),
@@ -1030,14 +1083,14 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFF0C2140), Color(0xFF07172C)],
+          colors: [AppColors.hexFF0C2140, AppColors.hexFF07172C],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: const [
           BoxShadow(
-              color: Color(0x2207182D), blurRadius: 14, offset: Offset(0, 8))
+              color: AppColors.hex2207182D, blurRadius: 14, offset: Offset(0, 8))
         ],
       ),
       child: Column(
@@ -1046,17 +1099,17 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
           Row(
             children: [
               const Icon(Icons.account_balance_wallet_outlined,
-                  size: 18, color: Colors.white),
+                  size: 18, color: AppColors.white),
               const SizedBox(width: 8),
               Expanded(
                   child: Text(
                       isArabic
-                          ? 'إجمالي صافي الإيراد الرقابي المستحق'
-                          : 'Total net controlled revenue due',
-                        style: const TextStyle(
-                          color: Colors.white70, fontSize: 11))),
-              _pill(percentageLabel, const Color(0xFF0E4B4B),
-                  const Color(0xFF61E3B0)),
+                          ? 'إجمالي العمولة التوضيحي'
+                          : 'Sample commission total',
+                      style: const TextStyle(
+                          color: AppColors.white70, fontSize: 11))),
+              _pill(percentageLabel,  AppColors.hexFF0E4B4B,
+                   AppColors.hexFF61E3B0),
             ],
           ),
           const SizedBox(height: 14),
@@ -1065,12 +1118,12 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
               TextSpan(
                   text: _formatRevenue(period.total),
                   style: const TextStyle(
-                      color: Colors.white,
+                      color: AppColors.white,
                       fontSize: 29,
                       fontWeight: FontWeight.bold)),
               TextSpan(
                   text: isArabic ? ' ج.م' : ' Egy',
-                  style: const TextStyle(color: Colors.white70, fontSize: 15)),
+                  style: const TextStyle(color: AppColors.white70, fontSize: 15)),
             ]),
             textAlign: TextAlign.center,
           ),
@@ -1079,7 +1132,7 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
             _text('دخل العمولات خلال الفترة المختارة',
                 'Commission income during selected period'),
             textAlign: TextAlign.center,
-            style: const TextStyle(color: Color(0xFF91A9C3), fontSize: 9),
+            style: const TextStyle(color: AppColors.hexFF91A9C3, fontSize: 9),
           ),
           SizedBox(
             height: 48,
@@ -1091,23 +1144,23 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
             decoration: BoxDecoration(
-                color: const Color(0xFF263B53),
+                color:  AppColors.hexFF263B53,
                 borderRadius: BorderRadius.circular(11)),
             child: Row(
               children: [
                 const Icon(Icons.shield_outlined,
-                    size: 17, color: Color(0xFF61E3B0)),
+                    size: 17, color: AppColors.hexFF61E3B0),
                 const SizedBox(width: 8),
                 Expanded(
                     child: Text(
                         isArabic
-                            ? 'المبلغ المحجوز كضمان الاستخدام الآمن\nمخصص ضمن التزامات الاشتراكات والعائدات المحولة'
-                            : 'Funds reserved for secure-use guarantees\nAllocated to subscriptions and transferred returns',
+                            ? 'مثال توضيحي لمبلغ ضمان الاستخدام الآمن\nليس رصيدًا حقيقيًا أو التزامًا ماليًا'
+                            : 'Sample secure-use guarantee amount\nNot a real balance or financial liability',
                         style: const TextStyle(
-                            color: Colors.white, fontSize: 9, height: 1.4))),
+                            color: AppColors.white, fontSize: 9, height: 1.4))),
                 const SizedBox(width: 8),
                 _pill(isArabic ? '38,500 ج.م' : '38,500 Egy',
-                    const Color(0xFF37516A), const Color(0xFF61E3B0)),
+                     AppColors.hexFF37516A,  AppColors.hexFF61E3B0),
               ],
             ),
           ),
@@ -1115,16 +1168,16 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
           Row(
             children: [
               const Icon(Icons.check_circle_outline,
-                  size: 14, color: Color(0xFF21D6A0)),
+                  size: 14, color: AppColors.hexFF21D6A0),
               const SizedBox(width: 5),
               Expanded(
                 child: Text(
                   isArabic
-                      ? '3,420 عملية استقطاع موثقة'
-                      : '3,420 verified deductions',
+                      ? 'عدد الاستقطاعات في البيانات التوضيحية'
+                      : 'Deductions in sample data',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 9, color: Color(0xFF91A9C3)),
+                  style: const TextStyle(fontSize: 9, color: AppColors.hexFF91A9C3),
                 ),
               ),
               const SizedBox(width: 5),
@@ -1136,7 +1189,7 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.end,
-                  style: const TextStyle(fontSize: 9, color: Color(0xFF91A9C3)),
+                  style: const TextStyle(fontSize: 9, color: AppColors.hexFF91A9C3),
                 ),
               ),
             ],
@@ -1147,22 +1200,16 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
   }
 
   Widget _buildSectionTitle(String title, String trailing) {
-    final palette = context.appThemePalette;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Row(
       children: [
         Expanded(
             child: Text(title,
-          style: TextStyle(
+                style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-            color: isDark
-              ? palette.textPrimary
-              : AppColors.primaryDark))),
-      Text(trailing,
-        style: TextStyle(
-          fontSize: 9,
-          color: isDark ? palette.accent : AppColors.info)),
+                    color: AppColors.primaryDark))),
+        Text(trailing,
+            style: const TextStyle(fontSize: 9, color: AppColors.info)),
       ],
     );
   }
@@ -1180,7 +1227,7 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
                   value: '142,600',
                   percentage: '50.1%',
                   icon: Icons.storefront_outlined,
-                  color: const Color(0xFF173C78),
+                  color:  AppColors.hexFF173C78,
                   currency: currency)),
           const SizedBox(width: 8),
           Expanded(
@@ -1191,7 +1238,7 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
                   value: '78,350',
                   percentage: '27.5%',
                   icon: Icons.home_repair_service_outlined,
-                  color: const Color(0xFF315A9A),
+                  color:  AppColors.hexFF315A9A,
                   currency: currency)),
         ]),
         const SizedBox(height: 8),
@@ -1204,7 +1251,7 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
                   value: '39,150',
                   percentage: '13.7%',
                   icon: Icons.handshake_outlined,
-                  color: const Color(0xFF8B27C9),
+                  color:  AppColors.hexFF8B27C9,
                   currency: currency)),
           const SizedBox(width: 8),
           Expanded(
@@ -1215,7 +1262,7 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
                   value: '24,800',
                   percentage: '8.7%',
                   icon: Icons.local_shipping_outlined,
-                  color: const Color(0xFFB45309),
+                  color:  AppColors.hexFFB45309,
                   currency: currency)),
         ]),
         const SizedBox(height: 8),
@@ -1226,7 +1273,7 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
             value: '31,900',
             percentage: '11.2%',
             icon: Icons.workspace_premium_outlined,
-            color: const Color(0xFF059669),
+            color:  AppColors.hexFF059669,
             wide: true,
             currency: currency),
       ],
@@ -1234,15 +1281,13 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
   }
 
   Widget _buildPeriodSelector(bool isArabic) {
-    final palette = context.appThemePalette;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final periods = isArabic
         ? ['اليوم', 'هذا الأسبوع', 'هذا الشهر', 'الربع المالي']
         : ['Today', 'This week', 'This month', 'This quarter'];
     return Container(
       padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
-          color: isDark ? palette.surfaceElevated : const Color(0xFFE9ECEF),
+          color:  AppColors.hexFFE9ECEF,
           borderRadius: BorderRadius.circular(12)),
       child: Row(
         children: List.generate(periods.length, (index) {
@@ -1254,9 +1299,7 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
                 constraints: const BoxConstraints(minHeight: 34),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                    color: selected
-                      ? palette.surface
-                      : Colors.transparent,
+                    color: selected ? AppColors.white : AppColors.transparent,
                     borderRadius: BorderRadius.circular(9)),
                 child: Text(periods[index],
                     maxLines: 1,
@@ -1266,8 +1309,8 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
                         fontWeight:
                             selected ? FontWeight.bold : FontWeight.normal,
                         color: selected
-                          ? palette.accent
-                          : palette.textSecondary)),
+                            ? AppColors.primaryDark
+                            : AppColors.textSecondary)),
               ),
             ),
           );
@@ -1277,8 +1320,6 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
   }
 
   Widget _buildFilters(bool isArabic) {
-    final palette = context.appThemePalette;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       reverse: true,
@@ -1291,20 +1332,17 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
               label: Text(isArabic ? filter.$2 : filter.$3,
                   style: TextStyle(
                       fontSize: 10,
-                        color: selected
-                          ? Theme.of(context).colorScheme.onPrimary
-                          : palette.textSecondary)),
+                      color:
+                          selected ? AppColors.white : AppColors.textSecondary)),
               selected: selected,
               showCheckmark: false,
               onSelected: (_) => setState(() => _selectedFilter = filter.$1),
-              backgroundColor: isDark ? palette.surface : Colors.white,
-              selectedColor: palette.accent,
+              backgroundColor: AppColors.white,
+              selectedColor: AppColors.primaryDark,
               side: BorderSide(
-                    color: selected
-                      ? palette.accent
-                      : isDark
-                        ? palette.border
-                        : const Color(0xFFE6EAF0)),
+                  color: selected
+                      ? AppColors.primaryDark
+                      :  AppColors.hexFFE6EAF0),
               padding: const EdgeInsets.symmetric(horizontal: 5),
               visualDensity: VisualDensity.compact,
             ),
@@ -1315,17 +1353,14 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
   }
 
   Widget _buildAuditPanel(bool isArabic) {
-    final palette = context.appThemePalette;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final colorScheme = Theme.of(context).colorScheme;
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-          color: isDark ? palette.surface : Colors.white,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(14),
           boxShadow: const [
             BoxShadow(
-                color: Color(0x12000000), blurRadius: 6, offset: Offset(0, 2))
+                color: AppColors.hex12000000, blurRadius: 6, offset: Offset(0, 2))
           ]),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -1337,44 +1372,37 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
                       isArabic
                           ? 'التدقيق الحسابي ومطابقة الحساب الوسيط'
                           : 'Accounting audit and escrow reconciliation',
-                        style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                            color: isDark
-                              ? palette.textPrimary
-                              : AppColors.primaryDark))),
+                          color: AppColors.primaryDark))),
               Container(
                   width: 36,
                   height: 36,
                   decoration: BoxDecoration(
-                      color: isDark
-                          ? palette.accentContainer
-                          : const Color(0xFFFFF5E6),
+                      color:  AppColors.textPrimary,
                       borderRadius: BorderRadius.circular(10)),
-                  child: Icon(
-                    Icons.verified_outlined,
-                    color: isDark ? palette.warning : const Color(0xFFB45309),
-                  )),
+                  child: const Icon(Icons.verified_outlined,
+                      color: AppColors.hexFFB45309)),
             ],
           ),
           const SizedBox(height: 8),
           Text(
               isArabic
-                  ? 'جميع العمولات المستقطعة ترحل فورًا إلى حساب الإيرادات التشغيلية المركزي. تتم مطابقة الرصيد البنكي مع كشف البنك عبر الحساب الوسيط.'
-                  : 'All deducted commissions move to the central operating revenue account and are reconciled against the bank statement.',
-                style: TextStyle(
-                  fontSize: 10, height: 1.6, color: palette.textSecondary)),
+                  ? 'بيانات هذه الشاشة توضيحية. لا يوجد حاليًا اتصال بكشف البنك أو مصدر مباشر لحركات العمولات.'
+                  : 'This screen uses sample data. No bank-statement connection or live commission feed is configured.',
+              style: const TextStyle(
+                  fontSize: 10, height: 1.6, color: AppColors.textSecondary)),
           const SizedBox(height: 14),
           ElevatedButton.icon(
-            onPressed: () {},
+            onPressed: () => _copyCommissionReport(isArabic),
             icon: const Icon(Icons.download_rounded, size: 17),
             label: Text(isArabic
-                ? 'تصدير كشف العمولات الرقابي (Excel / PDF)'
-                : 'Export commission statement (Excel / PDF)'),
+                ? 'نسخ الحركات الظاهرة بصيغة CSV'
+                : 'Copy visible entries as CSV'),
             style: ElevatedButton.styleFrom(
-              backgroundColor:
-                isDark ? palette.accent : AppColors.primaryDark,
-              foregroundColor: colorScheme.onPrimary,
+                backgroundColor: AppColors.primaryDark,
+                foregroundColor: AppColors.white,
                 minimumSize: const Size.fromHeight(42),
                 textStyle:
                     const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
@@ -1383,16 +1411,14 @@ class _CommissionsDashboardState extends State<_CommissionsDashboard>
           ),
           const SizedBox(height: 8),
           OutlinedButton.icon(
-            onPressed: () {},
+            onPressed: _explainBankConnection,
             icon: const Icon(Icons.compare_arrows_rounded, size: 18),
             label: Text(isArabic
-                ? 'مطابقة الحساب البنكي المباشر'
-                : 'Reconcile live bank account'),
+                ? 'حالة اتصال كشف البنك'
+                : 'Bank-statement connection status'),
             style: OutlinedButton.styleFrom(
-              foregroundColor: palette.accent,
-              backgroundColor: isDark
-                ? palette.surfaceElevated
-                : const Color(0xFFF1F3F5),
+                foregroundColor: AppColors.primaryDark,
+                backgroundColor:  AppColors.surface,
                 side: BorderSide.none,
                 minimumSize: const Size.fromHeight(42),
                 textStyle:
@@ -1446,16 +1472,13 @@ class _SectorCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = context.appThemePalette;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       constraints: const BoxConstraints(minHeight: 94),
       padding: const EdgeInsets.all(11),
       decoration: BoxDecoration(
-          color: isDark ? palette.surface : Colors.white,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: isDark ? palette.border : const Color(0xFFE9EDF2))),
+          border: Border.all(color:  AppColors.hexFFE9EDF2)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -1481,20 +1504,18 @@ class _SectorCard extends StatelessWidget {
                   child: Text(title,
                       maxLines: wide ? 1 : 2,
                       overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 9,
                           height: 1.3,
-                          color: palette.textSecondary))),
+                          color: AppColors.textSecondary))),
               const SizedBox(width: 8),
               Text('$value\n$currency',
                   textAlign: TextAlign.end,
-                    style: TextStyle(
+                  style: const TextStyle(
                       fontSize: 14,
                       height: 1.1,
                       fontWeight: FontWeight.bold,
-                        color: isDark
-                          ? palette.textPrimary
-                          : AppColors.primaryDark)),
+                      color: AppColors.primaryDark)),
             ],
           ),
         ],
@@ -1546,16 +1567,12 @@ class _TransactionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = context.appThemePalette;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final colorScheme = Theme.of(context).colorScheme;
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-            color: isDark ? palette.surface : Colors.white,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(15),
-            border: Border.all(
-              color: isDark ? palette.border : const Color(0xFFE9EDF2))),
+          border: Border.all(color:  AppColors.hexFFE9EDF2)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -1566,11 +1583,11 @@ class _TransactionCard extends StatelessWidget {
                     text: transaction.amount,
                     style: const TextStyle(
                         fontSize: 16,
-                        color: Color(0xFF00865F),
+                        color: AppColors.hexFF00865F,
                         fontWeight: FontWeight.bold)),
                 TextSpan(
                     text: isArabic ? '  ج.م' : '  Egy',
-                  style: const TextStyle(
+                    style: const TextStyle(
                         fontSize: 9, color: AppColors.textSecondary))
               ])),
               const SizedBox(width: 5),
@@ -1580,9 +1597,9 @@ class _TransactionCard extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.end,
-                    style: TextStyle(
+                  style: const TextStyle(
                       fontSize: 9,
-                      color: isDark ? palette.textSecondary : const Color(0xFF434B55),
+                      color: AppColors.hexFF434B55,
                       fontWeight: FontWeight.w600),
                 ),
               ),
@@ -1599,21 +1616,19 @@ class _TransactionCard extends StatelessWidget {
           const SizedBox(height: 12),
           Text(isArabic ? transaction.title : transaction.titleEn,
               textAlign: isArabic ? TextAlign.right : TextAlign.left,
-                style: TextStyle(
+              style: const TextStyle(
                   fontSize: 15,
                   height: 1.4,
                   fontWeight: FontWeight.bold,
-                  color: isDark ? palette.textPrimary : AppColors.primaryDark)),
+                  color: AppColors.primaryDark)),
           const SizedBox(height: 4),
           Text(isArabic ? transaction.description : transaction.descriptionEn,
               textAlign: isArabic ? TextAlign.right : TextAlign.left,
-                style: TextStyle(
-                  fontSize: 10, height: 1.55, color: palette.textSecondary)),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 9),
-                child: Divider(
-                  height: 1,
-                  color: isDark ? palette.border : const Color(0xFFE9EDF2))),
+              style: const TextStyle(
+                  fontSize: 10, height: 1.55, color: AppColors.textSecondary)),
+          const Padding(
+              padding: EdgeInsets.symmetric(vertical: 9),
+              child: Divider(height: 1, color: AppColors.hexFFE9EDF2)),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -1622,10 +1637,10 @@ class _TransactionCard extends StatelessWidget {
               Expanded(
                   child: Text(
                       isArabic ? transaction.detail : transaction.detailEn,
-                        style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 9,
                           height: 1.5,
-                          color: palette.textSecondary))),
+                          color: AppColors.textSecondary))),
             ],
           ),
           const SizedBox(height: 9),
@@ -1634,15 +1649,42 @@ class _TransactionCard extends StatelessWidget {
             child: SizedBox(
               height: 28,
               child: ElevatedButton.icon(
-                onPressed: () {},
+                onPressed: () => showDialog<void>(
+                  context: context,
+                  builder: (dialogContext) => AlertDialog(
+                    title: Text(isArabic
+                        ? 'تفاصيل الحركة التوضيحية'
+                        : 'Sample transaction details'),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(transaction.code),
+                        const SizedBox(height: 8),
+                        Text(isArabic ? transaction.title : transaction.titleEn),
+                        const SizedBox(height: 8),
+                        Text(isArabic
+                            ? transaction.description
+                            : transaction.descriptionEn),
+                        const SizedBox(height: 8),
+                        Text(isArabic ? transaction.detail : transaction.detailEn),
+                      ],
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(dialogContext),
+                        child: Text(isArabic ? 'إغلاق' : 'Close'),
+                      ),
+                    ],
+                  ),
+                ),
                 icon: const Icon(Icons.receipt_long_outlined, size: 13),
                 label: Text(
                     isArabic ? transaction.action : transaction.actionEn,
                     style: const TextStyle(fontSize: 9)),
                 style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                      isDark ? palette.accent : AppColors.primaryDark,
-                    foregroundColor: colorScheme.onPrimary,
+                    backgroundColor: AppColors.primaryDark,
+                    foregroundColor: AppColors.white,
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(9))),
@@ -1714,13 +1756,13 @@ class _TrendPainter extends CustomPainter {
         ..shader = const LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [Color(0x3355A5FF), Color(0x0055A5FF)],
+          colors: [AppColors.hex3355A5FF, AppColors.hex0055A5FF],
         ).createShader(Offset.zero & size),
     );
     canvas.drawPath(
       linePath,
       Paint()
-        ..color = const Color(0xFF55A5FF)
+        ..color =  AppColors.hexFF55A5FF
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2.2
         ..strokeCap = StrokeCap.round
@@ -1730,13 +1772,13 @@ class _TrendPainter extends CustomPainter {
       canvas.drawCircle(
         points[i],
         2,
-        Paint()..color = const Color(0xFF9CCBFF),
+        Paint()..color =  AppColors.hexFF9CCBFF,
       );
     }
     canvas.drawCircle(
       points.last,
       3.2,
-      Paint()..color = const Color(0xFF2DD4A4),
+      Paint()..color =  AppColors.hexFF2DD4A4,
     );
   }
 

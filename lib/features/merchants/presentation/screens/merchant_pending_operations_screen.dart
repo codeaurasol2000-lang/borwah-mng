@@ -36,11 +36,10 @@ class _MerchantPendingOperationsScreenState
 
     return Directionality(
       textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF5F7F9),
+      child: Scaffold(backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
           title: Text(l10n.merchantInfoPendingOperations),
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.white,
           foregroundColor: AppColors.primaryDark,
           centerTitle: true,
         ),
@@ -54,7 +53,7 @@ class _MerchantPendingOperationsScreenState
                 width: double.infinity,
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.white,
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(color: AppColors.cardBorder),
                 ),
@@ -120,7 +119,7 @@ class _MerchantHeading extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: AppColors.cardBorder),
       ),
@@ -130,7 +129,7 @@ class _MerchantHeading extends StatelessWidget {
             backgroundColor: AppColors.primaryDark,
             child: Icon(
               merchant.logoIcon ?? merchant.categoryIcon,
-              color: Colors.white,
+              color: AppColors.white,
             ),
           ),
           const SizedBox(width: 12),
@@ -172,7 +171,7 @@ class _PendingAdvertisementCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: AppColors.cardBorder),
       ),

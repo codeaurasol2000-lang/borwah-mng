@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -8,6 +10,9 @@ import '../../features/finance/presentation/screens/audit_screen.dart';
 import '../../features/finance/presentation/screens/bank_reconciliation_screen.dart';
 import '../../features/finance/presentation/screens/commissions_screen.dart';
 import '../../features/finance/presentation/screens/finance_dashboard_screen.dart';
+import '../../features/finance/presentation/screens/finance_supervisor_chats_screen.dart';
+import '../../features/finance/presentation/utils/open_financial_request_notice.dart';
+import '../../features/wasalny_supervisor/data/wasalny_local_event_store.dart';
 import '../../features/finance/presentation/screens/profile_screen.dart';
 import '../../features/finance/presentation/screens/settlements_screen.dart';
 import '../../features/finance/presentation/widgets/finance_navigation.dart';
@@ -25,6 +30,8 @@ class _FinanceTabsShellState extends State<FinanceTabsShell> {
   late final PageController _pageController = PageController(initialPage: 4);
   int _currentIndex = 4;
   bool _isBarsVisible = true;
+  int _unreadNotificationCount = 0;
+  Timer? _notificationRefreshTimer;
 
   late final _pages = <Widget>[
     const AuditScreen(showBottomNavigation: false),
@@ -38,9 +45,37 @@ class _FinanceTabsShellState extends State<FinanceTabsShell> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _refreshUnreadNotifications();
+    _notificationRefreshTimer = Timer.periodic(
+      const Duration(seconds: 5),
+      (_) => _refreshUnreadNotifications(),
+    );
+  }
+
+  @override
   void dispose() {
+    _notificationRefreshTimer?.cancel();
     _pageController.dispose();
     super.dispose();
+  }
+
+  Future<void> _refreshUnreadNotifications() async {
+    try {
+      final events = await WasalnyLocalEventStore().getEvents('finance');
+      final count = events.where((event) => !event.isRead).length;
+      if (mounted && count != _unreadNotificationCount) {
+        setState(() => _unreadNotificationCount = count);
+      }
+    } on Object catch (error, stackTrace) {
+      FlutterError.reportError(FlutterErrorDetails(
+        exception: error,
+        stack: stackTrace,
+        library: 'finance notifications',
+        context: ErrorDescription('while refreshing unread notifications'),
+      ));
+    }
   }
 
   void _selectPage(int index) {
@@ -96,16 +131,36 @@ class _FinanceTabsShellState extends State<FinanceTabsShell> {
                 ),
                 additionalActions: [
                   IconButton(
-                    tooltip: l10n.productNotificationsTitle,
+                    tooltip: l10n.localeName.startsWith('ar')
+                        ? 'الدردشات'
+                        : 'Chats',
                     onPressed: () => Navigator.of(context).push(
                       MaterialPageRoute<void>(
-                        builder: (_) => LocalEventInboxScreen(
-                          recipient: 'finance',
-                          title: l10n.productNotificationsTitle,
-                        ),
+                        builder: (_) => const FinanceSupervisorChatsScreen(),
                       ),
                     ),
-                    icon: const Icon(Icons.notifications_none_outlined),
+                    icon: const Icon(Icons.chat_bubble_outline),
+                  ),
+                  IconButton(
+                    tooltip: l10n.productNotificationsTitle,
+                    onPressed: () async {
+                      await Navigator.of(context).push<void>(
+                        MaterialPageRoute<void>(
+                          builder: (_) => LocalEventInboxScreen(
+                            recipient: 'finance',
+                            title: l10n.productNotificationsTitle,
+                            onOpenEvent: (event) =>
+                                openFinancialRequestNotice(context, event),
+                          ),
+                        ),
+                      );
+                      await _refreshUnreadNotifications();
+                    },
+                    icon: Badge(
+                      isLabelVisible: _unreadNotificationCount > 0,
+                      label: Text('$_unreadNotificationCount'),
+                      child: const Icon(Icons.notifications_none_outlined),
+                    ),
                   ),
                 ],
               ),

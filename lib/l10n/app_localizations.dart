@@ -413,7 +413,7 @@ abstract class AppLocalizations {
   /// No description provided for @expenseCategoryAndDocuments.
   ///
   /// In ar, this message translates to:
-  /// **'تصنيف المصروف والمستندات المؤيدة'**
+  /// **'تفاصيل المصروف'**
   String get expenseCategoryAndDocuments;
 
   /// No description provided for @detailedExpenseReason.
@@ -427,18 +427,6 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'أدخل بياناً تفصيلياً بالمصروف'**
   String get expenseDetailsHint;
-
-  /// No description provided for @invoiceSupportDocument.
-  ///
-  /// In ar, this message translates to:
-  /// **'مرفق الفاتورة الضريبية والمستند المؤيد'**
-  String get invoiceSupportDocument;
-
-  /// No description provided for @attachDocumentOptional.
-  ///
-  /// In ar, this message translates to:
-  /// **'إرفاق صورة المستند إن وجدت'**
-  String get attachDocumentOptional;
 
   /// No description provided for @expenseReasonRequired.
   ///
@@ -499,30 +487,6 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'سيتم إرسال طلب المصروف إلى الإدارة للمراجعة والموافقة، دون خصم المبلغ الآن.'**
   String get expenseConfirmDescription;
-
-  /// No description provided for @expenseAttachedPrefix.
-  ///
-  /// In ar, this message translates to:
-  /// **'مرفق'**
-  String get expenseAttachedPrefix;
-
-  /// No description provided for @expenseRemoveDocumentAction.
-  ///
-  /// In ar, this message translates to:
-  /// **'انقر للإزالة'**
-  String get expenseRemoveDocumentAction;
-
-  /// No description provided for @expenseDocumentAttached.
-  ///
-  /// In ar, this message translates to:
-  /// **'تم إرفاق المستند'**
-  String get expenseDocumentAttached;
-
-  /// No description provided for @expenseDocumentRemoved.
-  ///
-  /// In ar, this message translates to:
-  /// **'تمت إزالة المستند المرفق'**
-  String get expenseDocumentRemoved;
 
   /// No description provided for @strictFinancialDisbursementGovernance.
   ///
@@ -755,7 +719,7 @@ abstract class AppLocalizations {
   /// No description provided for @servicesProfileDemoMetricsNotice.
   ///
   /// In ar, this message translates to:
-  /// **'بيانات الملف ومؤشرات الأداء والأرصدة المعروضة تجريبية حتى ربط الحساب بمصدر بيانات معتمد.'**
+  /// **'بيانات الملف والأرصدة المعروضة تجريبية؛ مؤشرات الإجراءات مبنية على سجل العمليات المحفوظ محليًا.'**
   String get servicesProfileDemoMetricsNotice;
 
   /// No description provided for @servicesProfileLoadError.
@@ -5259,6 +5223,36 @@ abstract class AppLocalizations {
   /// **'التحقق والتدقيق'**
   String get settlementBeneficiaryAudit;
 
+  /// No description provided for @settlementBeneficiaryName.
+  ///
+  /// In ar, this message translates to:
+  /// **'اسم المستفيد'**
+  String get settlementBeneficiaryName;
+
+  /// No description provided for @settlementBeneficiaryRole.
+  ///
+  /// In ar, this message translates to:
+  /// **'صفة المستفيد'**
+  String get settlementBeneficiaryRole;
+
+  /// No description provided for @settlementUseSavedAccount.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختيار حساب مسجل'**
+  String get settlementUseSavedAccount;
+
+  /// No description provided for @settlementEnterBankManually.
+  ///
+  /// In ar, this message translates to:
+  /// **'إدخال بيانات البنك يدويًا'**
+  String get settlementEnterBankManually;
+
+  /// No description provided for @settlementNoSavedAccounts.
+  ///
+  /// In ar, this message translates to:
+  /// **'لا توجد حسابات بنكية مسجلة'**
+  String get settlementNoSavedAccounts;
+
   /// No description provided for @settlementAmountLabel.
   ///
   /// In ar, this message translates to:
@@ -6584,6 +6578,18 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'الطلبات المالية'**
   String get navFinancialRequests;
+
+  /// No description provided for @navMerchantUpgrades.
+  ///
+  /// In ar, this message translates to:
+  /// **'طلبات الترقية'**
+  String get navMerchantUpgrades;
+
+  /// No description provided for @merchantUpgradeReviewSubtitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'راجع طلبات ترقية المتاجر وأرسل الطلبات المقبولة إلى المشرف المالي'**
+  String get merchantUpgradeReviewSubtitle;
 
   /// No description provided for @navAccount.
   ///
@@ -11242,6 +11248,18 @@ abstract class AppLocalizations {
   /// **'إحالة طلب مالي للمشرف المالي'**
   String get merchantAuditFinancialSubmitted;
 
+  /// No description provided for @merchantAuditFinancialApproved.
+  ///
+  /// In ar, this message translates to:
+  /// **'اعتماد الطلب المالي'**
+  String get merchantAuditFinancialApproved;
+
+  /// No description provided for @merchantAuditFinancialFrozen.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعليق الطلب المالي'**
+  String get merchantAuditFinancialFrozen;
+
   /// No description provided for @merchantAuditFinancialRejected.
   ///
   /// In ar, this message translates to:
@@ -11446,6 +11464,48 @@ abstract class AppLocalizations {
   /// **'آيبان (IBAN)'**
   String get merchantWalletIban;
 
+  /// No description provided for @merchantWalletBankName.
+  ///
+  /// In ar, this message translates to:
+  /// **'اسم البنك أو مزود المحفظة'**
+  String get merchantWalletBankName;
+
+  /// No description provided for @merchantWalletDestinationName.
+  ///
+  /// In ar, this message translates to:
+  /// **'اسم صاحب الحساب أو المحفظة'**
+  String get merchantWalletDestinationName;
+
+  /// No description provided for @merchantWalletDestinationDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل رقم الحساب أو المحفظة أو عنوان التحويل'**
+  String get merchantWalletDestinationDetails;
+
+  /// No description provided for @merchantWalletPhoneLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'رقم هاتف المحفظة'**
+  String get merchantWalletPhoneLabel;
+
+  /// No description provided for @merchantWalletInstantAddressLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'عنوان إنستاباي أو اسم المستخدم'**
+  String get merchantWalletInstantAddressLabel;
+
+  /// No description provided for @merchantWalletEnterTransferDetails.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل بيانات الحساب المستلم أولاً.'**
+  String get merchantWalletEnterTransferDetails;
+
+  /// No description provided for @merchantProfileAddPhoto.
+  ///
+  /// In ar, this message translates to:
+  /// **'إضافة صورة شخصية'**
+  String get merchantProfileAddPhoto;
+
   /// No description provided for @merchantWalletDigitalWallet.
   ///
   /// In ar, this message translates to:
@@ -11487,6 +11547,12 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'01012345678'**
   String get merchantWalletPhoneValue;
+
+  /// No description provided for @merchantRecordAction.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجل التاجر'**
+  String get merchantRecordAction;
 
   /// No description provided for @merchantWalletInstantAddress.
   ///
@@ -12028,24 +12094,6 @@ abstract class AppLocalizations {
   /// **'هذا النص سيظهر كسجل رسمي للتاجر في حسابه الموثق.'**
   String get merchantSuspendPrivateNote;
 
-  /// No description provided for @merchantSuspendAttachments.
-  ///
-  /// In ar, this message translates to:
-  /// **'المستندات التوثيقية ومحاضر المعاينة'**
-  String get merchantSuspendAttachments;
-
-  /// No description provided for @merchantSuspendUpload.
-  ///
-  /// In ar, this message translates to:
-  /// **'انقر لإرفاق محضر المعاينة أو الصور'**
-  String get merchantSuspendUpload;
-
-  /// No description provided for @merchantSuspendFileTypes.
-  ///
-  /// In ar, this message translates to:
-  /// **'صيغ مدعومة: PDF, JPG, PNG (بحد أقصى 10 ميجابايت)'**
-  String get merchantSuspendFileTypes;
-
   /// No description provided for @merchantSuspendDuration.
   ///
   /// In ar, this message translates to:
@@ -12091,7 +12139,7 @@ abstract class AppLocalizations {
   /// No description provided for @merchantSuspendConfirm.
   ///
   /// In ar, this message translates to:
-  /// **'تأكيد التعليق المؤقت وإشعار التاجر'**
+  /// **'تأكيد التعليق المؤقت'**
   String get merchantSuspendConfirm;
 
   /// No description provided for @merchantSuspendCancel.
@@ -12775,7 +12823,7 @@ abstract class AppLocalizations {
   /// No description provided for @merchantLinkSavedLocally.
   ///
   /// In ar, this message translates to:
-  /// **'تم حفظ طلب الربط محلياً. لم يُرسل للتاجر أو للمنصة.'**
+  /// **'تمت إضافة التاجر إلى قائمة إشرافك على هذا الجهاز.'**
   String get merchantLinkSavedLocally;
 
   /// No description provided for @merchantLinkSaveFailed.

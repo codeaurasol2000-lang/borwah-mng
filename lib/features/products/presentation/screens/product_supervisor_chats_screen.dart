@@ -10,7 +10,14 @@ class ProductSupervisorChatsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final isArabic = l10n.localeName.startsWith('ar');
     final threads = [
+      (
+        Icons.account_balance_outlined,
+        isArabic ? 'المشرف المالي' : 'Finance supervisor',
+        isArabic ? 'تواصل بخصوص الطلبات والقرارات المالية' : 'Questions about financial requests and decisions',
+        l10n.productChatToday,
+      ),
       (
         Icons.supervisor_account_outlined,
         l10n.productHeadSupervisorName,
@@ -24,10 +31,9 @@ class ProductSupervisorChatsScreen extends StatelessWidget {
         l10n.productChatYesterday,
       ),
     ];
-    return Scaffold(
-      backgroundColor: AppColors.background,
+    return Scaffold(backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.white,
         foregroundColor: AppColors.primaryDark,
         title: Text(
           l10n.productChatsTitle,
@@ -41,7 +47,7 @@ class ProductSupervisorChatsScreen extends StatelessWidget {
         itemBuilder: (context, index) {
           final thread = threads[index];
           return Material(
-            color: Colors.white,
+            color: AppColors.white,
             borderRadius: BorderRadius.circular(14),
             child: ListTile(
               shape: RoundedRectangleBorder(
@@ -59,8 +65,13 @@ class ProductSupervisorChatsScreen extends StatelessWidget {
                       color: AppColors.textMuted, fontSize: 10)),
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute<void>(
-                  builder: (_) =>
-                      MerchantConversationScreen(conversationTitle: thread.$2),
+                  builder: (_) => MerchantConversationScreen(
+                    conversationTitle: thread.$2,
+                    conversationParticipants: [
+                      thread.$2,
+                      isArabic ? 'مشرف المنتجات' : 'Product supervisor',
+                    ],
+                  ),
                 ),
               ),
             ),

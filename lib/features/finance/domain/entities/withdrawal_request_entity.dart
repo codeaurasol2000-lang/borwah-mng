@@ -1,30 +1,38 @@
 import 'package:equatable/equatable.dart';
 
 enum BeneficiaryType { merchant, user, supervisor, serviceProvider }
+
 enum RequestStatus { pending, underInvestigation, approved, frozen, rejected }
+
 enum FinancialOperationType { withdrawal, deposit, promotion }
 
 class WithdrawalRequestEntity extends Equatable {
   final String id;
-  final String requestNumber;          // مثل: #TRD-8821 أو #SUP-409
-  final String beneficiaryName;        // متجر الأفق، أ. سعد العتيبي..
-  final String beneficiaryRole;        // فني صيانة، مشرف تجار معتمد..
+  final String requestNumber; // مثل: #TRD-8821 أو #SUP-409
+  final String beneficiaryName; // متجر الأفق، أ. سعد العتيبي..
+  final String beneficiaryRole; // فني صيانة، مشرف تجار معتمد..
   final BeneficiaryType beneficiaryType;
-  final double grossAmount;            // إجمالي المبلغ المطلوب
-  final double platformFeePercentage;  // نسبة عمولة المنصة
-  final double platformFeeAmount;      // قيمة العمولة بالريال
-  final double netAmount;              // صافي المبلغ المستحق للصرف
-  final String bankName;               // مصرف الراجحي، البنك الأهلي السعودي..
+  final double grossAmount; // إجمالي المبلغ المطلوب
+  final double platformFeePercentage; // نسبة عمولة المنصة
+  final double platformFeeAmount; // قيمة العمولة بالريال
+  final double netAmount; // صافي المبلغ المستحق للصرف
+  final String bankName; // مصرف الراجحي، البنك الأهلي السعودي..
   final String iban;
   final String dateText;
+  final DateTime? decisionAt;
+  final String? decisionBy;
   final RequestStatus status;
-  final String? auditCheckResult;      // نتيجة الفحص الآلي
-  final String? alertNotice;           // مذكرة الإشعار الرقابي إن وجدت
-  final bool isInstantTransferReady;   // هل متاح للصرف الفوري
-  final String? sourceOfFunds;         // مصدر المستحقات أو تفاصيل الإنجاز الميداني
-  final String? transferMethod;        // طريقة التحويل
+  final String? auditCheckResult; // نتيجة الفحص الآلي
+  final String? alertNotice; // مذكرة الإشعار الرقابي إن وجدت
+  final bool isInstantTransferReady; // هل متاح للصرف الفوري
+  final String? sourceOfFunds; // مصدر المستحقات أو تفاصيل الإنجاز الميداني
+  final String? transferMethod; // طريقة التحويل
   final FinancialOperationType operationType;
   final String? sourceAccount;
+  final String? reference;
+  final String? notes;
+  final String? settlementMode;
+  final bool adminApprovalPending;
 
   const WithdrawalRequestEntity({
     required this.id,
@@ -40,6 +48,8 @@ class WithdrawalRequestEntity extends Equatable {
     required this.iban,
     required this.dateText,
     required this.status,
+    this.decisionAt,
+    this.decisionBy,
     this.auditCheckResult,
     this.alertNotice,
     this.isInstantTransferReady = false,
@@ -47,6 +57,10 @@ class WithdrawalRequestEntity extends Equatable {
     this.transferMethod,
     this.operationType = FinancialOperationType.withdrawal,
     this.sourceAccount,
+    this.reference,
+    this.notes,
+    this.settlementMode,
+    this.adminApprovalPending = false,
   });
 
   WithdrawalRequestEntity copyWith({
@@ -62,6 +76,8 @@ class WithdrawalRequestEntity extends Equatable {
     String? bankName,
     String? iban,
     String? dateText,
+    DateTime? decisionAt,
+    String? decisionBy,
     RequestStatus? status,
     String? auditCheckResult,
     String? alertNotice,
@@ -70,6 +86,10 @@ class WithdrawalRequestEntity extends Equatable {
     String? transferMethod,
     FinancialOperationType? operationType,
     String? sourceAccount,
+    String? reference,
+    String? notes,
+    String? settlementMode,
+    bool? adminApprovalPending,
   }) {
     return WithdrawalRequestEntity(
       id: id ?? this.id,
@@ -78,20 +98,28 @@ class WithdrawalRequestEntity extends Equatable {
       beneficiaryRole: beneficiaryRole ?? this.beneficiaryRole,
       beneficiaryType: beneficiaryType ?? this.beneficiaryType,
       grossAmount: grossAmount ?? this.grossAmount,
-      platformFeePercentage: platformFeePercentage ?? this.platformFeePercentage,
+      platformFeePercentage:
+          platformFeePercentage ?? this.platformFeePercentage,
       platformFeeAmount: platformFeeAmount ?? this.platformFeeAmount,
       netAmount: netAmount ?? this.netAmount,
       bankName: bankName ?? this.bankName,
       iban: iban ?? this.iban,
       dateText: dateText ?? this.dateText,
+      decisionAt: decisionAt ?? this.decisionAt,
+      decisionBy: decisionBy ?? this.decisionBy,
       status: status ?? this.status,
       auditCheckResult: auditCheckResult ?? this.auditCheckResult,
       alertNotice: alertNotice ?? this.alertNotice,
-      isInstantTransferReady: isInstantTransferReady ?? this.isInstantTransferReady,
+      isInstantTransferReady:
+          isInstantTransferReady ?? this.isInstantTransferReady,
       sourceOfFunds: sourceOfFunds ?? this.sourceOfFunds,
       transferMethod: transferMethod ?? this.transferMethod,
       operationType: operationType ?? this.operationType,
       sourceAccount: sourceAccount ?? this.sourceAccount,
+      reference: reference ?? this.reference,
+      notes: notes ?? this.notes,
+      settlementMode: settlementMode ?? this.settlementMode,
+      adminApprovalPending: adminApprovalPending ?? this.adminApprovalPending,
     );
   }
 
@@ -100,8 +128,14 @@ class WithdrawalRequestEntity extends Equatable {
         id,
         requestNumber,
         netAmount,
+        decisionAt,
+        decisionBy,
         status,
         operationType,
         sourceAccount,
+        reference,
+        notes,
+        settlementMode,
+        adminApprovalPending,
       ];
 }

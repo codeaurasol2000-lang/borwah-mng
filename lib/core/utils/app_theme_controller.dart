@@ -7,26 +7,39 @@ class AppThemeController extends ChangeNotifier {
   static final instance = AppThemeController._();
   static const _preferenceKey = 'app_theme_mode';
 
-  ThemeMode _mode = ThemeMode.light;
+  ThemeMode _themeMode = ThemeMode.system;
 
-  ThemeMode get mode => _mode;
+  ThemeMode get themeMode => _themeMode;
+  bool get isDarkMode => _themeMode == ThemeMode.dark;
 
   Future<void> load() async {
     final preferences = await SharedPreferences.getInstance();
-    _mode = switch (preferences.getString(_preferenceKey)) {
+    _themeMode = switch (preferences.getString(_preferenceKey)) {
+      'light' => ThemeMode.light,
       'dark' => ThemeMode.dark,
-      'system' => ThemeMode.system,
-      _ => ThemeMode.light,
+      _ => ThemeMode.system,
     };
     notifyListeners();
   }
 
-  Future<void> setMode(ThemeMode mode) async {
-    if (_mode == mode) return;
-    _mode = mode;
+  Future<void> setThemeMode(ThemeMode mode) async {
+    if (_themeMode == mode) return;
+    _themeMode = mode;
     notifyListeners();
 
-    final preferences = await SharedPreferences.getInstance();
-    await preferences.setString(_preferenceKey, mode.name);
+    try {
+      final preferences = await SharedPreferences.getInstance();
+      final saved = await preferences.setString(_preferenceKey, mode.name);
+      if (!saved) throw StateError('Could not save the selected theme mode.');
+    } catch (error, stackTrace) {
+      FlutterError.reportError(
+        FlutterErrorDetails(
+          exception: error,
+          stack: stackTrace,
+          library: 'app theme',
+          context: ErrorDescription('while saving the selected theme mode'),
+        ),
+      );
+    }
   }
 }

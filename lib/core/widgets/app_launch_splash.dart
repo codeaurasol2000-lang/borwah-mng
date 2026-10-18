@@ -1,3 +1,4 @@
+import 'package:barwah_app/core/constants/app_colors.dart';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -72,8 +73,7 @@ class _AppLaunchSplashState extends State<AppLaunchSplash>
   Widget build(BuildContext context) {
     final tagline = AppLocalizations.of(context)!.appSubtitle;
 
-    return Scaffold(
-      backgroundColor: const Color(0xFFF7FAFC),
+    return Scaffold(backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: LayoutBuilder(
         builder: (context, constraints) {
           final center = Offset(
@@ -121,8 +121,8 @@ class _AppLaunchSplashState extends State<AppLaunchSplash>
                           decoration: BoxDecoration(
                             gradient: const LinearGradient(
                               colors: [
-                                Color(0xFF43C6AC),
-                                Color(0xFF258F9D),
+                                AppColors.hexFF43C6AC,
+                                AppColors.hexFF258F9D,
                               ],
                             ),
                             borderRadius: BorderRadius.circular(4),
@@ -143,7 +143,7 @@ class _AppLaunchSplashState extends State<AppLaunchSplash>
                     tagline,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
-                      color: Color(0xFF75869A),
+                      color: AppColors.hexFF75869A,
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
                       letterSpacing: 0.35,
@@ -172,7 +172,7 @@ class _LightBackdrop extends StatelessWidget {
               gradient: RadialGradient(
                 center: Alignment(0, -0.2),
                 radius: 0.9,
-                colors: [Color(0xFFFFFFFF), Color(0xFFF0F6FA)],
+                colors: [AppColors.primaryDark, AppColors.primaryExtraDark],
                 stops: [0.15, 1],
               ),
             ),
@@ -198,9 +198,9 @@ class _LightBackdrop extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      Color(0x0043C6AC),
-                      Color(0x8843C6AC),
-                      Color(0x0043C6AC),
+                      AppColors.hex0043C6AC,
+                      AppColors.hex8843C6AC,
+                      AppColors.hex0043C6AC,
                     ],
                   ),
                 ),
@@ -227,7 +227,7 @@ class _LightRing extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           border: Border.fromBorderSide(
-            BorderSide(color: Color(0x14718AA0), width: 1),
+            BorderSide(color: AppColors.hex14718AA0, width: 1),
           ),
         ),
       ),
@@ -305,14 +305,14 @@ class _AnimatedLetter extends StatelessWidget {
                   character,
                   key: ValueKey('brand-letter-$index'),
                   style: TextStyle(
-                    color: const Color(0xFF142D49),
+                    color:  AppColors.hexFF142D49,
                     fontSize: 27,
                     letterSpacing: 1.2,
                     fontWeight: FontWeight.w700,
                     shadows: value < 1
                         ? [
                             Shadow(
-                              color: const Color(0xFF43C6AC)
+                              color:  AppColors.hexFF43C6AC
                                   .withValues(alpha: (1 - value) * 0.6),
                               blurRadius: 16 * (1 - value),
                             ),
@@ -342,10 +342,10 @@ class _ShieldAssembly extends StatelessWidget {
 
   static const double _shieldSize = 62;
   static const List<Color> _colors = [
-    Color(0xFF43AFA2),
-    Color(0xFF173457),
-    Color(0xFF268EA0),
-    Color(0xFF71BFB5),
+    AppColors.hexFF43AFA2,
+    AppColors.hexFF173457,
+    AppColors.hexFF268EA0,
+    AppColors.hexFF71BFB5,
   ];
   static const List<double> _delays = [0, 0.07, 0.14, 0.21];
 
@@ -444,7 +444,7 @@ class _ShieldAssembly extends StatelessWidget {
                 width: _shieldSize,
                 height: _shieldSize,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.white,
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
@@ -453,7 +453,7 @@ class _ShieldAssembly extends StatelessWidget {
                       spreadRadius: 1,
                     ),
                     BoxShadow(
-                      color: Colors.white.withValues(alpha: 0.8),
+                      color: AppColors.white.withValues(alpha: 0.8),
                       blurRadius: 8,
                       spreadRadius: -2,
                     ),
@@ -557,16 +557,16 @@ class _FinishedBrandMark extends StatelessWidget {
       height: 152,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF43C6AC).withValues(alpha: 0.18),
+            color:  AppColors.hexFF43C6AC.withValues(alpha: 0.18),
             blurRadius: 42,
             spreadRadius: 4,
           ),
           BoxShadow(
-            color: const Color(0xFF173457).withValues(alpha: 0.09),
+            color:  AppColors.hexFF173457.withValues(alpha: 0.09),
             blurRadius: 28,
             offset: const Offset(0, 12),
           ),

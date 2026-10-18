@@ -121,10 +121,9 @@ class _ServicesSupervisorWalletScreenState
 
     return Directionality(
       textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF5F7F9),
+      child: Scaffold(backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.white,
           foregroundColor: AppColors.textPrimary,
           elevation: 0,
           centerTitle: true,
@@ -158,9 +157,9 @@ class _ServicesSupervisorWalletScreenState
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFE5EAF0)),
+        border: Border.all(color: AppColors.hexFFE5EAF0),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -245,7 +244,7 @@ class _ServicesSupervisorWalletScreenState
             decoration: InputDecoration(
               suffixText: l10n.servicesProfileCurrency,
               filled: true,
-              fillColor: const Color(0xFFF1F3F5),
+              fillColor: AppColors.surfaceLight,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide.none,
@@ -350,7 +349,7 @@ class _ServicesSupervisorWalletScreenState
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: const Color(0xFFF1F3F5),
+              color: AppColors.textPrimary,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
@@ -389,7 +388,7 @@ class _ServicesSupervisorWalletScreenState
               ),
               style: FilledButton.styleFrom(
                 backgroundColor: AppColors.primaryDark,
-                foregroundColor: Colors.white,
+                foregroundColor: AppColors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -415,9 +414,9 @@ class _ServicesSupervisorWalletScreenState
       child: Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFEDF3FF) : const Color(0xFFF1F3F5),
+          color: isSelected ? AppColors.hexFFEDF3FF : AppColors.textPrimary,
           border: Border.all(
-            color: isSelected ? const Color(0xFFD7E3F7) : Colors.transparent,
+            color: isSelected ? AppColors.hexFFD7E3F7 : AppColors.transparent,
           ),
           borderRadius: BorderRadius.circular(13),
         ),
@@ -468,7 +467,7 @@ class _ServicesSupervisorWalletScreenState
   InputDecoration _destinationDecoration(String label) => InputDecoration(
         labelText: label,
         filled: true,
-        fillColor: Colors.white,
+        fillColor: AppColors.white,
         isDense: true,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
@@ -538,7 +537,7 @@ class _ServicesSupervisorWalletScreenState
     return Container(
       padding: const EdgeInsets.all(13),
       decoration: BoxDecoration(
-        color: const Color(0xFFF1F3F5),
+        color: AppColors.textPrimary,
         borderRadius: BorderRadius.circular(13),
       ),
       child: Row(
@@ -736,7 +735,7 @@ class _WalletSummaryCard extends StatelessWidget {
               children: [
                 const Icon(
                   Icons.account_balance_wallet_outlined,
-                  color: Color(0xFFA7C8FF),
+                  color: AppColors.hexFFA7C8FF,
                   size: 20,
                 ),
                 const SizedBox(width: 8),
@@ -744,7 +743,7 @@ class _WalletSummaryCard extends StatelessWidget {
                   child: Text(
                     l10n.servicesWalletSummaryTitle,
                     style: const TextStyle(
-                      color: Color(0xFFB5C7DF),
+                      color: AppColors.hexFFB5C7DF,
                       fontSize: 12,
                     ),
                   ),
@@ -753,18 +752,18 @@ class _WalletSummaryCard extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: .08),
+                    color: AppColors.white.withValues(alpha: .08),
                     borderRadius: BorderRadius.circular(15),
                   ),
                   child: Row(
                     children: [
                       const Icon(Icons.circle,
-                          color: Color(0xFF28C88A), size: 7),
+                          color: AppColors.hexFF28C88A, size: 7),
                       const SizedBox(width: 5),
                       Text(
                         l10n.servicesWalletLiveUpdate,
                         style: const TextStyle(
-                          color: Color(0xFFD7E2EF),
+                          color: AppColors.hexFFD7E2EF,
                           fontSize: 9,
                         ),
                       ),
@@ -777,7 +776,7 @@ class _WalletSummaryCard extends StatelessWidget {
             Text(
               l10n.servicesWalletTotalBalance,
               style: const TextStyle(
-                color: Color(0xFFB5C7DF),
+                color: AppColors.hexFFB5C7DF,
                 fontSize: 11,
               ),
             ),
@@ -788,7 +787,7 @@ class _WalletSummaryCard extends StatelessWidget {
                   const TextSpan(
                     text: '6,050 ',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: AppColors.white,
                       fontSize: 31,
                       fontWeight: FontWeight.w800,
                     ),
@@ -796,7 +795,7 @@ class _WalletSummaryCard extends StatelessWidget {
                   TextSpan(
                     text: l10n.servicesProfileCurrency,
                     style: const TextStyle(
-                      color: Color(0xFFD7E2EF),
+                      color: AppColors.hexFFD7E2EF,
                       fontSize: 13,
                     ),
                   ),
@@ -812,7 +811,7 @@ class _WalletSummaryCard extends StatelessWidget {
                     amount: '4,850',
                     detail: l10n.servicesWalletReadyForTransfer,
                     icon: Icons.circle,
-                    iconColor: const Color(0xFF28C88A),
+                    iconColor: AppColors.hexFF28C88A,
                     l10n: l10n,
                   ),
                 ),
@@ -823,7 +822,7 @@ class _WalletSummaryCard extends StatelessWidget {
                     amount: '1,200',
                     detail: l10n.servicesWalletExpectedThisWeek,
                     icon: Icons.hourglass_bottom,
-                    iconColor: const Color(0xFFFFD54F),
+                    iconColor: AppColors.primaryDark,
                     l10n: l10n,
                   ),
                 ),
@@ -833,14 +832,14 @@ class _WalletSummaryCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 9),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: .09),
+                color: AppColors.white.withValues(alpha: .09),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Row(
                 children: [
                   const Icon(
                     Icons.verified_user_outlined,
-                    color: Color(0xFFA7C8FF),
+                    color: AppColors.hexFFA7C8FF,
                     size: 17,
                   ),
                   const SizedBox(width: 7),
@@ -848,7 +847,7 @@ class _WalletSummaryCard extends StatelessWidget {
                     child: Text(
                       l10n.servicesWalletMonthlyCommissions,
                       style: const TextStyle(
-                        color: Color(0xFFD7E2EF),
+                        color: AppColors.hexFFD7E2EF,
                         fontSize: 10,
                       ),
                     ),
@@ -856,7 +855,7 @@ class _WalletSummaryCard extends StatelessWidget {
                   Text(
                     '3,500 ${l10n.servicesProfileCurrency}',
                     style: const TextStyle(
-                      color: Colors.white,
+                      color: AppColors.white,
                       fontWeight: FontWeight.w800,
                       fontSize: 12,
                     ),
@@ -890,7 +889,7 @@ class _BalanceMetric extends StatelessWidget {
   Widget build(BuildContext context) => Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: .08),
+          color: AppColors.white.withValues(alpha: .08),
           borderRadius: BorderRadius.circular(11),
         ),
         child: Column(
@@ -902,7 +901,7 @@ class _BalanceMetric extends StatelessWidget {
                   child: Text(
                     title,
                     style: const TextStyle(
-                      color: Color(0xFFB5C7DF),
+                      color: AppColors.hexFFB5C7DF,
                       fontSize: 9,
                     ),
                   ),
@@ -914,7 +913,7 @@ class _BalanceMetric extends StatelessWidget {
             Text(
               '$amount ${l10n.servicesProfileCurrency}',
               style: const TextStyle(
-                color: Colors.white,
+                color: AppColors.white,
                 fontSize: 15,
                 fontWeight: FontWeight.w800,
               ),
@@ -948,9 +947,9 @@ class _AmountPreset extends StatelessWidget {
           style: FilledButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 6),
             backgroundColor:
-                emphasized ? AppColors.primaryDark : const Color(0xFFF1F3F5),
+                emphasized ? AppColors.primaryDark : AppColors.textPrimary,
             foregroundColor:
-                emphasized ? Colors.white : AppColors.textSecondary,
+                emphasized ? AppColors.white : AppColors.textSecondary,
             textStyle:
                 const TextStyle(fontSize: 10, fontWeight: FontWeight.w700),
           ),
@@ -993,12 +992,12 @@ class _WalletTransaction {
       RequestStatus.rejected => l10n.withdrawalDetailsStatusRejected,
     };
     final statusColor = switch (request.status) {
-      RequestStatus.pending => const Color(0xFFFFF0C2),
+      RequestStatus.pending => AppColors.textPrimary,
       RequestStatus.underInvestigation ||
       RequestStatus.frozen =>
-        const Color(0xFFFFE1E1),
-      RequestStatus.approved => const Color(0xFFDDF5EA),
-      RequestStatus.rejected => const Color(0xFFFFE1E1),
+        AppColors.textPrimary,
+      RequestStatus.approved => AppColors.hexFFDDF5EA,
+      RequestStatus.rejected => AppColors.textPrimary,
     };
     return _WalletTransaction(
       amount: request.netAmount.toStringAsFixed(
@@ -1019,7 +1018,7 @@ class _WalletTransaction {
                   request.status == RequestStatus.frozen ||
                   request.status == RequestStatus.underInvestigation
               ? AppColors.danger
-              : const Color(0xFFCF7900),
+              : AppColors.hexFFCF7900,
       statusColor: statusColor,
     );
   }
@@ -1038,9 +1037,9 @@ class _TransactionTile extends StatelessWidget {
   Widget build(BuildContext context) => Container(
         padding: const EdgeInsets.all(11),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: const Color(0xFFE8EDF2)),
+          border: Border.all(color: AppColors.hexFFE8EDF2),
         ),
         child: Row(
           children: [

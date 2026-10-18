@@ -62,6 +62,14 @@ class WasalnyComplaintsApiDataSource implements WasalnyComplaintsDataSource {
     );
   }
 
+  @override
+  Future<WasalnyComplaintModel> reopenComplaint(
+    String id, {
+    required String note,
+  }) {
+    return _updateComplaint(id, action: 'reopen', payload: {'note': note});
+  }
+
   Future<WasalnyComplaintModel> _updateComplaint(
     String id, {
     required String action,

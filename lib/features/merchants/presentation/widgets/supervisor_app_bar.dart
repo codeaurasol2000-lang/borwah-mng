@@ -12,7 +12,7 @@ class SupervisorAppBar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
     this.onNotificationTap,
     this.onProfileTap,
-    this.unreadNotificationsCount = 1,
+    this.unreadNotificationsCount = 0,
   });
 
   @override
@@ -22,9 +22,11 @@ class SupervisorAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final isArabic = l10n.localeName.startsWith('ar');
+    final colors = Theme.of(context).colorScheme;
 
     return AppBar(
-      backgroundColor: Colors.white,
+      backgroundColor: colors.surface,
+      foregroundColor: colors.onSurface,
       elevation: 0.5,
       scrolledUnderElevation: 0,
       automaticallyImplyLeading: false,
@@ -46,7 +48,7 @@ class SupervisorAppBar extends StatelessWidget implements PreferredSizeWidget {
                   child: const Center(
                     child: Icon(
                       Icons.security_outlined,
-                      color: Colors.white,
+                      color: AppColors.white,
                       size: 20,
                     ),
                   ),
@@ -67,10 +69,10 @@ class SupervisorAppBar extends StatelessWidget implements PreferredSizeWidget {
                           // Title: Merchants
                           Text(
                             l10n.merchantsSupervisorTitle,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: AppColors.textPrimary,
+                              color: colors.onSurface,
                             ),
                           ),
 
@@ -79,25 +81,25 @@ class SupervisorAppBar extends StatelessWidget implements PreferredSizeWidget {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 6, vertical: 2),
                             decoration: BoxDecoration(
-                              color: AppColors.infoLight,
+                              color: colors.secondaryContainer,
                               borderRadius: BorderRadius.circular(10),
                               border:
-                                  Border.all(color: AppColors.infoBorder),
+                                  Border.all(color: colors.outlineVariant),
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Icon(Icons.shield_outlined,
-                                    size: 10, color: AppColors.infoDark),
+                                Icon(Icons.shield_outlined,
+                                    size: 10, color: colors.onSecondaryContainer),
                                 const SizedBox(width: 3),
                                 Flexible(
                                   child: Text(
                                     l10n.merchantSupervisorRoleBadge,
                                     overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontSize: 9,
                                       fontWeight: FontWeight.bold,
-                                      color: AppColors.infoDark,
+                                      color: colors.onSecondaryContainer,
                                     ),
                                   ),
                                 ),
@@ -111,9 +113,9 @@ class SupervisorAppBar extends StatelessWidget implements PreferredSizeWidget {
                         l10n.merchantSupervisorAdminSubtitle,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 9,
-                          color: AppColors.textSecondary,
+                          color: colors.onSurfaceVariant,
                         ),
                       ),
                     ],
@@ -137,22 +139,22 @@ class SupervisorAppBar extends StatelessWidget implements PreferredSizeWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: AppColors.surfaceLight,
+                    color: colors.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: AppColors.cardBorder),
+                    border: Border.all(color: colors.outlineVariant),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.language,
-                          color: AppColors.primaryDark, size: 13),
+                      Icon(Icons.language,
+                          color: colors.primary, size: 13),
                       const SizedBox(width: 3),
                       Text(
                         isArabic ? 'English' : 'العربية',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 9,
                           fontWeight: FontWeight.bold,
-                          color: AppColors.primaryDark,
+                          color: colors.primary,
                         ),
                       ),
                     ],
@@ -167,8 +169,9 @@ class SupervisorAppBar extends StatelessWidget implements PreferredSizeWidget {
                 clipBehavior: Clip.none,
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.notifications_none_outlined,
-                        size: 22, color: AppColors.textPrimary),
+                    tooltip: l10n.productNotificationsTitle,
+                    icon: Icon(Icons.notifications_none_outlined,
+                        size: 22, color: colors.onSurface),
                     onPressed: onNotificationTap,
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(),
@@ -203,7 +206,7 @@ class SupervisorAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                   child: const Icon(
                     Icons.person_outline,
-                    color: Colors.white,
+                    color: AppColors.white,
                     size: 20,
                   ),
                 ),

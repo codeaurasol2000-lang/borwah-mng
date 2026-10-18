@@ -1,16 +1,21 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/di/injection_container.dart';
-import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/app_locale_controller.dart';
 import '../../../../core/utils/currency_formatter.dart';
 import '../../domain/entities/department_wallet_entity.dart';
+import '../../domain/entities/withdrawal_request_entity.dart';
+import '../../domain/repositories/finance_repository.dart';
 import '../controllers/dashboard/finance_dashboard_cubit.dart';
 import '../controllers/dashboard/finance_dashboard_state.dart';
 import 'bank_accounts_screen.dart';
-import 'unified_withdrawal_requests_screen.dart';
+import 'merchant_withdrawals_screen.dart';
+import 'finance_requests_center_screen.dart';
 import 'subscriptions_screen.dart';
 import 'expenses_management_screen.dart';
 import 'frozen_requests_screen.dart';
@@ -37,10 +42,15 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
     with AutomaticKeepAliveClientMixin<FinanceDashboardScreen> {
   final ScrollController _scrollController = ScrollController();
   bool _isNavVisible = true;
+  int _pendingPromotionCount = 0;
+  double _pendingPromotionAmount = 0;
+  late final DateTime _sessionOpenedAt;
 
   @override
   void initState() {
     super.initState();
+    _sessionOpenedAt = DateTime.now();
+    _loadPendingPromotionSummary();
 
     _scrollController.addListener(() {
       if (_scrollController.position.userScrollDirection ==
@@ -61,6 +71,32 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
     });
   }
 
+  Future<void> _loadPendingPromotionSummary() async {
+    try {
+      final result = await sl<FinanceRepository>().getMerchantWithdrawals();
+      final requests = result.fold(
+        (failure) => throw StateError(failure.message),
+        (items) => items,
+      );
+      final pendingPromotions = requests.where((request) =>
+          request.operationType == FinancialOperationType.promotion &&
+          request.status == RequestStatus.pending);
+      if (!mounted) return;
+      setState(() {
+        _pendingPromotionCount = pendingPromotions.length;
+        _pendingPromotionAmount = pendingPromotions.fold(
+            0.0, (sum, request) => sum + request.netAmount);
+      });
+    } on Object catch (error, stackTrace) {
+      FlutterError.reportError(FlutterErrorDetails(
+        exception: error,
+        stack: stackTrace,
+        library: 'finance dashboard',
+        context: ErrorDescription('while loading pending promotion summary'),
+      ));
+    }
+  }
+
   @override
   void dispose() {
     _scrollController.dispose();
@@ -74,17 +110,18 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
   Widget build(BuildContext context) {
     super.build(context);
     final l10n = AppLocalizations.of(context)!;
-    final palette = context.appThemePalette;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final colorScheme = Theme.of(context).colorScheme;
+    final colors = Theme.of(context).colorScheme;
+    final sessionTimestamp = DateFormat.yMd(l10n.localeName)
+        .add_jm()
+        .format(_sessionOpenedAt.toLocal());
 
     return BlocProvider(
       create: (_) => FinanceDashboardCubit(getFinanceSummaryUseCase: sl())
         ..loadDashboardData(),
       child: Directionality(
         textDirection: l10n.localeName.startsWith('ar')
-            ? TextDirection.rtl
-            : TextDirection.ltr,
+            ? ui.TextDirection.rtl
+            : ui.TextDirection.ltr,
         child: FinanceSwipeNavigation(
           currentIndex: 4,
           enabled: widget.showBottomNavigation,
@@ -96,6 +133,8 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
             // =========================
             appBar: widget.showBottomNavigation
                 ? AppBar(
+                    backgroundColor: colors.surface,
+                    foregroundColor: colors.onSurface,
                     titleSpacing: 0,
                     leading: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -109,12 +148,10 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                           );
                         },
                         child: CircleAvatar(
-                          backgroundColor: isDark
-                              ? palette.surfaceElevated
-                              : AppColors.surfaceLight,
+                          backgroundColor: colors.surfaceContainerHighest,
                           child: Icon(
                             Icons.person_outline,
-                            color: palette.accent,
+                            color: colors.primary,
                           ),
                         ),
                       ),
@@ -126,24 +163,24 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                         Text(
                           l10n.appName,
                           style: TextStyle(
-                            color: palette.accent,
+                            color: colors.onSurface,
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                           ),
                         ),
                         Row(
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.verified_outlined,
                               size: 13,
-                              color: AppColors.info,
+                              color: colors.secondary,
                             ),
                             const SizedBox(width: 4),
                             Text(
                               l10n.cfoRole,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 10,
-                                color: AppColors.textSecondary,
+                                color: colors.onSurfaceVariant,
                               ),
                             ),
                           ],
@@ -158,7 +195,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(Icons.translate,
-                                color: palette.accent, size: 19),
+                                color: colors.primary, size: 19),
                             const SizedBox(width: 3),
                             Text(
                               l10n.localeName.startsWith('ar')
@@ -167,16 +204,16 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                               style: TextStyle(
                                   fontSize: 10,
                                   fontWeight: FontWeight.bold,
-                                  color: palette.accent),
+                                  color: colors.primary),
                             ),
                           ],
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        padding: EdgeInsets.symmetric(horizontal: 16),
                         child: Icon(
                           Icons.shield_outlined,
-                          color: palette.accent,
+                          color: colors.primary,
                         ),
                       ),
                     ],
@@ -193,9 +230,9 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                       BlocBuilder<FinanceDashboardCubit, FinanceDashboardState>(
                     builder: (context, state) {
                       if (state is FinanceDashboardLoading) {
-                        return const Center(
+                        return Center(
                           child: CircularProgressIndicator(
-                            color: AppColors.primaryDark,
+                            color: colors.primary,
                           ),
                         );
                       }
@@ -247,9 +284,9 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                   const SizedBox(width: 8),
                                   Flexible(
                                     child: Text(
-                                      l10n.cfoSessionTimestamp,
+                                      sessionTimestamp,
                                       style: TextStyle(
-                                        color: Colors.blueGrey[400],
+                                        color: colors.onSurfaceVariant,
                                         fontSize: 11,
                                       ),
                                       maxLines: 1,
@@ -276,7 +313,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                 l10n.cfoControlPanelSubtitle,
                                 style: TextStyle(
                                   fontSize: 11,
-                                  color: Colors.blueGrey[500],
+                                  color: colors.onSurfaceVariant,
                                 ),
                               ),
 
@@ -290,16 +327,14 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                   vertical: 10,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: isDark
-                                      ? palette.surfaceElevated
-                                      : AppColors.surfaceHighlight,
+                                  color: colors.surfaceContainerHigh,
                                   borderRadius: BorderRadius.circular(14),
                                 ),
                                 child: Row(
                                   children: [
                                     Icon(
                                       Icons.verified,
-                                      color: palette.accent,
+                                      color: colors.primary,
                                       size: 20,
                                     ),
                                     const SizedBox(width: 8),
@@ -320,7 +355,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                             l10n.cfoRole,
                                             style: TextStyle(
                                               fontSize: 10,
-                                              color: palette.textSecondary,
+                                              color: colors.onSurfaceVariant,
                                             ),
                                           ),
                                         ],
@@ -334,10 +369,10 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                       ),
                                     ),
                                     const SizedBox(width: 6),
-                                    const Icon(
+                                    Icon(
                                       Icons.qr_code,
                                       size: 18,
-                                      color: AppColors.primaryDark,
+                                      color: colors.primary,
                                     ),
                                   ],
                                 ),
@@ -358,13 +393,11 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                 child: Container(
                                   padding: const EdgeInsets.all(16),
                                   decoration: BoxDecoration(
-                                    color: isDark
-                                        ? palette.accent
-                                        : AppColors.primaryDark,
+                                    color: AppColors.primaryDark,
                                     borderRadius: BorderRadius.circular(18),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: palette.accent.withValues(
+                                        color: AppColors.primaryDark.withValues(
                                           alpha: 0.2,
                                         ),
                                         blurRadius: 10,
@@ -388,9 +421,9 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                             ),
-                                            child: Icon(
+                                            child: const Icon(
                                               Icons.account_balance,
-                                              color: colorScheme.onPrimary,
+                                              color: AppColors.white,
                                               size: 20,
                                             ),
                                           ),
@@ -399,8 +432,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                             child: Text(
                                               l10n.totalAggregatedLiquidity,
                                               style: TextStyle(
-                                                color: colorScheme.onPrimary
-                                                    .withValues(alpha: 0.7),
+                                                color: colors.onPrimary.withValues(alpha: 0.72),
                                                 fontSize: 12,
                                               ),
                                               overflow: TextOverflow.ellipsis,
@@ -409,8 +441,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                           Icon(
                                             Icons.arrow_forward_ios,
                                             size: 12,
-                                            color: colorScheme.onPrimary
-                                                .withValues(alpha: 0.7),
+                                            color: colors.onPrimary.withValues(alpha: 0.72),
                                           ),
                                         ],
                                       ),
@@ -423,15 +454,14 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                             data.totalLiquidity,
                                           ),
                                           style: TextStyle(
-                                            color: colorScheme.onPrimary,
+                                            color: colors.onPrimary,
                                             fontSize: 26,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                       ),
                                       Divider(
-                                        color: colorScheme.onPrimary
-                                            .withValues(alpha: 0.2),
+                                        color: colors.onPrimary.withValues(alpha: 0.2),
                                         height: 20,
                                       ),
                                       _buildBankSubRow(
@@ -455,30 +485,70 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                               const SizedBox(height: 14),
 
                               // =========================
-                              // 4. طلبات السحب
+                              // 4. مركز الطلبات المالية الموحّد
                               // =========================
                               _buildNavigationCard(
                                 context,
-                                title: l10n.navWithdrawalOrders,
+                                title: l10n.localeName.startsWith('ar')
+                                    ? 'مركز الطلبات المالية'
+                                    : 'Financial requests center',
                                 countText:
                                     '${data.pendingMerchantWithdrawalsCount + data.pendingSupervisorWithdrawalsCount} ${l10n.ordersUnit}',
                                 amountText: CurrencyFormatter.format(
                                   data.pendingMerchantWithdrawalsAmount +
                                       data.pendingSupervisorWithdrawalsAmount,
                                 ),
-                                subtitle: l10n.auditInvoiceNote,
-                                icon: Icons.account_balance_wallet_outlined,
+                                subtitle: l10n.localeName.startsWith('ar')
+                                    ? 'طلبات السحب والإيداع والترويج من جميع الجهات'
+                                    : 'Withdrawal, deposit and promotion requests from all sources',
+                                icon: Icons.inbox_outlined,
+                                actionButtonText:
+                                    l10n.localeName.startsWith('ar')
+                                        ? 'فتح مركز الطلبات'
+                                        : 'Open requests center',
                                 onTap: () => Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (_) =>
-                                        const UnifiedWithdrawalRequestsScreen(),
+                                        const FinanceRequestsCenterScreen(),
                                   ),
                                 ),
                               ),
 
                               const SizedBox(height: 10),
 
+                              _buildNavigationCard(
+                                context,
+                                title: l10n.localeName.startsWith('ar')
+                                    ? '${l10n.productPromotionRequests} قيد المراجعة'
+                                    : 'Product promotions awaiting review',
+                                countText:
+                                    '$_pendingPromotionCount ${l10n.ordersUnit}',
+                                amountText: CurrencyFormatter.format(
+                                  _pendingPromotionAmount,
+                                ),
+                                subtitle: l10n.localeName.startsWith('ar')
+                                    ? 'طلبات أرسلها مشرفو المنتجات بعد مراجعتها'
+                                    : 'Requests submitted by product supervisors',
+                                icon: Icons.campaign_outlined,
+                                actionButtonText:
+                                    l10n.localeName.startsWith('ar')
+                                        ? 'مراجعة الطلبات'
+                                        : 'Review requests',
+                                onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) =>
+                                        const MerchantWithdrawalsScreen(
+                                      promotionOnly: true,
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                              const SizedBox(height: 10),
+
+                              // =========================
                               // =========================
                               // 5. الاشتراكات والترقيات
                               // =========================
@@ -505,18 +575,15 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                               const SizedBox(height: 14),
 
                               // =========================
-                              // 7. المصاريف والمدفوعات
+                              // 6. المصاريف والمدفوعات
                               // =========================
                               Container(
                                 padding: const EdgeInsets.all(16),
                                 decoration: BoxDecoration(
-                                  color:
-                                      isDark ? palette.surface : Colors.white,
+                                  color: colors.surface,
                                   borderRadius: BorderRadius.circular(16),
                                   border: Border.all(
-                                    color: isDark
-                                        ? palette.border
-                                        : AppColors.cardBorder,
+                                    color: colors.outlineVariant,
                                   ),
                                 ),
                                 child: Column(
@@ -526,15 +593,13 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                         Container(
                                           padding: const EdgeInsets.all(10),
                                           decoration: BoxDecoration(
-                                            color: isDark
-                                                ? palette.accentContainer
-                                                : const Color(0xFFF1F5F9),
+                                            color: colors.primary,
                                             borderRadius:
                                                 BorderRadius.circular(12),
                                           ),
                                           child: Icon(
                                             Icons.receipt_long,
-                                            color: palette.accent,
+                                            color: colors.onPrimary,
                                             size: 24,
                                           ),
                                         ),
@@ -549,9 +614,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                                 style: TextStyle(
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.bold,
-                                                  color: isDark
-                                                      ? palette.textPrimary
-                                                      : Colors.black87,
+                                                  color: colors.onSurface,
                                                 ),
                                               ),
                                               const SizedBox(height: 4),
@@ -564,10 +627,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                                         fontSize: 18,
                                                         fontWeight:
                                                             FontWeight.bold,
-                                                        color: isDark
-                                                            ? palette
-                                                                .textPrimary
-                                                            : Colors.black87,
+                                                        color: colors.onSurface,
                                                       ),
                                                       maxLines: 1,
                                                       overflow:
@@ -582,10 +642,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                                         fontSize: 12,
                                                         fontWeight:
                                                             FontWeight.bold,
-                                                        color: isDark
-                                                            ? palette
-                                                                .textPrimary
-                                                            : Colors.black87,
+                                                        color: colors.onSurface,
                                                       ),
                                                       maxLines: 1,
                                                       overflow:
@@ -598,10 +655,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                                       l10n.monthlyTotalExpenses,
                                                       style: TextStyle(
                                                         fontSize: 10,
-                                                        color: isDark
-                                                            ? palette
-                                                                .textSecondary
-                                                            : Colors.grey,
+                                                        color: colors.onSurfaceVariant,
                                                       ),
                                                       maxLines: 1,
                                                       overflow:
@@ -620,9 +674,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                               vertical: 6,
                                             ),
                                             decoration: BoxDecoration(
-                                              color: isDark
-                                                  ? palette.accentContainer
-                                                  : Colors.blue.shade50,
+                                              color: colors.secondaryContainer,
                                               borderRadius:
                                                   BorderRadius.circular(20),
                                             ),
@@ -632,9 +684,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                                 Icon(
                                                   Icons.circle,
                                                   size: 6,
-                                                  color: isDark
-                                                      ? palette.accent
-                                                      : Colors.blue.shade700,
+                                                  color: colors.onSecondaryContainer,
                                                 ),
                                                 const SizedBox(width: 4),
                                                 Flexible(
@@ -644,10 +694,8 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                                       fontSize: 10,
                                                       fontWeight:
                                                           FontWeight.bold,
-                                                      color: isDark
-                                                          ? palette.accent
-                                                          : Colors
-                                                              .blue.shade700,
+                                                      color:
+                                                          colors.onSecondaryContainer,
                                                       height: 1.2,
                                                     ),
                                                     textAlign: TextAlign.center,
@@ -663,12 +711,10 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                       ],
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 12),
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 12),
                                       child: Divider(
-                                        color: isDark
-                                            ? palette.border
-                                            : AppColors.cardBorder,
+                                        color: colors.outlineVariant,
                                         height: 1,
                                       ),
                                     ),
@@ -681,9 +727,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                             l10n.ongoingOperatingInvoices,
                                             style: TextStyle(
                                               fontSize: 11,
-                                              color: isDark
-                                                  ? palette.textPrimary
-                                                  : Colors.black87,
+                                              color: colors.onSurface,
                                             ),
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
@@ -698,9 +742,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                             ),
                                             decoration: BoxDecoration(
                                               border: Border.all(
-                                                color: isDark
-                                                    ? palette.border
-                                                    : Colors.blue.shade100,
+                                                color: colors.outlineVariant,
                                               ),
                                               borderRadius:
                                                   BorderRadius.circular(6),
@@ -709,9 +751,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                               l10n.scheduledDisbursementItems,
                                               style: TextStyle(
                                                 fontSize: 10,
-                                                color: isDark
-                                                    ? palette.accent
-                                                    : Colors.blue,
+                                                color: colors.secondary,
                                               ),
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
@@ -725,11 +765,8 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                       width: double.infinity,
                                       child: ElevatedButton.icon(
                                         style: ElevatedButton.styleFrom(
-                                          backgroundColor: isDark
-                                              ? palette.accent
-                                              : const Color(0xFF0F172A),
-                                          foregroundColor:
-                                              colorScheme.onPrimary,
+                                          backgroundColor: colors.primary,
+                                          foregroundColor: AppColors.white,
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(10),
@@ -772,14 +809,14 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                 children: [
                                   Expanded(
                                     child: _buildMetricTileNew(
+                                      context,
                                       title: l10n.monthlyEarnedCommissions,
                                       currencyText: l10n.currencyEgy,
                                       value: '284,900',
                                       icon: Icons.auto_graph,
-                                      color: Colors.blue.shade700,
+                                      color: colors.secondary,
                                       badgeText: '+14.2%',
-                                      badgeColor: Colors.blue.shade50,
-                                      badgeTextColor: Colors.blue.shade700,
+                                      badgeColor: colors.secondaryContainer,
                                       bottomText: l10n.comparedToLastMonth,
                                       bottomLink: l10n.netRegulatoryRevenue,
                                     ),
@@ -801,14 +838,10 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                 child: Container(
                                   padding: const EdgeInsets.all(14),
                                   decoration: BoxDecoration(
-                                    color: isDark
-                                        ? palette.surface
-                                        : const Color(0xFFF8FAFC),
+                                    color: colors.surface,
                                     borderRadius: BorderRadius.circular(16),
                                     border: Border.all(
-                                      color: isDark
-                                          ? palette.border
-                                          : AppColors.cardBorder,
+                                      color: colors.outlineVariant,
                                     ),
                                   ),
                                   child: Column(
@@ -822,20 +855,16 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                           Container(
                                             padding: const EdgeInsets.all(8),
                                             decoration: BoxDecoration(
-                                              color: isDark
-                                                  ? palette.surfaceElevated
-                                                  : Colors.white,
+                                              color: colors.surfaceContainerHighest,
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                               border: Border.all(
-                                                color: isDark
-                                                    ? palette.border
-                                                    : Colors.grey.shade200,
+                                                color: colors.outlineVariant,
                                               ),
                                             ),
                                             child: Icon(
                                               Icons.gavel,
-                                              color: palette.textSecondary,
+                                              color: colors.onSurfaceVariant,
                                               size: 20,
                                             ),
                                           ),
@@ -858,10 +887,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                                         l10n.balancesUnderRegulatoryAudit,
                                                         style: TextStyle(
                                                           fontSize: 11,
-                                                          color: isDark
-                                                              ? palette
-                                                                  .textPrimary
-                                                              : Colors.black87,
+                                                          color: colors.onSurface,
                                                         ),
                                                         maxLines: 2,
                                                         overflow: TextOverflow
@@ -882,10 +908,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                                           fontSize: 18,
                                                           fontWeight:
                                                               FontWeight.bold,
-                                                          color: isDark
-                                                              ? palette
-                                                                  .textPrimary
-                                                              : Colors.black87,
+                                                          color: colors.onSurface,
                                                         ),
                                                         maxLines: 1,
                                                         overflow: TextOverflow
@@ -897,10 +920,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                                       l10n.currencyEgy,
                                                       style: TextStyle(
                                                         fontSize: 10,
-                                                        color: isDark
-                                                            ? palette
-                                                                .textSecondary
-                                                            : Colors.grey,
+                                                        color: colors.onSurfaceVariant,
                                                         fontWeight:
                                                             FontWeight.bold,
                                                       ),
@@ -910,11 +930,8 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                               ],
                                             ),
                                           ),
-                                          Icon(
-                                            Icons.arrow_forward_ios,
-                                            size: 12,
-                                            color: palette.textSecondary,
-                                          ),
+                                          Icon(Icons.arrow_forward_ios,
+                                              size: 12, color: colors.onSurfaceVariant),
                                         ],
                                       ),
                                       const SizedBox(height: 10),
@@ -922,9 +939,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                         l10n.frozenWalletsNote,
                                         style: TextStyle(
                                           fontSize: 10,
-                                          color: isDark
-                                              ? palette.textSecondary
-                                              : Colors.grey.shade600,
+                                          color: colors.onSurfaceVariant,
                                           height: 1.4,
                                         ),
                                       ),
@@ -945,7 +960,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                       children: [
                                         Icon(
                                           Icons.account_balance_wallet,
-                                          color: palette.accent,
+                                          color: colors.primary,
                                           size: 18,
                                         ),
                                         const SizedBox(width: 6),
@@ -955,9 +970,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 14,
-                                              color: isDark
-                                                  ? palette.textPrimary
-                                                  : Colors.black87,
+                                              color: colors.onSurface,
                                             ),
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
@@ -972,9 +985,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                       l10n.activeSectorsCount,
                                       style: TextStyle(
                                         fontSize: 11,
-                                        color: isDark
-                                            ? palette.accent
-                                            : Colors.blue.shade700,
+                                      color: colors.secondary,
                                       ),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
@@ -1035,13 +1046,10 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                               Container(
                                 padding: const EdgeInsets.all(16),
                                 decoration: BoxDecoration(
-                                  color:
-                                      isDark ? palette.surface : Colors.white,
+                                  color: colors.surface,
                                   borderRadius: BorderRadius.circular(16),
                                   border: Border.all(
-                                    color: isDark
-                                        ? palette.border
-                                        : AppColors.cardBorder,
+                                    color: colors.outlineVariant,
                                   ),
                                 ),
                                 child: Column(
@@ -1053,7 +1061,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                             children: [
                                               Icon(
                                                 Icons.shield_outlined,
-                                                color: palette.accent,
+                                                color: colors.primary,
                                                 size: 20,
                                               ),
                                               const SizedBox(width: 8),
@@ -1063,7 +1071,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                                   style: TextStyle(
                                                     fontSize: 14,
                                                     fontWeight: FontWeight.bold,
-                                                    color: palette.textPrimary,
+                                                    color: colors.onSurface,
                                                     height: 1.2,
                                                   ),
                                                   maxLines: 2,
@@ -1082,9 +1090,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                               vertical: 6,
                                             ),
                                             decoration: BoxDecoration(
-                                              color: isDark
-                                                  ? palette.accentContainer
-                                                  : Colors.blue.shade50,
+                                              color: colors.secondaryContainer,
                                               borderRadius:
                                                   BorderRadius.circular(20),
                                             ),
@@ -1094,9 +1100,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                                 Icon(
                                                   Icons.check_circle_outline,
                                                   size: 14,
-                                                  color: isDark
-                                                      ? palette.accent
-                                                      : Colors.blue.shade700,
+                                                  color: colors.onSecondaryContainer,
                                                 ),
                                                 const SizedBox(width: 4),
                                                 Flexible(
@@ -1104,10 +1108,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                                     l10n.verySafeAndStable,
                                                     style: TextStyle(
                                                       fontSize: 9,
-                                                      color: isDark
-                                                          ? palette.accent
-                                                          : Colors
-                                                              .blue.shade700,
+                                                      color: colors.onSecondaryContainer,
                                                       fontWeight:
                                                           FontWeight.bold,
                                                       height: 1.2,
@@ -1128,9 +1129,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                     Container(
                                       padding: const EdgeInsets.all(16),
                                       decoration: BoxDecoration(
-                                        color: isDark
-                                            ? palette.surfaceElevated
-                                            : const Color(0xFFF8FAFC),
+                                        color: colors.surfaceContainerHigh,
                                         borderRadius: BorderRadius.circular(12),
                                       ),
                                       child: Row(
@@ -1141,7 +1140,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                             decoration: BoxDecoration(
                                               shape: BoxShape.circle,
                                               border: Border.all(
-                                                color: palette.accent,
+                                                color: colors.primary,
                                                 width: 6,
                                               ),
                                             ),
@@ -1151,7 +1150,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                                 style: TextStyle(
                                                   fontSize: 12,
                                                   fontWeight: FontWeight.bold,
-                                                  color: palette.accent,
+                                                  color: colors.primary,
                                                 ),
                                               ),
                                             ),
@@ -1166,8 +1165,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                                   l10n.dailyWithdrawalCoverageRatio,
                                                   style: TextStyle(
                                                     fontSize: 10,
-                                                    color:
-                                                        palette.textSecondary,
+                                                    color: colors.onSurfaceVariant,
                                                   ),
                                                 ),
                                                 const SizedBox(height: 2),
@@ -1182,10 +1180,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                                           fontSize: 22,
                                                           fontWeight:
                                                               FontWeight.bold,
-                                                          color: isDark
-                                                              ? palette
-                                                                  .textPrimary
-                                                              : Colors.black87,
+                                                          color: colors.onSurface,
                                                         ),
                                                         maxLines: 1,
                                                         overflow: TextOverflow
@@ -1198,10 +1193,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                                         l10n.excessCashCoverage,
                                                         style: TextStyle(
                                                           fontSize: 10,
-                                                          color: isDark
-                                                              ? palette.accent
-                                                              : Colors.blue
-                                                                  .shade700,
+                                                          color: colors.secondary,
                                                           fontWeight:
                                                               FontWeight.bold,
                                                         ),
@@ -1217,8 +1209,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                                   l10n.statutoryMinimumRequirement,
                                                   style: TextStyle(
                                                     fontSize: 10,
-                                                    color:
-                                                        palette.textSecondary,
+                                                    color: colors.onSurfaceVariant,
                                                   ),
                                                 ),
                                               ],
@@ -1232,9 +1223,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                       padding: const EdgeInsets.all(10),
                                       decoration: BoxDecoration(
                                         border: Border.all(
-                                          color: isDark
-                                              ? palette.border
-                                              : Colors.grey.shade200,
+                                          color: colors.outlineVariant,
                                         ),
                                         borderRadius: BorderRadius.circular(10),
                                       ),
@@ -1242,7 +1231,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                         children: [
                                           Icon(
                                             Icons.domain_verification,
-                                            color: palette.accent,
+                                            color: colors.primary,
                                             size: 20,
                                           ),
                                           const SizedBox(width: 10),
@@ -1251,9 +1240,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                               l10n.autoBankingSettlement,
                                               style: TextStyle(
                                                 fontSize: 11,
-                                                color: isDark
-                                                    ? palette.textPrimary
-                                                    : Colors.black87,
+                                                color: colors.onSurface,
                                               ),
                                               maxLines: 3,
                                               overflow: TextOverflow.ellipsis,
@@ -1265,9 +1252,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                               style: TextStyle(
                                                 fontSize: 10,
                                                 fontWeight: FontWeight.bold,
-                                                color: isDark
-                                                    ? palette.textPrimary
-                                                    : Colors.black87,
+                                                color: colors.onSurface,
                                               ),
                                               textAlign: TextAlign.center,
                                               maxLines: 3,
@@ -1289,9 +1274,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                               Container(
                                 padding: const EdgeInsets.all(16),
                                 decoration: BoxDecoration(
-                                  color: isDark
-                                      ? palette.surfaceElevated
-                                      : const Color(0xFFF1F5F9),
+                                  color: colors.surfaceContainerHigh,
                                   borderRadius: BorderRadius.circular(16),
                                 ),
                                 child: Column(
@@ -1301,17 +1284,13 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                         Container(
                                           padding: const EdgeInsets.all(8),
                                           decoration: BoxDecoration(
-                                            color: isDark
-                                                ? palette.surface
-                                                : Colors.white,
+                                            color: colors.secondaryContainer,
                                             borderRadius:
                                                 BorderRadius.circular(10),
                                           ),
                                           child: Icon(
                                             Icons.policy_outlined,
-                                            color: isDark
-                                                ? palette.textPrimary
-                                                : Colors.black87,
+                                            color: colors.onSecondaryContainer,
                                             size: 20,
                                           ),
                                         ),
@@ -1322,9 +1301,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                             style: TextStyle(
                                               fontSize: 12,
                                               fontWeight: FontWeight.bold,
-                                              color: isDark
-                                                  ? palette.textPrimary
-                                                  : Colors.black87,
+                                              color: colors.onSurface,
                                               height: 1.3,
                                             ),
                                             maxLines: 2,
@@ -1337,17 +1314,13 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                               horizontal: 8,
                                               vertical: 4,
                                             ),
-                                            color: isDark
-                                                ? palette.surface
-                                                : Colors.white,
+                                            color: colors.secondaryContainer,
                                             child: Text(
                                               l10n.governancePolicyClause,
                                               style: TextStyle(
                                                 fontSize: 9,
                                                 fontWeight: FontWeight.bold,
-                                                color: isDark
-                                                    ? palette.textSecondary
-                                                    : Colors.grey,
+                                                color: colors.onSecondaryContainer,
                                               ),
                                               textAlign: TextAlign.center,
                                               maxLines: 1,
@@ -1362,9 +1335,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                       l10n.governancePolicyNotice,
                                       style: TextStyle(
                                         fontSize: 10,
-                                        color: isDark
-                                            ? palette.textSecondary
-                                            : Colors.grey.shade700,
+                                        color: colors.onSurfaceVariant,
                                         height: 1.5,
                                       ),
                                       textAlign: TextAlign.justify,
@@ -1382,10 +1353,8 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                 width: double.infinity,
                                 child: ElevatedButton.icon(
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: isDark
-                                        ? palette.accent
-                                        : const Color(0xFF0F172A),
-                                    foregroundColor: colorScheme.onPrimary,
+                                    backgroundColor: colors.primary,
+                                    foregroundColor: AppColors.white,
                                     padding: const EdgeInsets.symmetric(
                                       vertical: 14,
                                     ),
@@ -1401,7 +1370,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                     context,
                                     MaterialPageRoute(
                                       builder: (_) =>
-                                          const UnifiedWithdrawalRequestsScreen(),
+                                          const FinanceRequestsCenterScreen(),
                                     ),
                                   ),
                                   label: Text(
@@ -1420,12 +1389,11 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                                 width: double.infinity,
                                 child: OutlinedButton.icon(
                                   style: OutlinedButton.styleFrom(
-                                    foregroundColor: palette.accent,
+                                    foregroundColor: colors.primary,
                                     side: const BorderSide(
-                                      color: Colors.transparent,
+                                      color: AppColors.transparent,
                                     ),
-                                    backgroundColor:
-                                        isDark ? palette.surface : Colors.white,
+                                    backgroundColor: colors.surface,
                                     padding: const EdgeInsets.symmetric(
                                       vertical: 14,
                                     ),
@@ -1490,19 +1458,18 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
     String title,
     String amount,
   ) {
-    final color = Theme.of(context).colorScheme.onPrimary;
     return Row(
       children: [
-        CircleAvatar(
+        const CircleAvatar(
           radius: 3,
-          backgroundColor: color.withValues(alpha: 0.54),
+          backgroundColor: AppColors.white54,
         ),
         const SizedBox(width: 6),
         Expanded(
           child: Text(
             title,
-            style: TextStyle(
-              color: color.withValues(alpha: 0.7),
+            style: const TextStyle(
+              color: AppColors.white70,
               fontSize: 11,
             ),
             overflow: TextOverflow.ellipsis,
@@ -1511,8 +1478,8 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
         const SizedBox(width: 8),
         Text(
           amount,
-          style: TextStyle(
-            color: color,
+          style: const TextStyle(
+            color: AppColors.white,
             fontSize: 12,
             fontWeight: FontWeight.bold,
           ),
@@ -1534,24 +1501,22 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
     required VoidCallback onTap,
     String? actionButtonText,
   }) {
-    final palette = context.appThemePalette;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colors = Theme.of(context).colorScheme;
+
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: isDark ? palette.surface : Colors.white,
+          color: colors.surface,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isDark ? palette.border : AppColors.cardBorder,
+            color: colors.outlineVariant,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(
-                alpha: 0.02,
-              ),
+              color: colors.shadow.withValues(alpha: 0.08),
               blurRadius: 5,
               offset: const Offset(0, 2),
             ),
@@ -1565,14 +1530,12 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: isDark
-                        ? palette.accentContainer
-                        : const Color(0xFFF1F5F9),
+                    color: colors.surfaceContainerHigh,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
                     icon,
-                    color: palette.accent,
+                    color: colors.primary,
                     size: 22,
                   ),
                 ),
@@ -1586,7 +1549,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                         title,
                         style: TextStyle(
                           fontSize: 11,
-                          color: isDark ? palette.textSecondary : Colors.grey,
+                          color: colors.onSurfaceVariant,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -1600,9 +1563,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                color: isDark
-                                    ? palette.textPrimary
-                                    : Colors.black87,
+                                color: colors.onSurface,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -1614,9 +1575,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                               '($amountText)',
                               style: TextStyle(
                                 fontSize: 12,
-                                color: isDark
-                                    ? palette.accent
-                                    : Colors.blue.shade700,
+                                color: colors.secondary,
                                 fontWeight: FontWeight.w600,
                               ),
                               overflow: TextOverflow.ellipsis,
@@ -1629,11 +1588,11 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                 ),
                 const SizedBox(width: 8),
                 Icon(
-                  Directionality.of(context) == TextDirection.rtl
+                  Directionality.of(context) == ui.TextDirection.rtl
                       ? Icons.arrow_back_ios
                       : Icons.arrow_forward_ios,
                   size: 12,
-                  color: isDark ? palette.textSecondary : Colors.grey,
+                  color: colors.onSurfaceVariant,
                 ),
               ],
             ),
@@ -1642,7 +1601,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
               subtitle,
               style: TextStyle(
                 fontSize: 10,
-                color: isDark ? palette.textSecondary : Colors.grey,
+                color: colors.onSurfaceVariant,
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -1654,7 +1613,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                   vertical: 10,
                 ),
                 decoration: BoxDecoration(
-                  color: isDark ? palette.accentContainer : Colors.blue.shade50,
+                  color: colors.secondaryContainer,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Row(
@@ -1663,7 +1622,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                     Icon(
                       Icons.verified_outlined,
                       size: 16,
-                      color: palette.accent,
+                      color: colors.onSecondaryContainer,
                     ),
                     const SizedBox(width: 6),
                     Flexible(
@@ -1672,7 +1631,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.bold,
-                          color: palette.accent,
+                          color: colors.onSecondaryContainer,
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -1692,7 +1651,8 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
   // =========================
   // Metric Tile
   // =========================
-  Widget _buildMetricTileNew({
+  Widget _buildMetricTileNew(
+    BuildContext context, {
     required String title,
     required String currencyText,
     required String value,
@@ -1700,20 +1660,18 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
     required Color color,
     required String badgeText,
     required Color badgeColor,
-    required Color badgeTextColor,
     required String bottomText,
     required String bottomLink,
   }) {
-    final palette = context.appThemePalette;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final metricColor = isDark ? palette.accent : color;
+    final colors = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark ? palette.surface : Colors.white,
+        color: colors.surface,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: isDark ? palette.border : AppColors.cardBorder,
+          color: colors.outlineVariant,
         ),
       ),
       child: Column(
@@ -1727,7 +1685,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                   title,
                   style: TextStyle(
                     fontSize: 11,
-                    color: isDark ? palette.textPrimary : Colors.black87,
+                    color: colors.onSurface,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -1736,12 +1694,12 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
               Container(
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: isDark ? palette.accentContainer : badgeColor,
+                  color: badgeColor,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
                   icon,
-                  color: metricColor,
+                  color: color,
                   size: 16,
                 ),
               ),
@@ -1758,7 +1716,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: isDark ? palette.textPrimary : Colors.black87,
+                    color: colors.onSurface,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -1769,7 +1727,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                 currencyText,
                 style: TextStyle(
                   fontSize: 10,
-                  color: isDark ? palette.textPrimary : Colors.black87,
+                  color: colors.onSurface,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -1784,7 +1742,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                   bottomText,
                   style: TextStyle(
                     fontSize: 10,
-                    color: isDark ? palette.textSecondary : Colors.grey,
+                    color: colors.onSurfaceVariant,
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -1795,7 +1753,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                   bottomLink,
                   style: TextStyle(
                     fontSize: 11,
-                    color: isDark ? palette.accent : Colors.blue.shade700,
+                    color: colors.secondary,
                     fontWeight: FontWeight.bold,
                   ),
                   maxLines: 1,
@@ -1822,8 +1780,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
     DepartmentType type,
   ) {
     final currencyText = AppLocalizations.of(context)!.currencyEgy;
-    final palette = context.appThemePalette;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colors = Theme.of(context).colorScheme;
 
     return GestureDetector(
       onTap: () {
@@ -1835,10 +1792,10 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: isDark ? palette.surface : Colors.white,
+          color: colors.surface,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
-            color: isDark ? palette.border : AppColors.cardBorder,
+            color: colors.outlineVariant,
           ),
         ),
         child: Row(
@@ -1849,15 +1806,13 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: isDark
-                          ? palette.accentContainer
-                          : Colors.blue.shade50,
+                      color: colors.secondaryContainer,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(
                       icon,
                       size: 20,
-                      color: palette.accent,
+                      color: colors.onSecondaryContainer,
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -1870,8 +1825,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
-                            color:
-                                isDark ? palette.textPrimary : Colors.black87,
+                            color: colors.onSurface,
                           ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -1881,7 +1835,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                           subtitle,
                           style: TextStyle(
                             fontSize: 9,
-                            color: isDark ? palette.textSecondary : Colors.grey,
+                            color: colors.onSurfaceVariant,
                             height: 1.3,
                           ),
                           maxLines: 2,
@@ -1905,7 +1859,7 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: isDark ? palette.textPrimary : Colors.black87,
+                        color: colors.onSurface,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -1914,16 +1868,16 @@ class _FinanceDashboardScreenState extends State<FinanceDashboardScreen>
                       currencyText,
                       style: TextStyle(
                         fontSize: 9,
-                        color: isDark ? palette.textSecondary : Colors.grey,
+                        color: colors.onSurfaceVariant,
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(width: 8),
-                const Icon(
+                Icon(
                   Icons.arrow_forward_ios,
                   size: 12,
-                  color: Colors.grey,
+                  color: colors.onSurfaceVariant,
                 ),
               ],
             ),

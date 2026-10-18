@@ -7,11 +7,13 @@ import '../../l10n/app_localizations.dart';
 class LocalEventInboxScreen extends StatefulWidget {
   final String recipient;
   final String title;
+  final Future<void> Function(WasalnyLocalEvent event)? onOpenEvent;
 
   const LocalEventInboxScreen({
     super.key,
     required this.recipient,
     required this.title,
+    this.onOpenEvent,
   });
 
   @override
@@ -93,6 +95,12 @@ class _LocalEventInboxScreenState extends State<LocalEventInboxScreen> {
     }
   }
 
+  Future<void> _openEvent(WasalnyLocalEvent event) async {
+    if (!event.isRead) await _markRead(event);
+    if (!mounted) return;
+    await widget.onOpenEvent?.call(event);
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -100,10 +108,9 @@ class _LocalEventInboxScreenState extends State<LocalEventInboxScreen> {
 
     return Directionality(
       textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-      child: Scaffold(
-        backgroundColor: AppColors.background,
+      child: Scaffold(backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.white,
           foregroundColor: AppColors.primaryDark,
           title: Text(widget.title),
           actions: [
@@ -141,12 +148,12 @@ class _LocalEventInboxScreenState extends State<LocalEventInboxScreen> {
                           final sourceColor = _sourceColor(event.source);
                           return Material(
                             color: event.isRead
-                                ? Colors.white
+                                ? AppColors.white
                                 : sourceColor.withValues(alpha: .07),
                             borderRadius: BorderRadius.circular(14),
                             child: InkWell(
                               borderRadius: BorderRadius.circular(14),
-                              onTap: () => _markRead(event),
+                              onTap: () => _openEvent(event),
                               child: Padding(
                                 padding: const EdgeInsets.all(14),
                                 child: Row(
@@ -212,6 +219,11 @@ class _LocalEventInboxScreenState extends State<LocalEventInboxScreen> {
                                         ],
                                       ),
                                     ),
+                                    if (event.requestId != null)
+                                      const Icon(
+                                        Icons.chevron_right,
+                                        color: AppColors.textSecondary,
+                                      ),
                                   ],
                                 ),
                               ),
@@ -224,8 +236,8 @@ class _LocalEventInboxScreenState extends State<LocalEventInboxScreen> {
   }
 
   Color _sourceColor(String source) => switch (source) {
-        'finance' => const Color(0xFFB56812),
-        'chief' => const Color(0xFF7A4DB3),
+        'finance' =>  AppColors.hexFFB56812,
+        'chief' =>  AppColors.hexFF7A4DB3,
         _ => AppColors.primaryDark,
       };
 

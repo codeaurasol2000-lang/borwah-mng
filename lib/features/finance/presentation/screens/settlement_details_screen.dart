@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/di/injection_container.dart';
 import '../../../../core/utils/app_locale_controller.dart';
 import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../core/widgets/finance_dialogs.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../domain/repositories/finance_repository.dart';
 
 class SettlementDetailsScreen extends StatefulWidget {
   final String id;
+  final String? financeRequestId;
   final String name;
   final String description;
   final String amount;
@@ -20,10 +23,17 @@ class SettlementDetailsScreen extends StatefulWidget {
   final Color badgeColor;
   final String linkedBank;
   final String iban;
+  final String? notes;
+  final DateTime? decisionAt;
+  final String? decisionBy;
+  final String? decisionNote;
+  final bool canDecide;
+  final bool adminApprovalPending;
 
   const SettlementDetailsScreen({
     super.key,
     required this.id,
+    this.financeRequestId,
     required this.name,
     required this.description,
     required this.amount,
@@ -37,6 +47,12 @@ class SettlementDetailsScreen extends StatefulWidget {
     required this.badgeColor,
     this.linkedBank = 'مصرف الراجحي - حساب الضمان المركزي',
     this.iban = 'SA44 8000 0123 6080 1012 3456',
+    this.notes,
+    this.decisionAt,
+    this.decisionBy,
+    this.decisionNote,
+    this.canDecide = true,
+    this.adminApprovalPending = false,
   });
 
   @override
@@ -46,11 +62,22 @@ class SettlementDetailsScreen extends StatefulWidget {
 
 class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
   late String _currentStatus;
+  bool _isSavingDecision = false;
+  DateTime? _decisionAt;
+  String? _decisionBy;
+  String? _decisionNote;
+  late bool _canDecide;
+  late bool _adminApprovalPending;
 
   @override
   void initState() {
     super.initState();
     _currentStatus = widget.status;
+    _decisionAt = widget.decisionAt;
+    _decisionBy = widget.decisionBy;
+    _decisionNote = widget.decisionNote;
+    _canDecide = widget.canDecide;
+    _adminApprovalPending = widget.adminApprovalPending;
   }
 
   void _showFeedback(String message) {
@@ -71,13 +98,39 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
     );
 
     if (confirmed && mounted) {
-      setState(() {
-        _currentStatus =
-            isArabic ? 'بانتظار مصادقة الإدارة' : 'Pending Admin Approval';
-      });
-      _showFeedback(isArabic
-          ? 'تم اعتماد التسوية وإرسالها بنجاح إلى الإدارة للمصادقة.'
-          : 'Settlement approved and forwarded to Admin for authorization.');
+      if (widget.financeRequestId == null) {
+        setState(() => _currentStatus =
+            isArabic ? 'بانتظار مصادقة الإدارة' : 'Pending Admin Approval');
+        _showFeedback(isArabic
+            ? 'تم اعتماد التسوية وإرسالها بنجاح إلى الإدارة للمصادقة.'
+            : 'Settlement approved and forwarded to Admin for authorization.');
+        return;
+      }
+      setState(() => _isSavingDecision = true);
+      final result = await sl<FinanceRepository>()
+          .approveWithdrawal(widget.financeRequestId!);
+      if (!mounted) return;
+      setState(() => _isSavingDecision = false);
+      result.fold(
+        (_) => _showFeedback(
+            AppLocalizations.of(context)!.financeRequestDecisionFailed),
+        (_) {
+          setState(() {
+            _currentStatus =
+                isArabic ? 'بانتظار الإدارة' : 'Pending Admin Approval';
+            _canDecide = false;
+            _adminApprovalPending = true;
+            _decisionAt = DateTime.now();
+            _decisionBy = 'Finance Supervisor';
+            _decisionNote = isArabic
+                ? 'تم الاعتماد، بانتظار المصادقة النهائية من الإدارة.'
+                : 'Approved, pending final Admin authorization.';
+          });
+          _showFeedback(isArabic
+              ? 'تم اعتماد التسوية وحفظ القرار.'
+              : 'Settlement approved and decision saved.');
+        },
+      );
     }
   }
 
@@ -89,12 +142,36 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
     );
 
     if (confirmed && mounted) {
-      setState(() {
-        _currentStatus = isArabic ? 'مجمد احترازياً' : 'Frozen';
-      });
-      _showFeedback(isArabic
-          ? 'تم تجميد طلب التسوية احترازياً وتحويله لملف التدقيق الرقابي.'
-          : 'Settlement request frozen and moved to audit review.');
+      if (widget.financeRequestId == null) {
+        setState(() => _currentStatus = isArabic ? 'مجمد احترازياً' : 'Frozen');
+        _showFeedback(isArabic
+            ? 'تم تجميد طلب التسوية احترازياً وتحويله لملف التدقيق الرقابي.'
+            : 'Settlement request frozen and moved to audit review.');
+        return;
+      }
+      setState(() => _isSavingDecision = true);
+      final result = await sl<FinanceRepository>().freezeWithdrawal(
+        widget.financeRequestId!,
+        isArabic ? 'تجميد احترازي من شاشة التسويات' : 'Frozen from settlements',
+      );
+      if (!mounted) return;
+      setState(() => _isSavingDecision = false);
+      result.fold(
+        (_) => _showFeedback(
+            AppLocalizations.of(context)!.financeRequestDecisionFailed),
+        (_) {
+          setState(() {
+            _currentStatus = AppLocalizations.of(context)!.filterDisputed;
+            _canDecide = false;
+            _decisionAt = DateTime.now();
+            _decisionBy = 'Finance Supervisor';
+            _decisionNote = isArabic
+                ? 'تجميد احترازي من شاشة التسويات'
+                : 'Frozen from settlements';
+          });
+          _showFeedback(AppLocalizations.of(context)!.financeRequestFrozen);
+        },
+      );
     }
   }
 
@@ -108,12 +185,35 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
     );
 
     if (reason != null && mounted) {
-      setState(() {
-        _currentStatus = isArabic ? 'مرفوض' : 'Rejected';
-      });
-      _showFeedback(isArabic
-          ? 'تم رفض الطلب بنجاح وإرسال السبب ("$reason") إلى رئيس المشرفين.'
-          : 'Settlement rejected and reason forwarded to Head of Supervisors.');
+      if (widget.financeRequestId == null) {
+        setState(() => _currentStatus = isArabic ? 'مرفوض' : 'Rejected');
+        _showFeedback(isArabic
+            ? 'تم رفض الطلب بنجاح وإرسال السبب ("$reason") إلى رئيس المشرفين.'
+            : 'Settlement rejected and reason forwarded to Head of Supervisors.');
+        return;
+      }
+      setState(() => _isSavingDecision = true);
+      final result = await sl<FinanceRepository>().rejectWithdrawal(
+        widget.financeRequestId!,
+        reason,
+      );
+      if (!mounted) return;
+      setState(() => _isSavingDecision = false);
+      result.fold(
+        (_) => _showFeedback(
+            AppLocalizations.of(context)!.financeRequestDecisionFailed),
+        (_) {
+          setState(() {
+            _currentStatus =
+                AppLocalizations.of(context)!.financeRequestRejectedBadge;
+            _canDecide = false;
+            _decisionAt = DateTime.now();
+            _decisionBy = 'Finance Supervisor';
+            _decisionNote = reason;
+          });
+          _showFeedback(AppLocalizations.of(context)!.financeRequestRejected);
+        },
+      );
     }
   }
 
@@ -123,10 +223,9 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
 
     return Directionality(
       textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF6F8FA),
+      child: Scaffold(backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.white,
           elevation: 0.5,
           scrolledUnderElevation: 0,
           leading: IconButton(
@@ -168,7 +267,7 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
             const SizedBox(height: 12),
             _buildAdminApprovalStatus(isArabic),
             const SizedBox(height: 20),
-            _buildActionButtons(isArabic),
+            if (_canDecide) _buildActionButtons(isArabic),
             const SizedBox(height: 24),
           ],
         ),
@@ -208,7 +307,7 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
               Text(
                 widget.id,
                 style: const TextStyle(
-                  color: Colors.white70,
+                  color: AppColors.white70,
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 0.5,
@@ -239,7 +338,7 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
                     Text(
                       widget.name,
                       style: const TextStyle(
-                        color: Colors.white,
+                        color: AppColors.white,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
@@ -248,7 +347,7 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
                     Text(
                       widget.description,
                       style: const TextStyle(
-                        color: Colors.white70,
+                        color: AppColors.white70,
                         fontSize: 11,
                       ),
                     ),
@@ -261,22 +360,22 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.1),
+              color: AppColors.white.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
               children: [
-                const Icon(Icons.access_time, color: Colors.white70, size: 14),
+                const Icon(Icons.access_time, color: AppColors.white70, size: 14),
                 const SizedBox(width: 6),
                 Text(
                   widget.age,
-                  style: const TextStyle(color: Colors.white70, fontSize: 10),
+                  style: const TextStyle(color: AppColors.white70, fontSize: 10),
                 ),
                 const Spacer(),
                 Text(
                   _currentStatus,
                   style: const TextStyle(
-                    color: Color(0xFF68D391),
+                    color: AppColors.hexFF68D391,
                     fontSize: 11,
                     fontWeight: FontWeight.bold,
                   ),
@@ -294,7 +393,7 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: AppColors.cardBorder),
       ),
@@ -342,6 +441,14 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
             value: widget.iban,
             isBold: false,
           ),
+          if (widget.notes?.isNotEmpty ?? false) ...[
+            const SizedBox(height: 8),
+            _buildInfoRow(
+              title: isArabic ? 'ملاحظات التسوية' : 'Settlement Notes',
+              value: widget.notes!,
+              isBold: false,
+            ),
+          ],
         ],
       ),
     );
@@ -351,7 +458,7 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: AppColors.cardBorder),
       ),
@@ -385,18 +492,6 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
             value: widget.description,
             isBold: false,
           ),
-          const SizedBox(height: 8),
-          _buildInfoRow(
-            title: isArabic ? 'رقم السجل التجاري / الهوية' : 'CR / ID Number',
-            value: '7028193812',
-            isBold: false,
-          ),
-          const SizedBox(height: 8),
-          _buildInfoRow(
-            title: isArabic ? 'رقم الهاتف الموثق' : 'Verified Phone',
-            value: '+966 50 123 4567',
-            isBold: false,
-          ),
         ],
       ),
     );
@@ -406,7 +501,7 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: AppColors.cardBorder),
       ),
@@ -453,9 +548,9 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFFF0F4F8),
+        color:  AppColors.textPrimary,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFD2DCE6)),
+        border: Border.all(color:  AppColors.hexFFD2DCE6),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -478,9 +573,13 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            isArabic
-                ? 'أي اعتماد لتسوية مالية يتطلب مصادقة نهائية من حساب الإدارة قبل تفعيل حركة الصرف البنكية.'
-                : 'Any settlement authorization requires final approval from the Admin before fund clearance.',
+            _adminApprovalPending
+                ? (isArabic
+                    ? 'اعتمد المشرف المالي الطلب، وهو الآن بانتظار المصادقة النهائية من الإدارة.'
+                    : 'The finance supervisor approved this request. It is now waiting for final Admin authorization.')
+                : (isArabic
+                    ? 'أي اعتماد لتسوية مالية يتطلب مصادقة نهائية من حساب الإدارة قبل تفعيل حركة الصرف البنكية.'
+                    : 'Any settlement authorization requires final approval from the Admin before fund clearance.'),
             style: const TextStyle(
                 fontSize: 10, color: AppColors.textSecondary, height: 1.4),
           ),
@@ -488,7 +587,7 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.white,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
@@ -507,6 +606,24 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
               ],
             ),
           ),
+          if (_decisionAt != null) ...[
+            const SizedBox(height: 10),
+            _buildAuditRow(
+              isArabic ? 'تاريخ القرار' : 'Decision date',
+              MaterialLocalizations.of(context).formatFullDate(_decisionAt!),
+            ),
+            _buildAuditRow(
+              isArabic ? 'صاحب القرار' : 'Decision by',
+              isArabic
+                  ? 'المشرف المالي'
+                  : (_decisionBy ?? 'Finance Supervisor'),
+            ),
+            if (_decisionNote?.isNotEmpty == true)
+              _buildAuditRow(
+                isArabic ? 'السبب / الملاحظة' : 'Reason / note',
+                _decisionNote!,
+              ),
+          ],
         ],
       ),
     );
@@ -521,11 +638,11 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
           child: ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primaryDark,
-              foregroundColor: Colors.white,
+              foregroundColor: AppColors.white,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
             ),
-            onPressed: _handleApprove,
+            onPressed: _isSavingDecision ? null : _handleApprove,
             icon: const Icon(Icons.verified_outlined, size: 18),
             label: Text(
               isArabic
@@ -548,7 +665,7 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
                   ),
-                  onPressed: _handleFreeze,
+                  onPressed: _isSavingDecision ? null : _handleFreeze,
                   icon: const Icon(Icons.pause_circle_outline, size: 16),
                   label: Text(
                     isArabic ? 'تجميد احترازي' : 'Freeze Request',
@@ -565,11 +682,11 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
                 child: TextButton.icon(
                   style: TextButton.styleFrom(
                     foregroundColor: AppColors.danger,
-                    backgroundColor: const Color(0xFFFFECEB),
+                    backgroundColor:  AppColors.surface,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
                   ),
-                  onPressed: _handleReject,
+                  onPressed: _isSavingDecision ? null : _handleReject,
                   icon: const Icon(Icons.cancel_outlined, size: 16),
                   label: Text(
                     isArabic ? 'رفض الطلب مع السبب' : 'Reject with Reason',
@@ -610,6 +727,17 @@ class _SettlementDetailsScreenState extends State<SettlementDetailsScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildAuditRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: _buildInfoRow(
+        title: label,
+        value: value,
+        isBold: false,
+      ),
     );
   }
 }

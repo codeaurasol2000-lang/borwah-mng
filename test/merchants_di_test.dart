@@ -1,10 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:barwah_app/core/di/injection_container.dart' as di;
 import 'package:barwah_app/features/merchants/presentation/controllers/merchants_cubit.dart';
 import 'package:barwah_app/features/merchants/presentation/controllers/merchants_state.dart';
 
 void main() {
   setUpAll(() async {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    SharedPreferences.setMockInitialValues({});
     await di.initDependencies();
   });
 
