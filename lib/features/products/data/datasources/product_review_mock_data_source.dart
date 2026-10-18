@@ -1,8 +1,14 @@
+import 'dart:convert';
+
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../domain/entities/product_review.dart';
 import '../models/product_review_model.dart';
 import 'product_review_data_source.dart';
 
 class ProductReviewMockDataSource implements ProductReviewDataSource {
+  static const _storageKey = 'product_supervisor_review_decisions_v1';
+
   final List<ProductReviewModel> _reviews = [
     _review(
       '1',
@@ -209,8 +215,46 @@ class ProductReviewMockDataSource implements ProductReviewDataSource {
     ),
   ];
 
+  bool _loaded = false;
+
+  Future<void> _ensureLoaded() async {
+    if (_loaded) return;
+    final preferences = await SharedPreferences.getInstance();
+    final encoded = preferences.getString(_storageKey);
+    if (encoded != null) {
+      final decoded = jsonDecode(encoded);
+      if (decoded is! List<dynamic>) {
+        throw const FormatException(
+            'Stored product review decisions are invalid.');
+      }
+      final saved = <String, ProductReviewModel>{};
+      for (final value in decoded) {
+        if (value is! Map<String, dynamic>) {
+          throw const FormatException(
+              'Stored product review entry is invalid.');
+        }
+        final review = ProductReviewModel.fromJson(value);
+        saved[review.id] = review;
+      }
+      for (var index = 0; index < _reviews.length; index++) {
+        _reviews[index] = saved[_reviews[index].id] ?? _reviews[index];
+      }
+    }
+    _loaded = true;
+  }
+
+  Future<void> _persist() async {
+    final preferences = await SharedPreferences.getInstance();
+    final saved = await preferences.setString(
+      _storageKey,
+      jsonEncode(_reviews.map((review) => review.toJson()).toList()),
+    );
+    if (!saved) throw StateError('Could not save product review decisions.');
+  }
+
   @override
   Future<List<ProductReviewModel>> getProductReviews() async {
+    await _ensureLoaded();
     return List.unmodifiable(_reviews);
   }
 
@@ -218,6 +262,7 @@ class ProductReviewMockDataSource implements ProductReviewDataSource {
   Future<ProductReviewModel> updateProductReview(
     ProductReviewModel review,
   ) async {
+    await _ensureLoaded();
     final index = _reviews.indexWhere((item) => item.id == review.id);
     if (index < 0) {
       throw StateError('Product review ${review.id} was not found.');
@@ -225,7 +270,14 @@ class ProductReviewMockDataSource implements ProductReviewDataSource {
     if (_reviews[index].status != ProductReviewStatus.pending) {
       throw StateError('Product review ${review.id} is no longer editable.');
     }
+    final previous = _reviews[index];
     _reviews[index] = review;
+    try {
+      await _persist();
+    } on Object {
+      _reviews[index] = previous;
+      rethrow;
+    }
     return review;
   }
 
@@ -236,6 +288,7 @@ class ProductReviewMockDataSource implements ProductReviewDataSource {
     String? decisionNote,
     bool merchantNotificationRequested = false,
   }) async {
+    await _ensureLoaded();
     final index = _reviews.indexWhere((review) => review.id == id);
     if (index < 0) {
       throw StateError('Product review $id was not found.');
@@ -249,7 +302,14 @@ class ProductReviewMockDataSource implements ProductReviewDataSource {
       decisionNote: decisionNote,
       merchantNotificationRequested: merchantNotificationRequested,
     );
+    final previous = _reviews[index];
     _reviews[index] = updated;
+    try {
+      await _persist();
+    } on Object {
+      _reviews[index] = previous;
+      rethrow;
+    }
     return updated;
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/app_theme.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/supervisor_stats_entity.dart';
 
@@ -26,6 +27,8 @@ class MerchantSearchFilterBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final palette = context.appThemePalette;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Column(
       children: [
@@ -37,13 +40,14 @@ class MerchantSearchFilterBar extends StatelessWidget {
               height: 46,
               width: 46,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: isDark ? palette.surface : Colors.white,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.cardBorder),
+                border: Border.all(
+                  color: isDark ? palette.border : AppColors.cardBorder,
+                ),
               ),
               child: IconButton(
-                icon: const Icon(Icons.tune,
-                    size: 20, color: AppColors.textPrimary),
+                icon: Icon(Icons.tune, size: 20, color: palette.textPrimary),
                 onPressed: onFilterIconTap,
               ),
             ),
@@ -54,26 +58,27 @@ class MerchantSearchFilterBar extends StatelessWidget {
               child: Container(
                 height: 46,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: isDark ? palette.surface : Colors.white,
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColors.cardBorder),
+                  border: Border.all(
+                    color: isDark ? palette.border : AppColors.cardBorder,
+                  ),
                 ),
                 child: TextField(
                   controller: searchController,
                   onChanged: onSearchChanged,
-                  style: const TextStyle(
-                      fontSize: 12, color: AppColors.textPrimary),
+                  style: TextStyle(fontSize: 12, color: palette.textPrimary),
                   decoration: InputDecoration(
                     hintText: l10n.searchMerchantsHint,
-                    hintStyle: const TextStyle(
-                        fontSize: 11, color: AppColors.textMuted),
+                    hintStyle:
+                        TextStyle(fontSize: 11, color: palette.textMuted),
                     suffixIcon: searchController.text.isNotEmpty
                         ? IconButton(
                             icon: const Icon(Icons.clear, size: 16),
                             onPressed: onClearSearch,
                           )
-                        : const Icon(Icons.search,
-                            size: 18, color: AppColors.textMuted),
+                        : Icon(Icons.search,
+                            size: 18, color: palette.textMuted),
                     border: InputBorder.none,
                     contentPadding: const EdgeInsets.symmetric(
                         horizontal: 14, vertical: 12),
@@ -94,8 +99,7 @@ class MerchantSearchFilterBar extends StatelessWidget {
               _buildFilterChip(
                 context,
                 index: 0,
-                label:
-                    '${l10n.filterAll} (${stats?.totalCount ?? 18})',
+                label: '${l10n.filterAll} (${stats?.totalCount ?? 18})',
                 isSelected: selectedFilterIndex == 0,
               ),
               const SizedBox(width: 8),
@@ -143,18 +147,27 @@ class MerchantSearchFilterBar extends StatelessWidget {
     required String label,
     required bool isSelected,
   }) {
+    final palette = context.appThemePalette;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final selectedColor = isDark ? palette.accent : const Color(0xFF07192F);
     return GestureDetector(
       onTap: () => onFilterSelected(index),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF07192F) : Colors.white,
+          color: isSelected
+              ? selectedColor
+              : isDark
+                  ? palette.surface
+                  : Colors.white,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isSelected
-                ? const Color(0xFF07192F)
-                : AppColors.cardBorder,
+                ? selectedColor
+                : isDark
+                    ? palette.border
+                    : AppColors.cardBorder,
           ),
         ),
         child: Text(
@@ -162,11 +175,12 @@ class MerchantSearchFilterBar extends StatelessWidget {
           style: TextStyle(
             fontSize: 11,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-            color: isSelected ? Colors.white : AppColors.textSecondary,
+            color: isSelected
+                ? Theme.of(context).colorScheme.onPrimary
+                : palette.textSecondary,
           ),
         ),
       ),
     );
   }
 }
-

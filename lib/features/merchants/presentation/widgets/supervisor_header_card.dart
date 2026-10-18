@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/app_theme.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/supervisor_stats_entity.dart';
 
@@ -12,12 +13,14 @@ class SupervisorHeaderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final isArabic = l10n.localeName.startsWith('ar');
+    final palette = context.appThemePalette;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF07192F),
+        color: isDark ? palette.surfaceElevated : const Color(0xFF07192F),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -101,7 +104,9 @@ class SupervisorHeaderCard extends StatelessWidget {
                     width: 42,
                     height: 42,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF1E3A5F),
+                        color: isDark
+                          ? palette.accentContainer
+                          : const Color(0xFF1E3A5F),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
                         color: Colors.white.withValues(alpha: 0.15),
@@ -124,7 +129,9 @@ class SupervisorHeaderCard extends StatelessWidget {
                         color: AppColors.success,
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: const Color(0xFF07192F),
+                            color: isDark
+                              ? palette.surfaceElevated
+                              : const Color(0xFF07192F),
                           width: 2,
                         ),
                       ),
@@ -146,7 +153,9 @@ class SupervisorHeaderCard extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 12, vertical: 10),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF031020),
+                    color: isDark
+                      ? palette.surface
+                      : const Color(0xFF031020),
                     borderRadius: BorderRadius.circular(14),
                     border: Border.all(
                       color: Colors.white.withValues(alpha: 0.08),
@@ -203,7 +212,9 @@ class SupervisorHeaderCard extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 12, vertical: 10),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF031020),
+                    color: isDark
+                      ? palette.surface
+                      : const Color(0xFF031020),
                     borderRadius: BorderRadius.circular(14),
                     border: Border.all(
                       color: Colors.white.withValues(alpha: 0.08),

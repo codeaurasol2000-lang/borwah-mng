@@ -449,13 +449,14 @@ class _MerchantWithdrawalsScreenState extends State<MerchantWithdrawalsScreen> {
                       const SizedBox(height: 20),
 
                       // 4. Filters
-                      Row(
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
                         children: [
                           _buildQueueChip(
                             l10n.financeRequestsInProgressTab,
                             false,
                           ),
-                          const SizedBox(width: 8),
                           _buildQueueChip(
                             l10n.financeRequestsArchiveTab,
                             true,

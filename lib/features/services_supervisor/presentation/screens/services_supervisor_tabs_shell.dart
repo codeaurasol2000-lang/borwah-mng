@@ -77,7 +77,9 @@ class _ServicesSupervisorTabsShellState
     final topPadding = MediaQuery.of(context).padding.top;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7F9),
+      backgroundColor: Theme.of(context).brightness == Brightness.dark
+          ? Theme.of(context).scaffoldBackgroundColor
+          : const Color(0xFFF5F7F9),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(_isBarsVisible ? kToolbarHeight : 0),
         child: AnimatedContainer(

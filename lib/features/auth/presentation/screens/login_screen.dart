@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/app_locale_controller.dart';
 import '../../../../core/widgets/app_brand_mark.dart';
 import '../../../../core/widgets/app_snack_bar.dart';
+import '../../../../core/widgets/theme_mode_menu_button.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../domain/entities/user_role.dart';
@@ -82,11 +84,15 @@ class _LoginScreenState extends State<LoginScreen> {
       },
       builder: (context, state) {
         final isArabic = l10n.localeName.startsWith('ar');
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+        final palette = context.appThemePalette;
+        final colorScheme = Theme.of(context).colorScheme;
 
         return Directionality(
           textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
           child: Scaffold(
-            backgroundColor: const Color(0xFFF1F5F9),
+            backgroundColor:
+                isDark ? palette.background : const Color(0xFFF1F5F9),
             body: SafeArea(
               child: Center(
                 child: SingleChildScrollView(
@@ -97,43 +103,53 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // زر تبديل اللغة أعلى الصفحة بدون AppBar
                       Align(
                         alignment: AlignmentDirectional.topEnd,
-                        child: OutlinedButton.icon(
-                          onPressed: AppLocaleController.instance.toggle,
-                          style: OutlinedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            side: BorderSide(color: Colors.grey.shade300),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const ThemeModeMenuButton(),
+                            OutlinedButton.icon(
+                              onPressed: AppLocaleController.instance.toggle,
+                              style: OutlinedButton.styleFrom(
+                                backgroundColor: isDark
+                                    ? palette.surfaceElevated
+                                    : Colors.white,
+                                side: BorderSide(
+                                  color: isDark
+                                      ? palette.border
+                                      : Colors.grey.shade300,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 6,
+                                ),
+                              ),
+                              icon: Icon(
+                                Icons.language,
+                                size: 16,
+                                color: palette.accent,
+                              ),
+                              label: Text(
+                                isArabic ? 'English' : 'العربية',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: palette.accent,
+                                ),
+                              ),
                             ),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                          ),
-                          icon: const Icon(
-                            Icons.language,
-                            size: 16,
-                            color: AppColors.primaryDark,
-                          ),
-                          label: Text(
-                            isArabic ? 'English' : 'العربية',
-                            style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.primaryDark,
-                            ),
-                          ),
+                          ],
                         ),
                       ),
                       const SizedBox(height: 16),
-                      // الشعار في بطاقة بيضاء دائرية
                       Container(
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: isDark ? palette.surface : Colors.white,
                           borderRadius: BorderRadius.circular(24),
                           boxShadow: [
                             BoxShadow(
@@ -146,34 +162,32 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: const AppBrandMark(size: 72, iconSize: 40),
                       ),
                       const SizedBox(height: 20),
-
-                      // عنوان النظام
                       Text(
                         l10n.appName,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
-                          color: AppColors.textPrimary,
+                          color: palette.textPrimary,
                         ),
                       ),
                       const SizedBox(height: 6),
                       Text(
                         l10n.appSubtitle,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 15,
-                          color: AppColors.textSecondary,
+                          color: palette.textSecondary,
                         ),
                       ),
                       const SizedBox(height: 12),
-
-                      // شارة بوابة تسجيل الدخول
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 14,
                           vertical: 6,
                         ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFE2E8F0),
+                          color: isDark
+                              ? palette.accentContainer
+                              : const Color(0xFFE2E8F0),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Row(
@@ -200,12 +214,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       const SizedBox(height: 28),
-
-                      // بطاقة الحقول
                       Container(
                         padding: const EdgeInsets.all(22),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: isDark ? palette.surface : Colors.white,
                           borderRadius: BorderRadius.circular(24),
                           boxShadow: [
                             BoxShadow(
@@ -218,7 +230,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            // حقل البريد
                             Align(
                               alignment: Alignment.centerRight,
                               child: Row(
@@ -232,10 +243,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                   ),
                                   const SizedBox(width: 6),
-                                  const Icon(
+                                  Icon(
                                     Icons.mail_outline,
                                     size: 18,
-                                    color: AppColors.textSecondary,
+                                    color: palette.textSecondary,
                                   ),
                                 ],
                               ),
@@ -246,10 +257,12 @@ class _LoginScreenState extends State<LoginScreen> {
                               textAlign: TextAlign.left,
                               decoration: InputDecoration(
                                 filled: true,
-                                fillColor: const Color(0xFFF8FAFC),
-                                prefixIcon: const Icon(
+                                fillColor: isDark
+                                    ? palette.surfaceElevated
+                                    : const Color(0xFFF8FAFC),
+                                prefixIcon: Icon(
                                   Icons.badge_outlined,
-                                  color: AppColors.textSecondary,
+                                  color: palette.textSecondary,
                                 ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(14),
@@ -258,8 +271,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                             const SizedBox(height: 16),
-
-                            // حقل كلمة المرور
                             Align(
                               alignment: Alignment.centerRight,
                               child: Row(
@@ -273,10 +284,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                   ),
                                   const SizedBox(width: 6),
-                                  const Icon(
+                                  Icon(
                                     Icons.lock_outline,
                                     size: 18,
-                                    color: AppColors.textSecondary,
+                                    color: palette.textSecondary,
                                   ),
                                 ],
                               ),
@@ -288,7 +299,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               textAlign: TextAlign.left,
                               decoration: InputDecoration(
                                 filled: true,
-                                fillColor: const Color(0xFFF8FAFC),
+                                fillColor: isDark
+                                    ? palette.surfaceElevated
+                                    : const Color(0xFFF8FAFC),
                                 prefixIcon: IconButton(
                                   icon: Icon(
                                     _obscurePassword
@@ -306,12 +319,12 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                             const SizedBox(height: 16),
-
-                            // صندوق التنبيه بالرتب
                             Container(
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
-                                color: const Color(0xFFF8FAFC),
+                                color: isDark
+                                    ? palette.surfaceElevated
+                                    : const Color(0xFFF8FAFC),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Row(
@@ -325,9 +338,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                   Expanded(
                                     child: Text(
                                       l10n.roleAccessNotice,
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         fontSize: 11,
-                                        color: AppColors.textSecondary,
+                                        color: palette.textSecondary,
                                         height: 1.4,
                                       ),
                                       textAlign: TextAlign.right,
@@ -337,13 +350,14 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                             const SizedBox(height: 20),
-
-                            // زر تسجيل الدخول
                             SizedBox(
                               height: 52,
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.primaryDark,
+                                  backgroundColor: isDark
+                                      ? colorScheme.primary
+                                      : AppColors.primaryDark,
+                                  foregroundColor: colorScheme.onPrimary,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(14),
                                   ),
@@ -355,8 +369,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                           _passwordController.text,
                                         ),
                                 child: state is AuthLoading
-                                    ? const CircularProgressIndicator(
-                                        color: Colors.white,
+                                    ? CircularProgressIndicator(
+                                        color: colorScheme.onPrimary,
                                       )
                                     : Row(
                                         mainAxisAlignment:
@@ -364,24 +378,22 @@ class _LoginScreenState extends State<LoginScreen> {
                                         children: [
                                           Text(
                                             l10n.loginButton,
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold,
-                                              color: Colors.white,
+                                              color: colorScheme.onPrimary,
                                             ),
                                           ),
                                           const SizedBox(width: 8),
-                                          const Icon(
+                                          Icon(
                                             Icons.login,
-                                            color: Colors.white,
+                                            color: colorScheme.onPrimary,
                                           ),
                                         ],
                                       ),
                               ),
                             ),
                             const SizedBox(height: 16),
-
-                            // استعادة الوصول
                             Center(
                               child: Text(
                                 '${l10n.forgotPassword}\n${l10n.requestAccessReset}',
@@ -397,8 +409,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       const SizedBox(height: 24),
-
-                      // حقوق النظام بالأسفل
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -408,26 +418,26 @@ class _LoginScreenState extends State<LoginScreen> {
                               textAlign: TextAlign.center,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 11,
-                                color: AppColors.textSecondary,
+                                color: palette.textSecondary,
                               ),
                             ),
                           ),
                           const SizedBox(width: 4),
-                          const Icon(
+                          Icon(
                             Icons.lock_person_outlined,
                             size: 14,
-                            color: AppColors.textSecondary,
+                            color: palette.textSecondary,
                           ),
                         ],
                       ),
                       const SizedBox(height: 4),
                       Text(
                         l10n.copyrightNotice,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 10,
-                          color: AppColors.textMuted,
+                          color: palette.textMuted,
                         ),
                       ),
                     ],

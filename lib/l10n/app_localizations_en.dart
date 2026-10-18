@@ -31,6 +31,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get switchLanguage => 'Switch language';
 
   @override
+  String get themeAppearance => 'Appearance';
+
+  @override
+  String get themeModeLight => 'Light';
+
+  @override
+  String get themeModeDark => 'Dark';
+
+  @override
+  String get themeModeSystem => 'Use device setting';
+
+  @override
   String get languageArabic => 'Arabic';
 
   @override

@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/app_theme.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../features/finance/domain/entities/withdrawal_request_entity.dart';
 import '../../../../features/finance/domain/repositories/finance_repository.dart';
@@ -30,6 +31,7 @@ class _WasalnyAdsReviewScreenState extends State<WasalnyAdsReviewScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final isArabic = l10n.localeName.startsWith('ar');
+    final palette = context.appThemePalette;
     return BlocBuilder<WasalnyAdsCubit, WasalnyAdsState>(
       builder: (context, state) {
         if (state is WasalnyAdsLoading) {
@@ -101,11 +103,11 @@ class _WasalnyAdsReviewScreenState extends State<WasalnyAdsReviewScreen> {
                             label: Text(_filterLabel(filter, l10n)),
                             selected: _filter == filter,
                             onSelected: (_) => setState(() => _filter = filter),
-                            selectedColor: AppColors.primaryDark,
+                            selectedColor: palette.accent,
                             labelStyle: TextStyle(
                               color: _filter == filter
-                                  ? Colors.white
-                                  : AppColors.textSecondary,
+                                  ? Theme.of(context).colorScheme.onPrimary
+                                  : palette.textSecondary,
                               fontSize: 11,
                             ),
                             side: BorderSide.none,
@@ -122,7 +124,7 @@ class _WasalnyAdsReviewScreenState extends State<WasalnyAdsReviewScreen> {
                   child: Text(
                     l10n.wasalnyAdsEmpty,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(color: AppColors.textSecondary),
+                    style: TextStyle(color: palette.textSecondary),
                   ),
                 ),
               for (final ad in visibleAds) ...[
@@ -154,8 +156,8 @@ class _WasalnyAdsReviewScreenState extends State<WasalnyAdsReviewScreen> {
               Text(
                 l10n.wasalnyAdsAuditNote,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: AppColors.textSecondary,
+                style: TextStyle(
+                  color: palette.textSecondary,
                   fontSize: 10,
                 ),
               ),
@@ -285,7 +287,8 @@ class _WasalnyAdsReviewScreenState extends State<WasalnyAdsReviewScreen> {
     }
 
     try {
-      final result = await sl<FinanceRepository>().submitMerchantFinancialRequest(
+      final result =
+          await sl<FinanceRepository>().submitMerchantFinancialRequest(
         beneficiaryName: ad.sellerNameAr,
         requestTitle: 'ترويج مدفوع لإعلان وصلني ${ad.reference} - باقة أسبوع',
         sourceAccount: ad.id,
@@ -374,10 +377,12 @@ class _PageHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final palette = context.appThemePalette;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? palette.surface : Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: const [
           BoxShadow(
@@ -390,10 +395,13 @@ class _PageHeader extends StatelessWidget {
             width: 44,
             height: 44,
             decoration: BoxDecoration(
-              color: AppColors.primaryDark,
+              color: palette.accent,
               borderRadius: BorderRadius.circular(13),
             ),
-            child: const Icon(Icons.shield_outlined, color: Colors.white),
+            child: Icon(
+              Icons.shield_outlined,
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -402,24 +410,23 @@ class _PageHeader extends StatelessWidget {
               children: [
                 Text(
                   l10n.wasalnyAdsTitle,
-                  style: const TextStyle(
-                    color: AppColors.textPrimary,
+                  style: TextStyle(
+                    color: palette.textPrimary,
                     fontSize: 17,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
                   l10n.wasalnyAdsSubtitle,
-                  style: const TextStyle(
-                    color: AppColors.textSecondary,
+                  style: TextStyle(
+                    color: palette.textSecondary,
                     fontSize: 10,
                   ),
                 ),
               ],
             ),
           ),
-          const Icon(Icons.local_shipping_outlined,
-              color: AppColors.primaryDark, size: 26),
+          Icon(Icons.local_shipping_outlined, color: palette.accent, size: 26),
         ],
       ),
     );
@@ -441,10 +448,12 @@ class _MetricCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final palette = context.appThemePalette;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? palette.surface : Colors.white,
         borderRadius: BorderRadius.circular(14),
       ),
       child: Column(
@@ -462,8 +471,8 @@ class _MetricCard extends StatelessWidget {
           Text(
             label,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: AppColors.textSecondary,
+            style: TextStyle(
+              color: palette.textSecondary,
               fontSize: 10,
             ),
           ),
@@ -500,6 +509,8 @@ class _WasalnyAdCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final palette = context.appThemePalette;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final statusLabel = switch (ad.status) {
       WasalnyAdStatus.pending => l10n.wasalnyAdsPendingStatus,
       WasalnyAdStatus.approved => l10n.wasalnyAdsApprovedStatus,
@@ -518,7 +529,8 @@ class _WasalnyAdCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDark ? palette.surface : Colors.white,
+          border: isDark ? Border.all(color: palette.border) : null,
           borderRadius: BorderRadius.circular(16),
           boxShadow: const [
             BoxShadow(
@@ -536,20 +548,26 @@ class _WasalnyAdCard extends StatelessWidget {
                     color: ad.status == WasalnyAdStatus.rejected ||
                             ad.status == WasalnyAdStatus.suspended ||
                             ad.status == WasalnyAdStatus.editRequested
-                        ? AppColors.textSecondary
-                        : AppColors.primaryDark,
+                        ? palette.textSecondary
+                        : palette.accent,
                     background: ad.status == WasalnyAdStatus.rejected ||
                             ad.status == WasalnyAdStatus.suspended ||
                             ad.status == WasalnyAdStatus.editRequested
-                        ? const Color(0xFFE9EAEC)
-                        : const Color(0xFFD7E5FF),
+                        ? (isDark
+                            ? palette.surfaceElevated
+                            : const Color(0xFFE9EAEC))
+                        : (isDark
+                            ? palette.accentContainer
+                            : const Color(0xFFD7E5FF)),
                   ),
                 ),
                 const Spacer(),
                 _Pill(
                   label: '#${ad.reference}',
-                  color: AppColors.textSecondary,
-                  background: const Color(0xFFF0F1F3),
+                  color: palette.textSecondary,
+                  background: isDark
+                      ? palette.surfaceElevated
+                      : const Color(0xFFF0F1F3),
                 ),
               ],
             ),
@@ -565,8 +583,8 @@ class _WasalnyAdCard extends StatelessWidget {
                         title,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: AppColors.textPrimary,
+                        style: TextStyle(
+                          color: palette.textPrimary,
                           fontWeight: FontWeight.bold,
                           fontSize: 14,
                         ),
@@ -574,8 +592,8 @@ class _WasalnyAdCard extends StatelessWidget {
                       const SizedBox(height: 5),
                       Text(
                         seller,
-                        style: const TextStyle(
-                          color: AppColors.textSecondary,
+                        style: TextStyle(
+                          color: palette.textSecondary,
                           fontSize: 11,
                         ),
                       ),
@@ -591,16 +609,16 @@ class _WasalnyAdCard extends StatelessWidget {
                               '$city • ${DateFormat('HH:mm').format(ad.submittedAt)}',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                color: AppColors.textSecondary,
+                              style: TextStyle(
+                                color: palette.textSecondary,
                                 fontSize: 10,
                               ),
                             ),
                           ),
                           Text(
                             '${NumberFormat('#,###').format(ad.price)} ${l10n.productWalletCurrency}',
-                            style: const TextStyle(
-                              color: AppColors.primaryDark,
+                            style: TextStyle(
+                              color: palette.accent,
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
@@ -615,7 +633,9 @@ class _WasalnyAdCard extends StatelessWidget {
                   width: 82,
                   height: 82,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFE9EDF1),
+                    color: isDark
+                        ? palette.surfaceElevated
+                        : const Color(0xFFE9EDF1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
@@ -625,7 +645,7 @@ class _WasalnyAdCard extends StatelessWidget {
                       'laptop' => Icons.laptop_mac_outlined,
                       _ => Icons.pedal_bike_outlined,
                     },
-                    color: AppColors.primaryDark,
+                    color: palette.accent,
                     size: 38,
                   ),
                 ),
@@ -825,7 +845,8 @@ class _PremiumCustomerBadge extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.workspace_premium, size: 13, color: Color(0xFF9A6B00)),
+            const Icon(Icons.workspace_premium,
+                size: 13, color: Color(0xFF9A6B00)),
             const SizedBox(width: 4),
             Text(
               l10n.wasalnyPremiumCustomer,

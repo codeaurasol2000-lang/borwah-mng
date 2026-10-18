@@ -5,6 +5,7 @@ import 'package:barwah_app/features/auth/presentation/screens/login_screen.dart'
 import 'package:barwah_app/features/finance/presentation/screens/bank_accounts_screen.dart';
 import 'package:barwah_app/features/finance/presentation/screens/bank_reconciliation_screen.dart';
 import 'package:barwah_app/features/finance/domain/entities/department_wallet_entity.dart';
+import 'package:barwah_app/features/finance/domain/entities/withdrawal_request_entity.dart';
 import 'package:barwah_app/features/finance/presentation/screens/department_wallet_screen.dart';
 import 'package:barwah_app/features/finance/presentation/screens/edit_matrix_screen.dart';
 import 'package:barwah_app/features/finance/presentation/screens/expenses_management_screen.dart';
@@ -13,6 +14,7 @@ import 'package:barwah_app/features/finance/presentation/screens/merchant_withdr
 import 'package:barwah_app/features/finance/presentation/screens/profile_screen.dart';
 import 'package:barwah_app/features/finance/presentation/screens/subscriptions_screen.dart';
 import 'package:barwah_app/features/finance/presentation/screens/supervisor_withdrawals_screen.dart';
+import 'package:barwah_app/features/finance/presentation/screens/unified_withdrawal_requests_screen.dart';
 import 'package:barwah_app/features/finance/presentation/screens/transaction_history_screen.dart';
 import 'package:barwah_app/features/finance/data/datasources/finance_remote_data_source.dart';
 import 'package:barwah_app/app/navigation/finance_tabs_shell.dart';
@@ -82,6 +84,23 @@ void main() {
 
   testWidgets('Test FinanceTabsShell in English', (tester) async {
     await testScreen(tester, FinanceTabsShell(onLogout: () {}));
+  });
+
+  testWidgets('Finance dashboard opens the unified withdrawal queue',
+      (tester) async {
+    await testScreen(tester, FinanceTabsShell(onLogout: () {}));
+    final l10n = AppLocalizations.of(
+      tester.element(find.byType(FinanceTabsShell)),
+    )!;
+
+    await tester.ensureVisible(find.text(l10n.navWithdrawalOrders));
+    await tester.tap(find.text(l10n.navWithdrawalOrders));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(UnifiedWithdrawalRequestsScreen), findsOneWidget);
+    expect(find.byType(MerchantWithdrawalsScreen), findsNothing);
+    expect(find.byType(SupervisorWithdrawalsScreen), findsNothing);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('Merchants shell reuses finance app bar and bottom bar',
@@ -735,6 +754,113 @@ void main() {
     expect(find.text(l10n.approveAndSendToAdmin), findsNothing);
     expect(find.text(l10n.approveAndIssueBankOrder), findsNothing);
     expect(find.text(l10n.financeRequestApprovedBadge), findsWidgets);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('Unified withdrawal requests filter by beneficiary and status',
+      (tester) async {
+    final financeDataSource = di.sl<FinanceRemoteDataSource>();
+    final testSuffix = DateTime.now().microsecondsSinceEpoch;
+    final merchantWithdrawal =
+        await financeDataSource.submitMerchantFinancialRequest(
+      beneficiaryName: 'Unified queue merchant',
+      requestTitle: 'Unified withdrawal $testSuffix',
+      sourceAccount: 'unified-queue-withdrawal-$testSuffix',
+      amount: 120,
+      operationType: FinancialOperationType.withdrawal,
+    );
+    final merchantDeposit =
+        await financeDataSource.submitMerchantFinancialRequest(
+      beneficiaryName: 'Unified queue deposit',
+      requestTitle: 'Unified deposit $testSuffix',
+      sourceAccount: 'unified-queue-deposit-$testSuffix',
+      amount: 80,
+      operationType: FinancialOperationType.deposit,
+    );
+    final supervisorWithdrawal =
+        await financeDataSource.submitSupervisorWithdrawal(
+      beneficiaryName: 'Unified queue supervisor',
+      beneficiaryRole: 'Finance supervisor',
+      sourceAccount: 'unified-queue-supervisor',
+      amount: 100,
+      bankName: 'Test bank',
+      iban: 'TEST-UNIFIED-PENDING',
+      transferMethod: 'Bank transfer',
+    );
+    final archivedWithdrawal =
+        await financeDataSource.submitSupervisorWithdrawal(
+      beneficiaryName: 'Unified queue archived',
+      beneficiaryRole: 'Finance supervisor',
+      sourceAccount: 'unified-queue-archive',
+      amount: 90,
+      bankName: 'Test bank',
+      iban: 'TEST-UNIFIED-ARCHIVED',
+      transferMethod: 'Bank transfer',
+    );
+    await financeDataSource.approveWithdrawal(archivedWithdrawal.id);
+
+    tester.view.physicalSize = const Size(390, 1600);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(() {
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+    });
+    await tester.pumpWidget(
+      buildTestScreen(const UnifiedWithdrawalRequestsScreen()),
+    );
+    await tester.pumpAndSettle();
+
+    final l10n = AppLocalizations.of(
+      tester.element(find.byType(UnifiedWithdrawalRequestsScreen)),
+    )!;
+    final listScrollable = find
+        .descendant(
+          of: find.byType(UnifiedWithdrawalRequestsScreen),
+          matching: find.byType(Scrollable),
+        )
+        .first;
+    expect(find.text(merchantWithdrawal.beneficiaryName), findsOneWidget);
+    expect(find.text(merchantDeposit.beneficiaryName), findsOneWidget);
+
+    await tester.tap(find.text(l10n.financeWalletDeposit).first);
+    await tester.pumpAndSettle();
+    expect(find.text(merchantDeposit.beneficiaryName), findsOneWidget);
+    expect(find.text(merchantWithdrawal.beneficiaryName), findsNothing);
+
+    await tester.scrollUntilVisible(
+      find.text(l10n.allTab).last,
+      350,
+      scrollable: listScrollable,
+    );
+    await tester.tap(find.text(l10n.allTab).last);
+    await tester.pumpAndSettle();
+
+    await tester.scrollUntilVisible(
+      find.text(l10n.platformSupervisorsTab),
+      350,
+      scrollable: listScrollable,
+    );
+    await tester.tap(find.text(l10n.platformSupervisorsTab));
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.text(supervisorWithdrawal.requestNumber),
+      350,
+      scrollable: listScrollable,
+    );
+    expect(find.text(supervisorWithdrawal.beneficiaryName), findsOneWidget);
+    expect(find.text(merchantWithdrawal.beneficiaryName), findsNothing);
+
+    await tester.drag(listScrollable, const Offset(0, 1200));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(l10n.financeRequestsArchiveTab));
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.text(archivedWithdrawal.requestNumber),
+      350,
+      scrollable: listScrollable,
+    );
+    expect(find.text(archivedWithdrawal.beneficiaryName), findsOneWidget);
+    expect(find.text(supervisorWithdrawal.beneficiaryName), findsNothing);
     expect(tester.takeException(), isNull);
   });
 

@@ -2,7 +2,10 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../data/services_supervisor_local_store.dart';
+import '../../../wasalny_supervisor/data/wasalny_local_event_store.dart';
 import '../../../merchants/presentation/screens/merchant_conversation_screen.dart';
 
 enum _ComplaintStatus { investigating, waiting, closed }
@@ -53,8 +56,41 @@ class ServicesComplaintsScreen extends StatefulWidget {
 class _ServicesComplaintsScreenState extends State<ServicesComplaintsScreen> {
   final _searchController = TextEditingController();
   int _selectedFilter = 0;
+  bool _isLoadingEscalations = true;
+  final Set<String> _escalatedComplaintIds = {};
 
   late final List<_ServiceComplaint> _complaints = _createComplaints();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadEscalations();
+  }
+
+  Future<void> _loadEscalations() async {
+    try {
+      final ids =
+          await ServicesSupervisorLocalStore.loadEscalatedComplaintIds();
+      if (!mounted) return;
+      setState(() {
+        _escalatedComplaintIds
+          ..clear()
+          ..addAll(ids);
+        for (final complaint in _complaints) {
+          complaint.escalated = ids.contains(complaint.id);
+        }
+        _isLoadingEscalations = false;
+      });
+    } on Object catch (error, stackTrace) {
+      FlutterError.reportError(FlutterErrorDetails(
+        exception: error,
+        stack: stackTrace,
+        library: 'services supervisor complaints',
+        context: ErrorDescription('while loading saved complaint escalations'),
+      ));
+      if (mounted) setState(() => _isLoadingEscalations = false);
+    }
+  }
 
   List<_ServiceComplaint> _createComplaints() {
     final l10n = AppLocalizations.of(context)!;
@@ -119,6 +155,9 @@ class _ServicesComplaintsScreenState extends State<ServicesComplaintsScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    if (_isLoadingEscalations) {
+      return const Center(child: CircularProgressIndicator());
+    }
     final isArabic = l10n.localeName.startsWith('ar');
     final complaints = _filteredComplaints();
 
@@ -432,7 +471,49 @@ class _ServicesComplaintsScreenState extends State<ServicesComplaintsScreen> {
       ),
     );
     if (confirmed != true || !mounted) return;
-    setState(() => complaint.escalated = true);
+    _escalatedComplaintIds.add(complaint.id);
+    complaint.escalated = true;
+    try {
+      await ServicesSupervisorLocalStore.saveEscalatedComplaintIds(
+        _escalatedComplaintIds,
+      );
+    } on Object catch (error, stackTrace) {
+      _escalatedComplaintIds.remove(complaint.id);
+      complaint.escalated = false;
+      FlutterError.reportError(FlutterErrorDetails(
+        exception: error,
+        stack: stackTrace,
+        library: 'services supervisor complaints',
+        context: ErrorDescription('while saving a complaint escalation'),
+      ));
+      if (mounted) {
+        AppSnackBar.showError(context, l10n.servicesAccountSaveError(error));
+      }
+      return;
+    }
+    if (!mounted) return;
+    setState(() {});
+    try {
+      await WasalnyLocalEventStore().publish(
+        WasalnyLocalEvent(
+          id: 'service-complaint-escalated-${complaint.id}',
+          recipient: 'head',
+          source: 'services',
+          titleAr: 'تصعيد شكوى خدمات',
+          titleEn: 'Service complaint escalated',
+          messageAr: 'الشكوى ${complaint.id} تحتاج إلى مراجعة رئيس المشرفين.',
+          messageEn: 'Complaint ${complaint.id} needs head-supervisor review.',
+          createdAt: DateTime.now(),
+        ),
+      );
+    } on Object catch (error, stackTrace) {
+      FlutterError.reportError(FlutterErrorDetails(
+        exception: error,
+        stack: stackTrace,
+        library: 'services supervisor notifications',
+        context: ErrorDescription('while notifying the head supervisor'),
+      ));
+    }
     _showMessage(l10n.servicesComplaintEscalatedNotice(complaint.id));
   }
 

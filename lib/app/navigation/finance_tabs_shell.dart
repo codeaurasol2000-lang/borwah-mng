@@ -70,7 +70,7 @@ class _FinanceTabsShellState extends State<FinanceTabsShell> {
     final topPadding = MediaQuery.of(context).padding.top;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7F9),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       // شريط AppBar متجاوب يختفي عند التمرير لأسفل ويعود عند الصعود
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(_isBarsVisible ? kToolbarHeight : 0.0),

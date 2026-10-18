@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/product_review.dart';
@@ -30,6 +31,8 @@ class _ProductAdsReviewScreenState extends State<ProductAdsReviewScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final isArabic = l10n.localeName.startsWith('ar');
+    final palette = context.appThemePalette;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return BlocBuilder<ProductReviewCubit, ProductReviewState>(
       builder: (context, state) {
@@ -69,7 +72,7 @@ class _ProductAdsReviewScreenState extends State<ProductAdsReviewScreen> {
         return ListView(
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
           children: [
-            _buildSummary(state, l10n),
+            _buildSummary(context, state, l10n),
             const SizedBox(height: 12),
             _buildSearch(context, l10n),
             const SizedBox(height: 10),
@@ -82,8 +85,8 @@ class _ProductAdsReviewScreenState extends State<ProductAdsReviewScreen> {
                     l10n.productReviewListTitle,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: AppColors.primaryDark,
+                    style: TextStyle(
+                      color: palette.accent,
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
                     ),
@@ -91,8 +94,8 @@ class _ProductAdsReviewScreenState extends State<ProductAdsReviewScreen> {
                 ),
                 _countBadge(
                   state.pendingCount.toString(),
-                  const Color(0xFFD9E7FF),
-                  AppColors.primaryDark,
+                  isDark ? palette.accentContainer : const Color(0xFFD9E7FF),
+                  palette.accent,
                 ),
               ],
             ),
@@ -103,7 +106,7 @@ class _ProductAdsReviewScreenState extends State<ProductAdsReviewScreen> {
                 child: Text(
                   l10n.productEmptyResults,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(color: AppColors.textSecondary),
+                  style: TextStyle(color: palette.textSecondary),
                 ),
               ),
             for (var index = 0; index < state.visibleReviews.length; index++)
@@ -120,11 +123,17 @@ class _ProductAdsReviewScreenState extends State<ProductAdsReviewScreen> {
     );
   }
 
-  Widget _buildSummary(ProductReviewLoaded state, AppLocalizations l10n) {
+  Widget _buildSummary(
+    BuildContext context,
+    ProductReviewLoaded state,
+    AppLocalizations l10n,
+  ) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final palette = context.appThemePalette;
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.primaryDark,
+        color: isDark ? palette.surfaceElevated : AppColors.primaryDark,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -254,20 +263,24 @@ class _ProductAdsReviewScreenState extends State<ProductAdsReviewScreen> {
   }
 
   Widget _buildSearch(BuildContext context, AppLocalizations l10n) {
+    final palette = context.appThemePalette;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       height: 46,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? palette.surface : Colors.white,
         borderRadius: BorderRadius.circular(13),
-        border: Border.all(color: AppColors.cardBorder),
+        border: Border.all(
+          color: isDark ? palette.border : AppColors.cardBorder,
+        ),
       ),
       child: TextField(
         controller: _searchController,
         onChanged: context.read<ProductReviewCubit>().setSearchQuery,
         decoration: InputDecoration(
           hintText: l10n.productSearchHint,
-          hintStyle: const TextStyle(color: AppColors.textMuted, fontSize: 11),
-          prefixIcon: const Icon(Icons.search, color: AppColors.textMuted),
+          hintStyle: TextStyle(color: palette.textMuted, fontSize: 11),
+          prefixIcon: Icon(Icons.search, color: palette.textMuted),
           suffixIcon: _searchController.text.isEmpty
               ? null
               : IconButton(
@@ -290,6 +303,8 @@ class _ProductAdsReviewScreenState extends State<ProductAdsReviewScreen> {
     ProductReviewLoaded state,
     AppLocalizations l10n,
   ) {
+    final palette = context.appThemePalette;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final categories = <({String label, ProductCategory? category})>[
       (label: l10n.productCategoryAll, category: null),
       (
@@ -321,18 +336,20 @@ class _ProductAdsReviewScreenState extends State<ProductAdsReviewScreen> {
                   .read<ProductReviewCubit>()
                   .setCategoryFilter(categories[index].category),
               showCheckmark: false,
-              selectedColor: AppColors.primaryDark,
-              backgroundColor: Colors.white,
+              selectedColor: palette.accent,
+              backgroundColor: isDark ? palette.surface : Colors.white,
               labelStyle: TextStyle(
                 color: state.categoryFilter == categories[index].category
-                    ? Colors.white
-                    : AppColors.textSecondary,
+                    ? Theme.of(context).colorScheme.onPrimary
+                    : palette.textSecondary,
                 fontSize: 10,
               ),
               side: BorderSide(
                 color: state.categoryFilter == categories[index].category
-                    ? AppColors.primaryDark
-                    : AppColors.cardBorder,
+                    ? palette.accent
+                    : isDark
+                        ? palette.border
+                        : AppColors.cardBorder,
               ),
             ),
           ],
@@ -349,6 +366,8 @@ class _ProductAdsReviewScreenState extends State<ProductAdsReviewScreen> {
     AppLocalizations l10n,
   ) {
     final isPending = product.status == ProductReviewStatus.pending;
+    final palette = context.appThemePalette;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final title = isArabic ? product.titleAr : product.titleEn;
     final merchant = isArabic ? product.merchantNameAr : product.merchantNameEn;
     final price = isArabic ? product.priceAr : product.priceEn;
@@ -357,9 +376,11 @@ class _ProductAdsReviewScreenState extends State<ProductAdsReviewScreen> {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(13),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? palette.surface : Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.cardBorder),
+        border: Border.all(
+          color: isDark ? palette.border : AppColors.cardBorder,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -368,11 +389,12 @@ class _ProductAdsReviewScreenState extends State<ProductAdsReviewScreen> {
             children: [
               CircleAvatar(
                 radius: 12,
-                backgroundColor: const Color(0xFFE8EDF2),
+                backgroundColor:
+                    isDark ? palette.surfaceElevated : const Color(0xFFE8EDF2),
                 child: Text(
                   '$order',
-                  style: const TextStyle(
-                    color: AppColors.primaryDark,
+                  style: TextStyle(
+                    color: palette.accent,
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
                   ),
@@ -381,22 +403,22 @@ class _ProductAdsReviewScreenState extends State<ProductAdsReviewScreen> {
               const SizedBox(width: 7),
               Text(
                 product.reference,
-                style: const TextStyle(
-                  color: AppColors.textSecondary,
+                style: TextStyle(
+                  color: palette.textSecondary,
                   fontSize: 10,
                 ),
               ),
               const Spacer(),
-              const Icon(
+              Icon(
                 Icons.access_time,
                 size: 13,
-                color: AppColors.textMuted,
+                color: palette.textMuted,
               ),
               const SizedBox(width: 4),
               Text(
                 l10n.productReceivedMinutesAgo(product.receivedMinutesAgo),
-                style: const TextStyle(
-                  color: AppColors.textSecondary,
+                style: TextStyle(
+                  color: palette.textSecondary,
                   fontSize: 10,
                 ),
               ),
@@ -413,7 +435,9 @@ class _ProductAdsReviewScreenState extends State<ProductAdsReviewScreen> {
                   width: 86,
                   height: 82,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFE5EBF0),
+                    color: isDark
+                        ? palette.surfaceElevated
+                        : const Color(0xFFE5EBF0),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Stack(
@@ -421,7 +445,7 @@ class _ProductAdsReviewScreenState extends State<ProductAdsReviewScreen> {
                       Center(
                         child: Icon(
                           _iconFor(product.imageKind),
-                          color: AppColors.primaryDark,
+                          color: palette.accent,
                           size: 38,
                         ),
                       ),
@@ -434,13 +458,13 @@ class _ProductAdsReviewScreenState extends State<ProductAdsReviewScreen> {
                             vertical: 3,
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.primaryDark,
+                            color: palette.accent,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
                             l10n.adsImageCount(product.photoCount.toString()),
-                            style: const TextStyle(
-                              color: Colors.white,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onPrimary,
                               fontSize: 8,
                             ),
                           ),
@@ -461,9 +485,13 @@ class _ProductAdsReviewScreenState extends State<ProductAdsReviewScreen> {
                       runSpacing: 4,
                       children: [
                         if (product.isFeatured)
-                          _featuredTag(l10n.productFeaturedBadge),
-                        _categoryTag(_categoryLabel(product.category, l10n)),
+                          _featuredTag(context, l10n.productFeaturedBadge),
                         _categoryTag(
+                          context,
+                          _categoryLabel(product.category, l10n),
+                        ),
+                        _categoryTag(
+                          context,
                           product.condition == ProductCondition.used
                               ? l10n.productConditionUsed
                               : l10n.productConditionNew,
@@ -476,8 +504,8 @@ class _ProductAdsReviewScreenState extends State<ProductAdsReviewScreen> {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.start,
-                      style: const TextStyle(
-                        color: AppColors.textPrimary,
+                      style: TextStyle(
+                        color: palette.textPrimary,
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
                       ),
@@ -485,13 +513,13 @@ class _ProductAdsReviewScreenState extends State<ProductAdsReviewScreen> {
                     const SizedBox(height: 7),
                     Row(
                       children: [
-                        const CircleAvatar(
+                        CircleAvatar(
                           radius: 10,
-                          backgroundColor: AppColors.primaryDark,
+                          backgroundColor: palette.accent,
                           child: Icon(
                             Icons.person,
                             size: 13,
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.onPrimary,
                           ),
                         ),
                         const SizedBox(width: 5),
@@ -500,16 +528,16 @@ class _ProductAdsReviewScreenState extends State<ProductAdsReviewScreen> {
                             merchant,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              color: AppColors.textSecondary,
+                            style: TextStyle(
+                              color: palette.textSecondary,
                               fontSize: 10,
                             ),
                           ),
                         ),
                         Text(
                           price,
-                          style: const TextStyle(
-                            color: AppColors.primaryDark,
+                          style: TextStyle(
+                            color: palette.accent,
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
                           ),
@@ -631,7 +659,7 @@ class _ProductAdsReviewScreenState extends State<ProductAdsReviewScreen> {
             const SizedBox(height: 7),
             Align(
               alignment: AlignmentDirectional.centerStart,
-              child: _statusTag(product.status, l10n),
+              child: _statusTag(context, product.status, l10n),
             ),
           ],
         ],
@@ -639,36 +667,46 @@ class _ProductAdsReviewScreenState extends State<ProductAdsReviewScreen> {
     );
   }
 
-  Widget _categoryTag(String label) {
+  Widget _categoryTag(BuildContext context, String label) {
+    final palette = context.appThemePalette;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
       decoration: BoxDecoration(
-        color: const Color(0xFFEAF1FB),
+        color: isDark ? palette.accentContainer : const Color(0xFFEAF1FB),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
         label,
-        style: const TextStyle(color: AppColors.info, fontSize: 8),
+        style: TextStyle(
+          color: isDark ? palette.accent : AppColors.info,
+          fontSize: 8,
+        ),
       ),
     );
   }
 
-  Widget _featuredTag(String label) {
+  Widget _featuredTag(BuildContext context, String label) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFF3D6),
+        color: isDark ? const Color(0xFF3B3017) : const Color(0xFFFFF3D6),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.star, size: 11, color: Color(0xFFB77900)),
+          Icon(
+            Icons.star,
+            size: 11,
+            color: isDark ? const Color(0xFFFFD36B) : const Color(0xFFB77900),
+          ),
           const SizedBox(width: 3),
           Text(
             label,
-            style: const TextStyle(
-              color: Color(0xFF885D00),
+            style: TextStyle(
+              color: isDark ? const Color(0xFFFFD36B) : const Color(0xFF885D00),
               fontSize: 8,
               fontWeight: FontWeight.w700,
             ),
@@ -691,32 +729,38 @@ class _ProductAdsReviewScreenState extends State<ProductAdsReviewScreen> {
         .length;
   }
 
-  Widget _statusTag(ProductReviewStatus status, AppLocalizations l10n) {
+  Widget _statusTag(
+    BuildContext context,
+    ProductReviewStatus status,
+    AppLocalizations l10n,
+  ) {
+    final palette = context.appThemePalette;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final (label, color, background) = switch (status) {
       ProductReviewStatus.pending => (
           l10n.productPendingAdsCount,
-          AppColors.info,
-          const Color(0xFFEAF1FB),
+          isDark ? palette.accent : AppColors.info,
+          isDark ? palette.accentContainer : const Color(0xFFEAF1FB),
         ),
       ProductReviewStatus.approved => (
           l10n.productStatusApproved,
-          AppColors.success,
-          const Color(0xFFE3F5EF),
+          isDark ? palette.success : AppColors.success,
+          isDark ? const Color(0xFF16382F) : const Color(0xFFE3F5EF),
         ),
       ProductReviewStatus.hidden => (
           l10n.productStatusHidden,
-          AppColors.textSecondary,
-          const Color(0xFFEDEFF1),
+          palette.textSecondary,
+          isDark ? palette.surfaceElevated : const Color(0xFFEDEFF1),
         ),
       ProductReviewStatus.rejected => (
           l10n.productStatusRejected,
-          AppColors.danger,
-          const Color(0xFFFFE0DD),
+          isDark ? palette.danger : AppColors.danger,
+          isDark ? const Color(0xFF40262B) : const Color(0xFFFFE0DD),
         ),
       ProductReviewStatus.suspended => (
           l10n.productStatusSuspended,
-          const Color(0xFF885D00),
-          const Color(0xFFFFF1D6),
+          isDark ? const Color(0xFFFFD36B) : const Color(0xFF885D00),
+          isDark ? const Color(0xFF3B3017) : const Color(0xFFFFF1D6),
         ),
     };
     return Container(

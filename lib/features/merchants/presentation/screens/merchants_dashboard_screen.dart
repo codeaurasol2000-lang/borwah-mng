@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../auth/presentation/controllers/auth_cubit.dart';
@@ -294,9 +295,11 @@ class _MerchantsDashboardScreenState extends State<MerchantsDashboardScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final palette = context.appThemePalette;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
+      backgroundColor: isDark ? palette.background : const Color(0xFFF8FAFC),
       appBar: widget.showAppBar
           ? SupervisorAppBar(
               onNotificationTap: widget.onNotificationTap,
@@ -306,9 +309,9 @@ class _MerchantsDashboardScreenState extends State<MerchantsDashboardScreen> {
       body: BlocBuilder<MerchantsCubit, MerchantsState>(
         builder: (context, state) {
           if (state is MerchantsLoading || state is MerchantsInitial) {
-            return const Center(
+            return Center(
               child: CircularProgressIndicator(
-                color: Color(0xFF07192F),
+                color: isDark ? palette.accent : const Color(0xFF07192F),
               ),
             );
           }
@@ -329,7 +332,10 @@ class _MerchantsDashboardScreenState extends State<MerchantsDashboardScreen> {
                       onPressed: () =>
                           context.read<MerchantsCubit>().loadMerchants(),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF07192F),
+                        backgroundColor:
+                            isDark ? palette.accent : const Color(0xFF07192F),
+                        foregroundColor:
+                            Theme.of(context).colorScheme.onPrimary,
                       ),
                       child: const Text('إعادة المحاولة',
                           style: TextStyle(color: Colors.white)),
@@ -343,7 +349,7 @@ class _MerchantsDashboardScreenState extends State<MerchantsDashboardScreen> {
           final loadedState = state as MerchantsLoaded;
 
           return RefreshIndicator(
-            color: const Color(0xFF07192F),
+            color: isDark ? palette.accent : const Color(0xFF07192F),
             onRefresh: () => context.read<MerchantsCubit>().loadMerchants(),
             child: Stack(
               children: [
@@ -507,18 +513,21 @@ class _MerchantsDashboardScreenState extends State<MerchantsDashboardScreen> {
                   left: 20,
                   child: ElevatedButton.icon(
                     onPressed: () => _showAddMerchantSheet(context),
-                    icon: const Icon(Icons.store_mall_directory_outlined,
-                        size: 18, color: Colors.white),
+                    icon: Icon(Icons.store_mall_directory_outlined,
+                        size: 18,
+                        color: Theme.of(context).colorScheme.onPrimary),
                     label: Text(
                       l10n.linkNewMerchant,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.onPrimary,
                       ),
                     ),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF07192F),
+                      backgroundColor:
+                          isDark ? palette.accent : const Color(0xFF07192F),
+                      foregroundColor: Theme.of(context).colorScheme.onPrimary,
                       padding: const EdgeInsets.symmetric(
                           horizontal: 20, vertical: 12),
                       shape: RoundedRectangleBorder(

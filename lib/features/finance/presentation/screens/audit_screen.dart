@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../widgets/finance_navigation.dart';
@@ -145,6 +146,7 @@ class _AuditScreenState extends State<AuditScreen>
     super.build(context);
     final l10n = AppLocalizations.of(context)!;
     final isArabic = l10n.localeName.startsWith('ar');
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Directionality(
       textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
@@ -152,7 +154,9 @@ class _AuditScreenState extends State<AuditScreen>
         currentIndex: 0,
         enabled: widget.showBottomNavigation,
         child: Scaffold(
-          backgroundColor: const Color(0xFFF5F7F9),
+            backgroundColor: isDark
+              ? Theme.of(context).scaffoldBackgroundColor
+              : const Color(0xFFF5F7F9),
           body: SafeArea(
             bottom: false,
             child: ListView(
@@ -215,6 +219,8 @@ class _AuditScreenState extends State<AuditScreen>
   }
 
   Widget _buildBrandHeader(AppLocalizations l10n) {
+    final palette = context.appThemePalette;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return SizedBox(
       height: 66,
       child: Directionality(
@@ -230,14 +236,14 @@ class _AuditScreenState extends State<AuditScreen>
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: isDark ? palette.surface : Colors.white,
                 borderRadius: BorderRadius.circular(18),
               ),
               child: Row(
                 children: [
                   Text(l10n.certifiedFinancialAuditor,
-                      style: const TextStyle(
-                          fontSize: 9, color: AppColors.textSecondary)),
+                        style: TextStyle(
+                          fontSize: 9, color: palette.textSecondary)),
                   const SizedBox(width: 4),
                   const Icon(Icons.verified_user_outlined,
                       size: 12, color: AppColors.info),
@@ -250,14 +256,14 @@ class _AuditScreenState extends State<AuditScreen>
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(l10n.appName,
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontSize: 16,
                         height: 1.1,
-                        color: AppColors.primaryDark,
+                        color: palette.textPrimary,
                         fontWeight: FontWeight.bold)),
                 Text(l10n.financialDepartment,
-                    style: const TextStyle(
-                        fontSize: 9, color: AppColors.textSecondary)),
+                    style: TextStyle(
+                        fontSize: 9, color: palette.textSecondary)),
               ],
             ),
             const SizedBox(width: 8),
@@ -402,6 +408,8 @@ class _AuditScreenState extends State<AuditScreen>
   }
 
   Widget _buildFilters(bool isArabic) {
+    final palette = context.appThemePalette;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       reverse: true,
@@ -419,9 +427,11 @@ class _AuditScreenState extends State<AuditScreen>
               padding: const EdgeInsets.symmetric(horizontal: 5),
               labelStyle: TextStyle(
                   fontSize: 9,
-                  color: selected ? Colors.white : AppColors.textSecondary),
-              backgroundColor: Colors.white,
-              selectedColor: AppColors.primaryDark,
+                    color: selected
+                      ? Theme.of(context).colorScheme.onPrimary
+                      : palette.textSecondary),
+                  backgroundColor: isDark ? palette.surface : Colors.white,
+                  selectedColor: palette.accent,
               side: BorderSide.none,
             ),
           );
@@ -461,12 +471,18 @@ class _AuditScreenState extends State<AuditScreen>
   }
 
   Widget _buildDateHeading(String label, bool isArabic) {
+    final palette = context.appThemePalette;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Row(
       children: [
         const Icon(Icons.calendar_month_outlined,
             size: 14, color: AppColors.info),
         const SizedBox(width: 6),
-        Expanded(child: Divider(color: Colors.blueGrey.shade100)),
+        Expanded(
+          child: Divider(
+            color: isDark ? palette.border : Colors.blueGrey.shade100,
+          ),
+        ),
         const SizedBox(width: 8),
         Text(label,
             style: const TextStyle(
@@ -478,10 +494,12 @@ class _AuditScreenState extends State<AuditScreen>
   }
 
   Widget _buildDisclosure(bool isArabic) {
+    final palette = context.appThemePalette;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFFE5E8EB),
+        color: isDark ? palette.surfaceElevated : const Color(0xFFE5E8EB),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
@@ -495,8 +513,8 @@ class _AuditScreenState extends State<AuditScreen>
                   ? 'يتم تصدير نسخة مشفرة من هذا السجل آليًا وبشكل يومي ومباشر لمكتب الملك وصندوق الحسابات القانونيين المعتمدين، ولا يمكن التراجع عنه أو محوه إلى أي سجل في هذه المنظومة.'
                   : 'An encrypted copy of this log is automatically delivered daily to the approved legal accounting office and cannot be altered or deleted.',
               textAlign: isArabic ? TextAlign.right : TextAlign.left,
-              style: const TextStyle(
-                  color: AppColors.textSecondary, fontSize: 9, height: 1.6),
+              style: TextStyle(
+                  color: palette.textSecondary, fontSize: 9, height: 1.6),
             ),
           ),
         ],
@@ -505,6 +523,9 @@ class _AuditScreenState extends State<AuditScreen>
   }
 
   Widget _buildExportButton(AppLocalizations l10n) {
+    final palette = context.appThemePalette;
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return ElevatedButton.icon(
       onPressed: () {},
       icon: const Icon(Icons.download_rounded, size: 17),
@@ -514,8 +535,8 @@ class _AuditScreenState extends State<AuditScreen>
             : 'Export complete encrypted log as Excel / PDF',
       ),
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.primaryDark,
-        foregroundColor: Colors.white,
+        backgroundColor: isDark ? palette.accent : AppColors.primaryDark,
+        foregroundColor: colorScheme.onPrimary,
         minimumSize: const Size.fromHeight(44),
         textStyle: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -538,32 +559,36 @@ class _AuditMetric extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final palette = context.appThemePalette;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       constraints: const BoxConstraints(minHeight: 76),
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 9),
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: AppColors.cardBorder),
+        color: isDark ? palette.surface : Colors.white,
+        border: Border.all(
+          color: isDark ? palette.border : AppColors.cardBorder,
+        ),
         borderRadius: BorderRadius.circular(9),
       ),
       child: Column(
         children: [
-          Icon(icon, size: 14, color: AppColors.info),
+          Icon(icon, size: 14, color: palette.accent),
           const SizedBox(height: 3),
           Text(title,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
-              style:
-                  const TextStyle(fontSize: 8, color: AppColors.textSecondary)),
+                style: TextStyle(
+                  fontSize: 8, color: palette.textSecondary)),
           const SizedBox(height: 3),
           Text(value,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
-              style: const TextStyle(
+                style: TextStyle(
                   fontSize: 13,
-                  color: AppColors.primaryDark,
+                  color: palette.accent,
                   fontWeight: FontWeight.bold)),
         ],
       ),
@@ -624,13 +649,22 @@ class _AuditEventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final palette = context.appThemePalette;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final amountColor = isDark
+      ? event.amountColor == const Color(0xFFD32626)
+        ? palette.danger
+        : palette.accent
+      : event.amountColor;
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? palette.surface : Colors.white,
         borderRadius: BorderRadius.circular(11),
-        border: Border.all(color: const Color(0xFFE9EDF2)),
+        border: Border.all(
+          color: isDark ? palette.border : const Color(0xFFE9EDF2),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -645,7 +679,15 @@ class _AuditEventCard extends StatelessWidget {
                   color: event.color.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(7),
                 ),
-                child: Icon(event.icon, size: 16, color: event.color),
+                child: Icon(
+                  event.icon,
+                  size: 16,
+                  color: isDark
+                    ? event.isWarning
+                      ? palette.danger
+                      : palette.accent
+                    : event.color,
+                ),
               ),
               const SizedBox(width: 8),
               Expanded(
@@ -655,16 +697,18 @@ class _AuditEventCard extends StatelessWidget {
                     Text(
                       isArabic ? event.titleAr : event.titleEn,
                       textAlign: isArabic ? TextAlign.right : TextAlign.left,
-                      style: const TextStyle(
-                          color: AppColors.primaryDark,
+                        style: TextStyle(
+                          color: isDark
+                            ? palette.textPrimary
+                            : AppColors.primaryDark,
                           fontSize: 13,
                           fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 3),
                     Text(
                       isArabic ? event.timeAr : event.timeEn,
-                      style: const TextStyle(
-                          color: AppColors.textSecondary, fontSize: 9),
+                        style: TextStyle(
+                          color: palette.textSecondary, fontSize: 9),
                     ),
                   ],
                 ),
@@ -675,7 +719,7 @@ class _AuditEventCard extends StatelessWidget {
                 textAlign: TextAlign.left,
                 textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
                 style: TextStyle(
-                    color: event.amountColor,
+                    color: amountColor,
                     fontSize: 10,
                     fontWeight: FontWeight.bold),
               ),
@@ -685,7 +729,7 @@ class _AuditEventCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
             decoration: BoxDecoration(
-              color: const Color(0xFFF1F3F5),
+              color: isDark ? palette.surfaceElevated : const Color(0xFFF1F3F5),
               borderRadius: BorderRadius.circular(7),
             ),
             child: Column(
@@ -694,8 +738,8 @@ class _AuditEventCard extends StatelessWidget {
                 Text(
                   isArabic ? event.descriptionAr : event.descriptionEn,
                   textAlign: isArabic ? TextAlign.right : TextAlign.left,
-                  style: const TextStyle(
-                      color: AppColors.textPrimary, fontSize: 10, height: 1.5),
+                    style: TextStyle(
+                      color: palette.textPrimary, fontSize: 10, height: 1.5),
                 ),
                 if (event.isWarning) ...[
                   const SizedBox(height: 7),
@@ -703,19 +747,21 @@ class _AuditEventCard extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 7, vertical: 5),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFFFE9E7),
+                        color: isDark
+                          ? const Color(0xFF40262B)
+                          : const Color(0xFFFFE9E7),
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.warning_amber_rounded,
-                            size: 13, color: AppColors.danger),
+                        Icon(Icons.warning_amber_rounded,
+                                size: 13, color: palette.danger),
                         const SizedBox(width: 5),
                         Expanded(
                           child: Text(
                             isArabic ? event.statusAr : event.statusEn,
-                            style: const TextStyle(
-                                color: AppColors.danger, fontSize: 8),
+                            style: TextStyle(
+                                color: palette.danger, fontSize: 8),
                           ),
                         ),
                       ],
@@ -729,8 +775,8 @@ class _AuditEventCard extends StatelessWidget {
                       child: Text(
                         event.reference,
                         textDirection: TextDirection.ltr,
-                        style: const TextStyle(
-                            color: AppColors.infoDark,
+                        style: TextStyle(
+                          color: isDark ? palette.accent : AppColors.infoDark,
                             fontSize: 8,
                             fontWeight: FontWeight.bold),
                       ),
@@ -741,7 +787,7 @@ class _AuditEventCard extends StatelessWidget {
                           : Icons.verified_user_outlined,
                       size: 11,
                       color:
-                          event.isWarning ? AppColors.danger : AppColors.info,
+                          event.isWarning ? palette.danger : palette.accent,
                     ),
                     const SizedBox(width: 4),
                     Flexible(
@@ -755,8 +801,8 @@ class _AuditEventCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: event.isWarning
-                              ? AppColors.textSecondary
-                              : AppColors.successDark,
+                              ? palette.textSecondary
+                              : palette.success,
                           fontSize: 8,
                         ),
                       ),

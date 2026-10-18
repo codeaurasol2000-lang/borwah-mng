@@ -1,4 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../wasalny_supervisor/data/wasalny_local_event_store.dart';
 
 import '../../domain/entities/product_review.dart';
 import '../../domain/entities/product_supervisor_audit_entry.dart';
@@ -104,6 +107,35 @@ class ProductReviewCubit extends Cubit<ProductReviewState> {
           occurredAt: DateTime.now(),
         ),
       );
+      if (updated.merchantNotificationRequested) {
+        final createdAt = DateTime.now();
+        try {
+          await WasalnyLocalEventStore().publish(
+            WasalnyLocalEvent(
+              id: 'product-review-${updated.id}-${updated.status.name}',
+              recipient: 'merchant',
+              source: 'products',
+              titleAr: 'تحديث مراجعة الإعلان',
+              titleEn: 'Advertisement review updated',
+              messageAr:
+                  '${updated.reference}: ${_statusLabelAr(updated.status)}',
+              messageEn: '${updated.reference}: ${updated.status.name}',
+              createdAt: createdAt,
+            ),
+          );
+        } on Object catch (error, stackTrace) {
+          FlutterError.reportError(
+            FlutterErrorDetails(
+              exception: error,
+              stack: stackTrace,
+              library: 'product supervisor notifications',
+              context: ErrorDescription(
+                'while notifying the merchant of a review',
+              ),
+            ),
+          );
+        }
+      }
       final reviews = current.reviews
           .map((review) => review.id == id ? updated : review)
           .toList();
@@ -121,4 +153,12 @@ class ProductReviewCubit extends Cubit<ProductReviewState> {
       return false;
     }
   }
+
+  String _statusLabelAr(ProductReviewStatus status) => switch (status) {
+        ProductReviewStatus.pending => 'قيد المراجعة',
+        ProductReviewStatus.approved => 'تمت الموافقة',
+        ProductReviewStatus.hidden => 'تم إخفاء الإعلان',
+        ProductReviewStatus.rejected => 'تم رفض الإعلان',
+        ProductReviewStatus.suspended => 'تم إيقاف الإعلان',
+      };
 }

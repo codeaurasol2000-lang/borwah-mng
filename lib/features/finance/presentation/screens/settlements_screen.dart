@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/app_theme.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../widgets/finance_navigation.dart';
 import '../widgets/new_settlement_bottom_sheet.dart';
@@ -97,6 +98,8 @@ class _SettlementsScreenState extends State<SettlementsScreen>
     super.build(context);
     final l10n = AppLocalizations.of(context)!;
     final isArabic = l10n.localeName.startsWith('ar');
+    final palette = context.appThemePalette;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Directionality(
       textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
@@ -104,10 +107,12 @@ class _SettlementsScreenState extends State<SettlementsScreen>
         currentIndex: 2,
         enabled: widget.showBottomNavigation,
         child: Scaffold(
-          backgroundColor: AppColors.backgroundLight,
+            backgroundColor: isDark
+              ? Theme.of(context).scaffoldBackgroundColor
+              : AppColors.backgroundLight,
           appBar: widget.showBottomNavigation
               ? AppBar(
-                  backgroundColor: Colors.white,
+                  backgroundColor: isDark ? palette.surface : Colors.white,
                   elevation: 0.5,
                   scrolledUnderElevation: 0,
                   leading: widget.showBottomNavigation
@@ -232,7 +237,7 @@ class _SettlementsScreenState extends State<SettlementsScreen>
           Text(
             l10n.settlementsPageTitle,
             textAlign: isArabic ? TextAlign.right : TextAlign.left,
-            style: const TextStyle(
+            style: TextStyle(
                 color: Colors.white, fontSize: 19, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 5),
@@ -282,13 +287,17 @@ class _SettlementsScreenState extends State<SettlementsScreen>
     required Color color,
   }) {
     final l10n = AppLocalizations.of(context)!;
+    final palette = context.appThemePalette;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       constraints: const BoxConstraints(minHeight: 92),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? palette.surface : Colors.white,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: AppColors.cardBorder),
+        border: Border.all(
+          color: isDark ? palette.border : AppColors.cardBorder,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -315,10 +324,10 @@ class _SettlementsScreenState extends State<SettlementsScreen>
             children: [
               Text(
                 amount,
-                style: const TextStyle(
+                style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.primaryDark),
+                    color: palette.textPrimary),
               ),
               const SizedBox(width: 4),
               Text(l10n.currencyEgy,
@@ -341,8 +350,11 @@ class _SettlementsScreenState extends State<SettlementsScreen>
 
   Widget _buildAddSettlementAction() {
     final l10n = AppLocalizations.of(context)!;
+    final palette = context.appThemePalette;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
     return Material(
-      color: AppColors.primaryDark,
+      color: isDark ? palette.accent : AppColors.primaryDark,
       borderRadius: BorderRadius.circular(12),
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
@@ -353,15 +365,15 @@ class _SettlementsScreenState extends State<SettlementsScreen>
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
           child: Row(
             children: [
-              const Icon(Icons.add_circle_outline,
-                  color: Colors.white, size: 20),
+                Icon(Icons.add_circle_outline,
+                  color: colorScheme.onPrimary, size: 20),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
                   l10n.addNewSettlement,
                   textAlign: TextAlign.end,
-                  style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: colorScheme.onPrimary,
                       fontSize: 13,
                       fontWeight: FontWeight.bold),
                 ),
@@ -375,7 +387,9 @@ class _SettlementsScreenState extends State<SettlementsScreen>
                 ),
                 child: Text(
                   l10n.instantRefundSettlement,
-                  style: const TextStyle(color: Colors.white70, fontSize: 8),
+                    style: TextStyle(
+                      color: colorScheme.onPrimary.withValues(alpha: 0.72),
+                      fontSize: 8),
                 ),
               ),
             ],
@@ -387,6 +401,9 @@ class _SettlementsScreenState extends State<SettlementsScreen>
 
   Widget _buildFilters() {
     final l10n = AppLocalizations.of(context)!;
+    final palette = context.appThemePalette;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colorScheme = Theme.of(context).colorScheme;
     final labels = {
       'الكل': l10n.filterAll,
       'قيد المراجعة': l10n.filterInReview,
@@ -404,12 +421,13 @@ class _SettlementsScreenState extends State<SettlementsScreen>
           selected: isSelected,
           onSelected: (_) => setState(() => _selectedFilter = filter),
           labelStyle: TextStyle(
-            color: isSelected ? Colors.white : AppColors.textSecondary,
+            color: isSelected ? colorScheme.onPrimary : palette.textSecondary,
             fontSize: 9,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
           ),
-          backgroundColor: AppColors.surfaceLight,
-          selectedColor: AppColors.primaryDark,
+            backgroundColor:
+              isDark ? palette.surfaceElevated : AppColors.surfaceLight,
+            selectedColor: palette.accent,
           side: BorderSide.none,
           visualDensity: VisualDensity.compact,
           showCheckmark: false,
@@ -421,6 +439,7 @@ class _SettlementsScreenState extends State<SettlementsScreen>
 
   Widget _buildRequestsHeader() {
     final l10n = AppLocalizations.of(context)!;
+    final palette = context.appThemePalette;
     return Row(
       children: [
         const Icon(Icons.assignment_outlined, color: AppColors.info, size: 17),
@@ -429,15 +448,15 @@ class _SettlementsScreenState extends State<SettlementsScreen>
           child: Text(
             l10n.pendingSettlementRequests,
             textAlign: TextAlign.end,
-            style: const TextStyle(
+            style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.bold,
-                color: AppColors.primaryDark),
+                color: palette.textPrimary),
           ),
         ),
         Text(
           '${_filteredRequests.length} ${l10n.settlementRequestOne}',
-          style: const TextStyle(fontSize: 9, color: AppColors.info),
+          style: TextStyle(fontSize: 9, color: palette.accent),
         ),
       ],
     );
@@ -521,6 +540,8 @@ class _SettlementsScreenState extends State<SettlementsScreen>
   Widget _buildRequestCard(_SettlementRequest request) {
     final l10n = AppLocalizations.of(context)!;
     final isArabic = l10n.localeName.startsWith('ar');
+    final palette = context.appThemePalette;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final labels = _localizedRequestLabels(request, l10n);
     return Material(
       color: Colors.transparent,
@@ -552,9 +573,11 @@ class _SettlementsScreenState extends State<SettlementsScreen>
           margin: const EdgeInsets.only(bottom: 8),
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: isDark ? palette.surface : Colors.white,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColors.cardBorder),
+            border: Border.all(
+              color: isDark ? palette.border : AppColors.cardBorder,
+            ),
           ),
           child: Column(
             children: [
@@ -562,16 +585,19 @@ class _SettlementsScreenState extends State<SettlementsScreen>
                 children: [
                   _buildTag(labels.badge, request.badgeColor),
                   const SizedBox(width: 5),
-                  _buildTag(labels.status, AppColors.surfaceLight,
-                      textColor: AppColors.infoDark),
+                  _buildTag(
+                    labels.status,
+                    isDark ? palette.surfaceElevated : AppColors.surfaceLight,
+                    textColor: isDark ? palette.accent : AppColors.infoDark,
+                  ),
                   const Spacer(),
                   Text(
                     request.id,
                     textDirection: TextDirection.ltr,
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontSize: 8,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.textSecondary),
+                        color: palette.textSecondary),
                   ),
                 ],
               ),
@@ -583,8 +609,8 @@ class _SettlementsScreenState extends State<SettlementsScreen>
                     backgroundColor: request.color,
                     child: Text(
                       labels.initials,
-                      style: const TextStyle(
-                          color: AppColors.infoDark,
+                      style: TextStyle(
+                          color: isDark ? palette.accent : AppColors.infoDark,
                           fontWeight: FontWeight.bold,
                           fontSize: 12),
                     ),
@@ -599,18 +625,18 @@ class _SettlementsScreenState extends State<SettlementsScreen>
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.end,
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.bold,
-                              color: AppColors.primaryDark),
+                              color: palette.textPrimary),
                         ),
                         Text(
                           labels.description,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.end,
-                          style: const TextStyle(
-                              fontSize: 8, color: AppColors.textSecondary),
+                          style: TextStyle(
+                              fontSize: 8, color: palette.textSecondary),
                         ),
                       ],
                     ),
@@ -623,15 +649,15 @@ class _SettlementsScreenState extends State<SettlementsScreen>
                         children: [
                           Text(
                             request.amount,
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,
-                                color: AppColors.primaryDark),
+                                color: palette.textPrimary),
                           ),
                           const SizedBox(width: 3),
                           Text(l10n.currencyEgy,
-                              style: const TextStyle(
-                                  fontSize: 8, color: AppColors.textSecondary)),
+                              style: TextStyle(
+                                  fontSize: 8, color: palette.textSecondary)),
                         ],
                       ),
                       Text(labels.age,
@@ -641,27 +667,30 @@ class _SettlementsScreenState extends State<SettlementsScreen>
                   ),
                 ],
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 7),
-                child: Divider(height: 1, color: AppColors.surfaceLight),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 7),
+                child: Divider(
+                  height: 1,
+                  color: isDark ? palette.border : AppColors.surfaceLight,
+                ),
               ),
               Row(
                 children: [
                   _buildTag('${labels.referenceTitle} ${request.reference}',
-                      AppColors.surfaceLight,
-                      textColor: AppColors.infoDark),
+                      isDark ? palette.surfaceElevated : AppColors.surfaceLight,
+                      textColor: isDark ? palette.accent : AppColors.infoDark),
                   const Spacer(),
                   Icon(
                     isArabic ? Icons.arrow_back : Icons.arrow_forward,
                     size: 14,
-                    color: AppColors.primaryDark,
+                    color: palette.accent,
                   ),
                   const SizedBox(width: 3),
                   Text(l10n.viewLabel,
-                      style: const TextStyle(
+                      style: TextStyle(
                           fontSize: 9,
                           fontWeight: FontWeight.bold,
-                          color: AppColors.primaryDark)),
+                          color: palette.accent)),
                 ],
               ),
             ],
@@ -690,6 +719,7 @@ class _SettlementsScreenState extends State<SettlementsScreen>
 
   Widget _buildRecentSettlementsHeader() {
     final l10n = AppLocalizations.of(context)!;
+    final palette = context.appThemePalette;
     return Row(
       children: [
         const Icon(Icons.history, color: AppColors.info, size: 17),
@@ -698,15 +728,15 @@ class _SettlementsScreenState extends State<SettlementsScreen>
           child: Text(
             l10n.recentSettlementsTitle,
             textAlign: TextAlign.end,
-            style: const TextStyle(
+            style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.bold,
-                color: AppColors.primaryDark),
+                color: palette.textPrimary),
           ),
         ),
         Text(
           l10n.settlementRecentOperationsCount,
-          style: const TextStyle(fontSize: 9, color: AppColors.info),
+          style: TextStyle(fontSize: 9, color: palette.accent),
         ),
         const SizedBox(width: 6),
         TextButton(
@@ -722,13 +752,17 @@ class _SettlementsScreenState extends State<SettlementsScreen>
   Widget _buildRecentSettlement(_RecentSettlement settlement) {
     final l10n = AppLocalizations.of(context)!;
     final labels = _localizedRecentLabels(settlement, l10n);
+    final palette = context.appThemePalette;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       margin: const EdgeInsets.only(bottom: 7),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? palette.surface : Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.cardBorder),
+        border: Border.all(
+          color: isDark ? palette.border : AppColors.cardBorder,
+        ),
       ),
       child: Row(
         children: [
@@ -740,11 +774,11 @@ class _SettlementsScreenState extends State<SettlementsScreen>
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(labels.title,
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontSize: 10, fontWeight: FontWeight.bold)),
                 Text(labels.description,
-                    style: const TextStyle(
-                        fontSize: 8, color: AppColors.textSecondary)),
+                    style: TextStyle(
+                        fontSize: 8, color: palette.textSecondary)),
               ],
             ),
           ),
@@ -755,22 +789,22 @@ class _SettlementsScreenState extends State<SettlementsScreen>
               Row(
                 children: [
                   Text(settlement.amount,
-                      style: const TextStyle(
+                      style: TextStyle(
                           fontSize: 11, fontWeight: FontWeight.bold)),
                   const SizedBox(width: 3),
                   Text(l10n.currencyEgy,
-                      style: const TextStyle(
-                          fontSize: 8, color: AppColors.textSecondary)),
+                      style: TextStyle(
+                          fontSize: 8, color: palette.textSecondary)),
                 ],
               ),
               Text(labels.time,
-                  style: const TextStyle(
-                      fontSize: 8, color: AppColors.textSecondary)),
+                  style: TextStyle(
+                      fontSize: 8, color: palette.textSecondary)),
             ],
           ),
           const SizedBox(width: 5),
           Text(settlement.id,
-              style: const TextStyle(fontSize: 8, color: AppColors.info)),
+              style: TextStyle(fontSize: 8, color: palette.accent)),
         ],
       ),
     );

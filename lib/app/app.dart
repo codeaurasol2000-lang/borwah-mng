@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../core/theme/app_theme.dart';
 import '../core/utils/app_locale_controller.dart';
+import '../core/utils/app_theme_controller.dart';
 import '../core/widgets/app_launch_splash.dart';
 import '../features/auth/presentation/controllers/auth_cubit.dart';
 import '../features/auth/presentation/screens/login_screen.dart';
@@ -103,7 +104,10 @@ class _BarwahAppState extends State<BarwahApp> {
     return MultiBlocProvider(
       providers: [BlocProvider(create: (_) => AuthCubit())],
       child: AnimatedBuilder(
-        animation: AppLocaleController.instance,
+        animation: Listenable.merge([
+          AppLocaleController.instance,
+          AppThemeController.instance,
+        ]),
         builder: (context, child) {
           return MaterialApp(
             navigatorKey: _navigatorKey,
@@ -113,6 +117,8 @@ class _BarwahAppState extends State<BarwahApp> {
             supportedLocales: AppLocalizations.supportedLocales,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: AppThemeController.instance.mode,
             builder: (context, child) {
               final isArabic = AppLocaleController.instance.isArabic;
 

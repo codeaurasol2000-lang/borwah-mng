@@ -44,49 +44,41 @@ class _SupervisorWithdrawalsScreenState
       };
 
   List<WithdrawalRequestEntity> get _filteredRequests => _categoryRequests
-      .where((request) => _showArchive
-          ? request.status != RequestStatus.pending
-          : request.status == RequestStatus.pending)
+      .where((request) => _isArchivedStatus(request.status) == _showArchive)
       .toList(growable: false);
 
   int get _pendingCount =>
       _categoryRequests.where((r) => r.status == RequestStatus.pending).length;
+  int get _approvedCount =>
+      _categoryRequests.where((r) => r.status == RequestStatus.approved).length;
+  int get _rejectedCount =>
+      _categoryRequests.where((r) => r.status == RequestStatus.rejected).length;
   int get _frozenCount => _categoryRequests
       .where((r) =>
           r.status == RequestStatus.underInvestigation ||
           r.status == RequestStatus.frozen)
       .length;
 
-  double get _totalPendingAmount {
-    return _categoryRequests
-        .where((r) => r.status == RequestStatus.pending)
-        .fold(0.0, (sum, req) => sum + req.netAmount);
-  }
+  double get _totalPendingAmount => _totalForStatus(RequestStatus.pending);
+  double get _totalApprovedAmount => _totalForStatus(RequestStatus.approved);
+  double get _totalRejectedAmount => _totalForStatus(RequestStatus.rejected);
+
+  double _totalForStatus(RequestStatus status) => _categoryRequests
+      .where((r) => r.status == status)
+      .fold(0.0, (sum, req) => sum + req.netAmount);
+
+  bool _isArchivedStatus(RequestStatus status) =>
+      status == RequestStatus.approved || status == RequestStatus.rejected;
 
   int _countFor(String type) {
-    if (type == 'المشرفين') {
-      return _requests
-          .where((r) =>
-              r.beneficiaryType == BeneficiaryType.supervisor &&
-              (_showArchive
-                  ? r.status != RequestStatus.pending
-                  : r.status == RequestStatus.pending))
-          .length;
-    }
-    if (type == 'مقدمي الخدمة') {
-      return _requests
-          .where((r) =>
-              r.beneficiaryType == BeneficiaryType.serviceProvider &&
-              (_showArchive
-                  ? r.status != RequestStatus.pending
-                  : r.status == RequestStatus.pending))
-          .length;
-    }
-    return _requests
-        .where((r) => _showArchive
-            ? r.status != RequestStatus.pending
-            : r.status == RequestStatus.pending)
-        .length;
+    return _requests.where((r) {
+      final matchesType = switch (type) {
+        'المشرفين' => r.beneficiaryType == BeneficiaryType.supervisor,
+        'مقدمي الخدمة' => r.beneficiaryType == BeneficiaryType.serviceProvider,
+        _ => true,
+      };
+      return matchesType && _isArchivedStatus(r.status) == _showArchive;
+    }).length;
   }
 
   @override
@@ -296,10 +288,14 @@ class _SupervisorWithdrawalsScreenState
                         children: [
                           Expanded(
                             child: _buildMetricMiniCard(
-                              title: l10n.awaitingApprovalTab,
-                              count: '$_pendingCount',
+                              title: _showArchive
+                                  ? l10n.financeRequestApprovedBadge
+                                  : l10n.awaitingApprovalTab,
+                              count: _showArchive
+                                  ? '$_approvedCount'
+                                  : '$_pendingCount',
                               sub:
-                                  '${CurrencyFormatter.format(_totalPendingAmount, includeCurrency: false)} ${l10n.currencyEgy}',
+                                  '${CurrencyFormatter.format(_showArchive ? _totalApprovedAmount : _totalPendingAmount, includeCurrency: false)} ${l10n.currencyEgy}',
                               icon: Icons.pending_actions,
                               color: AppColors.primaryDark,
                               countColor: Colors.black87,
@@ -308,9 +304,15 @@ class _SupervisorWithdrawalsScreenState
                           const SizedBox(width: 12),
                           Expanded(
                             child: _buildMetricMiniCard(
-                              title: l10n.underRegulatoryHold,
-                              count: '$_frozenCount',
-                              sub: l10n.temporarilySuspendedBadge,
+                              title: _showArchive
+                                  ? l10n.financeRequestRejectedBadge
+                                  : l10n.underRegulatoryHold,
+                              count: _showArchive
+                                  ? '$_rejectedCount'
+                                  : '$_frozenCount',
+                              sub: _showArchive
+                                  ? '${CurrencyFormatter.format(_totalRejectedAmount, includeCurrency: false)} ${l10n.currencyEgy}'
+                                  : l10n.temporarilySuspendedBadge,
                               icon: Icons.playlist_remove,
                               color: AppColors.danger,
                               countColor: AppColors.danger,

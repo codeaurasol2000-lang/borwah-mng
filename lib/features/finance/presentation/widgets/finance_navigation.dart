@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/app_locale_controller.dart';
+import '../../../../core/widgets/theme_mode_menu_button.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../screens/audit_screen.dart';
 import '../screens/bank_reconciliation_screen.dart';
@@ -35,11 +37,15 @@ class FinancePageAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final isArabic = l10n.localeName.startsWith('ar');
+    final palette = context.appThemePalette;
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return AppBar(
       centerTitle: false,
       titleSpacing: 12,
-      backgroundColor: Colors.white,
+      backgroundColor: palette.surface,
+      foregroundColor: isDark ? palette.textPrimary : AppColors.primaryDark,
       elevation: 0.5,
       scrolledUnderElevation: 0,
       leading: showBackButton
@@ -49,7 +55,7 @@ class FinancePageAppBar extends StatelessWidget implements PreferredSizeWidget {
               icon: Icon(
                   isArabic ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
                   size: 18,
-                  color: AppColors.primaryDark),
+                  color: palette.accent),
             )
           : null,
       title: Column(
@@ -59,19 +65,19 @@ class FinancePageAppBar extends StatelessWidget implements PreferredSizeWidget {
           Text(title,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                  color: AppColors.primaryDark,
+              style: TextStyle(
+                  color: isDark ? palette.textPrimary : AppColors.primaryDark,
                   fontWeight: FontWeight.bold,
                   fontSize: 15)),
           if (subtitle != null)
             Text(subtitle!,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                    color: AppColors.textSecondary, fontSize: 9)),
+                style: TextStyle(color: palette.textSecondary, fontSize: 10)),
         ],
       ),
       actions: [
+        const ThemeModeMenuButton(),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 10),
           child: InkWell(
@@ -80,22 +86,24 @@ class FinancePageAppBar extends StatelessWidget implements PreferredSizeWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
               decoration: BoxDecoration(
-                color: AppColors.surfaceLight,
+                color:
+                    isDark ? palette.surfaceElevated : AppColors.surfaceLight,
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.grey.shade300),
+                border: Border.all(
+                  color: isDark ? palette.border : Colors.grey.shade300,
+                ),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.language,
-                      color: AppColors.primaryDark, size: 14),
+                  Icon(Icons.language, color: palette.accent, size: 14),
                   const SizedBox(width: 4),
                   Text(
                     isArabic ? 'English' : 'العربية',
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.primaryDark),
+                        color: palette.accent),
                   ),
                 ],
               ),
@@ -106,10 +114,14 @@ class FinancePageAppBar extends StatelessWidget implements PreferredSizeWidget {
           IconButton(
             tooltip: l10n.profileTitle,
             onPressed: onProfilePressed,
-            icon: const CircleAvatar(
+            icon: CircleAvatar(
               radius: 15,
-              backgroundColor: AppColors.primaryDark,
-              child: Icon(Icons.person_outline, color: Colors.white, size: 17),
+              backgroundColor: palette.accent,
+              child: Icon(
+                Icons.person_outline,
+                color: colorScheme.onPrimary,
+                size: 17,
+              ),
             ),
           ),
         ...additionalActions,
@@ -195,6 +207,8 @@ class FinanceBottomNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final palette = context.appThemePalette;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final navItems = items ??
         [
@@ -222,8 +236,13 @@ class FinanceBottomNavigationBar extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: palette.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        border: isDark
+            ? Border(
+                top: BorderSide(color: palette.border.withValues(alpha: 0.75)),
+              )
+            : null,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.07),
@@ -264,7 +283,8 @@ class FinanceBottomNavigationBar extends StatelessWidget {
                     ),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? AppColors.primaryDark.withValues(alpha: 0.08)
+                          ? palette.accent
+                              .withValues(alpha: isDark ? 0.18 : 0.08)
                           : Colors.transparent,
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -275,8 +295,8 @@ class FinanceBottomNavigationBar extends StatelessWidget {
                           item.icon,
                           size: 20,
                           color: isSelected
-                              ? AppColors.primaryDark
-                              : AppColors.textSecondary,
+                              ? palette.accent
+                              : palette.textSecondary,
                         ),
                         const SizedBox(height: 3),
                         FittedBox(
@@ -285,13 +305,13 @@ class FinanceBottomNavigationBar extends StatelessWidget {
                             item.label,
                             maxLines: 1,
                             style: TextStyle(
-                              fontSize: 9,
+                              fontSize: 10,
                               fontWeight: isSelected
                                   ? FontWeight.bold
                                   : FontWeight.w500,
                               color: isSelected
-                                  ? AppColors.primaryDark
-                                  : AppColors.textSecondary,
+                                  ? palette.accent
+                                  : palette.textSecondary,
                             ),
                           ),
                         ),

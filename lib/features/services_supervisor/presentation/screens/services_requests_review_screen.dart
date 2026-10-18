@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/app_snack_bar.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../data/services_supervisor_local_store.dart';
+import '../../../wasalny_supervisor/data/wasalny_local_event_store.dart';
 import 'service_provider_catalog.dart';
 import 'services_request_details_screen.dart';
 
@@ -137,11 +140,113 @@ class _ServicesRequestsReviewScreenState
   final Set<String> _resolvedRequestIds = {};
   final Map<String, List<String>> _requestComments = {};
   final Map<String, ServiceProvider> _assignedProviders = {};
+  final Map<String, String> _decisions = {};
+  bool _isLoadingWorkflow = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadWorkflow();
+  }
+
+  Future<void> _loadWorkflow() async {
+    try {
+      final workflow = await ServicesSupervisorLocalStore.loadRequestWorkflow();
+      final resolvedIds = workflow['resolvedIds'];
+      final comments = workflow['comments'];
+      final assignments = workflow['assignedProviderIds'];
+      final decisions = workflow['decisions'];
+      if (resolvedIds != null &&
+          (resolvedIds is! List<dynamic> ||
+              resolvedIds.any((id) => id is! String))) {
+        throw const FormatException(
+            'Stored resolved service requests are invalid.');
+      }
+      if (comments != null && comments is! Map<String, dynamic>) {
+        throw const FormatException(
+            'Stored service request comments are invalid.');
+      }
+      if (assignments != null && assignments is! Map<String, dynamic>) {
+        throw const FormatException('Stored service assignments are invalid.');
+      }
+      if (decisions != null && decisions is! Map<String, dynamic>) {
+        throw const FormatException('Stored service decisions are invalid.');
+      }
+      final loadedComments = <String, List<String>>{};
+      for (final entry
+          in (comments as Map<String, dynamic>? ?? <String, dynamic>{})
+              .entries) {
+        if (entry.value is! List<dynamic> ||
+            (entry.value as List<dynamic>).any((value) => value is! String)) {
+          throw const FormatException(
+              'Stored service request comments are invalid.');
+        }
+        loadedComments[entry.key] =
+            (entry.value as List<dynamic>).cast<String>();
+      }
+      final providerById = {
+        for (final provider in serviceProviders) provider.id: provider,
+      };
+      final loadedAssignments = <String, ServiceProvider>{};
+      for (final entry
+          in (assignments as Map<String, dynamic>? ?? <String, dynamic>{})
+              .entries) {
+        if (entry.value is! String || !providerById.containsKey(entry.value)) {
+          throw const FormatException(
+              'Stored service provider assignment is invalid.');
+        }
+        loadedAssignments[entry.key] = providerById[entry.value as String]!;
+      }
+      final loadedDecisions = <String, String>{};
+      for (final entry
+          in (decisions as Map<String, dynamic>? ?? <String, dynamic>{})
+              .entries) {
+        if (entry.value is! String) {
+          throw const FormatException(
+              'Stored service request decision is invalid.');
+        }
+        loadedDecisions[entry.key] = entry.value as String;
+      }
+      if (!mounted) return;
+      setState(() {
+        _resolvedRequestIds.addAll(
+          (resolvedIds as List<dynamic>? ?? const []).cast<String>(),
+        );
+        _requestComments.addAll(loadedComments);
+        _assignedProviders.addAll(loadedAssignments);
+        _decisions.addAll(loadedDecisions);
+        _isLoadingWorkflow = false;
+      });
+    } on Object catch (error, stackTrace) {
+      FlutterError.reportError(FlutterErrorDetails(
+        exception: error,
+        stack: stackTrace,
+        library: 'services supervisor requests',
+        context: ErrorDescription('while loading saved request workflow'),
+      ));
+      if (mounted) setState(() => _isLoadingWorkflow = false);
+    }
+  }
+
+  Future<void> _saveWorkflow() =>
+      ServicesSupervisorLocalStore.saveRequestWorkflow(
+        resolvedRequestIds: _resolvedRequestIds,
+        comments: _requestComments,
+        assignedProviderIds: {
+          for (final entry in _assignedProviders.entries)
+            entry.key: entry.value.id,
+        },
+        decisions: _decisions,
+      );
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final isArabic = l10n.localeName.startsWith('ar');
+    final palette = context.appThemePalette;
+    if (_isLoadingWorkflow) {
+      return const Center(child: CircularProgressIndicator());
+    }
     final pendingRequests = _serviceRequests
         .where((request) => !_resolvedRequestIds.contains(request.id))
         .toList();
@@ -153,9 +258,9 @@ class _ServicesRequestsReviewScreenState
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 14, 16, 24),
       children: [
-        _buildHeading(l10n, pendingRequests.length),
+        _buildHeading(context, l10n, pendingRequests.length),
         const SizedBox(height: 14),
-        _buildSummary(l10n, pendingRequests.length),
+        _buildSummary(context, l10n, pendingRequests.length),
         const SizedBox(height: 14),
         _buildCategoryFilters(l10n, pendingRequests),
         const SizedBox(height: 14),
@@ -165,7 +270,7 @@ class _ServicesRequestsReviewScreenState
             child: Text(
               l10n.servicesRequestsEmpty,
               textAlign: TextAlign.center,
-              style: const TextStyle(color: AppColors.textSecondary),
+              style: TextStyle(color: palette.textSecondary),
             ),
           )
         else
@@ -187,7 +292,13 @@ class _ServicesRequestsReviewScreenState
     );
   }
 
-  Widget _buildHeading(AppLocalizations l10n, int requestCount) {
+  Widget _buildHeading(
+    BuildContext context,
+    AppLocalizations l10n,
+    int requestCount,
+  ) {
+    final palette = context.appThemePalette;
+    final colorScheme = Theme.of(context).colorScheme;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -199,8 +310,8 @@ class _ServicesRequestsReviewScreenState
             children: [
               Text(
                 l10n.servicesReviewTitle,
-                style: const TextStyle(
-                  color: AppColors.primaryDark,
+                style: TextStyle(
+                  color: palette.accent,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -208,8 +319,8 @@ class _ServicesRequestsReviewScreenState
               const SizedBox(height: 3),
               Text(
                 l10n.servicesReviewSubtitle,
-                style: const TextStyle(
-                  color: AppColors.textSecondary,
+                style: TextStyle(
+                  color: palette.textSecondary,
                   fontSize: 12,
                 ),
               ),
@@ -219,17 +330,24 @@ class _ServicesRequestsReviewScreenState
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
           decoration: BoxDecoration(
-            color: AppColors.primaryDark,
+            color: palette.accent,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.pending_actions, color: Colors.white, size: 14),
+              Icon(
+                Icons.pending_actions,
+                color: colorScheme.onPrimary,
+                size: 14,
+              ),
               const SizedBox(width: 5),
               Text(
                 l10n.servicesNewRequestsCount('$requestCount'),
-                style: const TextStyle(color: Colors.white, fontSize: 10),
+                style: TextStyle(
+                  color: colorScheme.onPrimary,
+                  fontSize: 10,
+                ),
               ),
             ],
           ),
@@ -238,13 +356,21 @@ class _ServicesRequestsReviewScreenState
     );
   }
 
-  Widget _buildSummary(AppLocalizations l10n, int pendingCount) {
+  Widget _buildSummary(
+    BuildContext context,
+    AppLocalizations l10n,
+    int pendingCount,
+  ) {
+    final palette = context.appThemePalette;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.all(9),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? palette.surface : Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.cardBorder),
+        border: Border.all(
+          color: isDark ? palette.border : AppColors.cardBorder,
+        ),
       ),
       child: Row(
         children: [
@@ -365,20 +491,82 @@ class _ServicesRequestsReviewScreenState
       ),
     );
     if (comment == null || !mounted) return;
-    setState(() {
-      _requestComments.putIfAbsent(request.id, () => []).add(comment);
-    });
-    AppSnackBar.showSuccess(context, l10n.servicesCommentSaved);
+    final previous = List<String>.of(_requestComments[request.id] ?? const []);
+    _requestComments[request.id] = [...previous, comment];
+    try {
+      await _saveWorkflow();
+      if (!mounted) return;
+      setState(() {});
+      AppSnackBar.showSuccess(context, l10n.servicesCommentSaved);
+    } on Object catch (error, stackTrace) {
+      _requestComments[request.id] = previous;
+      FlutterError.reportError(FlutterErrorDetails(
+        exception: error,
+        stack: stackTrace,
+        library: 'services supervisor requests',
+        context: ErrorDescription('while saving a request comment'),
+      ));
+      if (mounted) {
+        AppSnackBar.showError(context, l10n.servicesAccountSaveError(error));
+      }
+    }
   }
 
-  bool _applyDecision(
+  Future<bool> _applyDecision(
     _ServiceRequest request, {
     required bool approved,
     String? rejectionReason,
     required AppLocalizations l10n,
-  }) {
+  }) async {
     if (!mounted) return false;
-    setState(() => _resolvedRequestIds.add(request.id));
+    final previousDecision = _decisions[request.id];
+    _resolvedRequestIds.add(request.id);
+    _decisions[request.id] =
+        approved ? 'approved' : 'rejected:${rejectionReason ?? ''}';
+    try {
+      await _saveWorkflow();
+    } on Object catch (error, stackTrace) {
+      _resolvedRequestIds.remove(request.id);
+      if (previousDecision == null) {
+        _decisions.remove(request.id);
+      } else {
+        _decisions[request.id] = previousDecision;
+      }
+      FlutterError.reportError(FlutterErrorDetails(
+        exception: error,
+        stack: stackTrace,
+        library: 'services supervisor requests',
+        context: ErrorDescription('while saving a request decision'),
+      ));
+      if (mounted) {
+        AppSnackBar.showError(context, l10n.servicesAccountSaveError(error));
+      }
+      return false;
+    }
+    if (!mounted) return false;
+    setState(() {});
+    try {
+      await WasalnyLocalEventStore().publish(
+        WasalnyLocalEvent(
+          id: 'service-request-${request.id}-${approved ? 'approved' : 'rejected'}',
+          recipient: 'services',
+          source: 'services',
+          titleAr: 'تحديث طلب خدمة',
+          titleEn: 'Service request updated',
+          messageAr: '${request.id}: ${approved ? 'تمت الموافقة' : 'تم الرفض'}',
+          messageEn: '${request.id}: ${approved ? 'Approved' : 'Rejected'}',
+          createdAt: DateTime.now(),
+        ),
+      );
+    } on Object catch (error, stackTrace) {
+      FlutterError.reportError(FlutterErrorDetails(
+        exception: error,
+        stack: stackTrace,
+        library: 'services supervisor notifications',
+        context: ErrorDescription('while publishing a request decision'),
+      ));
+    }
+    if (!mounted) return false;
     AppSnackBar.showSuccess(
       context,
       approved
@@ -413,8 +601,31 @@ class _ServicesRequestsReviewScreenState
           workFee: request.workFee,
           icon: request.icon,
           photoUrls: request.photoUrls,
-          onAssign: (provider) {
-            setState(() => _assignedProviders[request.id] = provider);
+          onAssign: (provider) async {
+            final previous = _assignedProviders[request.id];
+            _assignedProviders[request.id] = provider;
+            try {
+              await _saveWorkflow();
+              if (mounted) setState(() {});
+            } on Object catch (error, stackTrace) {
+              if (previous == null) {
+                _assignedProviders.remove(request.id);
+              } else {
+                _assignedProviders[request.id] = previous;
+              }
+              FlutterError.reportError(FlutterErrorDetails(
+                exception: error,
+                stack: stackTrace,
+                library: 'services supervisor requests',
+                context: ErrorDescription('while saving a provider assignment'),
+              ));
+              if (mounted) {
+                AppSnackBar.showError(
+                  context,
+                  l10n.servicesAccountSaveError(error),
+                );
+              }
+            }
           },
           assignedProvider: _assignedProviders[request.id],
           initialCategory: request.category.name,
@@ -853,6 +1064,8 @@ class _ServiceRequestCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final palette = context.appThemePalette;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final service = isArabic ? request.serviceAr : request.serviceEn;
     final provider = isArabic ? request.providerAr : request.providerEn;
     final location = isArabic ? request.locationAr : request.locationEn;
@@ -863,9 +1076,11 @@ class _ServiceRequestCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? palette.surface : Colors.white,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: AppColors.cardBorder),
+        border: Border.all(
+          color: isDark ? palette.border : AppColors.cardBorder,
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.025),
@@ -883,12 +1098,13 @@ class _ServiceRequestCard extends StatelessWidget {
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
-                  color: AppColors.surfaceLight,
+                  color:
+                      isDark ? palette.surfaceElevated : AppColors.surfaceLight,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   request.icon,
-                  color: AppColors.primaryDark,
+                  color: palette.accent,
                   size: 25,
                 ),
               ),
@@ -901,8 +1117,10 @@ class _ServiceRequestCard extends StatelessWidget {
                       service,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: AppColors.primaryDark,
+                      style: TextStyle(
+                        color: isDark
+                            ? palette.textPrimary
+                            : AppColors.primaryDark,
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
                       ),
@@ -910,8 +1128,8 @@ class _ServiceRequestCard extends StatelessWidget {
                     const SizedBox(height: 3),
                     Text(
                       '#${request.id} • $time',
-                      style: const TextStyle(
-                        color: AppColors.textSecondary,
+                      style: TextStyle(
+                        color: palette.textSecondary,
                         fontSize: 10,
                       ),
                     ),
@@ -938,14 +1156,14 @@ class _ServiceRequestCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
             decoration: BoxDecoration(
-              color: AppColors.surfaceLight,
+              color: isDark ? palette.surfaceElevated : AppColors.surfaceLight,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
               children: [
-                const Icon(
+                Icon(
                   Icons.person_pin_circle_outlined,
-                  color: AppColors.primaryDark,
+                  color: palette.accent,
                   size: 19,
                 ),
                 const SizedBox(width: 7),
@@ -954,8 +1172,9 @@ class _ServiceRequestCard extends StatelessWidget {
                     provider,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: AppColors.primaryDark,
+                    style: TextStyle(
+                      color:
+                          isDark ? palette.textPrimary : AppColors.primaryDark,
                       fontSize: 13,
                       fontWeight: FontWeight.bold,
                     ),
@@ -968,13 +1187,15 @@ class _ServiceRequestCard extends StatelessWidget {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFD9EFFF),
+                    color: isDark
+                        ? palette.accentContainer
+                        : const Color(0xFFD9EFFF),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
                     l10n.servicesVerifiedProvider,
-                    style: const TextStyle(
-                      color: AppColors.primaryDark,
+                    style: TextStyle(
+                      color: palette.accent,
                       fontSize: 9,
                       fontWeight: FontWeight.w600,
                     ),
@@ -1503,8 +1724,14 @@ class _CategoryChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final palette = context.appThemePalette;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Material(
-      color: selected ? AppColors.primaryDark : Colors.white,
+      color: selected
+          ? palette.accent
+          : isDark
+              ? palette.surface
+              : Colors.white,
       borderRadius: BorderRadius.circular(20),
       child: InkWell(
         onTap: onTap,
@@ -1514,7 +1741,11 @@ class _CategoryChip extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: selected ? AppColors.primaryDark : AppColors.cardBorder,
+              color: selected
+                  ? palette.accent
+                  : isDark
+                      ? palette.border
+                      : AppColors.cardBorder,
             ),
           ),
           child: Row(
@@ -1523,7 +1754,9 @@ class _CategoryChip extends StatelessWidget {
               Text(
                 label,
                 style: TextStyle(
-                  color: selected ? Colors.white : AppColors.textSecondary,
+                  color: selected
+                      ? Theme.of(context).colorScheme.onPrimary
+                      : palette.textSecondary,
                   fontSize: 10,
                   fontWeight: FontWeight.w600,
                 ),
@@ -1534,13 +1767,17 @@ class _CategoryChip extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: selected
                       ? Colors.white.withValues(alpha: 0.16)
-                      : AppColors.surfaceLight,
+                      : isDark
+                          ? palette.surfaceElevated
+                          : AppColors.surfaceLight,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
                   '$count',
                   style: TextStyle(
-                    color: selected ? Colors.white : AppColors.primaryDark,
+                    color: selected
+                        ? Theme.of(context).colorScheme.onPrimary
+                        : palette.accent,
                     fontSize: 9,
                   ),
                 ),

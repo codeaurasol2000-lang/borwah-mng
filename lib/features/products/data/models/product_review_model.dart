@@ -23,6 +23,77 @@ class ProductReviewModel extends ProductReview {
     super.merchantNotificationRequested,
   });
 
+  factory ProductReviewModel.fromJson(Map<String, dynamic> json) {
+    T enumValue<T extends Enum>(List<T> values, Object? value) {
+      if (value is! String) {
+        throw const FormatException('Stored product review enum is invalid.');
+      }
+      return values.byName(value);
+    }
+
+    final requiredStrings = [
+      'id',
+      'reference',
+      'titleAr',
+      'titleEn',
+      'merchantNameAr',
+      'merchantNameEn',
+      'priceAr',
+      'priceEn',
+    ];
+    if (requiredStrings.any((key) => json[key] is! String) ||
+        json['photoCount'] is! int ||
+        json['receivedMinutesAgo'] is! int ||
+        json['isFeatured'] is! bool ||
+        json['merchantNotificationRequested'] is! bool) {
+      throw const FormatException('Stored product review is invalid.');
+    }
+    return ProductReviewModel(
+      id: json['id'] as String,
+      reference: json['reference'] as String,
+      titleAr: json['titleAr'] as String,
+      titleEn: json['titleEn'] as String,
+      merchantNameAr: json['merchantNameAr'] as String,
+      merchantNameEn: json['merchantNameEn'] as String,
+      category: enumValue(ProductCategory.values, json['category']),
+      condition: enumValue(ProductCondition.values, json['condition']),
+      imageKind: enumValue(ProductImageKind.values, json['imageKind']),
+      photoCount: json['photoCount'] as int,
+      receivedMinutesAgo: json['receivedMinutesAgo'] as int,
+      priceAr: json['priceAr'] as String,
+      priceEn: json['priceEn'] as String,
+      descriptionAr: json['descriptionAr'] as String? ?? '',
+      descriptionEn: json['descriptionEn'] as String? ?? '',
+      status: enumValue(ProductReviewStatus.values, json['status']),
+      decisionNote: json['decisionNote'] as String?,
+      isFeatured: json['isFeatured'] as bool,
+      merchantNotificationRequested:
+          json['merchantNotificationRequested'] as bool,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'reference': reference,
+        'titleAr': titleAr,
+        'titleEn': titleEn,
+        'merchantNameAr': merchantNameAr,
+        'merchantNameEn': merchantNameEn,
+        'category': category.name,
+        'condition': condition.name,
+        'imageKind': imageKind.name,
+        'photoCount': photoCount,
+        'receivedMinutesAgo': receivedMinutesAgo,
+        'priceAr': priceAr,
+        'priceEn': priceEn,
+        'descriptionAr': descriptionAr,
+        'descriptionEn': descriptionEn,
+        'status': status.name,
+        'decisionNote': decisionNote,
+        'isFeatured': isFeatured,
+        'merchantNotificationRequested': merchantNotificationRequested,
+      };
+
   factory ProductReviewModel.fromEntity(ProductReview entity) {
     return ProductReviewModel(
       id: entity.id,
